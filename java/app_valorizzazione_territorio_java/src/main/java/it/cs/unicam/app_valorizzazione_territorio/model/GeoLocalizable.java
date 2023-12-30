@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -12,16 +13,19 @@ import java.util.List;
 public class GeoLocalizable {
     private final Position coordinates;
     private String description;
-    private List<File> images;
+    private final List<File> images;
 
     /**
      * Constructor for a geo-localizable object.
      *
-     * @param coordinates
-     * @param description
-     * @param images
+     * @param coordinates the geographical coordinates of the geo-localizable object
+     * @param description the textual description of the geo-localizable object
+     * @param images the representative multimedia content of the geo-localizable object
+     * @throws IllegalArgumentException if coordinates, description or images are null
      */
     public GeoLocalizable(Position coordinates, String description, List<File> images) {
+        if(coordinates == null || description == null || images == null)
+            throw new IllegalArgumentException("Coordinates, description and images must not be null");
         this.coordinates = coordinates;
         this.description = description;
         this.images = images;
