@@ -12,8 +12,10 @@ public class Position {
      * Constructor for a geographical position.
      */
     public Position(double latitude, double longitude) {
-        if(Double.isNaN(latitude) || Double.isNaN(longitude))
-            throw new IllegalArgumentException("Latitude and longitude must be a number");
+        if(Double.isNaN(latitude) || Double.isNaN(longitude)
+                || Double.compare(latitude, -90) < 0 || Double.compare(latitude, 90) > 0
+                || Double.compare(longitude, -180) < 0 || Double.compare(longitude, 180) > 0)
+            throw new IllegalArgumentException("Latitude and longitude must be valid numbers");
         this.latitude = latitude;
         this.longitude = longitude;
     }
