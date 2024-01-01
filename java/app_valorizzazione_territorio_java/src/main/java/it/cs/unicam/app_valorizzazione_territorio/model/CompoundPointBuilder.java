@@ -1,5 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.CompoundPointIsNotItineraryException;
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.DescriptionNotSetException;
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.NotEnoughGeoLocalizablesException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException;
 
 import java.io.File;
@@ -77,9 +80,9 @@ public class CompoundPointBuilder {
      *
      * @throws IllegalStateException if the type of the CompoundPoint is not ITINERARY
      */
-    public void invertGeoLocalizables(GeoLocalizable geoLocalizable1, GeoLocalizable geoLocalizable2) {
+    public void invertGeoLocalizables(GeoLocalizable geoLocalizable1, GeoLocalizable geoLocalizable2) throws CompoundPointIsNotItineraryException {
         if(this.type != CompoundPointType.ITINERARY)
-            throw new IllegalStateException("Type must be set to ITINERARY before inverting geo-localizable objects");
+            throw new CompoundPointIsNotItineraryException("Type must be set to ITINERARY before inverting geo-localizable objects");
         if(geoLocalizable1 == null || geoLocalizable2 == null)
             throw new IllegalArgumentException("GeoLocalizable 1 and 2 must not be null");
 
@@ -101,13 +104,13 @@ public class CompoundPointBuilder {
             throw new IllegalArgumentException("GeoLocalizable must be in the list of geo-localizable objects");
     }
 
-    public CompoundPoint build() throws TypeNotSetException {
+    public CompoundPoint build() throws TypeNotSetException, DescriptionNotSetException, NotEnoughGeoLocalizablesException {
         if(this.type == null)
             throw new TypeNotSetException("Type must be set before building the CompoundPoint");
         if(this.description == null)
-            throw new IllegalStateException("Description must be set before building the CompoundPoint");
+            throw new DescriptionNotSetException("Description must be set before building the CompoundPoint");
         if(this.geoLocalizables.size() < 2)
-            throw new IllegalStateException("At least two geo-localizable objects must be added before building the CompoundPoint");
+            throw new NotEnoughGeoLocalizablesException("At least two geo-localizable objects must be added before building the CompoundPoint");
         return new CompoundPoint(this.type, this.description, this.geoLocalizables, this.images);
     }
 
