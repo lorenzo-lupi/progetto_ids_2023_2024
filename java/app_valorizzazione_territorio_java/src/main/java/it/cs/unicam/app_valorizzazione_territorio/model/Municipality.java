@@ -14,6 +14,7 @@ public class Municipality {
     private final Position position;
     private final List<Files> files;
     private final List<GeoLocalizable> geoLocalizables;
+    private final CoordinatesBox coordinatesBox;
 
     /**
      * Constructor for a municipality.
@@ -22,12 +23,13 @@ public class Municipality {
      * @param description description of the municipality
      * @param position geographical coordinates of the municipality
      */
-    public Municipality (String name, String description, Position position) {
+    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox) {
         this.name = name;
         this.description = description;
         this.position = position;
         this.files = new ArrayList<>();
         this.geoLocalizables = new ArrayList<>();
+        this.coordinatesBox = coordinatesBox;
     }
 
     public String getName() {
@@ -51,8 +53,25 @@ public class Municipality {
     }
 
     public CoordinatesBox getCoordinatesBox() {
-        //TODO
-        return null;
+        return coordinatesBox;
+    }
+
+    /**
+     * Returns the dynamic coordinates box of the municipality,
+     * calculated from the coordinates of the geo-localizable points in the municipality in order to include
+     * all the points in the box.
+     * If the municipality has no geo-localizable points, the static coordinates box is returned.
+     *
+     * @return the dynamic coordinates box of the municipality
+     */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public CoordinatesBox getDynamicCoordinatesBox() {
+        if (geoLocalizables.isEmpty()) return getCoordinatesBox();
+        double minLatitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLatitude).min(Double::compare).get();
+        double maxLatitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLatitude).max(Double::compare).get();
+        double minLongitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLongitude).min(Double::compare).get();
+        double maxLongitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLongitude).max(Double::compare).get();
+        return new CoordinatesBox(new Position(minLatitude, minLongitude), new Position(maxLatitude, maxLongitude));
     }
 
 }
