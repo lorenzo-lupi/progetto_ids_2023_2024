@@ -15,6 +15,13 @@ public class Municipality {
     private final List<Files> files;
     private final List<GeoLocalizable> geoLocalizables;
 
+    /**
+     * Constructor for a municipality.
+     *
+     * @param name name of the municipality
+     * @param description description of the municipality
+     * @param position geographical coordinates of the municipality
+     */
     public Municipality (String name, String description, Position position) {
         this.name = name;
         this.description = description;
