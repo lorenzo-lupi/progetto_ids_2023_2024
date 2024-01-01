@@ -9,10 +9,11 @@ import java.util.List;
  * It includes fundamental details such as a name,
  * a textual description and a representative multimedia content.
  */
-public class GeoLocalizable {
+public class GeoLocalizable implements Approvable {
     private final Position coordinates;
     private String description;
     private final List<File> images;
+    private boolean isApproved;
 
     /**
      * Constructor for a geo-localizable object.
@@ -28,6 +29,7 @@ public class GeoLocalizable {
         this.coordinates = coordinates;
         this.description = description;
         this.images = images;
+        this.isApproved = false;
     }
 
     public Position getCoordinates() {
@@ -60,4 +62,13 @@ public class GeoLocalizable {
     }
 
 
+    @Override
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    @Override
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
 }
