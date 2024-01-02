@@ -11,7 +11,7 @@ public class Repositories {
 
     private static final Repositories instance = new Repositories();
 
-    public Repositories() {
+    private Repositories() {
         this.repositories = new HashMap<>();
     }
 
