@@ -15,11 +15,14 @@ import java.util.*;
 public class CompoundPointBuilder {
     private CompoundPointType type;
     private String description;
+    private Municipality municipality;
+    private GeoLocalizable representative;
     private Collection<GeoLocalizable> geoLocalizables;
     private final List<File> images;
 
     public CompoundPointBuilder() {
        this.images = new LinkedList<>();
+
     }
 
     public CompoundPointBuilder setTypeExperience() {

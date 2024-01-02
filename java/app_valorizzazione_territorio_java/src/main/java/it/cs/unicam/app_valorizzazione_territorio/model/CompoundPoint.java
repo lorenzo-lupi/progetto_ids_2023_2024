@@ -3,12 +3,16 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-public class CompoundPoint {
+public class CompoundPoint implements Searchable, Approvable{
     private final CompoundPointType type;
     private String description;
     private final Collection<GeoLocalizable> geoLocalizables;
     private final List<File> images;
+
+    private Municipality municipality;
+    private GeoLocalizable representative;
 
     /**
      * Constructor for a compound point.
@@ -50,5 +54,23 @@ public class CompoundPoint {
     public void addFile(File file) {
         if(file != null)
             this.images.add(file);
+    }
+
+    //TODO
+    @Override
+    public boolean isApproved() {
+        return false;
+    }
+
+    //TODO
+    @Override
+    public void setApproved(boolean approved) {
+
+    }
+
+    //TODO
+    @Override
+    public Map<ParameterType, Object> getParameters() {
+        return null;
     }
 }

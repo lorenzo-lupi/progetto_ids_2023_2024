@@ -2,6 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a generic geo-localizable object, that is a
@@ -9,8 +10,10 @@ import java.util.List;
  * It includes fundamental details such as a name,
  * a textual description and a representative multimedia content.
  */
-public class GeoLocalizable implements Approvable {
+public class GeoLocalizable implements Approvable, Searchable {
     private final Position coordinates;
+    private final Municipality municipality;
+    private String name;
     private String description;
     private final List<File> images;
     private boolean isApproved;
@@ -23,11 +26,12 @@ public class GeoLocalizable implements Approvable {
      * @param images the representative multimedia content of the geo-localizable object
      * @throws IllegalArgumentException if coordinates, description or images are null
      */
-    public GeoLocalizable(Position coordinates, String description, List<File> images) {
-        if(coordinates == null || description == null || images == null)
+    public GeoLocalizable(Position coordinates, String description, List<File> images, Municipality municipality) {
+        if(coordinates == null || description == null || images == null || municipality == null)
             throw new IllegalArgumentException("Coordinates, description and images must not be null");
         this.coordinates = coordinates;
         this.description = description;
+        this.municipality = municipality;
         this.images = images;
         this.isApproved = false;
     }
@@ -36,6 +40,9 @@ public class GeoLocalizable implements Approvable {
         return coordinates;
     }
 
+    public Municipality getMunicipality() {
+        return municipality;
+    }
     public String getDescription() {
         return description;
     }
@@ -70,5 +77,13 @@ public class GeoLocalizable implements Approvable {
     @Override
     public void setApproved(boolean approved) {
         isApproved = approved;
+    }
+
+    @Override
+    public Map<ParameterType, Object> getParameters() {
+        return Map.of(ParameterType.COMUNE, this.municipality,
+                ParameterType.POSITION, this.coordinates,
+                ParameterType.DESCRIPTION, this.description,
+                ParameterType.NAME, this.name);
     }
 }
