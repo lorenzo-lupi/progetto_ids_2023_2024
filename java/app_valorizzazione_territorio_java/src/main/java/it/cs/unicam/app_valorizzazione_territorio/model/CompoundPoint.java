@@ -40,8 +40,12 @@ public class CompoundPoint implements Searchable, Approvable{
                          Collection<GeoLocalizable> geoLocalizables,
                          List<File> images,
                          Municipality municipality) {
+
         if(type == null || description == null || geoLocalizables == null || images == null || municipality == null)
             throw new IllegalArgumentException("Type, description, geoLocalizables and images must not be null");
+        if(geoLocalizables.size() < 2)
+            throw new IllegalArgumentException("A compound point must be composed by at least two geo-localizable objects");
+
         this.type = type;
         this.description = description;
         this.geoLocalizables = geoLocalizables;
