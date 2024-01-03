@@ -59,6 +59,13 @@ public class SearchEngine<T extends Searchable> {
     }
 
     /**
+     * Resets the search engine, removing all the criteria previously added to it.
+     */
+    public void resetCriteria() {
+        criteria.clear();
+    }
+
+    /**
      * Computes and returns the current predicate of the search engine, obtained as the conjunction
      * of all the criteria added to the search engine.
      *
