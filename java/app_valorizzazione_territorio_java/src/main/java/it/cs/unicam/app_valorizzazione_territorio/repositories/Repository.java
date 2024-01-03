@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * This abstract class represents a generic repository of items, capable of storing and retrieving them.
@@ -9,10 +10,18 @@ import java.util.*;
  * @param <I> the type of the items
  */
 public class Repository<I> {
-    Set<I> items;
+    private Set<I> items;
 
     public Repository() {
         this.items = new HashSet<>();
+    }
+
+    /**
+     * Returns the items of the repository in the form of a stream.
+     * @return the stream of items.
+     */
+    public Stream<I> getItemStream() {
+        return items.stream();
     }
 
     /**

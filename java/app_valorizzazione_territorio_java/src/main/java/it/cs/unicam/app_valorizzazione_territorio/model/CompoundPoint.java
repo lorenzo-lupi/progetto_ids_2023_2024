@@ -1,5 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -70,7 +73,7 @@ public class CompoundPoint implements Searchable, Approvable{
 
     //TODO
     @Override
-    public Map<ParameterType, Object> getParameters() {
+    public Map<Parameter, Object> getParametersMapping() {
         return null;
     }
 }

@@ -1,14 +1,18 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Representative entity of a municipal territory registered in the system.
  * It acts as a container for geo-localizable points.
  */
-public class Municipality {
+public class Municipality implements Searchable {
     private final String name;
     private final String description;
     private final Position position;
@@ -74,4 +78,10 @@ public class Municipality {
         return new CoordinatesBox(new Position(minLatitude, minLongitude), new Position(maxLatitude, maxLongitude));
     }
 
+    @Override
+    public Map<Parameter, Object> getParametersMapping() {
+        return Map.of(Parameter.POSITION, this.position,
+                Parameter.DESCRIPTION, this.description,
+                Parameter.NAME, this.name);
+    }
 }

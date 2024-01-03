@@ -55,6 +55,19 @@ public class CoordinatesBox {
         return southEast.getLongitude();
     }
 
+    /**
+     * Returns true if the geographical box contains the given geographical position.
+     *
+     * @param position the geographical position to check
+     * @return true if the geographical box contains the given geographical position, false otherwise
+     */
+    public boolean contains(Position position) {
+        return position.getLatitude() <= getNorth() &&
+                position.getLatitude() >= getSouth() &&
+                position.getLongitude() >= getWest() &&
+                position.getLongitude() <= getEast();
+    }
+
     @Override
     public String toString() {
         return "CoordinatesBox{" +

@@ -1,5 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -80,10 +83,11 @@ public class GeoLocalizable implements Approvable, Searchable {
     }
 
     @Override
-    public Map<ParameterType, Object> getParameters() {
-        return Map.of(ParameterType.COMUNE, this.municipality,
-                ParameterType.POSITION, this.coordinates,
-                ParameterType.DESCRIPTION, this.description,
-                ParameterType.NAME, this.name);
+    public Map<Parameter, Object> getParametersMapping() {
+        return Map.of(Parameter.MUNICIPALITY, this.municipality,
+                Parameter.POSITION, this.coordinates,
+                Parameter.DESCRIPTION, this.description,
+                Parameter.NAME, this.name,
+                Parameter.APPROVED, this.isApproved);
     }
 }
