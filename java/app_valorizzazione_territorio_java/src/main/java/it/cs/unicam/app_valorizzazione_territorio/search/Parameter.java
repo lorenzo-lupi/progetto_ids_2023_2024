@@ -4,6 +4,8 @@ public enum Parameter {
     NAME,
     DESCRIPTION,
     POSITION,
+    REPRESENTATIVE,
+    COMPUND_TYPE,
     MUNICIPALITY,
     APPROVED
 }

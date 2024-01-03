@@ -8,13 +8,23 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a compound point, i.e. a point composed by multiple geo-localizable objects.
+ * It includes fundamental details such as a textual description and a representative multimedia content.
+ * It also includes a list of geo-localizable objects that compose the compound point.
+ * It can be of two types: EXPERIENCE or ITINERARY.
+ * An EXPERIENCE is a compound point composed by multiple geo-localizable objects that are not necessarily
+ * connected to each other. An ITINERARY is a compound point composed by multiple geo-localizable objects
+ * that are connected to each other.
+ */
 public class CompoundPoint implements Searchable, Approvable{
     private final CompoundPointType type;
     private String description;
     private final Collection<GeoLocalizable> geoLocalizables;
     private final List<File> images;
+    private boolean approved;
 
-    private Municipality municipality;
+    private final Municipality municipality;
     private GeoLocalizable representative;
 
     /**
@@ -28,15 +38,26 @@ public class CompoundPoint implements Searchable, Approvable{
     public CompoundPoint(CompoundPointType type,
                          String description,
                          Collection<GeoLocalizable> geoLocalizables,
-                         List<File> images) {
-        if(type == null || description == null || geoLocalizables == null || images == null)
+                         List<File> images,
+                         Municipality municipality) {
+        if(type == null || description == null || geoLocalizables == null || images == null || municipality == null)
             throw new IllegalArgumentException("Type, description, geoLocalizables and images must not be null");
         this.type = type;
         this.description = description;
         this.geoLocalizables = geoLocalizables;
         this.images = images;
+        this.municipality = municipality;
+        this.approved = false;
+        setRepresentative(geoLocalizables);
     }
 
+    private void setRepresentative(Collection<GeoLocalizable> geoLocalizables) {
+        geoLocalizables.stream()
+                .findAny()
+                .ifPresentOrElse((geoLocalizable ->  this.representative = geoLocalizable),
+                (() -> {throw new IllegalArgumentException("GeoLocalizables must not be empty");}));
+
+    }
     public CompoundPointType getType() {
         return type;
     }
@@ -59,21 +80,24 @@ public class CompoundPoint implements Searchable, Approvable{
             this.images.add(file);
     }
 
-    //TODO
     @Override
     public boolean isApproved() {
-        return false;
+        return this.approved;
     }
 
-    //TODO
     @Override
     public void setApproved(boolean approved) {
-
+        this.approved = approved;
     }
 
-    //TODO
     @Override
     public Map<Parameter, Object> getParametersMapping() {
-        return null;
+        return Map.of(
+                Parameter.COMPUND_TYPE, this.type,
+                Parameter.DESCRIPTION, this.description,
+                Parameter.MUNICIPALITY, this.municipality,
+                Parameter.REPRESENTATIVE, this.representative,
+                Parameter.POSITION, this.geoLocalizables
+        );
     }
 }
