@@ -1,8 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocalizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
+import java.util.Collection;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -18,7 +20,7 @@ public class SearchCriterion<T> implements Predicate<Object> {
     public static final BiPredicate<Object,Object> STARTS_WITH = (a, b) -> a.toString().startsWith(b.toString());
     public static final BiPredicate<Object,Object> CONTAINS = (a, b) -> a.toString().contains(b.toString());
     public static final BiPredicate<Object, CoordinatesBox> INCLUDED_IN_BOX = (a, b) -> a instanceof Position p && b.contains(p);
-
+    public static final BiPredicate<Object, Collection<GeoLocalizable>> INCLUDED_IN_COLLECTION = (a, b) -> a instanceof GeoLocalizable g && b.contains(g);
     private final BiPredicate<Object,T> predicate;
     private final T value;
 
