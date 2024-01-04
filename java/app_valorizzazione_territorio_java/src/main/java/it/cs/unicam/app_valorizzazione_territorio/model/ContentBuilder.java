@@ -8,10 +8,17 @@ import java.util.List;
  * Builder for a content.
  */
 public class ContentBuilder {
-    private List<File> files;
     private String description;
+    private GeoLocalizable geoLocalizable;
+    private List<File> files;
 
-    public ContentBuilder() {
+    /**
+     * Creates a builder for a content associated to the specified geo-localizable point.
+     *
+     * @param geoLocalizable the geo-localizable point associated to the content to build
+     */
+    public ContentBuilder(GeoLocalizable geoLocalizable) {
+        this.geoLocalizable = geoLocalizable;
         this.files = new ArrayList<>();
         this.description = "";
     }
@@ -41,7 +48,7 @@ public class ContentBuilder {
      * @return the content built
      */
     public Content build() {
-        return new Content(this.description, this.files);
+        return new Content(this.description, this.geoLocalizable, this.files);
     }
 
     /**
@@ -55,18 +62,25 @@ public class ContentBuilder {
     }
 
     /**
-     * Returns the multimedia built files of the content.
-     * @return the multimedia built files of the content
-     */
-    public List<File> getFiles() {
-        return files;
-    }
-
-    /**
      * Returns the built textual description of the content.
      * @return the built textual description of the content
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Returns the built geo-localizable point associated to the content bulder.
+     * @return the built geo-localizable point associated to the content bulder
+     */
+    public GeoLocalizable getGeoLocalizable() {
+        return geoLocalizable;
+    }
+    /**
+     * Returns the multimedia built files of the content.
+     * @return the multimedia built files of the content
+     */
+    public List<File> getFiles() {
+        return files;
     }
 }
