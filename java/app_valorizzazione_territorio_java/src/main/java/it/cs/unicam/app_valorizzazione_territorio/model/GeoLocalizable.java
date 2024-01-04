@@ -36,6 +36,18 @@ public class GeoLocalizable implements Approvable, Searchable {
     /**
      * Constructor for a geo-localizable object.
      *
+     * @param name the name of the geo-localizable object
+     * @param description the textual description of the geo-localizable object
+     * @param coordinates the geographical coordinates of the geo-localizable object
+     * @param municipality the municipality of the geo-localizable object
+     */
+    public GeoLocalizable (String name, String description, Position coordinates, Municipality municipality) {
+        this(name, description, coordinates, municipality, new ArrayList<>(), new ArrayList<>());
+    }
+
+    /**
+     * Constructor for a geo-localizable object.
+     *
      * @param coordinates the geographical position of the geo-localizable object
      * @param municipality the municipality of the geo-localizable object
      * @param images the representative multimedia content of the geo-localizable object
@@ -68,15 +80,20 @@ public class GeoLocalizable implements Approvable, Searchable {
         this.isApproved = false;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public Position getCoordinates() {
         return coordinates;
     }
 
     public Municipality getMunicipality() {
         return municipality;
-    }
-    public String getDescription() {
-        return description;
     }
 
     public List<File> getImages() {
