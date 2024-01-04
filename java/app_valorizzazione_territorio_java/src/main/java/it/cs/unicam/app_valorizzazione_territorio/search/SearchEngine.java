@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
 import it.cs.unicam.app_valorizzazione_territorio.repositories.Repositories;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +96,5 @@ public class SearchEngine<T extends Searchable> {
                 .forEach(result::addResult);
         return result;
     }
-
 
 }
