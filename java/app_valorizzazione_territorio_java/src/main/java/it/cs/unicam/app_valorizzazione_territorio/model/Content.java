@@ -1,7 +1,11 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents an indivisible set of logically coherent information that can contain
@@ -9,8 +13,9 @@ import java.util.List;
  * It can be in the two states Unapproved (pending) and Approved (visible).
  */
 
-public class Content implements Approvable {
+public class Content implements Approvable, Searchable {
     private String description;
+    private final GeoLocalizable geoLocalizable;
     private final List<File> files;
     private boolean isApproved;
 
@@ -20,8 +25,9 @@ public class Content implements Approvable {
      * @param description the textual description of the content
      * @param files the multimedia files of the content
      */
-    public Content(String description, List<File> files) {
+    public Content(String description, GeoLocalizable geoLocalizable, List<File> files) {
         this.description = description;
+        this.geoLocalizable = geoLocalizable;
         this.files = files;
         this.isApproved = false;
     }
@@ -66,5 +72,11 @@ public class Content implements Approvable {
 
     public void setApproved(boolean approved) {
         isApproved = approved;
+    }
+
+    @Override
+    public Map<Parameter, Object> getParametersMapping() {
+        return Map.of(Parameter.DESCRIPTION, this.description,
+                Parameter.APPROVED, this.isApproved);
     }
 }

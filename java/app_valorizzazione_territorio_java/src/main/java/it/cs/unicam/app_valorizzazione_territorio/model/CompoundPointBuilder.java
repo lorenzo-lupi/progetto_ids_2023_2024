@@ -15,6 +15,7 @@ import java.util.*;
 public class CompoundPointBuilder {
     private CompoundPointType type;
     private String description;
+    private Municipality municipality;
     private Collection<GeoLocalizable> geoLocalizables;
     private final List<File> images;
 
@@ -46,6 +47,14 @@ public class CompoundPointBuilder {
     public CompoundPointBuilder addGeoLocalizable(GeoLocalizable geoLocalizable) throws TypeNotSetException{
         if(this.type == null)
             throw new TypeNotSetException("Type must be set before adding a geo-localizable object");
+
+        if(this.geoLocalizables.isEmpty())
+            this.municipality = geoLocalizable.getMunicipality();
+
+        if(!this.municipality.equals(geoLocalizable.getMunicipality())){
+            throw new IllegalArgumentException("All geo-localizable objects must belong to the same municipality");
+        }
+
         this.geoLocalizables.add(geoLocalizable);
         return this;
     }
@@ -104,6 +113,7 @@ public class CompoundPointBuilder {
             throw new IllegalArgumentException("GeoLocalizable must be in the list of geo-localizable objects");
     }
 
+
     public CompoundPoint build() throws TypeNotSetException, DescriptionNotSetException, NotEnoughGeoLocalizablesException {
         if(this.type == null)
             throw new TypeNotSetException("Type must be set before building the CompoundPoint");
@@ -111,7 +121,9 @@ public class CompoundPointBuilder {
             throw new DescriptionNotSetException("Description must be set before building the CompoundPoint");
         if(this.geoLocalizables.size() < 2)
             throw new NotEnoughGeoLocalizablesException("At least two geo-localizable objects must be added before building the CompoundPoint");
-        return new CompoundPoint(this.type, this.description, this.geoLocalizables, this.images);
+
+        return new CompoundPoint(this.type, this.description, this.geoLocalizables, this.images, this.municipality);
     }
+
 
 }
