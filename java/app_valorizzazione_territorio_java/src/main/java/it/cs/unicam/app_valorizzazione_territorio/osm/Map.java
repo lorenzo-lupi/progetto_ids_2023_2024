@@ -16,4 +16,12 @@ public class Map {
         this.geoLocalizableList = geoLocalizableList;
         this.osmData = osmData;
     }
+
+    public String getOsmData() {
+        return osmData;
+    }
+
+    public List<GeoLocalizable> getGeoLocalizableList() {
+        return geoLocalizableList.stream().toList();
+    }
 }

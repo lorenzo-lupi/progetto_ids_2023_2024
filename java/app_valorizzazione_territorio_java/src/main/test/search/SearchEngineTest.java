@@ -40,18 +40,15 @@ public class SearchEngineTest {
                     municipalities[0])
     };
     @BeforeAll
-    public static void setUpMunicipalityRepositories() {
+    public static void setUpCollections() {
         municipalities[1].addGeoLocalizable(geoLocalizables[0]);
         municipalities[1].addGeoLocalizable(geoLocalizables[1]);
         municipalities[0].addGeoLocalizable(geoLocalizables[2]);
-
-        Repositories.getInstance().getRepository(Municipality.class).addAll(List.of(municipalities));
-        Repositories.getInstance().getRepository(GeoLocalizable.class).addAll(List.of(geoLocalizables));
     }
 
     @Test
     public void shouldSearchMunicipalityByName() {
-        SearchEngine<Municipality> searchEngine = new SearchEngine<>(Municipality.class);
+        SearchEngine<Municipality> searchEngine = new SearchEngine<>(List.of(municipalities));
         searchEngine.addCriterion(Parameter.NAME, SearchCriterion.EQUALS, "Macerata");
         List<Municipality> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
@@ -60,7 +57,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchMunicipalityByDescription1() {
-        SearchEngine<Municipality> searchEngine = new SearchEngine<>(Municipality.class);
+        SearchEngine<Municipality> searchEngine = new SearchEngine<>(List.of(municipalities));
         searchEngine.addCriterion(Parameter.DESCRIPTION, SearchCriterion.CONTAINS, "Camerino");
         List<Municipality> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
@@ -69,7 +66,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchMunicipalityByDescription2() {
-        SearchEngine<Municipality> searchEngine = new SearchEngine<>(Municipality.class);
+        SearchEngine<Municipality> searchEngine = new SearchEngine<>(List.of(municipalities));
         searchEngine.addCriterion(Parameter.DESCRIPTION, SearchCriterion.STARTS_WITH, "Comune di");
         List<Municipality> searchResult = searchEngine.search().getResults();
         assertEquals(2, searchResult.size());
@@ -78,7 +75,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchMunicipalityByPosition() {
-        SearchEngine<Municipality> searchEngine = new SearchEngine<>(Municipality.class);
+        SearchEngine<Municipality> searchEngine = new SearchEngine<>(List.of(municipalities));
         searchEngine.addCriterion(Parameter.POSITION, SearchCriterion.EQUALS, new Position(43.13644468556232, 13.067156069846892));
         List<Municipality> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
@@ -87,7 +84,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchMunicipalityByCoordinatesBox() {
-        SearchEngine<Municipality> searchEngine = new SearchEngine<>(Municipality.class);
+        SearchEngine<Municipality> searchEngine = new SearchEngine<>(List.of(municipalities));
         searchEngine.addCriterion(Parameter.POSITION, SearchCriterion.INCLUDED_IN_BOX,
                 new CoordinatesBox(new Position(43.302654, 12.960106), new Position (43.099477, 13.546755)));
         List<Municipality> searchResult = searchEngine.search().getResults();
@@ -97,7 +94,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchGeoLocalizableByName() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(GeoLocalizable.class);
+        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
         searchEngine.addCriterion(Parameter.NAME, SearchCriterion.EQUALS, "Università di Camerino");
         List<GeoLocalizable> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
@@ -106,7 +103,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchGeoLocalizableByDescription() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(GeoLocalizable.class);
+        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
         searchEngine.addCriterion(Parameter.DESCRIPTION, SearchCriterion.CONTAINS, "Piazza");
         List<GeoLocalizable> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
@@ -115,7 +112,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchGeoLocalizableByMunicipality() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(GeoLocalizable.class);
+        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
         searchEngine.addCriterion(Parameter.MUNICIPALITY, SearchCriterion.EQUALS, municipalities[1]);
         List<GeoLocalizable> searchResult = searchEngine.search().getResults();
         assertEquals(2, searchResult.size());
@@ -124,7 +121,7 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchGeoLocalizableByApproved1() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(GeoLocalizable.class);
+        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
         searchEngine.addCriterion(Parameter.APPROVED, SearchCriterion.EQUALS, true);
         List<GeoLocalizable> searchResult = searchEngine.search().getResults();
         assertEquals(0, searchResult.size());
@@ -135,7 +132,7 @@ public class SearchEngineTest {
         geoLocalizables[1].setApproved(true);
         geoLocalizables[2].setApproved(true);
 
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(GeoLocalizable.class);
+        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
         searchEngine.addCriterion(Parameter.APPROVED, SearchCriterion.EQUALS, true);
         List<GeoLocalizable> searchResult = searchEngine.search().getResults();
         assertEquals(2, searchResult.size());

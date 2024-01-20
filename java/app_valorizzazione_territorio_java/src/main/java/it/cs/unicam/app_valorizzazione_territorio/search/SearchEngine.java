@@ -1,33 +1,27 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
-import it.cs.unicam.app_valorizzazione_territorio.repositories.Repositories;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.Repository;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * This class represents a search engine that can be used to search in the repositories  items
+ * This class represents a search engine that can be used to search in a given collection of items
  * of a specific {@link Searchable} type.
  *
  * @param <T> the type of the searchable items
  */
 public class SearchEngine<T extends Searchable> {
     private final Map<Parameter, List<SearchCriterion<?>>> criteria;
-    private final Class<T> typeParameterClass;
+    private final Collection<T> collection;
 
     /**
-     * Creates a new search engine for the specified type of searchable items.
+     * Creates a new search engine that searches in the given collection of searchable items.
      *
-     * @param typeParameterClass the type of searchable items.
+     * @param collection the collection of searchable items
      */
-    public SearchEngine(Class<T> typeParameterClass) {
+    public SearchEngine(Collection<T> collection) {
         this.criteria = new HashMap<>();
-        this.typeParameterClass = typeParameterClass;
+        this.collection = collection;
     }
 
     /**
@@ -83,7 +77,7 @@ public class SearchEngine<T extends Searchable> {
     }
 
     /**
-     * Performs the search on the item repositories according to the given current criteria
+     * Performs the search on this engine collection according to the given current criteria
      * and returns the result.
      *
      * @return the result of the search
@@ -91,7 +85,7 @@ public class SearchEngine<T extends Searchable> {
     public SearchResult<T> search() {
         SearchResult<T> result = new SearchResult<>();
         Predicate<T> predicate = getCurrentPredicate();
-        Repositories.getInstance().getRepository(typeParameterClass).getItemStream()
+        this.collection.stream()
                 .filter(predicate)
                 .forEach(result::addResult);
         return result;
