@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.CompoundPointIsNotItineraryException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.DescriptionNotSetException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.NotEnoughGeoLocalizablesException;
@@ -7,7 +8,6 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * This class represents a compound point, that is a
@@ -47,9 +47,9 @@ public class CompoundPointBuilder {
     }
 
     /**
-     * Add a GeoLocalizable to the CompoundPoint.
+     * Add a GeoLocatable to the CompoundPoint.
      *
-     * @param pointOfInterest the GeoLocalizable to add
+     * @param pointOfInterest the GeoLocatable to add
      * @throws TypeNotSetException if the type of the CompoundPoint has not been set
      */
     public CompoundPointBuilder addGeoLocalizable(PointOfInterest pointOfInterest) throws TypeNotSetException {
@@ -102,24 +102,24 @@ public class CompoundPointBuilder {
         if (this.type != CompoundPointType.ITINERARY)
             throw new CompoundPointIsNotItineraryException("Type must be set to ITINERARY before inverting geo-localizable objects");
         if (pointOfInterest1 == null || pointOfInterest2 == null)
-            throw new IllegalArgumentException("GeoLocalizable 1 and 2 must not be null");
+            throw new IllegalArgumentException("GeoLocatable 1 and 2 must not be null");
 
         LinkedList<PointOfInterest> pointOfInterests = (LinkedList<PointOfInterest>) this.pointOfInterests;
         int index1 = pointOfInterests.indexOf(pointOfInterest1);
         if (index1 == -1)
-            throw new IllegalArgumentException("GeoLocalizable 1 must be in the list of geo-localizable objects");
+            throw new IllegalArgumentException("GeoLocatable 1 must be in the list of geo-localizable objects");
         int index2 = pointOfInterests.indexOf(pointOfInterest2);
         if (index2 == -1)
-            throw new IllegalArgumentException("GeoLocalizable 2 must be in the list of geo-localizable objects");
+            throw new IllegalArgumentException("GeoLocatable 2 must be in the list of geo-localizable objects");
 
         Collections.swap(pointOfInterests, index1, index2);
     }
 
     public void eliminateGeoLocalizable(PointOfInterest pointOfInterest) {
         if (pointOfInterest == null)
-            throw new IllegalArgumentException("GeoLocalizable must not be null");
+            throw new IllegalArgumentException("GeoLocatable must not be null");
         if (!this.pointOfInterests.remove(pointOfInterest))
-            throw new IllegalArgumentException("GeoLocalizable must be in the list of geo-localizable objects");
+            throw new IllegalArgumentException("GeoLocatable must be in the list of geo-localizable objects");
     }
 
     public void setUser(User user) {

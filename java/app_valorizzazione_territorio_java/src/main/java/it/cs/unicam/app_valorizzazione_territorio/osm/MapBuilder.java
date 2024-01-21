@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchResult;
@@ -10,13 +11,13 @@ import java.util.List;
 /**
  * Builder for a map.
  */
-public class MapBuilder {
+public class MapBuilder<P extends Positionable> {
     private String osmData;
-    private List<PointOfInterest> pointOfInterestList;
+    private List<P> pointsList;
 
     public MapBuilder() {
         this.osmData = "";
-        this.pointOfInterestList = List.of();
+        this.pointsList = List.of();
     }
 
     /**
@@ -25,7 +26,7 @@ public class MapBuilder {
      * @param osmData the osmData
      * @return the builder
      */
-    public MapBuilder buildOsmData(String osmData) {
+    public MapBuilder<P> buildOsmData(String osmData) {
         this.osmData = osmData;
         return this;
     }
@@ -36,51 +37,40 @@ public class MapBuilder {
      * @return the builder
      * @throws IOException if an I/O error occurs
      */
-    public MapBuilder buildOsmData(CoordinatesBox coordinatesBox) throws IOException {
+    public MapBuilder<P> buildOsmData(CoordinatesBox coordinatesBox) throws IOException {
         this.osmData = OSMRequestHandler.getInstance().retrieveOSMData(coordinatesBox);
         return this;
     }
 
     /**
-     * Builds the geo-localizable list of the map with the given data.
+     * Builds the geo-locatable list of the map with the given data.
      *
-     * @param  pointOfInterestList the geo-localizable list
+     * @param  pointsList the list of positionable points
      * @return the builder
      */
-    public MapBuilder buildGeoLocalizableList(List<PointOfInterest> pointOfInterestList) {
-        this.pointOfInterestList = pointOfInterestList;
+    public MapBuilder<P> buildPointsList(List<P> pointsList) {
+        this.pointsList = pointsList;
         return this;
     }
 
     /**
-     * Builds the geo-localizable list of the map with the data included in the given search result.
+     * Adds a geo-locatable point to the map to be built.
      *
-     * @param geoLocalizableResult the search result
-     * @return the builder
+     * @param point the geo-locatable point to added
+     * @return true if the geo-locatable point has been added, false otherwise
      */
-    public MapBuilder buildGeoLocalizableList(SearchResult<PointOfInterest> geoLocalizableResult) {
-        this.pointOfInterestList = geoLocalizableResult.getResults();
-        return this;
+    public boolean addGeoLocatable(P point) {
+        return this.pointsList.add(point);
     }
 
     /**
-     * Adds a geo-localizable point to the map to be built.
+     * Removes a geo-locatable point from the map to be built.
      *
-     * @param pointOfInterest the geo-localizable point to added
-     * @return true if the geo-localizable point has been added, false otherwise
+     * @param point the geo-locatable point to removed
+     * @return true if the geo-locatable point has been removed, false otherwise
      */
-    public boolean addGeoLocalizable(PointOfInterest pointOfInterest) {
-        return this.pointOfInterestList.add(pointOfInterest);
-    }
-
-    /**
-     * Removes a geo-localizable point from the map to be built.
-     *
-     * @param pointOfInterest the geo-localizable point to removed
-     * @return true if the geo-localizable point has been removed, false otherwise
-     */
-    public boolean removeGeoLocalizable(PointOfInterest pointOfInterest) {
-        return this.pointOfInterestList.remove(pointOfInterest);
+    public boolean removeGeoLocatable(P point) {
+        return this.pointsList.remove(point);
     }
 
     /**
@@ -88,8 +78,8 @@ public class MapBuilder {
      *
      * @return the map built
      */
-    public Map getResult() {
-        return new Map(this.osmData, this.pointOfInterestList.stream().toList());
+    public Map<P> getResult() {
+        return new Map<P>(this.osmData, this.pointsList.stream().toList());
     }
 
     /**
@@ -97,9 +87,9 @@ public class MapBuilder {
      *
      * @return the builder
      */
-    public MapBuilder reset() {
+    public MapBuilder<P> reset() {
         this.osmData = "";
-        this.pointOfInterestList = List.of();
+        this.pointsList = List.of();
         return this;
     }
 }

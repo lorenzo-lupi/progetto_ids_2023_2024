@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.*;
@@ -15,7 +16,7 @@ import java.util.*;
  */
 public class CompoundPoint extends GeoLocatable {
     private final CompoundPointType type;
-    private final Collection<PointOfInterest> pointOfInterests;
+    private final Collection<PointOfInterest> pointsOfInterest;
     private final PointOfInterest representative;
 
     /**
@@ -23,20 +24,20 @@ public class CompoundPoint extends GeoLocatable {
      *
      * @param type             the type of the compound point
      * @param description      the textual description of the compound point
-     * @param pointOfInterests the geo-localizable objects that compose the compound point
-     * @throws IllegalArgumentException if type, description, geoLocalizables or images are null
+     * @param pointsOfInterest the points of interest that compose the compound point
+     * @throws IllegalArgumentException if type, description, geoLocatables or images are null
      */
     public CompoundPoint(PointOfInterest representative,
                          String title,
                          String description,
                          CompoundPointType type,
                          ApprovalStatusENUM approvalStatus,
-                         Collection<PointOfInterest> pointOfInterests) {
+                         Collection<PointOfInterest> pointsOfInterest) {
 
-        super(representative.getCoordinates(), title, description, approvalStatus);
-        checkArguments(type, pointOfInterests, representative);
+        super(title, description, representative.getMunicipality());
+        checkArguments(type, pointsOfInterest, representative);
         this.type = type;
-        this.pointOfInterests = pointOfInterests;
+        this.pointsOfInterest = pointsOfInterest;
         this.representative = representative;
     }
 
@@ -62,9 +63,13 @@ public class CompoundPoint extends GeoLocatable {
 
 
     public List<PointOfInterest> getGeoLocalizablesList() {
-        return pointOfInterests.stream().toList();
+        return pointsOfInterest.stream().toList();
     }
 
+    @Override
+    public Position getPosition() {
+        return this.representative.getPosition();
+    }
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {

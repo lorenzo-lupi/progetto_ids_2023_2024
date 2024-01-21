@@ -1,5 +1,6 @@
 package search;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
@@ -24,22 +25,22 @@ public class SearchEngineTest {
                     new CoordinatesBox(new Position(43.153712, 13.036414), new Position (43.123261, 13.095768)))
     };
 
-    private static final GeoLocalizable[] geoLocalizables = new POI[] {
-            new POI("Università di Camerino", "Università di Camerino",
+    private static final GeoLocatable[] GEO_LOCATABLES = new PointOfInterest[] {
+            new PointOfInterest("Università di Camerino", "Università di Camerino",
                     new Position(43.13644468556232, 13.067156069846892),
                     municipalities[1]),
-            new POI("Via Madonna delle Carceri", "Via Madonna delle Carceri",
+            new PointOfInterest("Via Madonna delle Carceri", "Via Madonna delle Carceri",
                     new Position(43.140, 13.069),
                     municipalities[1]),
-            new POI("Piazza della Libertà", "Piazza della Libertà",
+            new PointOfInterest("Piazza della Libertà", "Piazza della Libertà",
                     new Position(43.29812657107886, 13.451878161920886),
                     municipalities[0])
     };
     @BeforeAll
     public static void setUpCollections() {
-        municipalities[1].addGeoLocalizable(geoLocalizables[0]);
-        municipalities[1].addGeoLocalizable(geoLocalizables[1]);
-        municipalities[0].addGeoLocalizable(geoLocalizables[2]);
+        municipalities[1].addGeoLocalizable(GEO_LOCATABLES[0]);
+        municipalities[1].addGeoLocalizable(GEO_LOCATABLES[1]);
+        municipalities[0].addGeoLocalizable(GEO_LOCATABLES[2]);
     }
 
     @Test
@@ -90,48 +91,48 @@ public class SearchEngineTest {
 
     @Test
     public void shouldSearchGeoLocalizableByName() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
+        SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
         searchEngine.addCriterion(Parameter.NAME, SearchCriterion.EQUALS, "Università di Camerino");
-        List<GeoLocalizable> searchResult = searchEngine.search().getResults();
+        List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
         assertEquals("Università di Camerino", searchResult.get(0).getName());
     }
 
     @Test
     public void shouldSearchGeoLocalizableByDescription() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
+        SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
         searchEngine.addCriterion(Parameter.DESCRIPTION, SearchCriterion.CONTAINS, "Piazza");
-        List<GeoLocalizable> searchResult = searchEngine.search().getResults();
+        List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
         assertEquals("Piazza della Libertà", searchResult.get(0).getName());
     }
 
     @Test
     public void shouldSearchGeoLocalizableByMunicipality() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
+        SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
         searchEngine.addCriterion(Parameter.MUNICIPALITY, SearchCriterion.EQUALS, municipalities[1]);
-        List<GeoLocalizable> searchResult = searchEngine.search().getResults();
+        List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(2, searchResult.size());
-        assertTrue(searchResult.containsAll(Arrays.asList(geoLocalizables[0], geoLocalizables[1])));
+        assertTrue(searchResult.containsAll(Arrays.asList(GEO_LOCATABLES[0], GEO_LOCATABLES[1])));
     }
 
     @Test
     public void shouldSearchGeoLocalizableByApproved1() {
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
-        searchEngine.addCriterion(Parameter.APPROVED, SearchCriterion.EQUALS, true);
-        List<GeoLocalizable> searchResult = searchEngine.search().getResults();
+        SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
+        searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusENUM.APPROVED);
+        List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(0, searchResult.size());
     }
 
     @Test
     public void shouldSearchGeoLocalizableByApproved2() {
-        geoLocalizables[1].setApproved(true);
-        geoLocalizables[2].setApproved(true);
+        GEO_LOCATABLES[1].approve();
+        GEO_LOCATABLES[2].approve();
 
-        SearchEngine<GeoLocalizable> searchEngine = new SearchEngine<>(List.of(geoLocalizables));
-        searchEngine.addCriterion(Parameter.APPROVED, SearchCriterion.EQUALS, true);
-        List<GeoLocalizable> searchResult = searchEngine.search().getResults();
+        SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
+        searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusENUM.APPROVED);;
+        List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(2, searchResult.size());
-        assertTrue(searchResult.containsAll(Arrays.asList(geoLocalizables[1], geoLocalizables[2])));
+        assertTrue(searchResult.containsAll(Arrays.asList(GEO_LOCATABLES[1], GEO_LOCATABLES[2])));
     }
 }

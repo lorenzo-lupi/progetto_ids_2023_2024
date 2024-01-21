@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.abstractions;
 
 public enum ApprovalStatusENUM {
     APPROVED,

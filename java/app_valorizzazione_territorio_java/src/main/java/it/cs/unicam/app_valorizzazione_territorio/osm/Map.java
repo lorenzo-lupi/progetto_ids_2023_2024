@@ -1,19 +1,19 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 
 import java.util.List;
 
 /**
  * This class represents a geographical visualizable map, composed of geographical OSM data and
- * {@link PointOfInterest} objects.
+ * {@link Positionable} objects.
  */
-public class Map {
+public class Map<P extends Positionable> {
     private final String osmData;
-    private final List<PointOfInterest> pointOfInterestList;
+    private final List<P> positionablePoints;
 
-    public Map(String osmData, List<PointOfInterest> pointOfInterestList) {
-        this.pointOfInterestList = pointOfInterestList;
+    public Map(String osmData, List<P> positionablePoints) {
+        this.positionablePoints = positionablePoints;
         this.osmData = osmData;
     }
 
@@ -21,7 +21,7 @@ public class Map {
         return osmData;
     }
 
-    public List<PointOfInterest> getGeoLocalizableList() {
-        return pointOfInterestList.stream().toList();
+    public List<P> getPointsList() {
+        return positionablePoints.stream().toList();
     }
 }

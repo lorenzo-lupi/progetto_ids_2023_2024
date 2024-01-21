@@ -1,157 +1,75 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
-
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-/**
- * This class represents a generic geo-localizable object, that is a physical point associated
- * with geographical coordinates.
- * It includes fundamental details such as a name, a textual description and a representative
- * multimedia content.
- */
-public abstract class GeoLocalizable implements Approvable, Searchable, Visualizable {
-    private String name;
-    private String description;
-    private final Municipality municipality;
-    private final List<File> images;
-    private boolean isApproved;
-    private final long ID = MunicipalityRepository.getInstance().getNextGeoLocalizableID();
+public class PointOfInterest extends GeoLocatable {
+    private final List<Content> contents;
+    private final Position position;
 
     /**
-     * Constructor for a geo-localizable object.
+     * Constructor for a PointOfInterest.
      *
-     * @param name the name of the geo-localizable object
-     * @param municipality the municipality of the geo-localizable object
+     * @param name the name of the PointOfInterest
+     * @param coordinates the geographical coordinates of the PointOfInterest
+     * @param municipality the municipality of the PointOfInterest
      */
-    public GeoLocalizable (String name, Municipality municipality) {
-        this(name, null, municipality, new ArrayList<>());
+    public PointOfInterest(String name, Position coordinates, Municipality municipality) {
+        this(name, "", coordinates, municipality, new ArrayList<>(), new ArrayList<>());
     }
 
     /**
-     * Constructor for a geo-localizable object.
+     * Constructor for a PointOfInterest.
      *
-     * @param name the name of the geo-localizable object
-     * @param description the textual description of the geo-localizable object
-     * @param municipality the municipality of the geo-localizable object
+     * @param name the name of the PointOfInterest
+     * @param description the textual description of the PointOfInterest
+     * @param coordinates the geographical coordinates of the PointOfInterest
+     * @param municipality the municipality of the PointOfInterest
      */
-    public GeoLocalizable (String name, String description, Municipality municipality) {
-        this(name, description, municipality, new ArrayList<>());
+    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality) {
+        this(name, description, coordinates, municipality, new ArrayList<>(), new ArrayList<>());
     }
 
     /**
-     * Constructor for a geo-localizable object.
+     * Constructor for a PointOfInterest.
      *
-     * @param name the name of the geo-localizable object
-     * @param description the textual description of the geo-localizable object
-     * @param municipality the municipality of the geo-localizable object
-     * @param images the representative multimedia content of the geo-localizable object
-     * @throws IllegalArgumentException if coordinates, description or images are null
+     * @param name the name of the PointOfInterest
+     * @param description the textual description of the PointOfInterest
+     * @param coordinates the geographical coordinates of the PointOfInterest
+     * @param municipality the municipality of the PointOfInterest
+     * @param images the representative multimedia content of the PointOfInterest
+     * @param contents the contents associated to the PointOfInterest
      */
-    public GeoLocalizable(String name, String description, Municipality municipality, List<File> images) {
-        if(municipality == null || images == null)
-            throw new IllegalArgumentException("Coordinates, municipality, images and contents must not be null");
-        this.name = name;
-        this.description = description;
-        this.municipality = municipality;
-        this.images = images;
-        this.isApproved = false;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Municipality getMunicipality() {
-        return municipality;
-    }
-
-    public List<File> getImages() {
-        return images;
-    }
-
-    public void setName (String name) {
-        this.name = name;
+    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality, List<File> images, List<Content> contents) {
+        super(name, description, municipality, images);
+        this.position = coordinates;
+        this.contents = contents;
     }
 
     /**
-     * Sets the description of the geo-localizable object.
+     * Returns the contents associated to the geo-localizable object.
      *
-     * @param description the description to set
+     * @param content the contents associated to the geo-localizable object
+     * @return true if the contents associated to the geo-localizable object has been added, false otherwise
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public boolean addContent(Content content) {
+        return this.contents.add(content);
     }
 
     /**
-     * Adds a representative multimedia content to the geo-localizable object.
+     * Removes a content from the geo-locatable object.
      *
-     * @param image the representative multimedia content to add
-     * @return true if the representative multimedia content has been added, false otherwise
+     * @param content the content to remove
+     * @return true if the content has been removed, false otherwise
      */
-    public boolean addImage(File image) {
-        return this.images.add(image);
-    }
-
-    /**
-     * Removes a representative multimedia content from the geo-localizable object.
-     *
-     * @param image the representative multimedia content to remove
-     * @return true if the representative multimedia content has been removed, false otherwise
-     */
-    public boolean removeImage(File image) {
-        return this.images.remove(image);
-    }
-
-    /**
-     * Returns the geographical position associated to the geo-localizable object.
-     *
-     * @return the geographical position associated to the geo-localizable object
-     */
-    public abstract Position getPosition();
-
-    @Override
-    public boolean isApproved() {
-        return isApproved;
+    public boolean removeContent(Content content) {
+        return this.contents.remove(content);
     }
 
     @Override
-    public void setApproved(boolean approved) {
-        isApproved = approved;
+    public Position getPosition() {
+        return this.position;
     }
 
-    @Override
-    public Map<Parameter, Object> getParametersMapping() {
-        return Map.of(Parameter.MUNICIPALITY, this.municipality,
-                Parameter.POSITION, this.getPosition(),
-                Parameter.DESCRIPTION, this.description,
-                Parameter.NAME, this.name,
-                Parameter.APPROVED, this.isApproved);
-    }
-
-    @Override
-    public Identifiable getSynthesizedFormat() {
-        //TODO
-        return null;
-    }
-
-    @Override
-    public Identifiable getDetailedFormat() {
-        //TODO
-        return null;
-    }
-
-    @Override
-    public long getID() {
-        return this.ID;
-    }
 }

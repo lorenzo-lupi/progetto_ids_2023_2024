@@ -1,8 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
@@ -25,10 +26,10 @@ public class MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static Map getMap(Municipality municipality) throws IOException {
-        return new MapBuilder()
+    public static Map<GeoLocatable> getMap(Municipality municipality) throws IOException {
+        return new MapBuilder<GeoLocatable>()
                 .buildOsmData(municipality.getCoordinatesBox())
-                .buildGeoLocalizableList(municipality.getGeoLocalizables())
+                .buildPointsList(municipality.getGeoLocatables())
                 .getResult();
     }
 
@@ -42,12 +43,12 @@ public class MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static Map getMap(Municipality municipality, CoordinatesBox box) throws IOException {
-        SearchEngine<PointOfInterest> engine = new SearchEngine<>(municipality.getGeoLocalizables());
+    public static Map<GeoLocatable> getMap(Municipality municipality, CoordinatesBox box) throws IOException {
+        SearchEngine<GeoLocatable> engine = new SearchEngine<>(municipality.getGeoLocatables());
         engine.addCriterion(Parameter.POSITION, SearchCriterion.INCLUDED_IN_BOX, box);
-        return new MapBuilder()
+        return new MapBuilder<GeoLocatable>()
                 .buildOsmData(box)
-                .buildGeoLocalizableList(engine.search())
+                .buildPointsList(engine.search().getResults())
                 .getResult();
     }
 
@@ -60,8 +61,8 @@ public class MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static Map getEmptyMap(Municipality municipality) throws IOException {
-        return new MapBuilder()
+    public static Map<Positionable> getEmptyMap(Municipality municipality) throws IOException {
+        return new MapBuilder<>()
                 .buildOsmData(municipality.getCoordinatesBox())
                 .getResult();
     }
@@ -74,8 +75,8 @@ public class MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static Map getEmptyMap(CoordinatesBox box) throws IOException {
-        return new MapBuilder()
+    public static Map<Positionable> getEmptyMap(CoordinatesBox box) throws IOException {
+        return new MapBuilder<>()
                 .buildOsmData(box)
                 .getResult();
     }
