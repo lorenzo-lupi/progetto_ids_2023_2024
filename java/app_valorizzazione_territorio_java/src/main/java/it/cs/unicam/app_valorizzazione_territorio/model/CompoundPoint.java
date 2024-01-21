@@ -1,7 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 
 import java.io.File;
 import java.util.Collection;
@@ -17,7 +18,7 @@ import java.util.Map;
  * connected to each other. An ITINERARY is a compound point composed by multiple geo-localizable objects
  * that are connected to each other.
  */
-public class CompoundPoint implements Searchable, Approvable{
+public class CompoundPoint implements Searchable, Approvable {
     private final CompoundPointType type;
     private String description;
     private final Collection<GeoLocalizable> geoLocalizables;

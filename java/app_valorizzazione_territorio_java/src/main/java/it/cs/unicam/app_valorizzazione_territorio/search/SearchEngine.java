@@ -1,16 +1,19 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
  * This class represents a search engine that can be used to search in a given collection of items
- * of a specific {@link Searchable} type.
+ * of a specific {@link Searchable} and {@link Visualizable}type.
  *
  * @param <T> the type of the searchable items
  */
-public class SearchEngine<T extends Searchable> {
+public class SearchEngine<T extends Searchable & Visualizable> {
     private final Map<Parameter, List<SearchCriterion<?>>> criteria;
     private final Collection<T> collection;
 

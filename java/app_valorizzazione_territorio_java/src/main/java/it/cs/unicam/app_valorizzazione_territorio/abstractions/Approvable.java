@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.abstractions;
 
 /**
  * This interface represents an object that can be in the two states Unapproved (pending) and Approved (visible).
@@ -11,6 +11,7 @@ public interface Approvable {
 
     /**
      * Sets the object as approved or not.
+     *
      * @param approved
      */
     void setApproved(boolean approved);

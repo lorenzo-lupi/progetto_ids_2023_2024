@@ -1,10 +1,14 @@
-package it.cs.unicam.app_valorizzazione_territorio.search;
+package it.cs.unicam.app_valorizzazione_territorio.abstractions;
+
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Classes implementing this interface can be searched and filtered by a dedicated {@link SearchEngine}.
+ * Classes implementing this interface provide a set of descriptive parameters and their associated
+ * values in order for their objects to be searched and filtered.
  */
 public interface Searchable {
 

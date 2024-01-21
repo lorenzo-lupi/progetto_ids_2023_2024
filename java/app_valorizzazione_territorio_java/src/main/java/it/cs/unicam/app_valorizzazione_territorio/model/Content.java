@@ -1,7 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 
 import java.io.File;
 import java.util.List;

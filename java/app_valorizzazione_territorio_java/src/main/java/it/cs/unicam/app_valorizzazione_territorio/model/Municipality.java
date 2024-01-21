@@ -1,7 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,13 +15,14 @@ import java.util.Map;
  * Representative entity of a municipal territory registered in the system.
  * It acts as a container for geo-localizable points.
  */
-public class Municipality implements Searchable {
-    private String name;
-    private String description;
+public class Municipality implements Searchable, Identifiable, Visualizable {
+    private final String name;
+    private final String description;
     private final Position position;
     private final CoordinatesBox coordinatesBox;
     private final List<File> files;
     private final List<GeoLocalizable> geoLocalizables;
+    private final long ID = MunicipalityRepository.getInstance().getNextID();
 
     /**
      * Constructor for a municipality.
@@ -104,10 +108,10 @@ public class Municipality implements Searchable {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public CoordinatesBox getDynamicCoordinatesBox() {
         if (geoLocalizables.isEmpty()) return getCoordinatesBox();
-        double minLatitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLatitude).min(Double::compare).get();
-        double maxLatitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLatitude).max(Double::compare).get();
-        double minLongitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLongitude).min(Double::compare).get();
-        double maxLongitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLongitude).max(Double::compare).get();
+        double minLatitude = geoLocalizables.stream().map(GeoLocalizable::getPosition).map(Position::getLatitude).min(Double::compare).get();
+        double maxLatitude = geoLocalizables.stream().map(GeoLocalizable::getPosition).map(Position::getLatitude).max(Double::compare).get();
+        double minLongitude = geoLocalizables.stream().map(GeoLocalizable::getPosition).map(Position::getLongitude).min(Double::compare).get();
+        double maxLongitude = geoLocalizables.stream().map(GeoLocalizable::getPosition).map(Position::getLongitude).max(Double::compare).get();
         return new CoordinatesBox(new Position(minLatitude, minLongitude), new Position(maxLatitude, maxLongitude));
     }
 
@@ -116,5 +120,22 @@ public class Municipality implements Searchable {
         return Map.of(Parameter.POSITION, this.position,
                 Parameter.DESCRIPTION, this.description,
                 Parameter.NAME, this.name);
+    }
+
+    @Override
+    public long getID() {
+        return this.ID;
+    }
+
+    @Override
+    public Identifiable getSynthesizedFormat() {
+        //TODO
+        return null;
+    }
+
+    @Override
+    public Identifiable getDetailedFormat() {
+        //TODO
+        return null;
     }
 }

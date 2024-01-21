@@ -1,5 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,10 +11,12 @@ import java.util.stream.Collectors;
 /**
  * This class represents a user of the application.
  */
-public class User {
+public class User implements Identifiable {
     private String username;
     private final String email;
     private final List<Role> roles;
+
+    private final long ID = UserRepository.getInstance().getNextID();
 
     /**
      * Creates a new user with the given username and email.
@@ -60,5 +65,10 @@ public class User {
                 .filter(role -> role.municipality().equals(municipality))
                 .map(Role::authorization)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public long getID() {
+        return this.ID;
     }
 }

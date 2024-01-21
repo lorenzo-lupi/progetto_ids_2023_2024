@@ -1,10 +1,6 @@
 package search;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocalizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.Repositories;
+import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
@@ -28,14 +24,14 @@ public class SearchEngineTest {
                     new CoordinatesBox(new Position(43.153712, 13.036414), new Position (43.123261, 13.095768)))
     };
 
-    private static final GeoLocalizable[] geoLocalizables = new GeoLocalizable[] {
-            new GeoLocalizable("Università di Camerino", "Università di Camerino",
+    private static final GeoLocalizable[] geoLocalizables = new POI[] {
+            new POI("Università di Camerino", "Università di Camerino",
                     new Position(43.13644468556232, 13.067156069846892),
                     municipalities[1]),
-            new GeoLocalizable("Via Madonna delle Carceri", "Via Madonna delle Carceri",
+            new POI("Via Madonna delle Carceri", "Via Madonna delle Carceri",
                     new Position(43.140, 13.069),
                     municipalities[1]),
-            new GeoLocalizable("Piazza della Libertà", "Piazza della Libertà",
+            new POI("Piazza della Libertà", "Piazza della Libertà",
                     new Position(43.29812657107886, 13.451878161920886),
                     municipalities[0])
     };

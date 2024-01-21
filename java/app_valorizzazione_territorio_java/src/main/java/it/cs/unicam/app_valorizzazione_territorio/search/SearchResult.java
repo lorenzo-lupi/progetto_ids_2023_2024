@@ -1,14 +1,17 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class represents a search result produced by a {@link SearchEngine}.
  *
- * @param <S> the type of the {@link Searchable} items in the result
+ * @param <S> the type of the {@link Searchable} and {@link Visualizable} items in the result
  */
-public class SearchResult<S extends Searchable> {
+public class SearchResult<S extends Visualizable> {
     private final List<S> results;
 
     public SearchResult() {
