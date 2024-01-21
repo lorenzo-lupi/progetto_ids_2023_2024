@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
 
 import java.util.Date;
+import java.util.function.Predicate;
 
 /**
  * This class represents a request for approval of an item.
@@ -11,14 +12,43 @@ import java.util.Date;
  * @param user the user who made the request.
  * @param date the date of the request.
  * @param approvableItem the item to be approved.
- * @param municipality the municipality to which the item belongs.
  */
-public record ApprovalRequest<I extends Approvable>(User user, Date date, I approvableItem, Municipality municipality) {
+public record ApprovalRequest <I extends Approvable> (User user,
+                                                      Date date,
+                                                      I approvableItem,
+                                                      Predicate<User> canApprove) implements Approvable {
 
     /**
-     * Sets the acceptance of the request.
+     * Returns true if the user can approve the item, false otherwise.
      */
-    public void setAcceptance(boolean acceptance) {
-        this.approvableItem.setApproved(acceptance);
+    @Override
+    public boolean isApproved() {
+        return approvableItem.isApproved();
+    }
+
+    /**
+     * Rejects the item.
+     */
+    @Override
+    public void reject() {
+        approvableItem.reject();
+    }
+
+    /**
+     * Approves the item.
+     */
+    @Override
+    public void approve() {
+        approvableItem.approve();
+    }
+
+    /**
+     * Retrieves the current approval status of the item.
+     *
+     * @return ApprovalStatusENUM representing the current approval status.
+     */
+    @Override
+    public ApprovalStatusENUM getApprovalStatus() {
+        return approvableItem.getApprovalStatus();
     }
 }

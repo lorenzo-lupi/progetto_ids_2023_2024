@@ -7,6 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * This class represents a compound point, that is a
@@ -16,11 +17,13 @@ public class CompoundPointBuilder {
     private CompoundPointType type;
     private String description;
     private Municipality municipality;
-    private Collection<GeoLocalizable> geoLocalizables;
+    private String title;
+    private Collection<PointOfInterest> pointOfInterests;
     private final List<File> images;
 
+    private User user;
     public CompoundPointBuilder() {
-       this.images = new LinkedList<>();
+        this.images = new LinkedList<>();
     }
 
     public CompoundPointBuilder setTypeExperience() {
@@ -33,6 +36,11 @@ public class CompoundPointBuilder {
         return this;
     }
 
+    public CompoundPointBuilder setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
     public CompoundPointBuilder setDescription(String description) {
         this.description = description;
         return this;
@@ -40,22 +48,22 @@ public class CompoundPointBuilder {
 
     /**
      * Add a GeoLocalizable to the CompoundPoint.
-     * @param geoLocalizable the GeoLocalizable to add
-
+     *
+     * @param pointOfInterest the GeoLocalizable to add
      * @throws TypeNotSetException if the type of the CompoundPoint has not been set
      */
-    public CompoundPointBuilder addGeoLocalizable(GeoLocalizable geoLocalizable) throws TypeNotSetException{
-        if(this.type == null)
+    public CompoundPointBuilder addGeoLocalizable(PointOfInterest pointOfInterest) throws TypeNotSetException {
+        if (this.type == null)
             throw new TypeNotSetException("Type must be set before adding a geo-localizable object");
 
-        if(this.geoLocalizables.isEmpty())
-            this.municipality = geoLocalizable.getMunicipality();
+        if (this.pointOfInterests.isEmpty())
+            this.municipality = pointOfInterest.getMunicipality();
 
-        if(!this.municipality.equals(geoLocalizable.getMunicipality())){
+        if (!this.municipality.equals(pointOfInterest.getMunicipality())) {
             throw new IllegalArgumentException("All geo-localizable objects must belong to the same municipality");
         }
 
-        this.geoLocalizables.add(geoLocalizable);
+        this.pointOfInterests.add(pointOfInterest);
         return this;
     }
 
@@ -70,6 +78,7 @@ public class CompoundPointBuilder {
 
     /**
      * Checks if the type of the CompoundPoint is EXPERIENCE.
+     *
      * @return true if the type of the CompoundPoint is EXPERIENCE, false otherwise
      */
     public boolean isExperience() {
@@ -81,7 +90,7 @@ public class CompoundPointBuilder {
     }
 
     public Collection getGeoLocalizables() {
-        return this.geoLocalizables;
+        return this.pointOfInterests;
     }
 
     /**
@@ -89,41 +98,61 @@ public class CompoundPointBuilder {
      *
      * @throws IllegalStateException if the type of the CompoundPoint is not ITINERARY
      */
-    public void invertGeoLocalizables(GeoLocalizable geoLocalizable1, GeoLocalizable geoLocalizable2) throws CompoundPointIsNotItineraryException {
-        if(this.type != CompoundPointType.ITINERARY)
+    public void invertGeoLocalizables(PointOfInterest pointOfInterest1, PointOfInterest pointOfInterest2) throws CompoundPointIsNotItineraryException {
+        if (this.type != CompoundPointType.ITINERARY)
             throw new CompoundPointIsNotItineraryException("Type must be set to ITINERARY before inverting geo-localizable objects");
-        if(geoLocalizable1 == null || geoLocalizable2 == null)
+        if (pointOfInterest1 == null || pointOfInterest2 == null)
             throw new IllegalArgumentException("GeoLocalizable 1 and 2 must not be null");
 
-        LinkedList<GeoLocalizable> geoLocalizables = (LinkedList<GeoLocalizable>)this.geoLocalizables;
-        int index1 = geoLocalizables.indexOf(geoLocalizable1);
-        if(index1 == -1)
+        LinkedList<PointOfInterest> pointOfInterests = (LinkedList<PointOfInterest>) this.pointOfInterests;
+        int index1 = pointOfInterests.indexOf(pointOfInterest1);
+        if (index1 == -1)
             throw new IllegalArgumentException("GeoLocalizable 1 must be in the list of geo-localizable objects");
-        int index2 = geoLocalizables.indexOf(geoLocalizable2);
-        if(index2 == -1)
+        int index2 = pointOfInterests.indexOf(pointOfInterest2);
+        if (index2 == -1)
             throw new IllegalArgumentException("GeoLocalizable 2 must be in the list of geo-localizable objects");
 
-        Collections.swap(geoLocalizables, index1, index2);
+        Collections.swap(pointOfInterests, index1, index2);
     }
 
-    public void eliminateGeoLocalizable(GeoLocalizable geoLocalizable) {
-        if(geoLocalizable == null)
+    public void eliminateGeoLocalizable(PointOfInterest pointOfInterest) {
+        if (pointOfInterest == null)
             throw new IllegalArgumentException("GeoLocalizable must not be null");
-        if(!this.geoLocalizables.remove(geoLocalizable))
+        if (!this.pointOfInterests.remove(pointOfInterest))
             throw new IllegalArgumentException("GeoLocalizable must be in the list of geo-localizable objects");
     }
 
-
-    public CompoundPoint build() throws TypeNotSetException, DescriptionNotSetException, NotEnoughGeoLocalizablesException {
-        if(this.type == null)
-            throw new TypeNotSetException("Type must be set before building the CompoundPoint");
-        if(this.description == null)
-            throw new DescriptionNotSetException("Description must be set before building the CompoundPoint");
-        if(this.geoLocalizables.size() < 2)
-            throw new NotEnoughGeoLocalizablesException("At least two geo-localizable objects must be added before building the CompoundPoint");
-
-        return new CompoundPoint(this.type, this.description, this.geoLocalizables, this.images, this.municipality);
+    public void setUser(User user) {
+        this.user = user;
     }
 
+    //TODO: check user permissions
+    public CompoundPoint build() throws TypeNotSetException, DescriptionNotSetException, NotEnoughGeoLocalizablesException {
+        if (this.type == null)
+            throw new TypeNotSetException("Type must be set before building the CompoundPoint");
+        if (this.description == null)
+            throw new DescriptionNotSetException("Description must be set before building the CompoundPoint");
+        if (this.pointOfInterests.size() < 2)
+            throw new NotEnoughGeoLocalizablesException("At least two geo-localizable objects must be added before building the CompoundPoint");
+
+        CompoundPoint compoundPoint = new CompoundPoint(this.pointOfInterests.iterator().next(),
+                this.title,
+                this.description,
+                this.type,
+                ApprovalStatusENUM.PENDING,
+                this.pointOfInterests);
+        this.images.forEach(compoundPoint::addImage);
+
+        return compoundPoint;
+    }
+
+    private ApprovalStatusENUM appropriateApprovalStatus(User user) {
+
+        if(Role.isContributorForMunicipality(this.municipality)
+                .or(Role.isCuratorForMunicipality(this.municipality)).test(user))
+            return ApprovalStatusENUM.APPROVED;
+        else
+            return ApprovalStatusENUM.PENDING;
+    }
 
 }

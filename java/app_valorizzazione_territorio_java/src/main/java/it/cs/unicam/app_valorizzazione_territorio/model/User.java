@@ -50,8 +50,8 @@ public class User implements Identifiable {
         this.roles.add(role);
     }
 
-    public void addRole(Municipality municipality, Authorization authorization) {
-        this.roles.add(new Role(municipality, authorization));
+    public void addRole(Municipality municipality, RoleTypeEnum roleTypeEnum) {
+        this.roles.add(new Role(municipality, roleTypeEnum));
     }
 
     /**
@@ -60,10 +60,10 @@ public class User implements Identifiable {
      * @param municipality the municipality
      * @return the authorizations of the user in the given municipality
      */
-    public Set<Authorization> getAuthorizations(Municipality municipality) {
+    public Set<RoleTypeEnum> getAuthorizations(Municipality municipality) {
         return this.roles.stream()
                 .filter(role -> role.municipality().equals(municipality))
-                .map(Role::authorization)
+                .map(Role::roleTypeEnum)
                 .collect(Collectors.toSet());
     }
 

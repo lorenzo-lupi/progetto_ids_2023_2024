@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 
 
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocalizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
@@ -43,7 +43,7 @@ public class MapProvider {
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
     public static Map getMap(Municipality municipality, CoordinatesBox box) throws IOException {
-        SearchEngine<GeoLocalizable> engine = new SearchEngine<>(municipality.getGeoLocalizables());
+        SearchEngine<PointOfInterest> engine = new SearchEngine<>(municipality.getGeoLocalizables());
         engine.addCriterion(Parameter.POSITION, SearchCriterion.INCLUDED_IN_BOX, box);
         return new MapBuilder()
                 .buildOsmData(box)
