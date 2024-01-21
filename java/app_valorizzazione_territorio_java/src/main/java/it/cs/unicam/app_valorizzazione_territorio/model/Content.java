@@ -13,9 +13,9 @@ import java.util.Map;
  * It can be in the two states Unapproved (pending) and Approved (visible).
  */
 
-public class Content implements Approvable, Searchable {
+public class Content implements Approveable, Searchable {
     private String description;
-    private final GeoLocalizable geoLocalizable;
+    private final PointOfInterest pointOfInterest;
     private final List<File> files;
     private boolean isApproved;
 
@@ -25,9 +25,9 @@ public class Content implements Approvable, Searchable {
      * @param description the textual description of the content
      * @param files the multimedia files of the content
      */
-    public Content(String description, GeoLocalizable geoLocalizable, List<File> files) {
+    public Content(String description, PointOfInterest pointOfInterest, List<File> files) {
         this.description = description;
-        this.geoLocalizable = geoLocalizable;
+        this.pointOfInterest = pointOfInterest;
         this.files = files;
         this.isApproved = false;
     }

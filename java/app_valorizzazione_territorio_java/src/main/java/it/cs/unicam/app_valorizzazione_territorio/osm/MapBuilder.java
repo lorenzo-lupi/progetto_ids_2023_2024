@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocalizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchResult;
 
 import java.io.IOException;
@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class MapBuilder {
     private String osmData;
-    private List<GeoLocalizable> geoLocalizableList;
+    private List<PointOfInterest> pointOfInterestList;
 
     public MapBuilder() {
         this.osmData = "";
-        this.geoLocalizableList = List.of();
+        this.pointOfInterestList = List.of();
     }
 
     /**
@@ -44,11 +44,11 @@ public class MapBuilder {
     /**
      * Builds the geo-localizable list of the map with the given data.
      *
-     * @param  geoLocalizableList the geo-localizable list
+     * @param  pointOfInterestList the geo-localizable list
      * @return the builder
      */
-    public MapBuilder buildGeoLocalizableList(List<GeoLocalizable> geoLocalizableList) {
-        this.geoLocalizableList = geoLocalizableList;
+    public MapBuilder buildGeoLocalizableList(List<PointOfInterest> pointOfInterestList) {
+        this.pointOfInterestList = pointOfInterestList;
         return this;
     }
 
@@ -58,29 +58,29 @@ public class MapBuilder {
      * @param geoLocalizableResult the search result
      * @return the builder
      */
-    public MapBuilder buildGeoLocalizableList(SearchResult<GeoLocalizable> geoLocalizableResult) {
-        this.geoLocalizableList = geoLocalizableResult.getResults();
+    public MapBuilder buildGeoLocalizableList(SearchResult<PointOfInterest> geoLocalizableResult) {
+        this.pointOfInterestList = geoLocalizableResult.getResults();
         return this;
     }
 
     /**
      * Adds a geo-localizable point to the map to be built.
      *
-     * @param geoLocalizable the geo-localizable point to added
+     * @param pointOfInterest the geo-localizable point to added
      * @return true if the geo-localizable point has been added, false otherwise
      */
-    public boolean addGeoLocalizable(GeoLocalizable geoLocalizable) {
-        return this.geoLocalizableList.add(geoLocalizable);
+    public boolean addGeoLocalizable(PointOfInterest pointOfInterest) {
+        return this.pointOfInterestList.add(pointOfInterest);
     }
 
     /**
      * Removes a geo-localizable point from the map to be built.
      *
-     * @param geoLocalizable the geo-localizable point to removed
+     * @param pointOfInterest the geo-localizable point to removed
      * @return true if the geo-localizable point has been removed, false otherwise
      */
-    public boolean removeGeoLocalizable(GeoLocalizable geoLocalizable) {
-        return this.geoLocalizableList.remove(geoLocalizable);
+    public boolean removeGeoLocalizable(PointOfInterest pointOfInterest) {
+        return this.pointOfInterestList.remove(pointOfInterest);
     }
 
     /**
@@ -89,7 +89,7 @@ public class MapBuilder {
      * @return the map built
      */
     public Map getResult() {
-        return new Map(this.osmData, this.geoLocalizableList.stream().toList());
+        return new Map(this.osmData, this.pointOfInterestList.stream().toList());
     }
 
     /**
@@ -99,7 +99,7 @@ public class MapBuilder {
      */
     public MapBuilder reset() {
         this.osmData = "";
-        this.geoLocalizableList = List.of();
+        this.pointOfInterestList = List.of();
         return this;
     }
 }

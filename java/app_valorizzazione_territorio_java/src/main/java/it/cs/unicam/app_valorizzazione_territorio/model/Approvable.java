@@ -10,8 +10,19 @@ public interface Approvable {
     boolean isApproved();
 
     /**
-     * Sets the object as approved or not.
-     * @param approved
+     * Rejects the object.
      */
-    void setApproved(boolean approved);
+    void reject();
+
+    /**
+     * Approves the object.
+     */
+    void approve();
+
+    /**
+     * Retrieves the current approval status of the object.
+     *
+     * @return ApprovalStatusENUM representing the current approval status.
+     */
+    ApprovalStatusENUM getApprovalStatus();
 }

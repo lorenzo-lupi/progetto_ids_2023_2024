@@ -1,12 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.Searchable;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a compound point, i.e. a point composed by multiple geo-localizable objects.
@@ -17,91 +13,64 @@ import java.util.Map;
  * connected to each other. An ITINERARY is a compound point composed by multiple geo-localizable objects
  * that are connected to each other.
  */
-public class CompoundPoint implements Searchable, Approvable{
+public class CompoundPoint extends GeoLocatable {
     private final CompoundPointType type;
-    private String description;
-    private final Collection<GeoLocalizable> geoLocalizables;
-    private final List<File> images;
-    private boolean approved;
-
-    private final Municipality municipality;
-    private GeoLocalizable representative;
+    private final Collection<PointOfInterest> pointOfInterests;
+    private final PointOfInterest representative;
 
     /**
      * Constructor for a compound point.
-     * @param type the type of the compound point
-     * @param description the textual description of the compound point
-     * @param geoLocalizables the geo-localizable objects that compose the compound point
-     * @param images the representative multimedia content of the compound point
+     *
+     * @param type             the type of the compound point
+     * @param description      the textual description of the compound point
+     * @param pointOfInterests the geo-localizable objects that compose the compound point
      * @throws IllegalArgumentException if type, description, geoLocalizables or images are null
      */
-    public CompoundPoint(CompoundPointType type,
+    public CompoundPoint(PointOfInterest representative,
+                         String title,
                          String description,
-                         Collection<GeoLocalizable> geoLocalizables,
-                         List<File> images,
-                         Municipality municipality) {
+                         CompoundPointType type,
+                         ApprovalStatusENUM approvalStatus,
+                         Collection<PointOfInterest> pointOfInterests) {
 
-        if(type == null || description == null || geoLocalizables == null || images == null || municipality == null)
-            throw new IllegalArgumentException("Type, description, geoLocalizables and images must not be null");
-        if(geoLocalizables.size() < 2)
-            throw new IllegalArgumentException("A compound point must be composed by at least two geo-localizable objects");
-
+        super(representative.getCoordinates(), title, description, approvalStatus);
+        checkArguments(type, pointOfInterests, representative);
         this.type = type;
-        this.description = description;
-        this.geoLocalizables = geoLocalizables;
-        this.images = images;
-        this.municipality = municipality;
-        this.approved = false;
-        setRepresentative(geoLocalizables);
+        this.pointOfInterests = pointOfInterests;
+        this.representative = representative;
     }
 
-    private void setRepresentative(Collection<GeoLocalizable> geoLocalizables) {
-        geoLocalizables.stream()
-                .findAny()
-                .ifPresentOrElse((geoLocalizable ->  this.representative = geoLocalizable),
-                (() -> {throw new IllegalArgumentException("GeoLocalizables must not be empty");}));
+    private void checkArguments(CompoundPointType type,
+                                Collection<PointOfInterest> pointOfInterests,
+                                PointOfInterest representative) {
 
+        if (type == null)
+            throw new IllegalArgumentException("type cannot be null");
+        if (pointOfInterests == null)
+            throw new IllegalArgumentException("pointOfInterests cannot be null");
+        if (representative == null)
+            throw new IllegalArgumentException("representative cannot be null");
+        if (pointOfInterests.size() < 2)
+            throw new IllegalArgumentException("pointOfInterests must contain at least 2 elements");
+        if (!pointOfInterests.contains(representative))
+            throw new IllegalArgumentException("pointOfInterests doesn't contain the representative point");
     }
+
     public CompoundPointType getType() {
         return type;
     }
 
-    public String getDescription() {
-        return description;
+
+    public List<PointOfInterest> getGeoLocalizablesList() {
+        return pointOfInterests.stream().toList();
     }
 
-    public List<GeoLocalizable> getGeoLocalizablesList() {
-        return geoLocalizables.stream().toList();
-    }
-
-    public void setDescription(String description) {
-        if(description != null)
-            this.description = description;
-    }
-
-    public void addFile(File file) {
-        if(file != null)
-            this.images.add(file);
-    }
-
-    @Override
-    public boolean isApproved() {
-        return this.approved;
-    }
-
-    @Override
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
-        return Map.of(
-                Parameter.COMPUND_TYPE, this.type,
-                Parameter.DESCRIPTION, this.description,
-                Parameter.MUNICIPALITY, this.municipality,
-                Parameter.REPRESENTATIVE, this.representative,
-                Parameter.POSITION, this.geoLocalizables
-        );
+        HashMap<Parameter, Object> parameters
+                = new HashMap<>(super.getParametersMapping());
+        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
+        return parameters;
     }
 }

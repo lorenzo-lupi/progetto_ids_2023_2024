@@ -14,7 +14,7 @@ import java.util.Map;
  * It includes fundamental details such as a name,
  * a textual description and a representative multimedia content.
  */
-public class GeoLocalizable implements Approvable, Searchable {
+public class PointOfInterest implements Approveable, Searchable {
     private String name;
     private String description;
     private final Position coordinates;
@@ -29,7 +29,7 @@ public class GeoLocalizable implements Approvable, Searchable {
      * @param coordinates the geographical position of the geo-localizable object
      * @param municipality the municipality of the geo-localizable object
      */
-    public GeoLocalizable (Position coordinates, Municipality municipality) {
+    public PointOfInterest(Position coordinates, Municipality municipality) {
         this(null, null, coordinates, municipality, new ArrayList<>(), new ArrayList<>());
     }
 
@@ -41,7 +41,7 @@ public class GeoLocalizable implements Approvable, Searchable {
      * @param coordinates the geographical coordinates of the geo-localizable object
      * @param municipality the municipality of the geo-localizable object
      */
-    public GeoLocalizable (String name, String description, Position coordinates, Municipality municipality) {
+    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality) {
         this(name, description, coordinates, municipality, new ArrayList<>(), new ArrayList<>());
     }
 
@@ -53,7 +53,7 @@ public class GeoLocalizable implements Approvable, Searchable {
      * @param images the representative multimedia content of the geo-localizable object
      * @param contents the contents associated to the geo-localizable object
      */
-    public GeoLocalizable (Position coordinates, Municipality municipality, List<File> images, List<Content> contents) {
+    public PointOfInterest(Position coordinates, Municipality municipality, List<File> images, List<Content> contents) {
         this(null, null, coordinates, municipality, images, contents);
     }
 
@@ -68,7 +68,7 @@ public class GeoLocalizable implements Approvable, Searchable {
      * @param contents the contents associated to the geo-localizable object
      * @throws IllegalArgumentException if coordinates, description or images are null
      */
-    public GeoLocalizable(String name, String description, Position coordinates, Municipality municipality, List<File> images, List<Content> contents) {
+    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality, List<File> images, List<Content> contents) {
         if(coordinates == null || municipality == null || images == null || contents == null)
             throw new IllegalArgumentException("Coordinates, municipality, images and contents must not be null");
         this.name = name;

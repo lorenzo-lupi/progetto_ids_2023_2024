@@ -18,7 +18,7 @@ public class Municipality implements Searchable {
     private final Position position;
     private final CoordinatesBox coordinatesBox;
     private final List<File> files;
-    private final List<GeoLocalizable> geoLocalizables;
+    private final List<PointOfInterest> pointOfInterests;
 
     /**
      * Constructor for a municipality.
@@ -39,18 +39,18 @@ public class Municipality implements Searchable {
      * @param description description of the municipality
      * @param position geographical coordinates of the municipality
      * @param files representative multimedia content of the municipality
-     * @param geoLocalizables geo-localizable points of the municipality
+     * @param pointOfInterests geo-localizable points of the municipality
      * @throws IllegalArgumentException if position, coordinatesBox, files or geoLocalizables are null
      */
-    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files, List<GeoLocalizable> geoLocalizables) {
-        if (position == null || coordinatesBox == null || files == null || geoLocalizables == null)
+    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files, List<PointOfInterest> pointOfInterests) {
+        if (position == null || coordinatesBox == null || files == null || pointOfInterests == null)
             throw new IllegalArgumentException("The parameters cannot be null.");
         this.name = name;
         this.description = description;
         this.position = position;
         this.coordinatesBox = coordinatesBox;
         this.files = files;
-        this.geoLocalizables = geoLocalizables;
+        this.pointOfInterests = pointOfInterests;
     }
 
     public String getName() {
@@ -73,8 +73,8 @@ public class Municipality implements Searchable {
         return files;
     }
 
-    public List<GeoLocalizable> getGeoLocalizables() {
-        return geoLocalizables;
+    public List<PointOfInterest> getGeoLocalizables() {
+        return pointOfInterests;
     }
 
     public boolean addFile(File file) {
@@ -85,12 +85,12 @@ public class Municipality implements Searchable {
         return this.files.remove(file);
     }
 
-    public boolean addGeoLocalizable(GeoLocalizable geoLocalizable) {
-        return this.geoLocalizables.add(geoLocalizable);
+    public boolean addGeoLocalizable(PointOfInterest pointOfInterest) {
+        return this.pointOfInterests.add(pointOfInterest);
     }
 
-    public boolean removeGeoLocalizable(GeoLocalizable geoLocalizable) {
-        return this.geoLocalizables.remove(geoLocalizable);
+    public boolean removeGeoLocalizable(PointOfInterest pointOfInterest) {
+        return this.pointOfInterests.remove(pointOfInterest);
     }
 
     /**
@@ -103,11 +103,11 @@ public class Municipality implements Searchable {
      */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public CoordinatesBox getDynamicCoordinatesBox() {
-        if (geoLocalizables.isEmpty()) return getCoordinatesBox();
-        double minLatitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLatitude).min(Double::compare).get();
-        double maxLatitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLatitude).max(Double::compare).get();
-        double minLongitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLongitude).min(Double::compare).get();
-        double maxLongitude = geoLocalizables.stream().map(GeoLocalizable::getCoordinates).map(Position::getLongitude).max(Double::compare).get();
+        if (pointOfInterests.isEmpty()) return getCoordinatesBox();
+        double minLatitude = pointOfInterests.stream().map(PointOfInterest::getCoordinates).map(Position::getLatitude).min(Double::compare).get();
+        double maxLatitude = pointOfInterests.stream().map(PointOfInterest::getCoordinates).map(Position::getLatitude).max(Double::compare).get();
+        double minLongitude = pointOfInterests.stream().map(PointOfInterest::getCoordinates).map(Position::getLongitude).min(Double::compare).get();
+        double maxLongitude = pointOfInterests.stream().map(PointOfInterest::getCoordinates).map(Position::getLongitude).max(Double::compare).get();
         return new CoordinatesBox(new Position(minLatitude, minLongitude), new Position(maxLatitude, maxLongitude));
     }
 
