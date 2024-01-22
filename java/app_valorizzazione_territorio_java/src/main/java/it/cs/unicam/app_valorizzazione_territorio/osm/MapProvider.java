@@ -1,10 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
@@ -16,11 +16,22 @@ import java.io.IOException;
  * the given municipalities.
  */
 public class MapProvider {
-    //TODO: overload methods with a municipalityID parameter instead of a municipality parameter
     /**
      * Returns a map associated with the given municipality.
      * The returned map has the size of the default {@link CoordinatesBox} of the municipality,
-     * and contains all its geo-localizable points.
+     * and contains all its geo-locatable points.
+     *
+     * @param municipalityID the municipality ID
+     * @return the map
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
+     */
+    public static Map<GeoLocatable> getMap(long municipalityID) throws IOException {
+        return getMap(MunicipalityRepository.getInstance().getItemByID(municipalityID));
+    }
+    /**
+     * Returns a map associated with the given municipality.
+     * The returned map has the size of the default {@link CoordinatesBox} of the municipality,
+     * and contains all its geo-locatable points.
      *
      * @param municipality the municipality
      * @return the map
@@ -55,13 +66,26 @@ public class MapProvider {
     /**
      * Returns an empty map associated with the given municipality.
      * The returned map has the size of the default {@link CoordinatesBox} of the municipality, but it
-     * contains no geo-localizable points.
+     * contains no geo-locatable points.
+     *
+     * @param municipalityID the municipality ID
+     * @return the map
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
+     */
+    public static Map<?> getEmptyMap(long municipalityID) throws IOException {
+        return getEmptyMap(MunicipalityRepository.getInstance().getItemByID(municipalityID));
+    }
+
+    /**
+     * Returns an empty map associated with the given municipality.
+     * The returned map has the size of the default {@link CoordinatesBox} of the municipality, but it
+     * contains no geo-locatable points.
      *
      * @param municipality the municipality
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static Map<Positionable> getEmptyMap(Municipality municipality) throws IOException {
+    public static Map<?> getEmptyMap(Municipality municipality) throws IOException {
         return new MapBuilder<>()
                 .buildOsmData(municipality.getCoordinatesBox())
                 .getResult();
@@ -75,9 +99,23 @@ public class MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static Map<Positionable> getEmptyMap(CoordinatesBox box) throws IOException {
+    public static Map<?> getEmptyMap(CoordinatesBox box) throws IOException {
         return new MapBuilder<>()
                 .buildOsmData(box)
+                .getResult();
+    }
+
+    /**
+     * Returns a map of the Italian territory containing all the municipalities
+     * registered in the system.
+     *
+     * @return a map of the Italian territory
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
+     */
+    public static Map<Municipality> getMunicipalityMap() throws IOException {
+        return new MapBuilder<Municipality>()
+                .buildOsmData(CoordinatesBox.ITALY)
+                .buildPointsList(MunicipalityRepository.getInstance().getItemStream().toList())
                 .getResult();
     }
 }

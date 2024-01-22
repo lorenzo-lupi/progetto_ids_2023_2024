@@ -1,9 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.search.SearchResult;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 /**
  * Builder for a map.
  */
-public class MapBuilder<P extends Positionable> {
+public class MapBuilder<P extends Positionable & Identifiable> {
     private String osmData;
     private List<P> pointsList;
 
