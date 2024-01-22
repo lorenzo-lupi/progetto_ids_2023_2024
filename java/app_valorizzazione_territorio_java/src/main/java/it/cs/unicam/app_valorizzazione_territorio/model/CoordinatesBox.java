@@ -5,6 +5,11 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
  * The internal representation is a pair of two geographical positions, the north-west and the south-east corners.
  */
 public class CoordinatesBox {
+    public static final CoordinatesBox ITALY = new CoordinatesBox(
+            new Position(47.092, 6.626),
+            new Position(35.492, 18.520)
+    );
+
     private final Position northWest;
     private final Position southEast;
 
