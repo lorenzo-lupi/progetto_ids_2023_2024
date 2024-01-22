@@ -1,7 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContestStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
@@ -57,6 +55,11 @@ public abstract class ContestDecorator implements Contest{
     @Override
     public ContestStatusEnum getStatus() {
         return this.contest.getStatus();
+    }
+
+    @Override
+    public ProposalRequests getProposalRequests() {
+        return this.contest.getProposalRequests();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContestStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
@@ -53,6 +52,11 @@ public interface Contest extends Identifiable, Searchable, Visualizable {
     GeoLocatable getGeoLocation() throws UnsupportedOperationException;
 
     String getName();
+
+    /**
+     * Returns the animator of the contest.
+     * @return the animator of the contest.
+     */
     User getAnimator();
     String getTopic();
     String getRules();
@@ -60,6 +64,12 @@ public interface Contest extends Identifiable, Searchable, Visualizable {
     Date getVotingStartDate();
     Date getEndDate();
     ContestStatusEnum getStatus();
+
+    /**
+     * Returns the proposal requests of the contest.
+     * @return the proposal requests of the contest.
+     */
+    ProposalRequests getProposalRequests();
 
 
     default ContestSOF getSynthesizedFormat() {

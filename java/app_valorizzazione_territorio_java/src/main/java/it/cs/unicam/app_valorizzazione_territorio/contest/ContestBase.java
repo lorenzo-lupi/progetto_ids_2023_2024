@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContestStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -17,6 +16,7 @@ public class ContestBase implements Contest {
     private Date startDate;
     private Date votingStartDate;
     private Date endDate;
+    private ProposalRequests proposalRequests;
     private final long ID = MunicipalityRepository.getInstance().getNextContestID();
 
     public ContestBase(String name,
@@ -81,7 +81,7 @@ public class ContestBase implements Contest {
     }
 
     public void setStartDate(Date startDate) {
-        if (!checkDates(startDate, this.votingStartDate, this.endDate))
+        if (!(new Date()).before(startDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
         this.startDate = startDate;
     }
@@ -91,7 +91,7 @@ public class ContestBase implements Contest {
     }
 
     public void setVotingStartDate(Date votingStartDate) {
-        if (!checkDates(this.startDate, votingStartDate, this.endDate))
+        if (!(this.startDate.before(votingStartDate) && (votingStartDate.before(endDate))))
             throw new IllegalArgumentException("Dates must be in the correct order");
         this.votingStartDate = votingStartDate;
     }
@@ -101,7 +101,7 @@ public class ContestBase implements Contest {
     }
 
     public void setEndDate(Date endDate) {
-        if (!checkDates(this.startDate, this.votingStartDate, endDate))
+        if (!this.votingStartDate.before(endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
         this.endDate = endDate;
     }
@@ -115,6 +115,11 @@ public class ContestBase implements Contest {
             return ContestStatusEnum.VOTING;
         else
             return ContestStatusEnum.CLOSED;
+    }
+
+    @Override
+    public ProposalRequests getProposalRequests() {
+        return this.proposalRequests;
     }
 
     private boolean checkDates(Date startDate, Date votingStartDate, Date endDate) {

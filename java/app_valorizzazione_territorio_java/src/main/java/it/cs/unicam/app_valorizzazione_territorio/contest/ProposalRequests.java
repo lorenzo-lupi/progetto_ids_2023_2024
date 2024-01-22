@@ -1,4 +1,7 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.contest;
+
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
