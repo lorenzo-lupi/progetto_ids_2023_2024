@@ -1,4 +1,7 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.builders;
+
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 
 import java.io.File;
 import java.util.ArrayList;

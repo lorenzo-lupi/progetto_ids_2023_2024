@@ -54,4 +54,26 @@ public class Position {
                 ", longitude=" + longitude + '}';
     }
 
+    /**
+     * Returns the distance between two positions.
+     *
+     * @param other the other position
+     * @return the distance between two positions
+     */
+    public Position sum(Position other){
+        return new Position(this.latitude + other.getLatitude(),
+                this.longitude + other.getLongitude());
+    }
+
+    /**
+     * Returns the distance between two positions.
+     *
+     * @param scalar the scalar to apply
+     * @return the distance between two positions
+     */
+    public Position divide(int scalar){
+        return new Position(this.latitude / scalar,
+                this.longitude / scalar);
+    }
+
 }

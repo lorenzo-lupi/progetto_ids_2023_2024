@@ -6,7 +6,6 @@ import java.util.List;
 
 public class PointOfInterest extends GeoLocatable {
     private final List<Content> contents;
-    private final Position position;
 
     /**
      * Constructor for a PointOfInterest.
@@ -41,9 +40,12 @@ public class PointOfInterest extends GeoLocatable {
      * @param images the representative multimedia content of the PointOfInterest
      * @param contents the contents associated to the PointOfInterest
      */
-    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality, List<File> images, List<Content> contents) {
-        super(name, description, municipality, images);
-        this.position = coordinates;
+    public PointOfInterest(String name, String description,
+                                            Position coordinates,
+                                            Municipality municipality,
+                                            List<File> images,
+                                            List<Content> contents) {
+        super(name, description, municipality, coordinates, images);
         this.contents = contents;
     }
 
@@ -65,11 +67,6 @@ public class PointOfInterest extends GeoLocatable {
      */
     public boolean removeContent(Content content) {
         return this.contents.remove(content);
-    }
-
-    @Override
-    public Position getPosition() {
-        return this.position;
     }
 
 }

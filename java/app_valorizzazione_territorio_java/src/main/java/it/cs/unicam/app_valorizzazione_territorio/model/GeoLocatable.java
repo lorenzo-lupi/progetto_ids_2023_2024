@@ -18,31 +18,12 @@ import java.util.Map;
 public abstract class GeoLocatable implements Approvable, Searchable, Visualizable, Identifiable, Positionable {
     private String name;
     private String description;
+    private Position position;
     private final Municipality municipality;
     private final List<File> images;
     private ApprovalStatusENUM approvalStatus;
     private final long ID = MunicipalityRepository.getInstance().getNextGeoLocalizableID();
 
-    /**
-     * Constructor for a geo-localizable object.
-     *
-     * @param name the name of the geo-localizable object
-     * @param municipality the municipality of the geo-localizable object
-     */
-    public GeoLocatable(String name, Municipality municipality) {
-        this(name, null, municipality, new ArrayList<>());
-    }
-
-    /**
-     * Constructor for a geo-localizable object.
-     *
-     * @param name the name of the geo-localizable object
-     * @param description the textual description of the geo-localizable object
-     * @param municipality the municipality of the geo-localizable object
-     */
-    public GeoLocatable(String name, String description, Municipality municipality) {
-        this(name, description, municipality, new ArrayList<>());
-    }
 
     /**
      * Constructor for a geo-localizable object.
@@ -53,16 +34,23 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
      * @param images the representative multimedia content of the geo-localizable object
      * @throws IllegalArgumentException if coordinates, description or images are null
      */
-    public GeoLocatable(String name, String description, Municipality municipality, List<File> images) {
+    public GeoLocatable(String name,
+                        String description,
+                        Municipality municipality,
+                        Position position,
+                        List<File> images){
         if(name == null || description == null)
             throw new IllegalArgumentException("title and description cannot be null");
         if(municipality == null || images == null)
             throw new IllegalArgumentException("Municipality and images must not be null");
+        if(approvalStatus == null)
+            throw new IllegalArgumentException("ApprovalStatus must not be null");
 
         this.name = name;
         this.description = description;
         this.municipality = municipality;
         this.images = images;
+        this.position = position;
         this.approvalStatus = ApprovalStatusENUM.PENDING;
     }
 
@@ -72,6 +60,10 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
 
     public Municipality getMunicipality() {
         return municipality;
+    }
+
+    public Position getPosition(){
+        return position;
     }
 
     public List<File> getImages() {

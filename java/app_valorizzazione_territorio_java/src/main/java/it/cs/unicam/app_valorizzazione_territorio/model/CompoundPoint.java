@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -17,8 +18,6 @@ import java.util.*;
 public class CompoundPoint extends GeoLocatable {
     private final CompoundPointType type;
     private final Collection<PointOfInterest> pointsOfInterest;
-    private final PointOfInterest representative;
-
     /**
      * Constructor for a compound point.
      *
@@ -27,34 +26,31 @@ public class CompoundPoint extends GeoLocatable {
      * @param pointsOfInterest the points of interest that compose the compound point
      * @throws IllegalArgumentException if type, description, geoLocatables or images are null
      */
-    public CompoundPoint(PointOfInterest representative,
-                         String title,
+    public CompoundPoint(String title,
                          String description,
+                         Municipality municipality,
+                         Position position,
                          CompoundPointType type,
-                         ApprovalStatusENUM approvalStatus,
-                         Collection<PointOfInterest> pointsOfInterest) {
+                         Collection<PointOfInterest> pointsOfInterest,
+                         List<File> images) {
 
-        super(title, description, representative.getMunicipality());
-        checkArguments(type, pointsOfInterest, representative);
+        super(title, description, municipality, position, images);
+        checkArguments(type, pointsOfInterest);
+
         this.type = type;
         this.pointsOfInterest = pointsOfInterest;
-        this.representative = representative;
+
     }
 
     private void checkArguments(CompoundPointType type,
-                                Collection<PointOfInterest> pointOfInterests,
-                                PointOfInterest representative) {
+                                Collection<PointOfInterest> pointOfInterests) {
 
         if (type == null)
             throw new IllegalArgumentException("type cannot be null");
         if (pointOfInterests == null)
             throw new IllegalArgumentException("pointOfInterests cannot be null");
-        if (representative == null)
-            throw new IllegalArgumentException("representative cannot be null");
         if (pointOfInterests.size() < 2)
             throw new IllegalArgumentException("pointOfInterests must contain at least 2 elements");
-        if (!pointOfInterests.contains(representative))
-            throw new IllegalArgumentException("pointOfInterests doesn't contain the representative point");
     }
 
     public CompoundPointType getType() {
@@ -66,10 +62,6 @@ public class CompoundPoint extends GeoLocatable {
         return pointsOfInterest.stream().toList();
     }
 
-    @Override
-    public Position getPosition() {
-        return this.representative.getPosition();
-    }
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {

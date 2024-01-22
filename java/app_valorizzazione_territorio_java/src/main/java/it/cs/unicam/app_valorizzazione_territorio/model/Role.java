@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
+
 import java.util.function.Predicate;
 
 /**
@@ -18,5 +20,6 @@ public record Role(Municipality municipality, RoleTypeEnum roleTypeEnum) {
                 .anyMatch(role -> role.roleTypeEnum() == RoleTypeEnum.CONTRIBUTOR
                         && role.municipality().equals(municipality));
     }
+
 
 }
