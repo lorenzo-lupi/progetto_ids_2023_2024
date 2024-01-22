@@ -43,4 +43,5 @@ public interface Contest extends Identifiable, Approvable, Searchable, Visualiza
      * @throws UnsupportedOperationException if the contest has no geo-location.
      */
     GeoLocatable getGeoLocation() throws UnsupportedOperationException;
+    User getAnimator();
 }

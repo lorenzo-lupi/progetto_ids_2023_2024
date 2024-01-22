@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Contest;
+
 import java.util.Date;
 
 public class ContestApprovalRequest extends ApprovalRequest<Content>{
