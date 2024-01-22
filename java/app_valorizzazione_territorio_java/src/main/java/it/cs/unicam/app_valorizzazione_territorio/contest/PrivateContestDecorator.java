@@ -1,8 +1,6 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.contest.ContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.HashMap;
@@ -10,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PrivateContestDecorator extends ContestDecorator {
-    private List<User> participants;
+    private final List<User> participants;
 
     public PrivateContestDecorator(Contest contest,
                                    List<User> participants) {
@@ -28,11 +26,6 @@ public class PrivateContestDecorator extends ContestDecorator {
     @Override
     public List<User> getParticipants() throws UnsupportedOperationException {
         return this.participants;
-    }
-
-    @Override
-    public GeoLocatable getGeoLocation() throws UnsupportedOperationException {
-        return null;
     }
 
     @Override
