@@ -15,7 +15,7 @@ import java.util.*;
  * that are connected to each other.
  */
 public class CompoundPoint extends GeoLocatable {
-    private final CompoundPointType type;
+    private final CompoundPointTypeEnum type;
     private final Collection<PointOfInterest> pointsOfInterest;
     /**
      * Constructor for a compound point.
@@ -29,7 +29,7 @@ public class CompoundPoint extends GeoLocatable {
                          String description,
                          Municipality municipality,
                          Position position,
-                         CompoundPointType type,
+                         CompoundPointTypeEnum type,
                          Collection<PointOfInterest> pointsOfInterest,
                          List<File> images) {
 
@@ -41,7 +41,7 @@ public class CompoundPoint extends GeoLocatable {
 
     }
 
-    private void checkArguments(CompoundPointType type,
+    private void checkArguments(CompoundPointTypeEnum type,
                                 Collection<PointOfInterest> pointOfInterests) {
 
         if (type == null)
@@ -52,7 +52,7 @@ public class CompoundPoint extends GeoLocatable {
             throw new IllegalArgumentException("pointOfInterests must contain at least 2 elements");
     }
 
-    public CompoundPointType getType() {
+    public CompoundPointTypeEnum getType() {
         return type;
     }
 
@@ -64,7 +64,7 @@ public class CompoundPoint extends GeoLocatable {
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
-        HashMap<Parameter, Object> parameters
+        Map<Parameter, Object> parameters
                 = new HashMap<>(super.getParametersMapping());
         parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
         return parameters;

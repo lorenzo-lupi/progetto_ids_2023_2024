@@ -42,8 +42,6 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
             throw new IllegalArgumentException("title and description cannot be null");
         if(municipality == null || images == null)
             throw new IllegalArgumentException("Municipality and images must not be null");
-        if(approvalStatus == null)
-            throw new IllegalArgumentException("ApprovalStatus must not be null");
 
         this.name = name;
         this.description = description;
