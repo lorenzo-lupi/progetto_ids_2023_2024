@@ -5,14 +5,12 @@ import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
-import java.io.File;
-import java.util.List;
 import java.util.LinkedList;
 
 public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest> {
     private Position position;
     public PointOfInterestBuilder(Municipality municipality, User user) {
-        super(user, municipality);
+        super(municipality);
     }
 
     public void setPosition(Position position) {
