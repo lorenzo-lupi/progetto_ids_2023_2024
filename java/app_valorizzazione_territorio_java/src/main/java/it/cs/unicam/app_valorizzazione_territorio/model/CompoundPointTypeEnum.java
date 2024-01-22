@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.function.Supplier;
 
-public enum CompoundPointType {
+public enum CompoundPointTypeEnum {
     ITINERARY(LinkedList::new),
     EXPERIENCE(HashSet::new);
 
     private final Supplier<Collection<PointOfInterest>> collectionSupplier;
-    CompoundPointType(Supplier<Collection<PointOfInterest>> collectionSupplier){
+    CompoundPointTypeEnum(Supplier<Collection<PointOfInterest>> collectionSupplier){
         this.collectionSupplier = collectionSupplier;
     }
 

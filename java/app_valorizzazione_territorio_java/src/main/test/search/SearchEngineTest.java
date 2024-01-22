@@ -1,6 +1,6 @@
 package search;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
@@ -119,7 +119,7 @@ public class SearchEngineTest {
     @Test
     public void shouldSearchGeoLocalizableByApproved1() {
         SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
-        searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusENUM.APPROVED);
+        searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusEnum.APPROVED);
         List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(0, searchResult.size());
     }
@@ -130,7 +130,7 @@ public class SearchEngineTest {
         GEO_LOCATABLES[2].approve();
 
         SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(List.of(GEO_LOCATABLES));
-        searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusENUM.APPROVED);;
+        searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusEnum.APPROVED);;
         List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(2, searchResult.size());
         assertTrue(searchResult.containsAll(Arrays.asList(GEO_LOCATABLES[1], GEO_LOCATABLES[2])));

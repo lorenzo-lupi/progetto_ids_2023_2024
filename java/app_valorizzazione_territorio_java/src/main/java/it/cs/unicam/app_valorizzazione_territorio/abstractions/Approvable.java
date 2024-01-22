@@ -25,5 +25,5 @@ public interface Approvable {
      *
      * @return ApprovalStatusENUM representing the current approval status.
      */
-    ApprovalStatusENUM getApprovalStatus();
+    ApprovalStatusEnum getApprovalStatus();
 }

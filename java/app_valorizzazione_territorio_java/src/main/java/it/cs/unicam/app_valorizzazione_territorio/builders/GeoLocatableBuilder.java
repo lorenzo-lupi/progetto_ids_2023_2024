@@ -1,12 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.builders;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.DescriptionNotSetException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TitleNotSetException;
 import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Role;
-import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.io.File;
 import java.util.LinkedList;

@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.abstractions;
 
-public enum ApprovalStatusENUM {
+public enum ApprovalStatusEnum {
     APPROVED,
     REJECTED,
     PENDING;

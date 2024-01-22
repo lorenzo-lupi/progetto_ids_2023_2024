@@ -10,7 +10,7 @@ import java.util.*;
  * geographical point composed of two or more geo-localizable objects.
  */
 public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
-    private final CompoundPointType type;
+    private final CompoundPointTypeEnum type;
     private final Collection<PointOfInterest> pointOfInterests;
 
 
@@ -22,7 +22,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      * @param municipality      the municipality of the CompoundPoint
      * @throws IllegalArgumentException if type, municipality or user are null
      */
-    public CompoundPointBuilder(CompoundPointType compoundPointType,
+    public CompoundPointBuilder(CompoundPointTypeEnum compoundPointType,
                                 Municipality municipality) {
 
         super(municipality);
@@ -55,7 +55,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @return the type of the CompoundPoint
      */
-    public CompoundPointType getType() {
+    public CompoundPointTypeEnum getType() {
         return this.type;
     }
 
@@ -75,7 +75,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      * @throws IllegalStateException if the type of the CompoundPoint is not ITINERARY
      */
     public void invertPointOfInterest(PointOfInterest pointOfInterest1, PointOfInterest pointOfInterest2) throws CompoundPointIsNotItineraryException {
-        if (this.type != CompoundPointType.ITINERARY)
+        if (this.type != CompoundPointTypeEnum.ITINERARY)
             throw new CompoundPointIsNotItineraryException("Type must be set to ITINERARY before inverting geo-localizable objects");
         if (pointOfInterest1 == null || pointOfInterest2 == null)
             throw new IllegalArgumentException("GeoLocatable 1 and 2 must not be null");

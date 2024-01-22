@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 
@@ -18,7 +18,7 @@ public class Content implements Approvable, Searchable {
     private String description;
     private final PointOfInterest pointOfInterest;
     private final List<File> files;
-    private ApprovalStatusENUM approvalStatus;
+    private ApprovalStatusEnum approvalStatus;
 
     /**
      * Constructor for a content.
@@ -34,7 +34,7 @@ public class Content implements Approvable, Searchable {
         this.description = description;
         this.pointOfInterest = pointOfInterest;
         this.files = files;
-        this.approvalStatus = ApprovalStatusENUM.PENDING;
+        this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
     public String getDescription() {
@@ -85,21 +85,21 @@ public class Content implements Approvable, Searchable {
 
     @Override
     public boolean isApproved() {
-        return this.approvalStatus == ApprovalStatusENUM.APPROVED;
+        return this.approvalStatus == ApprovalStatusEnum.APPROVED;
     }
 
     @Override
     public void reject() {
-        this.approvalStatus = ApprovalStatusENUM.REJECTED;
+        this.approvalStatus = ApprovalStatusEnum.REJECTED;
     }
 
     @Override
     public void approve() {
-        this.approvalStatus = ApprovalStatusENUM.APPROVED;
+        this.approvalStatus = ApprovalStatusEnum.APPROVED;
     }
 
     @Override
-    public ApprovalStatusENUM getApprovalStatus() {
+    public ApprovalStatusEnum getApprovalStatus() {
         return this.approvalStatus;
     }
 }

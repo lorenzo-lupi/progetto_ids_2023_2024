@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 
 import java.util.Date;
 import java.util.function.Predicate;
@@ -49,7 +49,7 @@ public record ApprovalRequest <I extends Approvable> (User user,
      * @return ApprovalStatusENUM representing the current approval status.
      */
     @Override
-    public ApprovalStatusENUM getApprovalStatus() {
+    public ApprovalStatusEnum getApprovalStatus() {
         return approvableItem.getApprovalStatus();
     }
 }

@@ -5,7 +5,6 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     private Position position;
     private final Municipality municipality;
     private final List<File> images;
-    private ApprovalStatusENUM approvalStatus;
+    private ApprovalStatusEnum approvalStatus;
     private final long ID = MunicipalityRepository.getInstance().getNextGeoLocalizableID();
 
 
@@ -43,15 +42,13 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
             throw new IllegalArgumentException("title and description cannot be null");
         if(municipality == null || images == null)
             throw new IllegalArgumentException("Municipality and images must not be null");
-        if(approvalStatus == null)
-            throw new IllegalArgumentException("ApprovalStatus must not be null");
 
         this.name = name;
         this.description = description;
         this.municipality = municipality;
         this.images = images;
         this.position = position;
-        this.approvalStatus = ApprovalStatusENUM.PENDING;
+        this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
     public String getName() {
@@ -119,21 +116,21 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
 
     @Override
     public boolean isApproved() {
-        return this.approvalStatus == ApprovalStatusENUM.APPROVED;
+        return this.approvalStatus == ApprovalStatusEnum.APPROVED;
     }
 
     @Override
     public void reject() {
-        this.approvalStatus = ApprovalStatusENUM.REJECTED;
+        this.approvalStatus = ApprovalStatusEnum.REJECTED;
     }
 
     @Override
     public void approve() {
-        this.approvalStatus = ApprovalStatusENUM.APPROVED;
+        this.approvalStatus = ApprovalStatusEnum.APPROVED;
     }
 
     @Override
-    public ApprovalStatusENUM getApprovalStatus() {
+    public ApprovalStatusEnum getApprovalStatus() {
         return this.approvalStatus;
     }
 
