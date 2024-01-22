@@ -49,6 +49,10 @@ public class PointOfInterest extends GeoLocatable {
         this.contents = contents;
     }
 
+    public List<Content> getContents() {
+        return this.contents;
+    }
+
     /**
      * Returns the contents associated to the geo-localizable object.
      *

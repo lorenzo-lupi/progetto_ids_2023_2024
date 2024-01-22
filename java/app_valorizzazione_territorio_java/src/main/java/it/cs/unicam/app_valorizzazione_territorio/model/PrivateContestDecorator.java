@@ -1,7 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.contest.ContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.HashMap;

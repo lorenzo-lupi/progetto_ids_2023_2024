@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.builders;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.contest.ContestBase;
+import it.cs.unicam.app_valorizzazione_territorio.contest.GeoLocatableContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 
@@ -13,12 +15,14 @@ public class ContestBuilder {
     private List<User> participants;
     private boolean hasGeoLocation;
     private GeoLocatable geoLocatable;
+    private String name;
     private String topic;
     private String rules;
     private Date startDate;
     private Date votingStartDate;
     private Date endDate;
     private User animator;
+
     public ContestBuilder(User animator){
         if (animator == null)
             throw new IllegalArgumentException("Animator must not be null");
@@ -75,7 +79,7 @@ public class ContestBuilder {
 
     public Contest getResult(){
         checkBaseContestParameters();
-        Contest contest = new ContestBase(animator, topic, rules, startDate, votingStartDate, endDate);
+        Contest contest = new ContestBase(name, animator, topic, rules, startDate, votingStartDate, endDate);
         if(isPrivate) {
             contest = new PrivateContestDecorator(contest, participants);
         }
@@ -131,7 +135,9 @@ public class ContestBuilder {
         this.endDate = endDate;
     }
 
-
+    public void setName(String name) {
+        this.name = name;
+    }
     public void setTopic(String topic) {
         this.topic = topic;
     }

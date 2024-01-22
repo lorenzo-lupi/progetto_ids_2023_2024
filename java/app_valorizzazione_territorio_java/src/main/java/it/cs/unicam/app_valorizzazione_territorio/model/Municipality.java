@@ -1,13 +1,11 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +23,8 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     private final CoordinatesBox coordinatesBox;
     private final List<File> files;
     private final List<GeoLocatable> geoLocatables;
+
+    private final List<Contest> contests;
     private final long ID = MunicipalityRepository.getInstance().getNextID();
 
     /**
@@ -36,7 +36,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
      * @throws IllegalArgumentException if position or coordinatesBox are null
      */
     public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files) {
-        this(name, description, position, coordinatesBox, files, new ArrayList<>());
+        this(name, description, position, coordinatesBox, files, new ArrayList<>(), new ArrayList<>());
     }
 
     /**
@@ -49,8 +49,8 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
      * @param geoLocatables geo-localizable points of the municipality
      * @throws IllegalArgumentException if position, coordinatesBox, files or geoLocatables are null
      */
-    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files, List<GeoLocatable> geoLocatables) {
-        if (position == null || coordinatesBox == null || files == null || geoLocatables == null)
+    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files, List<GeoLocatable> geoLocatables, List<Contest> contests) {
+        if (position == null || coordinatesBox == null || files == null || geoLocatables == null || contests == null)
             throw new IllegalArgumentException("The parameters cannot be null.");
         this.name = name;
         this.description = description;
@@ -58,6 +58,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
         this.coordinatesBox = coordinatesBox;
         this.files = files;
         this.geoLocatables = geoLocatables;
+        this.contests = contests;
     }
 
     public String getName() {
@@ -82,6 +83,10 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
 
     public List<GeoLocatable> getGeoLocatables() {
         return geoLocatables;
+    }
+
+    public List<Contest> getContests() {
+        return contests;
     }
 
     public boolean addFile(File file) {

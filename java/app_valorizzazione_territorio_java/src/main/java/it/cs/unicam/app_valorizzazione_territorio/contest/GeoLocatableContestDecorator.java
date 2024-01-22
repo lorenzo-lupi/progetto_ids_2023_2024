@@ -1,10 +1,9 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GeoLocatableContestDecorator extends ContestDecorator{
@@ -21,6 +20,7 @@ public class GeoLocatableContestDecorator extends ContestDecorator{
     public boolean hasGeoLocation() {
         return true;
     }
+
     @Override
     public GeoLocatable getGeoLocation() throws UnsupportedOperationException {
         return this.geoLocatable;

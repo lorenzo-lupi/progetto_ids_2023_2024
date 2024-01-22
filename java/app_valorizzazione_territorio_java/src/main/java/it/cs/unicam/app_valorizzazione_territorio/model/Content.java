@@ -115,12 +115,12 @@ public class Content implements Approvable, Searchable, Visualizable {
     }
 
     @Override
-    public Identifiable getSynthesizedFormat() {
+    public ContentSOF getSynthesizedFormat() {
         return new ContentSOF(this.getFiles().get(0), this.ID);
     }
 
     @Override
-    public Identifiable getDetailedFormat() {
+    public ContentDOF getDetailedFormat() {
         return new ContentDOF(this.getDescription(), this.getPointOfInterest().getName(), this.getFiles(), this.getApprovalStatus(), this.getID());
     }
 }

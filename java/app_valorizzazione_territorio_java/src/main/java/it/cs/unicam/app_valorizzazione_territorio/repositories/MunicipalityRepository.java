@@ -1,14 +1,12 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
+import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -22,6 +20,7 @@ import static java.util.stream.Collectors.toMap;
 public class MunicipalityRepository extends Repository<Municipality> {
     private static MunicipalityRepository instance;
     private long nextGeoLocalizableID = 0L;
+    private long nextContestID = 0L;
     private long nextContentID = 0L;
 
     private MunicipalityRepository() {
@@ -44,6 +43,14 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
+     * Returns and updates the next available ID for the contests of the
+     * municipalities in the repository.
+     *
+     * @return the next available ID for the contests of the municipalities in the repository
+     */
+    public long getNextContestID() { return nextContestID++; }
+
+    /**
      * Returns and updates the next available ID for the content of the
      * contents of the POIs of the municipalities in the repository.
      *
@@ -52,6 +59,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
     public long getNextContentID() {
         return nextContentID++;
     }
+
 
     /**
      * Returns a map of all the geo-locatable points of the municipalities in the repository mapped with their IDs.
@@ -65,15 +73,26 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
+     * Returns a map of all the contests of the municipalities in the repository mapped with their IDs.
+     *
+     * @return a map of all the contests of the municipalities
+     */
+    private Map<Long, Contest> getAllContestsMap() {
+        return this.getItemStream().parallel()
+                .flatMap(municipality -> municipality.getContests().stream())
+                .collect(toMap(Contest::getID, Function.identity()));
+    }
+
+    /**
      * Returns a map of all the content of the POIs of the municipalities in the repository mapped with their IDs.
      *
      * @return a map of all the content of the POIs of the municipalities
      */
-    private Map<Long, Content> getAllContentMap() {
+    private Map<Long, Content> getAllContentsMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getGeoLocatables().stream())
                 .filter(geoLocatable -> geoLocatable instanceof PointOfInterest)
-                .flatMap(pointOfInterest -> pointOfInterest.getContents().stream())
+                .flatMap(pointOfInterest -> ((PointOfInterest) pointOfInterest).getContents().stream())
                 .collect(toMap(Content::getID, Function.identity()));
     }
 
@@ -88,13 +107,23 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
+     * Returns the contest of the municipalities in the repository with the given ID.
+     *
+     * @param ID the ID of the contest to be returned
+     * @return the contest of the municipalities in the repository with the given ID
+     */
+    public Contest getContestByID(long ID) {
+        return getAllContestsMap().get(ID);
+    }
+
+    /**
      * Returns the content of the POIs of the municipalities in the repository with the given ID.
      *
      * @param ID the ID of the content to be returned
      * @return the content of the POIs of the municipalities in the repository with the given ID
      */
     public Content getContentByID(long ID) {
-        return getAllContentMap().get(ID);
+        return getAllContentsMap().get(ID);
     }
 
     /**
@@ -107,11 +136,20 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
+     * Returns a stream of all the contests of the municipalities in the repository.
+     *
+     * @return a stream of all the contests of the municipalities in the repository
+     */
+    public Stream<Contest> getAllContests() {
+        return getAllContestsMap().values().stream();
+    }
+
+    /**
      * Returns a stream of all the content of the POIs of the municipalities in the repository.
      *
      * @return a stream of all the content of the POIs of the municipalities in the repository
      */
     public Stream<Content> getAllContents() {
-        return getAllContentMap().values().stream();
+        return getAllContentsMap().values().stream();
     }
 }
