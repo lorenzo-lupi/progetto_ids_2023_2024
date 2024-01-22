@@ -1,9 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusENUM;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 
 import java.io.File;
 import java.util.List;
@@ -14,11 +15,13 @@ import java.util.Map;
  * multimedia files and related textual descriptions that can be associated with a geo-localizable point.
  * It can be in the two states Unapproved (pending) and Approved (visible).
  */
-public class Content implements Approvable, Searchable {
+public class Content implements Approvable, Searchable, Visualizable {
     private String description;
     private final PointOfInterest pointOfInterest;
     private final List<File> files;
-    private ApprovalStatusENUM approvalStatus;
+    private ApprovalStatusEnum approvalStatus;
+
+    private final long ID = MunicipalityRepository.getInstance().getNextContentID();
 
     /**
      * Constructor for a content.
@@ -34,7 +37,7 @@ public class Content implements Approvable, Searchable {
         this.description = description;
         this.pointOfInterest = pointOfInterest;
         this.files = files;
-        this.approvalStatus = ApprovalStatusENUM.PENDING;
+        this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
     public String getDescription() {
@@ -45,6 +48,10 @@ public class Content implements Approvable, Searchable {
         if (description == null)
             throw new IllegalArgumentException("Description cannot be null");
         this.description = description;
+    }
+
+    public PointOfInterest getPointOfInterest() {
+        return pointOfInterest;
     }
 
     /**
@@ -76,7 +83,6 @@ public class Content implements Approvable, Searchable {
     }
 
 
-
     @Override
     public Map<Parameter, Object> getParametersMapping() {
         return Map.of(Parameter.DESCRIPTION, this.description,
@@ -85,21 +91,36 @@ public class Content implements Approvable, Searchable {
 
     @Override
     public boolean isApproved() {
-        return this.approvalStatus == ApprovalStatusENUM.APPROVED;
+        return this.approvalStatus == ApprovalStatusEnum.APPROVED;
     }
 
     @Override
     public void reject() {
-        this.approvalStatus = ApprovalStatusENUM.REJECTED;
+        this.approvalStatus = ApprovalStatusEnum.REJECTED;
     }
 
     @Override
     public void approve() {
-        this.approvalStatus = ApprovalStatusENUM.APPROVED;
+        this.approvalStatus = ApprovalStatusEnum.APPROVED;
     }
 
     @Override
-    public ApprovalStatusENUM getApprovalStatus() {
+    public ApprovalStatusEnum getApprovalStatus() {
         return this.approvalStatus;
+    }
+
+    @Override
+    public long getID() {
+        return this.ID;
+    }
+
+    @Override
+    public Identifiable getSynthesizedFormat() {
+        return new ContentSOF(this.getFiles().get(0), this.ID);
+    }
+
+    @Override
+    public Identifiable getDetailedFormat() {
+        return new ContentDOF(this.getDescription(), this.getPointOfInterest().getName(), this.getFiles(), this.getApprovalStatus(), this.getID());
     }
 }

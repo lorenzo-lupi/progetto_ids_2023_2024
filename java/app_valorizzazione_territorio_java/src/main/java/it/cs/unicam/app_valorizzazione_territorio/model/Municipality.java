@@ -3,6 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
@@ -33,8 +35,8 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
      * @param position geographical coordinates of the municipality
      * @throws IllegalArgumentException if position or coordinatesBox are null
      */
-    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox) {
-        this(name, description, position, coordinatesBox, new ArrayList<>(), new ArrayList<>());
+    public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files) {
+        this(name, description, position, coordinatesBox, files, new ArrayList<>());
     }
 
     /**
@@ -129,14 +131,12 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     }
 
     @Override
-    public Identifiable getSynthesizedFormat() {
-        //TODO
-        return null;
+    public MunicipalitySOF getSynthesizedFormat() {
+        return new MunicipalitySOF(this.getName(), this.getFiles().get(0), this.getID());
     }
 
     @Override
-    public Identifiable getDetailedFormat() {
-        //TODO
-        return null;
+    public MunicipalityDOF getDetailedFormat() {
+        return new MunicipalityDOF(this.getName(), this.getDescription(), this.getPosition(), this.getFiles(), this.getID());
     }
 }

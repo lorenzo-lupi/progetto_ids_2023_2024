@@ -1,4 +1,10 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.requests;
+
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.Date;
 
@@ -29,8 +35,24 @@ public class ContestApprovalRequest extends ApprovalRequest<Content>{
         super(user, approvableItem, date);
         this.contest = contest;
     }
+
+    public Contest getContest() {
+        return contest;
+    }
+
     @Override
     public boolean canBeApprovedBy(User user) {
         return user.equals(contest.getAnimator());
+    }
+
+    @Override
+    public ContestRequestSOF getSynthesizedFormat() {
+        return new ContestRequestSOF(this.getUser().getUsername(), this.getContest().getName(), this.getDate(), this.getID());
+    }
+
+    @Override
+    public Identifiable getDetailedFormat() {
+        return new ContestRequestDOF(this.getUser().getSynthesizedFormat(), this.getContest().getSynthesizedFormat(),
+                this.getDate(), this.getApprovableItem().getDetailedFormat(), this.getID());
     }
 }

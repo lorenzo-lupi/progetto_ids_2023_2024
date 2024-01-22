@@ -1,6 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * This class represents a user of the application.
  */
-public class User implements Identifiable {
+public class User implements Identifiable, Visualizable {
     private String username;
     private final String email;
     private final List<Role> roles;
@@ -70,5 +73,15 @@ public class User implements Identifiable {
     @Override
     public long getID() {
         return this.ID;
+    }
+
+    @Override
+    public UserSOF getSynthesizedFormat() {
+        return new UserSOF(this.getUsername(), this.getID());
+    }
+
+    @Override
+    public UserDOF getDetailedFormat() {
+        return new UserDOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
     }
 }

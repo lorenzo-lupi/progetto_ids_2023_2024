@@ -23,7 +23,7 @@ public interface Approvable {
     /**
      * Retrieves the current approval status of the object.
      *
-     * @return ApprovalStatusENUM representing the current approval status.
+     * @return ApprovalStatusEnum representing the current approval status.
      */
-    ApprovalStatusENUM getApprovalStatus();
+    ApprovalStatusEnum getApprovalStatus();
 }
