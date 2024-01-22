@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.abstractions;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.ProposalRequests;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.List;
@@ -43,5 +44,16 @@ public interface Contest extends Identifiable, Approvable, Searchable, Visualiza
      * @throws UnsupportedOperationException if the contest has no geo-location.
      */
     GeoLocatable getGeoLocation() throws UnsupportedOperationException;
+
+    /**
+     * Returns the animator of the contest.
+     * @return the animator of the contest.
+     */
     User getAnimator();
+
+    /**
+     * Returns the proposal requests of the contest.
+     * @return the proposal requests of the contest.
+     */
+    ProposalRequests getProposalRequests();
 }

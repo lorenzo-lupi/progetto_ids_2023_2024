@@ -31,6 +31,16 @@ public abstract class ContestDecorator implements Contest{
     }
 
     @Override
+    public User getAnimator() {
+        return this.contest.getAnimator();
+    }
+
+    @Override
+    public ProposalRequests getProposalRequests() {
+        return this.contest.getProposalRequests();
+    }
+
+    @Override
     public boolean isPrivate() {
         return this.contest.isPrivate();
     }

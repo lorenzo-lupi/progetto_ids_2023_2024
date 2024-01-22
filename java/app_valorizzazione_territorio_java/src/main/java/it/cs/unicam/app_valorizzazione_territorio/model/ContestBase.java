@@ -10,13 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ContestBase implements Contest {
-    private ApprovalStatusEnum approvalStatus;
     private User animator;
+    private ProposalRequests proposalRequests;
     private String topic;
     private String rules;
     private Date startDate;
     private Date votingStartDate;
     private Date endDate;
+
+    private ApprovalStatusEnum approvalStatus;
 
     public ContestBase(User animator,
                        String topic,
@@ -29,6 +31,7 @@ public class ContestBase implements Contest {
             throw new IllegalArgumentException("All parameters must not be null");
         if (!checkDates(startDate, votingStartDate, endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
+        this.proposalRequests = new ProposalRequests();
         this.animator = animator;
         this.topic = topic;
         this.rules = rules;
@@ -85,6 +88,16 @@ public class ContestBase implements Contest {
     @Override
     public GeoLocatable getGeoLocation() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("ContestBase has no geo location");
+    }
+
+    @Override
+    public User getAnimator() {
+        return this.animator;
+    }
+
+    @Override
+    public ProposalRequests getProposalRequests() {
+        return this.proposalRequests;
     }
 
     //TODO
