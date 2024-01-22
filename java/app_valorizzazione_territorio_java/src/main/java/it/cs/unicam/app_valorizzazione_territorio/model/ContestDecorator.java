@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,31 @@ public abstract class ContestDecorator implements Contest{
     public ContestDecorator(Contest contest){
         this.contest = contest;
     }
+
+    @Override
+    public String getTopic() {
+        return this.contest.getTopic();
+    }
+
+    @Override
+    public String getRules() {
+        return this.contest.getRules();
+    }
+    @Override
+    public Date getStartDate() {
+        return this.contest.getStartDate();
+    }
+
+    @Override
+    public Date getVotingStartDate() {
+        return this.contest.getVotingStartDate();
+    }
+
+    @Override
+    public Date getEndDate() {
+        return this.contest.getEndDate();
+    }
+
     @Override
     public boolean isApproved() {
         return contest.isApproved();

@@ -12,8 +12,16 @@ import java.util.Map;
 public class ContestBase implements Contest {
     private User animator;
     private ProposalRequests proposalRequests;
+
+
+
     private String topic;
+
+
     private String rules;
+
+
+
     private Date startDate;
     private Date votingStartDate;
     private Date endDate;
@@ -48,6 +56,31 @@ public class ContestBase implements Contest {
                 startDate.before(votingStartDate)
                 &&
                 votingStartDate.before(endDate);
+    }
+
+
+    @Override
+    public String getTopic() {
+        return topic;
+    }
+
+    @Override
+    public String getRules() {
+        return rules;
+    }
+    @Override
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    @Override
+    public Date getVotingStartDate() {
+        return votingStartDate;
+    }
+
+    @Override
+    public Date getEndDate() {
+        return endDate;
     }
 
     @Override

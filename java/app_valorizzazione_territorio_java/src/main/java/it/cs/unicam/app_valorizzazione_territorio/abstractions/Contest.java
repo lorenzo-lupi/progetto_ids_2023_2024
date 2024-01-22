@@ -4,6 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.ProposalRequests;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,4 +57,14 @@ public interface Contest extends Identifiable, Approvable, Searchable, Visualiza
      * @return the proposal requests of the contest.
      */
     ProposalRequests getProposalRequests();
+
+    String getTopic();
+
+    String getRules();
+
+    Date getStartDate();
+
+    Date getVotingStartDate();
+
+    Date getEndDate();
 }
