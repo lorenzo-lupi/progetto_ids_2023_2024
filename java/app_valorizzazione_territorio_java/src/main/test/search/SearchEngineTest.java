@@ -8,6 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,10 +20,12 @@ public class SearchEngineTest {
     private static final Municipality[] municipalities = new Municipality[] {
             new Municipality("Macerata", "Comune di Macerata",
                     new Position(43.29812657107886, 13.451878161920886),
-                    new CoordinatesBox(new Position(43.317324, 13.409422), new Position (43.271074, 13.499990))),
+                    new CoordinatesBox(new Position(43.317324, 13.409422), new Position (43.271074, 13.499990)),
+                    new ArrayList<>()),
             new Municipality("Camerino", "Comune di Camerino",
                     new Position(43.13644468556232, 13.067156069846892),
-                    new CoordinatesBox(new Position(43.153712, 13.036414), new Position (43.123261, 13.095768)))
+                    new CoordinatesBox(new Position(43.153712, 13.036414), new Position (43.123261, 13.095768)),
+                    new ArrayList<>())
     };
 
     private static final GeoLocatable[] GEO_LOCATABLES = new PointOfInterest[] {

@@ -120,9 +120,9 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
-        return Map.of(Parameter.POSITION, this.position,
-                Parameter.DESCRIPTION, this.description,
-                Parameter.NAME, this.name);
+        return Map.of(Parameter.POSITION, this.getPosition(),
+                Parameter.DESCRIPTION, this.getDescription(),
+                Parameter.NAME, this.getName());
     }
 
     @Override

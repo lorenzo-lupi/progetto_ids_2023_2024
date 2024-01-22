@@ -28,14 +28,6 @@ public abstract class Repository<I extends Identifiable> {
     }
 
     /**
-     * Returns an iterator over the items of the repository.
-     * @return an iterator over the items of the repository
-     */
-    public Iterator<I> getIterator() {
-        return this.items.values().iterator();
-    }
-
-    /**
      * Adds an item to the repository.
      * If the repository already contains an item with the same ID, the new item will not be added.
      *
