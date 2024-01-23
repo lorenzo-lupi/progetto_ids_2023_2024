@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+
 /**
  * This class represents a geographical position, that is a
  * point on the surface of the Earth associated with geographical coordinates.
@@ -75,5 +76,6 @@ public class Position {
         return new Position(this.latitude / scalar,
                 this.longitude / scalar);
     }
+
 
 }

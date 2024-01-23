@@ -17,4 +17,12 @@ public enum CompoundPointTypeEnum {
     public Collection<PointOfInterest> getCollection(){
         return collectionSupplier.get();
     }
+
+    public static CompoundPointTypeEnum fromString(String type) {
+        return switch (type) {
+            case "itinerary" -> ITINERARY;
+            case "experience" -> EXPERIENCE;
+            default -> throw new IllegalArgumentException("Unexpected value: " + type);
+        };
+    }
 }

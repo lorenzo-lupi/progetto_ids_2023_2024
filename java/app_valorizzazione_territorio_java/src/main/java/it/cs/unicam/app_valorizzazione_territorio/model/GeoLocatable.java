@@ -80,6 +80,14 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     }
 
     /**
+     * Returns the description of the geo-localizable object.
+     * @return the description of the geo-localizable object
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
      * Sets the description of the geo-localizable object.
      *
      * @param description the description to set
@@ -143,17 +151,7 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
                 Parameter.APPROVAL_STATUS, this.approvalStatus);
     }
 
-    @Override
-    public Identifiable getSynthesizedFormat() {
-        //TODO
-        return null;
-    }
 
-    @Override
-    public Identifiable getDetailedFormat() {
-        //TODO
-        return null;
-    }
 
     @Override
     public long getID() {

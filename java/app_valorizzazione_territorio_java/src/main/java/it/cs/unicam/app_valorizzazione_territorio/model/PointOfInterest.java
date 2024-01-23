@@ -1,5 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,4 +77,21 @@ public class PointOfInterest extends GeoLocatable {
         return this.contents.remove(content);
     }
 
+    @Override
+    public PointOfInterestSOF getSynthesizedFormat() {
+        return new PointOfInterestSOF(super.getName(),
+                super.getPosition().toString(),
+                super.getID());
+    }
+
+    @Override
+    public PointOfInterestDOF getDetailedFormat() {
+        return new PointOfInterestDOF(super.getName(),
+                super.getDescription(),
+                super.getPosition().toString(),
+                super.getMunicipality().getSynthesizedFormat(),
+                super.getImages(),
+                this.contents.stream().map(Content::getSynthesizedFormat).toList(),
+                super.getID());
+    }
 }

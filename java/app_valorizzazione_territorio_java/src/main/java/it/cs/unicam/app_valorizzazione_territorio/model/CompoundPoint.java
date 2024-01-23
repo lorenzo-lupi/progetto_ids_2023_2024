@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.io.File;
@@ -68,5 +69,17 @@ public class CompoundPoint extends GeoLocatable {
                 = new HashMap<>(super.getParametersMapping());
         parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
         return parameters;
+    }
+
+    @Override
+    public Identifiable getSynthesizedFormat() {
+        //TODO
+        return null;
+    }
+
+    @Override
+    public Identifiable getDetailedFormat() {
+        //TODO
+        return null;
     }
 }

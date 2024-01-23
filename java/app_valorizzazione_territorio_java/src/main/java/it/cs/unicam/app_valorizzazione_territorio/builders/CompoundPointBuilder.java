@@ -45,8 +45,9 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
             throw new IllegalArgumentException("GeoLocatable must not be null");
         if (!pointOfInterest.getMunicipality().equals(this.getMunicipality()))
             throw new WrongMunicipalityException("GeoLocatable must have the same municipality of the CompoundPoint");
-
-        this.pointOfInterests.add(pointOfInterest);
+        if(!pointOfInterests.contains(pointOfInterest)) {
+            this.pointOfInterests.add(pointOfInterest);
+        }
     }
 
 

@@ -19,5 +19,8 @@ public record Role(Municipality municipality, RoleTypeEnum roleTypeEnum) {
                         && role.municipality().equals(municipality));
     }
 
+    public static Predicate<User> isAtLeastContributorForMunicipality(Municipality municipality){
+        return isCuratorForMunicipality(municipality).or(isContributorForMunicipality(municipality));
+    }
 
 }

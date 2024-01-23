@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
@@ -29,8 +30,12 @@ public class SearchCriterion<T> implements Predicate<Object> {
     public static final BiPredicate<Object, Object> INCLUDED_IN_COMPOUND_POINT =
             (a, b) -> a instanceof PointOfInterest g && b instanceof Collection c && c.contains(g);
 
+    public static final BiPredicate<Object, Object> EQUALS_ID =
+            (a, b) ->  a instanceof Long la && b instanceof Identifiable ic && ic.getID() == la;
+
     //TODO permette utente:
-    //public static final BiPredicate<Object, >
+    //public static final BiPredicate<Object,  Object> PERMITS_USER =
+
 
     /**
      * A {@link Map} that maps a {@link String} format to a {@link BiPredicate} that can be used for search.

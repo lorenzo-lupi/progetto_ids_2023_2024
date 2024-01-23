@@ -41,9 +41,9 @@ public class SearchEngineTest {
     };
     @BeforeAll
     public static void setUpCollections() {
-        municipalities[1].addGeoLocalizable(GEO_LOCATABLES[0]);
-        municipalities[1].addGeoLocalizable(GEO_LOCATABLES[1]);
-        municipalities[0].addGeoLocalizable(GEO_LOCATABLES[2]);
+        municipalities[1].addGeoLocatable(GEO_LOCATABLES[0]);
+        municipalities[1].addGeoLocatable(GEO_LOCATABLES[1]);
+        municipalities[0].addGeoLocatable(GEO_LOCATABLES[2]);
     }
 
     @Test
