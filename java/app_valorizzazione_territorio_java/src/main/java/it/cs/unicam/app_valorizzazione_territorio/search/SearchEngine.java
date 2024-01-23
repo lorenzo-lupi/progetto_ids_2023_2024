@@ -36,9 +36,11 @@ public class SearchEngine<T extends Searchable & Visualizable> {
      * @param parameter the parameter to apply the criterion on
      * @param predicate the {@link BiPredicate} to add as a criterion
      * @param value the reference value
-     * @param <P> the type of the reference value
      */
-    public <P> void addCriterion(Parameter parameter, BiPredicate<Object, ? super P> predicate, P value) {
+    public void addCriterion(Parameter parameter, BiPredicate<Object, Object> predicate, Object value) {
+        if (parameter == null || predicate == null || value == null)
+            throw new IllegalArgumentException("Parameters must not be null");
+
         addCriterion(parameter, new SearchCriterion<>(predicate, value));
     }
 
@@ -50,6 +52,9 @@ public class SearchEngine<T extends Searchable & Visualizable> {
      * @param criterion the criterion to add
      */
     public void addCriterion(Parameter parameter, SearchCriterion<?> criterion) {
+        if (parameter == null || criterion == null)
+            throw new IllegalArgumentException("Parameters must not be null");
+
         if (!this.criteria.containsKey(parameter)) {
             this.criteria.put(parameter, new ArrayList<>());
         }

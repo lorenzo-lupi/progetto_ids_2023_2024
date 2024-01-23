@@ -1,10 +1,12 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -16,14 +18,32 @@ import java.util.function.Predicate;
  * @param <T> the type of the value used for the search
  */
 public class SearchCriterion<T> implements Predicate<Object> {
-    public static final BiPredicate<Object,Object> EQUALS = (a, b) -> b.equals(a);
-    public static final BiPredicate<Object,Object> STARTS_WITH = (a, b) -> a.toString().startsWith(b.toString());
-    public static final BiPredicate<Object,Object> CONTAINS = (a, b) -> a.toString().contains(b.toString());
-    public static final BiPredicate<Object, CoordinatesBox> INCLUDED_IN_BOX = (a, b) -> a instanceof Position p && b.contains(p);
-    public static final BiPredicate<Object, Collection<PointOfInterest>> INCLUDED_IN_COMPOUND_POINT = (a, b) -> a instanceof PointOfInterest g && b.contains(g);
+    public static final BiPredicate<Object,Object> EQUALS =
+            (a, b) -> b.equals(a);
+    public static final BiPredicate<Object,Object> STARTS_WITH =
+            (a, b) -> a.toString().startsWith(b.toString());
+    public static final BiPredicate<Object,Object> CONTAINS =
+            (a, b) -> a.toString().contains(b.toString());
+    public static final BiPredicate<Object, Object> INCLUDED_IN_BOX =
+            (a, b) -> a instanceof Position p && b instanceof CoordinatesBox c && c.contains(p);
+    public static final BiPredicate<Object, Object> INCLUDED_IN_COMPOUND_POINT =
+            (a, b) -> a instanceof PointOfInterest g && b instanceof Collection c && c.contains(g);
+
     //TODO permette utente:
     //public static final BiPredicate<Object, >
-    private final BiPredicate<Object,T> predicate;
+
+    /**
+     * A {@link Map} that maps a {@link String} format to a {@link BiPredicate} that can be used for search.
+     */
+    public static final Map<String, BiPredicate<Object, Object>> stringToBiPredicate = Map.of(
+            "equals", EQUALS,
+            "startsWith", STARTS_WITH,
+            "contains", CONTAINS,
+            "includedInBox", INCLUDED_IN_BOX,
+            "includedInCompoundPoint", INCLUDED_IN_COMPOUND_POINT
+    );
+
+    private final BiPredicate<Object, Object> predicate;
     private final T value;
 
     /**
@@ -31,7 +51,7 @@ public class SearchCriterion<T> implements Predicate<Object> {
      * @param predicate the {@link BiPredicate} used for the search
      * @param value the value used for the search
      */
-    public SearchCriterion(BiPredicate<Object,T> predicate, T value) {
+    public SearchCriterion(BiPredicate<Object,Object> predicate, T value) {
         this.predicate = predicate;
         this.value = value;
     }
