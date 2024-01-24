@@ -1,13 +1,16 @@
 package it.cs.unicam.app_valorizzazione_territorio.builders;
 
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.*;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 
 import java.util.*;
 
 /**
  * This class represents a compound point, that is a
- * geographical point composed of two or more geo-localizable objects.
+ * geographical point composed of two or more points of interest objects.
  */
 public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
     private final CompoundPointTypeEnum type;
@@ -27,7 +30,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
 
         super(municipality);
         if (compoundPointType == null)
-            throw new IllegalArgumentException("CompoundPointType must not be nul");
+            throw new IllegalArgumentException("CompoundPointType must not be null");
 
         this.type = compoundPointType;
         this.pointOfInterests = this.type.getCollection();
@@ -116,7 +119,6 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
                 this.getTitle(),
                 this.getDescription(),
                 this.getMunicipality(),
-                this.getRepresentative(),
                 this.type,
                 this.pointOfInterests,
                 this.getImages());
@@ -126,14 +128,6 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
         super.checkArguments();
         if(this.pointOfInterests.size() < 2)
             throw new NotEnoughGeoLocatablesException("pointOfInterests must contain at least 2 elements");
-    }
-
-    private Position getRepresentative() {
-        return this.pointOfInterests.stream()
-                .map(PointOfInterest::getPosition)
-                .reduce(Position::sum)
-                .map(position -> position.divide(this.pointOfInterests.size()))
-                .orElseThrow();
     }
 
 }

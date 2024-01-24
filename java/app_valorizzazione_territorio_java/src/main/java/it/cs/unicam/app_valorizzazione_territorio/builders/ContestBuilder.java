@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contest.ContestBase;
 import it.cs.unicam.app_valorizzazione_territorio.contest.GeoLocatableContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.contest.PrivateContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.*;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 
 import java.util.Date;

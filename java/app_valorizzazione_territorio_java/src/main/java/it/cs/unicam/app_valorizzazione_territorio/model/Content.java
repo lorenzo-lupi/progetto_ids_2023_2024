@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -121,6 +122,10 @@ public class Content implements Approvable, Searchable, Visualizable {
 
     @Override
     public ContentDOF getDetailedFormat() {
-        return new ContentDOF(this.getDescription(), this.getPointOfInterest().getName(), this.getFiles(), this.getApprovalStatus(), this.getID());
+        return new ContentDOF(this.getDescription(),
+                this.getPointOfInterest().getSynthesizedFormat(),
+                this.getFiles(),
+                this.getApprovalStatus(),
+                this.getID());
     }
 }

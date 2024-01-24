@@ -5,15 +5,81 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import java.io.File;
 import java.util.List;
 
-public record PointOfInterestDOF(String name,
-                                 String description,
-                                 String position,
-                                 MunicipalitySOF municipalitySOF,
-                                 List<File> images,
-                                 List<ContentSOF> contents,
-                                 long id) implements Identifiable {
+/**
+ * This class represents a Point of Interest Detailed Output Format object.
+ *
+ * @param name
+ * @param description
+ * @param position
+ * @param municipalitySOF
+ * @param classification
+ * @param images
+ * @param contents
+ * @param ID
+ */
+public class PointOfInterestDOF implements Identifiable {
+    private final String name;
+    private final String description;
+    private final String position;
+    private final MunicipalitySOF municipalitySOF;
+    private final String classification;
+    private final List<File> images;
+    private final List<ContentSOF> contents;
+    private final long ID;
+
+    public PointOfInterestDOF(String name,
+                              String description,
+                              String position,
+                              MunicipalitySOF municipalitySOF,
+                              String classification,
+                              List<File> images,
+                              List<ContentSOF> contents,
+                              long ID) {
+        this.name = name;
+        this.description = description;
+        this.position = position;
+        this.municipalitySOF = municipalitySOF;
+        this.classification = classification;
+        this.images = images;
+        this.contents = contents;
+        this.ID = ID;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public String position() {
+        return position;
+    }
+
+    public MunicipalitySOF municipalitySOF() {
+        return municipalitySOF;
+    }
+
+    public String classification() {
+        return classification;
+    }
+
+    public List<File> images() {
+        return images;
+    }
+
+    public List<ContentSOF> contents() {
+        return contents;
+    }
+
+    public long ID() {
+        return ID;
+    }
+
     @Override
     public long getID() {
-        return this.id;
+        return this.ID();
     }
 }
+

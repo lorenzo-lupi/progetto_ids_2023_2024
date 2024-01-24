@@ -1,14 +1,22 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PointOfInterest extends GeoLocatable {
+/**
+ * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
+ * represents an attraction, an event or an activity present on the territory. It can be included in a compound point.
+ */
+public abstract class PointOfInterest extends GeoLocatable {
+    private Position position;
     private final List<Content> contents;
 
     /**
@@ -49,7 +57,8 @@ public class PointOfInterest extends GeoLocatable {
                                             Municipality municipality,
                                             List<File> images,
                                             List<Content> contents) {
-        super(name, description, municipality, coordinates, images);
+        super(name, description, municipality, images);
+        this.position = coordinates;
         this.contents = contents;
     }
 
@@ -77,10 +86,19 @@ public class PointOfInterest extends GeoLocatable {
         return this.contents.remove(content);
     }
 
+    public Position getPosition() {
+        return this.position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
     @Override
     public PointOfInterestSOF getSynthesizedFormat() {
         return new PointOfInterestSOF(super.getName(),
-                super.getPosition().toString(),
+                this.getImages().get(0),
+                this.getClass().getName(),
                 super.getID());
     }
 
@@ -88,8 +106,9 @@ public class PointOfInterest extends GeoLocatable {
     public PointOfInterestDOF getDetailedFormat() {
         return new PointOfInterestDOF(super.getName(),
                 super.getDescription(),
-                super.getPosition().toString(),
+                this.getPosition().toString(),
                 super.getMunicipality().getSynthesizedFormat(),
+                this.getClass().getName(),
                 super.getImages(),
                 this.contents.stream().map(Content::getSynthesizedFormat).toList(),
                 super.getID());

@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.contest.ContestStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 
 /**
@@ -11,7 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
  * @param ID
  */
 public record ContestSOF(String name,
-                         ContestStatusEnum status,
+                         String status,
                          long ID) implements Identifiable {
     @Override
     public long getID() {

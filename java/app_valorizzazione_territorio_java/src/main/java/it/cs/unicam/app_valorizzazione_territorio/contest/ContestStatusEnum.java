@@ -1,9 +1,25 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * This enum represents the status of a contest in a given moment.
+ */
 public enum ContestStatusEnum {
     PLANNED,
     OPEN,
-    CLOSED,
     VOTING,
-    FINISHED;
+    CLOSED;
+
+    public static final Map<String, Parameter> stringToContestStatus;
+
+    static {
+        stringToContestStatus = new HashMap<>();
+        for (Parameter parameter : Parameter.values()) {
+            stringToContestStatus.put(parameter.toString(), parameter);
+        }
+    }
 }

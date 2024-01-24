@@ -1,6 +1,8 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -17,7 +19,6 @@ import java.util.Map;
 public abstract class GeoLocatable implements Approvable, Searchable, Visualizable, Identifiable, Positionable {
     private String name;
     private String description;
-    private Position position;
     private final Municipality municipality;
     private final List<File> images;
     private ApprovalStatusEnum approvalStatus;
@@ -36,7 +37,6 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     public GeoLocatable(String name,
                         String description,
                         Municipality municipality,
-                        Position position,
                         List<File> images){
         if(name == null || description == null)
             throw new IllegalArgumentException("title and description cannot be null");
@@ -47,7 +47,6 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
         this.description = description;
         this.municipality = municipality;
         this.images = images;
-        this.position = position;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
@@ -57,10 +56,6 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
 
     public Municipality getMunicipality() {
         return municipality;
-    }
-
-    public Position getPosition(){
-        return position;
     }
 
     public List<File> getImages() {
@@ -150,8 +145,6 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
                 Parameter.NAME, this.name,
                 Parameter.APPROVAL_STATUS, this.approvalStatus);
     }
-
-
 
     @Override
     public long getID() {

@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 
@@ -104,17 +104,6 @@ public class ContestBase implements Contest {
         if (!this.votingStartDate.before(endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
         this.endDate = endDate;
-    }
-
-    public ContestStatusEnum getStatus() {
-        if (new Date().before(startDate))
-            return ContestStatusEnum.PLANNED;
-        else if (new Date().before(votingStartDate))
-            return ContestStatusEnum.OPEN;
-        else if (new Date().before(endDate))
-            return ContestStatusEnum.VOTING;
-        else
-            return ContestStatusEnum.CLOSED;
     }
 
     @Override

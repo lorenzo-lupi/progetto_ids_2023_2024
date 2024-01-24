@@ -1,18 +1,22 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
+import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 /**
- * This class represents a compound point, i.e. a point composed by multiple geo-localizable objects.
+ * This class represents a compound point, i.e. a point composed by multiple points of interest objects.
  * It includes fundamental details such as a textual description and a representative multimedia content.
- * It also includes a list of geo-localizable objects that compose the compound point.
+ * It also includes a list of points of interest objects that compose the compound point.
  * It can be of two types: EXPERIENCE or ITINERARY.
- * An EXPERIENCE is a compound point composed by multiple geo-localizable objects that are not necessarily
- * connected to each other. An ITINERARY is a compound point composed by multiple geo-localizable objects
+ * An EXPERIENCE is a compound point composed by multiple points of interest objects that are not necessarily
+ * connected to each other. An ITINERARY is a compound point composed by multiple points of interest objects
  * that are connected to each other.
  */
 public class CompoundPoint extends GeoLocatable {
@@ -29,12 +33,11 @@ public class CompoundPoint extends GeoLocatable {
     public CompoundPoint(String title,
                          String description,
                          Municipality municipality,
-                         Position position,
                          CompoundPointTypeEnum type,
                          Collection<PointOfInterest> pointsOfInterest,
                          List<File> images) {
 
-        super(title, description, municipality, position, images);
+        super(title, description, municipality, images);
         checkArguments(type, pointsOfInterest);
 
         this.type = type;
@@ -69,6 +72,15 @@ public class CompoundPoint extends GeoLocatable {
                 = new HashMap<>(super.getParametersMapping());
         parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
         return parameters;
+    }
+
+    @Override
+    public Position getPosition() {
+        return this.pointsOfInterest.stream()
+                .map(PointOfInterest::getPosition)
+                .reduce(Position::sum)
+                .map(position -> position.divide(this.pointsOfInterest.size()))
+                .orElseThrow();
     }
 
     @Override

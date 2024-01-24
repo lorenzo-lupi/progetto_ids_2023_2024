@@ -5,7 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -63,7 +63,16 @@ public interface Contest extends Identifiable, Searchable, Visualizable {
     Date getStartDate();
     Date getVotingStartDate();
     Date getEndDate();
-    ContestStatusEnum getStatus();
+    default ContestStatusEnum getStatus() {
+        if (new Date().before(getStartDate()))
+            return ContestStatusEnum.PLANNED;
+        else if (new Date().before(getVotingStartDate()))
+            return ContestStatusEnum.OPEN;
+        else if (new Date().before(getEndDate()))
+            return ContestStatusEnum.VOTING;
+        else
+            return ContestStatusEnum.CLOSED;
+    }
 
     /**
      * Returns the proposal requests of the contest.
@@ -73,14 +82,24 @@ public interface Contest extends Identifiable, Searchable, Visualizable {
 
 
     default ContestSOF getSynthesizedFormat() {
-        return new ContestSOF(this.getName(), this.getStatus(), this.getID());
+        return new ContestSOF(this.getName(),
+                this.getStatus().toString(),
+                this.getID());
     }
 
     @Override
     default ContestDOF getDetailedFormat() {
-        return new ContestDOF(this.getName(), this.getAnimator().getSynthesizedFormat(), this.getTopic(),
-                this.getRules(), this.isPrivate(), (this.hasGeoLocation() ? this.getGeoLocation() : null),
-                this.getStatus(), this.getStartDate(), this.getVotingStartDate(), this.getEndDate(), this.getID());
+        return new ContestDOF(this.getName(),
+                this.getAnimator().getSynthesizedFormat(),
+                this.getTopic(),
+                this.getRules(),
+                this.isPrivate(),
+                (this.hasGeoLocation() ? this.getGeoLocation() : null),
+                this.getStatus().toString(),
+                this.getStartDate(),
+                this.getVotingStartDate(),
+                this.getEndDate(),
+                this.getID());
     }
 
     @Override

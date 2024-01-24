@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +17,7 @@ public enum CompoundPointTypeEnum {
     public Collection<PointOfInterest> getCollection(){
         return collectionSupplier.get();
     }
+
 
     public static CompoundPointTypeEnum fromString(String type) {
         return switch (type) {

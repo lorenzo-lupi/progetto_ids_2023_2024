@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.builders;
 
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.DescriptionNotSetException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TitleNotSetException;
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 
 import java.io.File;
@@ -11,7 +11,6 @@ import java.util.List;
 
 public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
     private final Municipality municipality;
-
     private String title;
     private String description;
     private final List<File> images;

@@ -4,6 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -116,10 +117,10 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public CoordinatesBox getDynamicCoordinatesBox() {
         if (geoLocatables.isEmpty()) return getCoordinatesBox();
-        double minLatitude = geoLocatables.stream().map(it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable::getPosition).map(Position::getLatitude).min(Double::compare).get();
-        double maxLatitude = geoLocatables.stream().map(it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable::getPosition).map(Position::getLatitude).max(Double::compare).get();
-        double minLongitude = geoLocatables.stream().map(it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable::getPosition).map(Position::getLongitude).min(Double::compare).get();
-        double maxLongitude = geoLocatables.stream().map(it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable::getPosition).map(Position::getLongitude).max(Double::compare).get();
+        double minLatitude = geoLocatables.stream().map(GeoLocatable::getPosition).map(Position::getLatitude).min(Double::compare).get();
+        double maxLatitude = geoLocatables.stream().map(GeoLocatable::getPosition).map(Position::getLatitude).max(Double::compare).get();
+        double minLongitude = geoLocatables.stream().map(GeoLocatable::getPosition).map(Position::getLongitude).min(Double::compare).get();
+        double maxLongitude = geoLocatables.stream().map(GeoLocatable::getPosition).map(Position::getLongitude).max(Double::compare).get();
         return new CoordinatesBox(new Position(minLatitude, minLongitude), new Position(maxLatitude, maxLongitude));
     }
 
