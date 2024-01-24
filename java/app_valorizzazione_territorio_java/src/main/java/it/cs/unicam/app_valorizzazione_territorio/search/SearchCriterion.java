@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -18,6 +19,7 @@ import java.util.function.Predicate;
  * @param <T> the type of the value used for the search
  */
 public class SearchCriterion<T> implements Predicate<Object> {
+
     public static final BiPredicate<Object,Object> EQUALS =
             (a, b) -> b.equals(a);
     public static final BiPredicate<Object,Object> STARTS_WITH =
@@ -37,15 +39,18 @@ public class SearchCriterion<T> implements Predicate<Object> {
 
 
     /**
-     * A {@link Map} that maps a {@link String} format to a {@link BiPredicate} that can be used for search.
+     * A Map that maps a String format to a BiPredicate that can be used for search.
      */
-    public static final Map<String, BiPredicate<Object, Object>> stringToBiPredicate = Map.of(
-            "equals", EQUALS,
-            "startsWith", STARTS_WITH,
-            "contains", CONTAINS,
-            "includedInBox", INCLUDED_IN_BOX,
-            "includedInCompoundPoint", INCLUDED_IN_COMPOUND_POINT
-    );
+    public static final Map<String, BiPredicate<Object, Object>> stringToBiPredicate;
+
+    static {
+        stringToBiPredicate = new HashMap<>();
+        stringToBiPredicate.put("equals", EQUALS);
+        stringToBiPredicate.put("startsWith", STARTS_WITH);
+        stringToBiPredicate.put("contains", CONTAINS);
+        stringToBiPredicate.put("includedInBox", INCLUDED_IN_BOX);
+        stringToBiPredicate.put("includedInCompoundPoint", INCLUDED_IN_COMPOUND_POINT);
+    }
 
     private final BiPredicate<Object, Object> predicate;
     private final T value;

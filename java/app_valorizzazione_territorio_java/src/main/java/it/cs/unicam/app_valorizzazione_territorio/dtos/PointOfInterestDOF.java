@@ -1,6 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.PositionParser;
 
 import java.io.File;
 import java.util.List;
@@ -17,7 +20,7 @@ import java.util.List;
  * @param contents
  * @param ID
  */
-public class PointOfInterestDOF implements Identifiable {
+public class PointOfInterestDOF implements Identifiable, Positionable {
     private final String name;
     private final String description;
     private final String position;
@@ -80,6 +83,11 @@ public class PointOfInterestDOF implements Identifiable {
     @Override
     public long getID() {
         return this.ID();
+    }
+
+    @Override
+    public Position getPosition() {
+        return PositionParser.parse(this.position());
     }
 }
 

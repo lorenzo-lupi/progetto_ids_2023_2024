@@ -55,9 +55,7 @@ public class SearchEngine<T extends Searchable & Visualizable> {
         if (parameter == null || criterion == null)
             throw new IllegalArgumentException("Parameters must not be null");
 
-        if (!this.criteria.containsKey(parameter)) {
-            this.criteria.put(parameter, new ArrayList<>());
-        }
+        this.criteria.computeIfAbsent(parameter, k -> new ArrayList<>());
         this.criteria.get(parameter).add(criterion);
     }
 
