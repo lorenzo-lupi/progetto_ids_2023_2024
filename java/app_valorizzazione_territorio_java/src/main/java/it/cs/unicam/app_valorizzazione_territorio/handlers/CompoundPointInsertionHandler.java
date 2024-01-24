@@ -3,43 +3,32 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.builders.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.IdsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
+
 
 import java.util.List;
 import java.io.File;
 
-import static it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion.EQUALS_ID;
-
 public class CompoundPointInsertionHandler {
-    private Municipality municipality;
-    private final long userId;
+    private final Municipality municipality;
+    private final User user;
     private CompoundPointBuilder builder;
     private CompoundPoint compoundPoint;
+
 
     /**
      * Constructor for a CompoundPointInsertionHandler.
      *
      * @param userId the ID of the user who is inserting the compound point
      */
-    public CompoundPointInsertionHandler(long userId) {
-        this.userId = userId;
+    public CompoundPointInsertionHandler(long userId, long municipalityId) {
+        this.user = IdsUtils.getUserObject(userId);
+        this.municipality = IdsUtils.getMunicipalityObject(municipalityId);
     }
 
-    /**
-     * Sets the municipality in which the compound point will be inserted.
-     * @param municipalityID the ID of the municipality
-     */
-    private void setMunicipality(long municipalityID) {
-        this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityID);
-        if(municipality == null)
-            throw new IllegalArgumentException("Municipality not found");
-    }
 
     /**
      * Inserts the type of the compound point.
@@ -104,7 +93,7 @@ public class CompoundPointInsertionHandler {
         if (builder == null)
             throw new TypeNotSetException("Type must be inserted first");
 
-        builder.addPointOfInterest(poiFromID(pointOfInterestID));
+        builder.addPointOfInterest(getPoiFromID(pointOfInterestID));
     }
 
     /**
@@ -130,7 +119,7 @@ public class CompoundPointInsertionHandler {
         if (builder == null)
             throw new TypeNotSetException("Type must be inserted first");
 
-        builder.eliminatePointOfInterest(poiFromID(pointOfInterestID));
+        builder.eliminatePointOfInterest(getPoiFromID(pointOfInterestID));
     }
 
     /**
@@ -165,27 +154,21 @@ public class CompoundPointInsertionHandler {
      * @throws IllegalStateException if the compound point has not been created yet
      */
     public void insertCompoundPoint() {
-        if (compoundPoint == null)
+        if (this.compoundPoint == null)
             throw new IllegalStateException("Compound point must be created first");
-        User user = UserRepository.getInstance().getItemByID(userId);
-        if(Role.isAtLeastContributorForMunicipality(municipality).test(user)){
-            municipality.addGeoLocatable(compoundPoint);
+
+        if(Role.isAtLeastContributorForMunicipality(this.municipality).test(this.user)){
+            this.municipality.addGeoLocatable(this.compoundPoint);
         }
         else {
             ApprovalRequestRepository.getInstance().add(
-                    new MunicipalityApprovalRequest(user, compoundPoint, municipality));
+                    new MunicipalityApprovalRequest(this.user, this.compoundPoint, this.municipality));
         }
     }
 
 
-    private PointOfInterest  poiFromID(long pointOfInterestID){
-        SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(municipality.getGeoLocatables());
-        searchEngine.addCriterion(Parameter.ID, EQUALS_ID, pointOfInterestID);
-        GeoLocatable result = searchEngine.search().getResults().stream().findFirst().orElse(null);
-
-        if (result == null)
-            throw new IllegalArgumentException("Point of interest not found");
-        if(!(result instanceof PointOfInterest pointOfInterest))
+    private PointOfInterest  getPoiFromID(long pointOfInterestID){
+        if(!(IdsUtils.getGeoLocatableObject(pointOfInterestID, municipality) instanceof PointOfInterest pointOfInterest))
             throw new IllegalArgumentException("Wrong poi id");
 
         return pointOfInterest;

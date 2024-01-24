@@ -1,8 +1,10 @@
-package it.cs.unicam.app_valorizzazione_territorio.osm;
+package it.cs.unicam.app_valorizzazione_territorio.builders;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
+import it.cs.unicam.app_valorizzazione_territorio.osm.OSMRequestHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class MapBuilder<P extends Positionable & Identifiable> {
     private String osmData;
     private List<P> pointsList;
+    private Map<P> map;
 
     public MapBuilder() {
         this.osmData = "";
@@ -72,13 +75,18 @@ public class MapBuilder<P extends Positionable & Identifiable> {
         return this.pointsList.remove(point);
     }
 
+    public MapBuilder<P> build(){
+        this.map =  new Map<P>(this.osmData, this.pointsList.stream().toList());
+        return this;
+    }
+
     /**
      * Builds a map with the data provided.
      *
      * @return the map built
      */
     public Map<P> getResult() {
-        return new Map<P>(this.osmData, this.pointsList.stream().toList());
+        return this.map;
     }
 
     /**

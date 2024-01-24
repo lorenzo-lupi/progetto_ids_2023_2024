@@ -40,8 +40,9 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      *
      * @param title the title of the CompoundPoint
      */
-    public void setTitle(String title) {
+    public GeoLocatableBuilder<T> setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     /**
@@ -58,8 +59,9 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      *
      * @param description the description of the CompoundPoint
      */
-    public void setDescription(String description) {
+    public GeoLocatableBuilder<T> setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     /**
@@ -76,8 +78,9 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      *
      * @param image the image to add
      */
-    public void addImage(File image) {
+    public GeoLocatableBuilder<T> addImage(File image) {
         this.images.add(image);
+        return this;
     }
 
     /**
@@ -90,6 +93,7 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
         return List.copyOf(this.images);
     }
 
+
     public  void checkArguments() throws IllegalStateException {
         if (this.getTitle() == null)
             throw new TitleNotSetException("Title must be set before building the CompoundPoint");
@@ -97,5 +101,6 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
             throw new DescriptionNotSetException("Description must be set before building the CompoundPoint");
     }
 
+    public abstract void build() throws IllegalStateException;
     public abstract T obtainResult() throws IllegalStateException;
 }

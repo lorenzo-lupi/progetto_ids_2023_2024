@@ -13,7 +13,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
     private final CompoundPointTypeEnum type;
     private final Collection<PointOfInterest> pointOfInterests;
 
-
+    private CompoundPoint compoundPoint;
 
     /**
      * Constructor for a CompoundPointBuilder.
@@ -40,7 +40,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @param pointOfInterest the GeoLocatable to add
      */
-    public void addPointOfInterest(PointOfInterest pointOfInterest) throws WrongMunicipalityException {
+    public GeoLocatableBuilder<CompoundPoint> addPointOfInterest(PointOfInterest pointOfInterest) throws WrongMunicipalityException {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("GeoLocatable must not be null");
         if (!pointOfInterest.getMunicipality().equals(this.getMunicipality()))
@@ -48,6 +48,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
         if(!pointOfInterests.contains(pointOfInterest)) {
             this.pointOfInterests.add(pointOfInterest);
         }
+        return this;
     }
 
 
@@ -75,7 +76,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @throws IllegalStateException if the type of the CompoundPoint is not ITINERARY
      */
-    public void invertPointOfInterest(PointOfInterest pointOfInterest1, PointOfInterest pointOfInterest2) throws CompoundPointIsNotItineraryException {
+    public GeoLocatableBuilder<CompoundPoint> invertPointOfInterest(PointOfInterest pointOfInterest1, PointOfInterest pointOfInterest2) throws CompoundPointIsNotItineraryException {
         if (this.type != CompoundPointTypeEnum.ITINERARY)
             throw new CompoundPointIsNotItineraryException("Type must be set to ITINERARY before inverting geo-localizable objects");
         if (pointOfInterest1 == null || pointOfInterest2 == null)
@@ -89,6 +90,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
             throw new IllegalArgumentException("GeoLocatable 1 and 2 must be in the list of geo-localizable objects");
 
         Collections.swap(pointOfInterests, index1, index2);
+        return this;
     }
 
     /**
@@ -96,11 +98,12 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @param pointOfInterest the PointOfInterest object to eliminate
      */
-    public void eliminatePointOfInterest(PointOfInterest pointOfInterest) {
+    public GeoLocatableBuilder<CompoundPoint> eliminatePointOfInterest(PointOfInterest pointOfInterest) {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("GeoLocatable must not be null");
         if (!this.pointOfInterests.remove(pointOfInterest))
             throw new IllegalArgumentException("GeoLocatable must be in the list of  point of interests");
+        return this;
     }
 
     /**
@@ -110,9 +113,23 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      * @throws IllegalStateException if the CompoundPoint is not ready to be built
      */
     public CompoundPoint obtainResult() throws IllegalStateException{
+        if(compoundPoint == null)
+            build();
+        return this.compoundPoint;
+    }
+
+    @Override
+    public void checkArguments() throws IllegalStateException {
+        super.checkArguments();
+        if(this.pointOfInterests.size() < 2)
+            throw new NotEnoughGeoLocatablesException("pointOfInterests must contain at least 2 elements");
+    }
+
+    @Override
+    public void build() throws IllegalStateException {
         this.checkArguments();
 
-        return new CompoundPoint(
+        this.compoundPoint = new CompoundPoint(
                 this.getTitle(),
                 this.getDescription(),
                 this.getMunicipality(),
@@ -120,12 +137,6 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
                 this.type,
                 this.pointOfInterests,
                 this.getImages());
-    }
-
-    public void checkArguments() throws IllegalStateException {
-        super.checkArguments();
-        if(this.pointOfInterests.size() < 2)
-            throw new NotEnoughGeoLocatablesException("pointOfInterests must contain at least 2 elements");
     }
 
     private Position getRepresentative() {
