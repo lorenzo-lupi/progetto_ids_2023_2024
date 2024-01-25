@@ -37,6 +37,18 @@ public interface Contest extends Identifiable, Searchable, Visualizable {
     List<User> getParticipants() throws UnsupportedOperationException;
 
     /**
+     * Checks if the given user is permitted to participate in the contest.
+     * A user is permitted to participate in a contest if the contest is public or
+     * if it private and the user is a participant.
+     *
+     * @param user the user to check
+     * @return true if the given user is permitted to participate in the contest, false otherwise.
+     */
+    default boolean permitsUser(User user) {
+        return !this.isPrivate() || this.getParticipants().contains(user);
+    }
+
+    /**
      * Returns true if the contest has a geolocation, false otherwise.
      *
      * @return true if the contest has a geolocation, false otherwise.
@@ -105,6 +117,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable {
     @Override
     default Map<Parameter, Object> getParametersMapping() {
         return Map.of(
+                Parameter.THIS, this,
                 Parameter.NAME, this.getName(),
                 Parameter.CONTEST_TOPIC, this.getTopic(),
                 Parameter.CONTEST_STATUS, this.getStatus());

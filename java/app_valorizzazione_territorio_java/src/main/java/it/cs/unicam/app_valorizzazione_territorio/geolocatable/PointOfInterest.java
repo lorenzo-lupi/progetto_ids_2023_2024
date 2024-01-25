@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
@@ -67,10 +66,10 @@ public abstract class PointOfInterest extends GeoLocatable {
     }
 
     /**
-     * Returns the contents associated to the geo-localizable object.
+     * Returns the contents associated to the geo-locatable object.
      *
-     * @param content the contents associated to the geo-localizable object
-     * @return true if the contents associated to the geo-localizable object has been added, false otherwise
+     * @param content the contents associated to the geo-locatable object
+     * @return true if the contents associated to the geo-locatable object has been added, false otherwise
      */
     public boolean addContent(Content content) {
         return this.contents.add(content);

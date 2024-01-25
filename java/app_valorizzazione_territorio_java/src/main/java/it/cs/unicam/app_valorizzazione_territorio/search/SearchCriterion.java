@@ -1,9 +1,11 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,12 +32,10 @@ public class SearchCriterion<T> implements Predicate<Object> {
             (a, b) -> a instanceof Position p && b instanceof CoordinatesBox c && c.contains(p);
     public static final BiPredicate<Object, Object> INCLUDED_IN_COMPOUND_POINT =
             (a, b) -> a instanceof PointOfInterest g && b instanceof Collection c && c.contains(g);
-
     public static final BiPredicate<Object, Object> EQUALS_ID =
             (a, b) ->  a instanceof Long la && b instanceof Identifiable ic && ic.getID() == la;
-
-    //TODO permette utente:
-    //public static final BiPredicate<Object,  Object> PERMITS_USER =
+    public static final BiPredicate<Object,  Object> PERMITS_USER =
+            (a, b) -> a instanceof Contest c && b instanceof User u && c.permitsUser(u);
 
 
     /**
@@ -50,6 +50,8 @@ public class SearchCriterion<T> implements Predicate<Object> {
         stringToBiPredicate.put("contains", CONTAINS);
         stringToBiPredicate.put("includedInBox", INCLUDED_IN_BOX);
         stringToBiPredicate.put("includedInCompoundPoint", INCLUDED_IN_COMPOUND_POINT);
+        stringToBiPredicate.put("equalsID", EQUALS_ID);
+        stringToBiPredicate.put("permitsUser", PERMITS_USER);
     }
 
     private final BiPredicate<Object, Object> predicate;

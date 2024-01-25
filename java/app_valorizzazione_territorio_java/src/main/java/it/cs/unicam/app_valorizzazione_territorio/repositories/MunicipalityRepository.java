@@ -66,7 +66,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a map of all the geo-locatable points of the municipalities
      */
-    private Map<Long, GeoLocatable> getAllGeoLocatablesMap() {
+    public Map<Long, GeoLocatable> getAllGeoLocatablesMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getGeoLocatables().stream())
                 .collect(toMap(GeoLocatable::getID, Function.identity()));
@@ -77,7 +77,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a map of all the contests of the municipalities
      */
-    private Map<Long, Contest> getAllContestsMap() {
+    public Map<Long, Contest> getAllContestsMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getContests().stream())
                 .collect(toMap(Contest::getID, Function.identity()));
@@ -88,7 +88,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a map of all the content of the POIs of the municipalities
      */
-    private Map<Long, Content> getAllContentsMap() {
+    public Map<Long, Content> getAllContentsMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getGeoLocatables().stream())
                 .filter(geoLocatable -> geoLocatable instanceof PointOfInterest)

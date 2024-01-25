@@ -6,7 +6,6 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.IdsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
@@ -171,7 +170,7 @@ public class CompoundPointInsertionHandler {
     }
 
 
-    private PointOfInterest  getPoiFromID(long pointOfInterestID){
+    private PointOfInterest getPoiFromID(long pointOfInterestID){
         if(!(IdsUtils.getGeoLocatableObject(pointOfInterestID, municipality) instanceof PointOfInterest pointOfInterest))
             throw new IllegalArgumentException("Wrong poi id");
 

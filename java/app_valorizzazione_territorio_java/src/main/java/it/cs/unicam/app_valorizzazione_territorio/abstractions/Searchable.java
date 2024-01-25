@@ -17,7 +17,11 @@ public interface Searchable {
      *
      * @return the mapping between parameters and values
      */
-    Map<Parameter, Object> getParametersMapping();
+    default Map<Parameter, Object> getParametersMapping() {
+        return Map.of(
+                Parameter.THIS, this
+        );
+    }
 
     /**
      * Returns the set of search parameters defined for this object.

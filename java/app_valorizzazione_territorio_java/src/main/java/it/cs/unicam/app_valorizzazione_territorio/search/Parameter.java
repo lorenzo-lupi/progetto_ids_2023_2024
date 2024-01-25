@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Parameter {
+    THIS,
     NAME,
     DESCRIPTION,
     POSITION,

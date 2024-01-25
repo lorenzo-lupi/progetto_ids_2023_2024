@@ -3,10 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.builders;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.Date;
-import java.util.LinkedList;
 
 public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest> {
     private Position position;

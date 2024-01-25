@@ -3,6 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.repositories;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -25,6 +27,15 @@ public abstract class Repository<I extends Identifiable> {
      */
     public Stream<I> getItemStream() {
         return items.values().stream();
+    }
+
+    /**
+     * Returns a copy of the map of all the items of the repository.
+     *
+     * @return a copy of the map of all the items of the repository
+     */
+    public Map<Long, I> getAllItemsMap() {
+        return items.values().stream().collect(Collectors.toMap(I::getID, Function.identity()));
     }
 
     /**
