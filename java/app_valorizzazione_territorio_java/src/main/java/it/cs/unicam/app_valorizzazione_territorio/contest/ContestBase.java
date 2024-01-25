@@ -39,7 +39,7 @@ public class ContestBase implements Contest {
         this.startDate = startDate;
         this.votingStartDate = votingStartDate;
         this.endDate = endDate;
-
+        this.proposalRequests = new ProposalRequests();
     }
 
     public String getName() {

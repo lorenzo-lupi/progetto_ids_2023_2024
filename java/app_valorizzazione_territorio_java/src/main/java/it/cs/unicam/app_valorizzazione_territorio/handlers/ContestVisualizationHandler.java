@@ -13,6 +13,9 @@ import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
 import java.util.List;
 
+/**
+ * This class represents a handler for the search and visualization of the contests of a municipality.
+ */
 public class ContestVisualizationHandler extends SearchHandler<Contest> {
 
     private final User user;
@@ -84,6 +87,7 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
      */
     public List<ContestSOF> viewAllContests() {
         return municipality.getContests().stream()
+                .filter(contest -> contest.permitsUser(user))
                 .map(Contest::getSynthesizedFormat)
                 .toList();
     }

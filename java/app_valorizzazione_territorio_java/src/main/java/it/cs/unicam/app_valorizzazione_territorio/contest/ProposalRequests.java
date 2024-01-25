@@ -3,10 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class ProposalRequests {
     private Map<Content, Collection<User>> votes;
@@ -16,9 +13,22 @@ public class ProposalRequests {
     }
 
     /**
+     * Returns the list of proposed contents combined with their number of received votes from users.
+     *
+     * @return the list of proposals.
+     */
+    public List<VotedContent> getProposals() {
+        return votes.keySet()
+                .stream()
+                .map(content -> new VotedContent(content, votes.get(content).size()))
+                .toList();
+    }
+
+    /**
      * Checks if a user has voted for a content.
-     * @param user
-     * @return
+     *
+     * @param user the user to check
+     * @return true if the user has voted for a content, false otherwise
      */
     public boolean hasVoted(User user) {
         if (user == null)
@@ -30,9 +40,12 @@ public class ProposalRequests {
     }
 
     /**
-     * Checks if a content has been proposed.
-     * @param content
-     * @return
+     * Adds a vote to the given content by the given user.
+     *
+     * @param content the content to be voted.
+     * @param user    the user who wants to vote.
+     * @throws IllegalArgumentException if the content or the user are null,
+     * if the content is not in the list or if the user has already voted.
      */
     public void addVote(Content content, User user) {
         if (content == null || user == null)
@@ -49,6 +62,7 @@ public class ProposalRequests {
 
     /**
      * Removes a user's vote from a content.
+     *
      * @param user the user who wants to remove his vote.
      * @throws IllegalArgumentException if the user has not voted for any content.
      */
@@ -63,6 +77,7 @@ public class ProposalRequests {
 
     /**
      * Adds a content to the list of proposals.
+     *
      * @param content the content to be added.
      * @throws IllegalArgumentException if the content is already in the list.
      */
@@ -78,6 +93,7 @@ public class ProposalRequests {
 
     /**
      * Removes a content from the list of proposals.
+     *
      * @param content the content to be removed.
      * @throws IllegalArgumentException if the content is not in the list.
      */

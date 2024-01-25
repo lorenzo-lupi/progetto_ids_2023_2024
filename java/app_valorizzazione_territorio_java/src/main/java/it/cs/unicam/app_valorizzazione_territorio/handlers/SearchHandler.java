@@ -86,7 +86,7 @@ public abstract class SearchHandler<S extends Searchable & Visualizable> {
     }
 
     /**
-     * Returns the search result based on the previously submitted search criterion.
+     * Returns the search result based on the previously submitted search criteria.
      *
      * @return the search result of the search engine
      */
