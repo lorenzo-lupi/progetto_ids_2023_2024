@@ -98,7 +98,7 @@ public abstract class PointOfInterest extends GeoLocatable {
     public PointOfInterestSOF getSynthesizedFormat() {
         return new PointOfInterestSOF(super.getName(),
                 this.getImages().get(0),
-                this.getClass().getName(),
+                this.getClass().getSimpleName(),
                 super.getID());
     }
 
@@ -108,7 +108,7 @@ public abstract class PointOfInterest extends GeoLocatable {
                 super.getDescription(),
                 this.getPosition().toString(),
                 super.getMunicipality().getSynthesizedFormat(),
-                this.getClass().getName(),
+                this.getClass().getSimpleName(),
                 super.getImages(),
                 this.contents.stream().map(Content::getSynthesizedFormat).toList(),
                 super.getID());

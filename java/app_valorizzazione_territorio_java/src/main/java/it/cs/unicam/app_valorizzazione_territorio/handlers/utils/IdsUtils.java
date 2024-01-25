@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.model.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -40,6 +40,8 @@ public class IdsUtils {
         return getGeoLocatableObject(pointOfInterestID, getMunicipalityObject(municipalityID));
     }
 
+    //TODO: ATTENZIONE! E' molto più semplice di così, esiste già il metodo in MunicipalityRepository per
+    //TODO: ottenere un geoLocatable da un ID, che è univoco in tutti i comuni.
     public static GeoLocatable getGeoLocatableObject(long pointOfInterestID, Municipality municipality) {
         if(municipality == null)
             throw new IllegalArgumentException("Municipality cannot be null");
