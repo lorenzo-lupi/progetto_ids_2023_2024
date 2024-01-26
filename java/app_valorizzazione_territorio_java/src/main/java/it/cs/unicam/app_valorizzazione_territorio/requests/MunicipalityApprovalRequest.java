@@ -50,13 +50,13 @@ public class MunicipalityApprovalRequest<I extends Approvable & Visualizable> ex
     }
 
     @Override
-    public Identifiable getSynthesizedFormat() {
+    public MunicipalityRequestSOF getSynthesizedFormat() {
         return new MunicipalityRequestSOF(this.getUser().getUsername(),
                 this.getMunicipality().getName(), this.getDate(), this.getID());
     }
 
     @Override
-    public Identifiable getDetailedFormat() {
+    public MunicipalityRequestDOF getDetailedFormat() {
         return new MunicipalityRequestDOF(this.getUser().getSynthesizedFormat(),
                 this.getMunicipality().getSynthesizedFormat(), this.getDate(),
                 this.getApprovableItem().getSynthesizedFormat(), this.getID());
