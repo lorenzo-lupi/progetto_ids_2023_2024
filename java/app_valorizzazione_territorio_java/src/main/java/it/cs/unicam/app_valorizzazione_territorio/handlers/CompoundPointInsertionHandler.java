@@ -169,7 +169,7 @@ public class CompoundPointInsertionHandler {
      * @throws IllegalStateException if the compound point has not been created yet
      */
     public void insertCompoundPoint() {
-        GeoLocatableControllerUtils.insertCompoundPoint(this.compoundPoint, this.user, this.municipality);
+        GeoLocatableControllerUtils.insertGeoLocatable(this.compoundPoint, this.user);
     }
 
 

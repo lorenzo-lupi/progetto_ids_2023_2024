@@ -5,7 +5,6 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.IdsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.PositionParser;
@@ -112,7 +111,7 @@ public class PointOfInterestInsertionHandler {
      */
     public void insertPointOfInterest(){
         GeoLocatableControllerUtils
-                .insertCompoundPoint(poi, user, municipality);
+                .insertGeoLocatable(poi, user);
     }
 
 }

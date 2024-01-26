@@ -38,6 +38,16 @@ public class ContentBuilder {
 
     /**
      * Removes a file from the content to be built.
+     * @param file the file to removed
+     * @return the builder
+     */
+    public ContentBuilder removeFile(File file) {
+        this.files.remove(file);
+        return this;
+    }
+
+    /**
+     * Removes a file from the content to be built.
      * @param description the file to removed
      * @return the builder
      */
