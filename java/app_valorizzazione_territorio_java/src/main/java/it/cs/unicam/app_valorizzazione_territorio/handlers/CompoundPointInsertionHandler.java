@@ -9,9 +9,8 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
-
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
 import java.util.List;
 import java.io.File;
@@ -29,8 +28,8 @@ public class CompoundPointInsertionHandler {
      * @param userId the ID of the user who is inserting the compound point
      */
     public CompoundPointInsertionHandler(long userId, long municipalityId) {
-        this.user = IdsUtils.getUserObject(userId);
-        this.municipality = IdsUtils.getMunicipalityObject(municipalityId);
+        this.user = UserRepository.getInstance().getItemByID(userId);
+        this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityId);
     }
 
 
@@ -140,6 +139,18 @@ public class CompoundPointInsertionHandler {
 
 
     //TODO: del added file
+    /**
+     * Deletes a file from the compound point.
+     * @param file the file to delete
+     * @throws TypeNotSetException if the type has not been inserted yet
+     */
+    public void deleteFile(File file) {
+        if (builder == null)
+            throw new TypeNotSetException("Type must be inserted first");
+        if(file == null )
+            throw new IllegalArgumentException("File cannot be null");
+        builder.removeImage(file);
+    }
 
 
     /**

@@ -8,7 +8,9 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRe
 import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
 
 public class GeoLocatableControllerUtils {
-    public static void insertCompoundPoint(GeoLocatable geoLocatable, User user, Municipality municipality) {
+    public static void insertCompoundPoint(GeoLocatable geoLocatable,
+                                           User user,
+                                           Municipality municipality) {
         if (geoLocatable == null)
             throw new IllegalStateException("Compound point must be created first");
 

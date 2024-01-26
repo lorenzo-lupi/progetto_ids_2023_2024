@@ -83,6 +83,16 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
     }
 
     /**
+     * Remove an image from the CompoundPoint.
+     *
+     * @param image the image to remove
+     */
+    public GeoLocatableBuilder<T> removeImage(File image) {
+        this.images.remove(image);
+        return this;
+    }
+
+    /**
      * Get the images of the CompoundPoint.
      *
      * @return the images of the CompoundPoint

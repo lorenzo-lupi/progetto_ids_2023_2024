@@ -12,6 +12,8 @@ import it.cs.unicam.app_valorizzazione_territorio.model.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +34,8 @@ public class PointOfInterestInsertionHandler {
      * @param userId the ID of the user who is inserting the point of interest
      */
     public PointOfInterestInsertionHandler(long userId, long municipalityId) throws IOException {
-        this.user = IdsUtils.getUserObject(userId);
-        this.municipality = IdsUtils.getMunicipalityObject(municipalityId);
+        this.user = UserRepository.getInstance().getItemByID(userId);
+        this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityId);
         this.builder = new PointOfInterestBuilder(municipality);
         this.map = MapProvider.getEmptyMap(municipality);
     }
@@ -90,6 +92,14 @@ public class PointOfInterestInsertionHandler {
     }
 
     /**
+     * remove the image from the point of interest
+     */
+    public void removeImage(File image){
+        builder.removeImage(image);
+    }
+
+
+    /**
      * Creates the point of interest.
      */
     public void createPointOfInterest(){
@@ -97,6 +107,9 @@ public class PointOfInterestInsertionHandler {
                 .obtainResult();
     }
 
+    /**
+     * Inserts the point of interest in the Municipality.
+     */
     public void insertPointOfInterest(){
         GeoLocatableControllerUtils
                 .insertCompoundPoint(poi, user, municipality);
