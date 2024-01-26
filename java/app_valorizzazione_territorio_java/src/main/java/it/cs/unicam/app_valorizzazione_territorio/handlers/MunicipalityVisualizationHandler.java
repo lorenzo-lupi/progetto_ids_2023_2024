@@ -51,11 +51,7 @@ public class MunicipalityVisualizationHandler extends SearchHandler<Municipality
      * @throws IllegalArgumentException if the Municipality having the given ID is not found
      **/
     public static MunicipalityDOF viewMunicipality(long municipalityID) {
-        Municipality municipality = MunicipalityRepository.getInstance().getItemByID(municipalityID);
-        if (municipality == null)
-            throw new IllegalArgumentException("Municipality not found");
-
-        return municipality.getDetailedFormat();
+        return MunicipalityRepository.getInstance().getItemByID(municipalityID).getDetailedFormat();
     }
 
     @Override

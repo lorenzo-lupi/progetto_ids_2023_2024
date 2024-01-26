@@ -1,11 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -101,9 +103,40 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @param ID the ID of the geo-locatable point to be returned
      * @return the geo-locatable point of the municipalities in the repository with the given ID
+     * @throws IllegalArgumentException if the geo-locatable point with the given ID is not found
      */
     public GeoLocatable getGeoLocatableByID(long ID) {
-        return getAllGeoLocatablesMap().get(ID);
+        GeoLocatable geoLocatable = getAllGeoLocatablesMap().get(ID);
+        if(geoLocatable == null) throw new IllegalArgumentException("GeoLocatable not found");
+        return geoLocatable;
+    }
+
+    /**
+     * Returns the point of interest of the municipalities in the repository with the given ID.
+     *
+     * @param ID the ID of the point of interest to be returned
+     * @return the point of interest of the municipalities in the repository with the given ID
+     * @throws IllegalArgumentException if the geo-locatable point with the given ID is not found or
+     * is not a point of interest
+     */
+    public PointOfInterest getPointOfInterestByID(long ID) {
+        if (!(getGeoLocatableByID(ID) instanceof PointOfInterest pointOfInterest))
+            throw new IllegalArgumentException("The given geo-locatable ID does not correspond to a point of interest");
+        return pointOfInterest;
+    }
+
+    /**
+     * Returns the compound point of the municipalities in the repository with the given ID.
+     *
+     * @param ID the ID of the compound point to be returned
+     * @return the compound point of the municipalities in the repository with the given ID
+     * @throws IllegalArgumentException if the geo-locatable point with the given ID is not found or
+     * is not a compound point
+     */
+    public CompoundPoint getCompoundPointByID(long ID) {
+        if (!(getGeoLocatableByID(ID) instanceof CompoundPoint compoundPoint))
+            throw new IllegalArgumentException("The given geo-locatable ID does not correspond to a compound point");
+        return compoundPoint;
     }
 
     /**
@@ -111,9 +144,12 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @param ID the ID of the contest to be returned
      * @return the contest of the municipalities in the repository with the given ID
+     * @throws IllegalArgumentException if the contest with the given ID is not found
      */
     public Contest getContestByID(long ID) {
-        return getAllContestsMap().get(ID);
+        Contest contest = getAllContestsMap().get(ID);
+        if(contest == null) throw new IllegalArgumentException("Contest not found");
+        return contest;
     }
 
     /**
@@ -121,9 +157,12 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @param ID the ID of the content to be returned
      * @return the content of the POIs of the municipalities in the repository with the given ID
+     * @throws IllegalArgumentException if the content with the given ID is not found
      */
     public Content getContentByID(long ID) {
-        return getAllContentsMap().get(ID);
+        Content content = getAllContentsMap().get(ID);
+        if(content == null) throw new IllegalArgumentException("Content not found");
+        return content;
     }
 
     /**

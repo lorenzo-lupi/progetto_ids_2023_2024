@@ -22,6 +22,12 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
 
     private final Municipality municipality;
 
+    /**
+     * Creates a new ContestVisualizationHandler for the municipality corresponding to the given ID.
+     *
+     * @param userID the ID of the user
+     * @param municipalityID the ID of the municipality
+     */
     public ContestVisualizationHandler(long userID, long municipalityID) {
         super(MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests());
         this.user = UserRepository.getInstance().getItemByID(userID);
@@ -65,18 +71,28 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     }
 
     /**
-     * Returns the Detailed Format of a Contest having the given ID.
+     * Returns the Detailed Format of a Contest corresponding to the given ID in the municipality corresponding
+     * to the given ID.
+     *
+     * @param municipalityID the ID of the municipality
+     * @param contestID the ID of the Contest to visualize
+     * @return the Detailed Format of the Contest having the given ID
+     * @throws IllegalArgumentException if the Contest having the given ID is not found in the municipality
+     */
+    public static ContestDOF viewContest(long municipalityID, long contestID) {
+        return getContest(MunicipalityRepository.getInstance().getItemByID(municipalityID), contestID).getDetailedFormat();
+    }
+
+    /**
+     * Returns the Detailed Format of a Contest in the system having the given ID.
+     * The contest can belong to any municipality.
      *
      * @param contestID the ID of the Contest to visualize
      * @return the Detailed Format of the Contest having the given ID
-     * @throws IllegalArgumentException if the Contest having the given ID is not found
+     * @throws IllegalArgumentException if the Contest having the given ID is not found in the system
      **/
-    public static ContestDOF viewContest(long contestID) {
-        Contest contest = MunicipalityRepository.getInstance().getContestByID(contestID);
-        if (contest == null)
-            throw new IllegalArgumentException("Contest not found");
-
-        return contest.getDetailedFormat();
+    public static ContestDOF viewContestFromRepository(long contestID) {
+        return MunicipalityRepository.getInstance().getContestByID(contestID).getDetailedFormat();
     }
 
     /**
@@ -93,6 +109,17 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     }
 
     /**
+     * Returns the Detailed Format of a Contest corresponding to the given ID in the municipality.
+     *
+     * @param contestID the ID of the Contest to visualize
+     * @return the Detailed Format of the Contest having the given ID
+     * @throws IllegalArgumentException if the Contest having the given ID is not found in the municipality
+     */
+    public ContestDOF viewContest(long contestID) {
+        return getContest(municipality, contestID).getDetailedFormat();
+    }
+
+    /**
      * Starts a new search by resetting the criteria of the search engine.
      * The started search is performed on the contests of the municipality that permit the user.
      */
@@ -106,5 +133,12 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     @SuppressWarnings("unchecked")
     public List<ContestSOF> getSearchResult() {
         return (List<ContestSOF>) super.getSearchResult();
+    }
+
+    private static Contest getContest(Municipality municipality, long contestID) {
+        return municipality.getContests().stream()
+                .filter(contest -> contest.getID() == contestID)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Contest not found"));
     }
 }

@@ -1,7 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.contest.ProposalRequests;
 import it.cs.unicam.app_valorizzazione_territorio.contest.VotedContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
@@ -54,13 +53,6 @@ public class ContestContentVoteHandler extends SearchHandler<VotedContent> {
                 filters);
     }
 
-    private static VotedContent getVotedContent(Contest contest, long contentID) {
-        return contest.getProposalRequests().getProposals().stream()
-                .filter(votedContent -> votedContent.getID() == contentID)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Content not found"));
-    }
-
     /**
      * Returns the detailed format of the content corresponding to the given ID proposed for the
      * contest corresponding to the given ID combined with its number of votes.
@@ -85,12 +77,7 @@ public class ContestContentVoteHandler extends SearchHandler<VotedContent> {
      */
     public static void vote(long userID, long contestID, long contentID) {
         User user = UserRepository.getInstance().getItemByID(userID);
-        if (user == null)
-            throw new IllegalArgumentException("User not found");
         Contest contest = MunicipalityRepository.getInstance().getContestByID(contestID);
-        if (contest == null)
-            throw new IllegalArgumentException("Contest not found");
-
         contest.getProposalRequests().addVote(getVotedContent(contest, contentID).content(), user);
     }
 
@@ -105,12 +92,7 @@ public class ContestContentVoteHandler extends SearchHandler<VotedContent> {
      */
     public static void removeVote(long userID, long contestID) {
         User user = UserRepository.getInstance().getItemByID(userID);
-        if (user == null)
-            throw new IllegalArgumentException("User not found");
         Contest contest = MunicipalityRepository.getInstance().getContestByID(contestID);
-        if (contest == null)
-            throw new IllegalArgumentException("Contest not found");
-
         contest.getProposalRequests().removeVote(user);
     }
 
@@ -166,5 +148,12 @@ public class ContestContentVoteHandler extends SearchHandler<VotedContent> {
      */
     public void removeVote() {
         contest.getProposalRequests().removeVote(user);
+    }
+
+    private static VotedContent getVotedContent(Contest contest, long contentID) {
+        return contest.getProposalRequests().getProposals().stream()
+                .filter(votedContent -> votedContent.getID() == contentID)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Content not found"));
     }
 }

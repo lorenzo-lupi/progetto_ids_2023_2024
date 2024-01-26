@@ -91,9 +91,12 @@ public abstract class Repository<I extends Identifiable> {
      *
      * @param ID the ID of the item to be returned
      * @return the item corresponding to the specified ID, if any
+     * @throws IllegalArgumentException if the item is not found
      */
     public I getItemByID(long ID) {
-        return this.items.get(ID);
+        I item = this.items.get(ID);
+        if (item == null) throw new IllegalArgumentException("Item not found");
+        return item;
     }
 
     /**
