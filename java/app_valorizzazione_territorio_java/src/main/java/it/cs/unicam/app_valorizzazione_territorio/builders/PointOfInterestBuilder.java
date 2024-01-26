@@ -61,7 +61,7 @@ public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest>
     }
 
     @Override
-    public void build() throws IllegalStateException {
+    public PointOfInterestBuilder build() throws IllegalStateException {
         this.checkArguments();
         this.pointOfInterest = switch (this.classification.getSimpleName()) {
                     case "Attraction" -> new Attraction(this.getTitle(),
@@ -83,6 +83,7 @@ public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest>
                             this.timetable);
                     default -> throw new IllegalStateException("Unexpected value: " + this.classification);
                 };
+        return this;
     }
 
     @Override

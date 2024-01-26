@@ -4,14 +4,11 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.function.Predicate;
 
 /**
  * This class represents a request for approval of an item.

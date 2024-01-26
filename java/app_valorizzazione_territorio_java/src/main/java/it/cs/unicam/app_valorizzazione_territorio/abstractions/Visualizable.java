@@ -6,19 +6,20 @@ package it.cs.unicam.app_valorizzazione_territorio.abstractions;
  * They also provide a unique identifier in order to be identified in the system from their
  * synthetic or detailed representation.
  */
-public interface Visualizable extends Identifiable{
+public interface Visualizable extends Identifiable {
 
     /**
-     * Returns a record containing the synthetic information of the object.
+     * Returns the synthetic representation of the object.
      *
-     * @return a record containing the synthetic information of the object
+     * @return the synthetic representation of the object
      */
     Identifiable getSynthesizedFormat();
 
     /**
-     * Returns a record containing the detailed information of the object.
+     * Returns the detailed representation of the object.
      *
-     * @return a record containing the detailed information of the object
+     * @return the detailed representation of the object
      */
     Identifiable getDetailedFormat();
+
 }

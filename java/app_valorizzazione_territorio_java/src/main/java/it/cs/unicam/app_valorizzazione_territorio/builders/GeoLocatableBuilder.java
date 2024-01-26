@@ -100,6 +100,6 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
             throw new DescriptionNotSetException("Description must be set before building the CompoundPoint");
     }
 
-    public abstract void build() throws IllegalStateException;
+    public abstract GeoLocatableBuilder<T> build() throws IllegalStateException;
     public abstract T obtainResult() throws IllegalStateException;
 }

@@ -2,6 +2,8 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
 
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
  * This class represents a geographical visualizable map, composed of geographical OSM data and
  * {@link Positionable} objects that are also {@link Identifiable}.
  */
-public class Map<P extends Positionable & Identifiable> {
+public class Map<P extends Positionable & Visualizable> implements Visualizable {
     private final String osmData;
     private final List<P> positionablePoints;
 
@@ -37,5 +39,22 @@ public class Map<P extends Positionable & Identifiable> {
                 .filter(p -> p.getID() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public long getID() {
+        return 0;
+    }
+
+    @Override
+    public MapDOF getSynthesizedFormat() {
+        return this.getDetailedFormat();
+    }
+
+    @Override
+    public MapDOF getDetailedFormat() {
+        return new MapDOF(osmData,
+                positionablePoints.stream().map(Visualizable::getSynthesizedFormat).toList(),
+                getID());
     }
 }

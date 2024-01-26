@@ -129,7 +129,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
     }
 
     @Override
-    public void build() throws IllegalStateException {
+    public CompoundPointBuilder build() throws IllegalStateException {
         this.checkArguments();
 
         this.compoundPoint = new CompoundPoint(
@@ -139,5 +139,6 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
                 this.type,
                 this.pointOfInterests,
                 this.getImages());
+        return this;
     }
 }

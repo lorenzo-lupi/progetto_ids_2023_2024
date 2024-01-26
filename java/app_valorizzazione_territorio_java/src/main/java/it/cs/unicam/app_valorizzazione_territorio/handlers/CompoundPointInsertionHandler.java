@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.builders.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.IdsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
@@ -96,7 +97,7 @@ public class CompoundPointInsertionHandler {
         if (builder == null)
             throw new TypeNotSetException("Type must be inserted first");
 
-        builder.addPointOfInterest(getPoiFromID(pointOfInterestID));
+        builder.addPointOfInterest(IdsUtils.getPoiFromID(pointOfInterestID, municipality));
     }
 
     /**
@@ -122,7 +123,7 @@ public class CompoundPointInsertionHandler {
         if (builder == null)
             throw new TypeNotSetException("Type must be inserted first");
 
-        builder.eliminatePointOfInterest(getPoiFromID(pointOfInterestID));
+        builder.eliminatePointOfInterest(IdsUtils.getPoiFromID(pointOfInterestID, municipality));
     }
 
     /**
@@ -157,24 +158,10 @@ public class CompoundPointInsertionHandler {
      * @throws IllegalStateException if the compound point has not been created yet
      */
     public void insertCompoundPoint() {
-        if (this.compoundPoint == null)
-            throw new IllegalStateException("Compound point must be created first");
-
-        if(Role.isAtLeastContributorForMunicipality(this.municipality).test(this.user)){
-            this.municipality.addGeoLocatable(this.compoundPoint);
-        }
-        else {
-            ApprovalRequestRepository.getInstance().add(
-                    new MunicipalityApprovalRequest(this.user, this.compoundPoint, this.municipality));
-        }
+        GeoLocatableControllerUtils.insertCompoundPoint(this.compoundPoint, this.user, this.municipality);
     }
 
 
-    private PointOfInterest getPoiFromID(long pointOfInterestID){
-        if(!(IdsUtils.getGeoLocatableObject(pointOfInterestID, municipality) instanceof PointOfInterest pointOfInterest))
-            throw new IllegalArgumentException("Wrong poi id");
 
-        return pointOfInterest;
-    }
 
 }

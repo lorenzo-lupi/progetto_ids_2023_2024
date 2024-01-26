@@ -2,7 +2,6 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 

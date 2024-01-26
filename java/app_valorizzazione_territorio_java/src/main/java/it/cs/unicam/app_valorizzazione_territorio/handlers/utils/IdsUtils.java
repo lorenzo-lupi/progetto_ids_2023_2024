@@ -2,6 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -64,5 +65,12 @@ public class IdsUtils {
         if(result == null)
             throw new IllegalArgumentException("Object not found");
         return result;
+    }
+
+    public static PointOfInterest getPoiFromID(long pointOfInterestID, Municipality municipality){
+        if(!(IdsUtils.getGeoLocatableObject(pointOfInterestID, municipality) instanceof PointOfInterest pointOfInterest))
+            throw new IllegalArgumentException("Wrong poi id");
+
+        return pointOfInterest;
     }
 }
