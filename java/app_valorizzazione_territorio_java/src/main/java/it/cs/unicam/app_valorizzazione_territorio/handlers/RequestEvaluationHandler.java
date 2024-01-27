@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RequestEvaluationHandler {
 
-    private User user;
+    private final User user;
     /**
      * Creates a new search handler that searches in the given collection of searchable items.
      *

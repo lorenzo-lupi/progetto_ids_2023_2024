@@ -24,7 +24,6 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     private final CoordinatesBox coordinatesBox;
     private final List<File> files;
     private final List<GeoLocatable> geoLocatables;
-
     private final List<Contest> contests;
     private final long ID = MunicipalityRepository.getInstance().getNextID();
 
@@ -104,6 +103,14 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
 
     public boolean removeGeoLocalizable(GeoLocatable geoLocatable) {
         return this.geoLocatables.remove(geoLocatable);
+    }
+
+    public boolean addContest(Contest contest) {
+        return this.contests.add(contest);
+    }
+
+    public boolean removeContest(Contest contest) {
+        return this.contests.remove(contest);
     }
 
     /**

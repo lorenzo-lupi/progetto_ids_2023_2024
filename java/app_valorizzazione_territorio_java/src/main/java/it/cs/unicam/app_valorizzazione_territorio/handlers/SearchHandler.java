@@ -11,7 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class SearchHandler<S extends Searchable & Visualizable> {
+public class SearchHandler<S extends Searchable & Visualizable> {
 
     protected final SearchEngine<S> searchEngine;
 
@@ -61,7 +61,7 @@ public abstract class SearchHandler<S extends Searchable & Visualizable> {
      * @param parameter the searchable item parameter to apply the criterion on
      * @param criterion the criterion to add
      * @param value the reference value
-     * @throws IllegalArgumentException if any of the parameters is null or invalid
+     * @throws IllegalArgumentException if any of the arguments is null or invalid
      */
     public void setSearchCriterion(String parameter, String criterion, Object value){
         this.setSearchCriterion(new SearchFilter(parameter, criterion, value));

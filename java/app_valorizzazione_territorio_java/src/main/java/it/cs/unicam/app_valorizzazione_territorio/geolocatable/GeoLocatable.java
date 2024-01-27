@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -148,5 +149,12 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     @Override
     public long getID() {
         return this.ID;
+    }
+
+    public GeoLocatableSOF getSynthesizedFormat(){
+        return new GeoLocatableSOF(this.getName(),
+                this.getImages().get(0),
+                this.getClass().getSimpleName(),
+                this.getID());
     }
 }

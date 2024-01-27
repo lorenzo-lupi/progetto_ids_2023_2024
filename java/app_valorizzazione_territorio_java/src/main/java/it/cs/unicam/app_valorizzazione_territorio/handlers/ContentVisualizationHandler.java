@@ -13,7 +13,7 @@ import java.util.List;
  * This class represents a handler for the search and visualization of the contents of a point of interest.
  */
 public class ContentVisualizationHandler extends SearchHandler<Content>{
-    private PointOfInterest pointOfInterest;
+    private final PointOfInterest pointOfInterest;
 
     /**
      * Creates a new ContentVisualizationHandler for the point of interest corresponding to the given ID.
@@ -23,6 +23,7 @@ public class ContentVisualizationHandler extends SearchHandler<Content>{
      */
     public ContentVisualizationHandler(long pointOfInterestID) {
         super(MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID).getContents());
+        this.pointOfInterest = MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID);
     }
 
     /**
