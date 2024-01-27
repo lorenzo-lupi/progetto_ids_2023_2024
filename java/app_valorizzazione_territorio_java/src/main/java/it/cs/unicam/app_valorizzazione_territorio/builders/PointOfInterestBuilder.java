@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
 import java.util.Date;
+import java.util.Map;
 
 public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest> {
     private Position position;
@@ -20,7 +21,7 @@ public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest>
         super(municipality);
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setPosition(Position position) {
+    public PointOfInterestBuilder setPosition(Position position) {
         if(position == null)
             throw new IllegalArgumentException("Position must not be null");
         if(!this.getMunicipality().getCoordinatesBox().contains(position))
@@ -30,32 +31,32 @@ public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest>
         return this;
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setClassification(Class<? extends PointOfInterest> classification) {
+    public PointOfInterestBuilder setClassification(Class<? extends PointOfInterest> classification) {
         this.classification = classification;
         return this;
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setAttractionType(AttractionTypeEnum attractionType) {
+    public PointOfInterestBuilder setAttractionType(AttractionTypeEnum attractionType) {
         this.attractionType = attractionType;
         return this;
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setStartDate(Date startDate) {
+    public PointOfInterestBuilder setStartDate(Date startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setEndDate(Date endDate) {
+    public PointOfInterestBuilder setEndDate(Date endDate) {
         this.endDate = endDate;
         return this;
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setActivityType(ActivityTypeEnum activityType) {
+    public PointOfInterestBuilder setActivityType(ActivityTypeEnum activityType) {
         this.activityType = activityType;
         return this;
     }
 
-    public GeoLocatableBuilder<PointOfInterest> setTimetable(Timetable timetable) {
+    public PointOfInterestBuilder setTimetable(Timetable timetable) {
         this.timetable = timetable;
         return this;
     }

@@ -14,9 +14,9 @@ import java.util.Date;
  * @param rules
  * @param isPrivate
  * @param geoLocatable
- * @param status
+ * @param contestStatus
  * @param startDate
- * @param cotingStartDate
+ * @param votingStartDate
  * @param endDate
  * @param ID
  */
@@ -28,7 +28,7 @@ public record ContestDOF(String name,
                          Identifiable geoLocatable,
                          String contestStatus,
                          Date startDate,
-                         Date cotingStartDate,
+                         Date votingStartDate,
                          Date endDate,
                          long ID) implements Identifiable {
     @Override

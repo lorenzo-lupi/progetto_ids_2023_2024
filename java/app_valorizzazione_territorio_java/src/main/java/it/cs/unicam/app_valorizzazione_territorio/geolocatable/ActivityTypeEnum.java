@@ -26,12 +26,12 @@ public enum ActivityTypeEnum {
     AMUSEMENT_PARK,
     OTHER;
 
-    public static final Map<String, Parameter> stringToActivityType;
+    public static final Map<String, ActivityTypeEnum> stringToActivityType;
 
     static {
         stringToActivityType = new HashMap<>();
-        for (Parameter parameter : Parameter.values()) {
-            stringToActivityType.put(parameter.toString(), parameter);
+        for (ActivityTypeEnum type : ActivityTypeEnum.values()) {
+            stringToActivityType.put(type.toString(), type);
         }
     }
 

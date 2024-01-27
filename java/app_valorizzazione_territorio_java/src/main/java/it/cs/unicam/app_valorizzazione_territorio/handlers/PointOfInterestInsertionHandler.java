@@ -3,7 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestIF;
+import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
@@ -13,6 +14,7 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import org.w3c.dom.Attr;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +23,9 @@ import java.io.IOException;
  * This class handles the insertion of a point of interest.
  */
 public class PointOfInterestInsertionHandler {
-    private User user;
-    private Municipality municipality;
-    private PointOfInterestBuilder builder;
+    private final User user;
+    private final Municipality municipality;
+    private final PointOfInterestBuilder builder;
     private PointOfInterest poi;
     private Map<? extends Positionable> map;
 
@@ -38,6 +40,41 @@ public class PointOfInterestInsertionHandler {
         this.builder = new PointOfInterestBuilder(municipality);
         this.map = MapProvider.getEmptyMap(municipality);
     }
+
+    /**
+     * Inserts the given point of interest in the municipality corresponding to the given ID.
+     *
+     * @param userId the ID of the user who is inserting the point of interest
+     * @param municipalityId the ID of the municipality to which the point of interest is related
+     * @param poiIF the DTO of the point of interest to be inserted
+     * @throws IllegalArgumentException if the user or the municipality are not found, or if the point
+     * of interest is not valid
+     */
+    public static void insertPointOfInterest(long userId, long municipalityId, PointOfInterestIF poiIF) {
+        PointOfInterestBuilder builder = new PointOfInterestBuilder(MunicipalityRepository.getInstance().getItemByID(municipalityId));
+
+        builder.setTitle(poiIF.name())
+                .setDescription(poiIF.description());
+        poiIF.images().forEach(builder::addImage);
+
+        builder.setPosition(poiIF.position())
+                .setClassification(PointOfInterest.stringToClass.get(poiIF.classification()));
+
+        if (poiIF.classification().equals(Attraction.class.getSimpleName()))
+                builder.setAttractionType(AttractionTypeEnum.stringToAttractionType.get(poiIF.type()));
+        else if (poiIF.classification().equals(Event.class.getSimpleName()))
+                builder.setStartDate(poiIF.startDate())
+                        .setEndDate(poiIF.endDate());
+        else if (poiIF.classification().equals(Activity.class.getSimpleName()))
+                builder.setActivityType(ActivityTypeEnum.stringToActivityType.get(poiIF.type()))
+                        .setTimetable(poiIF.timetable());
+        else throw new IllegalArgumentException("Invalid classification");
+
+        builder.build();
+
+        GeoLocatableControllerUtils.insertGeoLocatable(builder.obtainResult(), UserRepository.getInstance().getItemByID(userId));
+    }
+
 
     /**
      * Returns the map of the point of interest in the detailed format.

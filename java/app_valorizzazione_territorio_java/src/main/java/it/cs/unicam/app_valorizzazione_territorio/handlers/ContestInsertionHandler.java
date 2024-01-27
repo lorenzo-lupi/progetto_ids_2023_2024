@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContestBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
@@ -16,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 public class ContestInsertionHandler {
-
     private final SearchHandler<GeoLocatable> geoLocatableSearchHandler;
     private final SearchHandler<User> userSearchHandler;
     private final User user;
@@ -42,6 +43,67 @@ public class ContestInsertionHandler {
         this.builder = new ContestBuilder(user);
         this.geoLocatableSearchHandler = new SearchHandler<>(municipality.getGeoLocatables());
         this.userSearchHandler = new SearchHandler<>(UserRepository.getInstance().getItemStream().toList());
+    }
+
+    /**
+     * Inserts a contest in the municipality corresponding to the given ID.
+     *
+     * @param municipalityID the ID of the municipality
+     * @param contestIF the DTO of the contest to insert
+     * @throws IllegalArgumentException if the animator of the contest is not authorized to insert contests
+     * in the municipality, or if the animator is null, or if the contest is null or if the contest is invalid
+     */
+    public static void insertContest(long municipalityID, ContestIF contestIF){
+        ContestBuilder builder = new ContestBuilder(UserRepository.getInstance().getItemByID(contestIF.animatorID()));
+
+        builder.setName(contestIF.name())
+                .setTopic(contestIF.topic())
+                .setRules(contestIF.rules())
+                .setStartDate(contestIF.startDate())
+                .setVotingStartDate(contestIF.votingStartDate())
+                .setEndDate(contestIF.endDate());
+
+        if (contestIF.isPrivate()) {
+            builder.setPrivate();
+            contestIF.userIDs().stream()
+                    .map(UserRepository.getInstance()::getItemByID)
+                    .forEach(builder::addParticipant);
+        }
+        if (contestIF.geoLocatableID() != null)
+            builder.setGeoLocation(MunicipalityRepository.getInstance().getGeoLocatableByID(contestIF.geoLocatableID()));
+
+        builder.build();
+
+        MunicipalityRepository.getInstance().getItemByID(municipalityID).addContest(builder.getResult());
+        sendNotifications(builder.getResult(), INVITATION_MESSAGE);
+    }
+
+    /**
+     * Performs a search on the list of users in the system using the given filters.
+     * The filters are applied in logical and.
+     *
+     * @param filters the filters to apply
+     * @return the list of users corresponding to the given filters
+     */
+    @SuppressWarnings("unchecked")
+    public static List<UserSOF> viewFilteredUsers(List<SearchFilter> filters){
+        return (List<UserSOF>) SearchHandler.getFilteredItems(
+                UserRepository.getInstance().getItemStream().toList(),
+                filters);
+    }
+
+    /**
+     * Performs a search on the list of geo-locatables in the system using the given filters.
+     * The filters are applied in logical and.
+     *
+     * @param filters the filters to apply
+     * @return the list of geo-locatable corresponding to the given filters
+     */
+    @SuppressWarnings("unchecked")
+    public static List<GeoLocatableSOF> viewFilteredGeoLocatables(List<SearchFilter> filters){
+        return (List<GeoLocatableSOF>) SearchHandler.getFilteredItems(
+                MunicipalityRepository.getInstance().getAllGeoLocatables().toList(),
+                filters);
     }
 
     /**
@@ -264,11 +326,13 @@ public class ContestInsertionHandler {
      */
     public void insertContest(String message) {
         this.builder.build();
-        if (builder.getResult().isPrivate()) {
-            Notification contestNotification = new Notification(this.builder.getResult(), message);
-            builder.getResult().getParticipants().forEach(user -> user.addNotification(contestNotification));
-        }
+        if (builder.getResult().isPrivate()) sendNotifications(builder.getResult(), message);
         municipality.addContest(builder.getResult());
+    }
+
+    private static void sendNotifications(Contest contest, String message) {
+        Notification contestNotification = new Notification(contest, message);
+        contest.getParticipants().forEach(user -> user.addNotification(contestNotification));
     }
 
 }

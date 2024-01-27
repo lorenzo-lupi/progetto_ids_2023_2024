@@ -1,7 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +11,12 @@ public enum EventStatusEnum {
     OPEN,
     CLOSED;
 
-    public static final Map<String, Parameter> stringToEventState;
+    public static final Map<String, EventStatusEnum> stringToEventStatus;
 
     static {
-        stringToEventState = new HashMap<>();
-        for (Parameter parameter : Parameter.values()) {
-            stringToEventState.put(parameter.toString(), parameter);
+        stringToEventStatus = new HashMap<>();
+        for (EventStatusEnum status : EventStatusEnum.values()) {
+            stringToEventStatus.put(status.toString(), status);
         }
     }
 }

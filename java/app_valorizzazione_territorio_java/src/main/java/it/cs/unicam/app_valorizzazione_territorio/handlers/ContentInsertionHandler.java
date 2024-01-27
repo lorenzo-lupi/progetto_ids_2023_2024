@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
@@ -29,6 +30,21 @@ public class ContentInsertionHandler {
         this.user = UserRepository.getInstance().getItemByID(userId);
         this.poi = MunicipalityRepository.getInstance().getPointOfInterestByID(poiId);
         this.builder = new ContentBuilder(poi);
+    }
+
+    /**
+     * Inserts the given content on the point of interest corresponding to the given ID.
+     *
+     * @param userID the ID of the user who is inserting the content
+     * @param poiID the ID of the point of interest to which the content is related
+     * @param contentIF the DTO of the content to be inserted
+     * @throws IllegalArgumentException if the user or the point of interest are not found
+     */
+    public static void insertContent(long userID, long poiID, ContentIF contentIF) {
+        ContentBuilder builder = new ContentBuilder(MunicipalityRepository.getInstance().getPointOfInterestByID(poiID));
+        builder.buildDescription(contentIF.description());
+        contentIF.files().forEach(builder::buildFile);
+        GeoLocatableControllerUtils.insertContent(builder.build(), UserRepository.getInstance().getItemByID(userID));
     }
 
      /**

@@ -1,7 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
@@ -9,6 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
@@ -17,6 +17,12 @@ import java.util.List;
 public abstract class PointOfInterest extends GeoLocatable {
     private Position position;
     private final List<Content> contents;
+
+    public static final Map<String, Class<? extends PointOfInterest>> stringToClass = Map.of(
+            Attraction.class.getSimpleName(), Attraction.class,
+            Event.class.getSimpleName(), Event.class,
+            Activity.class.getSimpleName(), Activity.class
+    );
 
     /**
      * Constructor for a PointOfInterest.
@@ -91,14 +97,6 @@ public abstract class PointOfInterest extends GeoLocatable {
 
     public void setPosition(Position position) {
         this.position = position;
-    }
-
-    @Override
-    public PointOfInterestSOF getSynthesizedFormat() {
-        return new PointOfInterestSOF(super.getName(),
-                this.getImages().get(0),
-                this.getClass().getSimpleName(),
-                super.getID());
     }
 
     @Override

@@ -33,7 +33,7 @@ public class SearchHandler<S extends Searchable & Visualizable> {
      * @return the list of items corresponding to the given filters
      * @param <S> the type of the searchable items
      */
-    protected static <S extends Searchable & Visualizable> List<? extends Identifiable> getFilteredItems (
+    public static <S extends Searchable & Visualizable> List<? extends Identifiable> getFilteredItems (
             List<S> list, List<SearchFilter> filters) {
 
         SearchEngine<S> searchEngine = new SearchEngine<>(list);
