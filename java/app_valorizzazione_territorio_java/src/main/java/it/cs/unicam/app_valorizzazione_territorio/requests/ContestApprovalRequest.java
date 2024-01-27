@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.requests;
 
+import it.cs.unicam.app_valorizzazione_territorio.contest.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
@@ -9,7 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 
 import java.util.Date;
 
-public class ContestApprovalRequest extends ApprovalRequest<PointOfInterestContent>{
+public class ContestApprovalRequest extends ApprovalRequest<ContestContent>{
     private final Contest contest;
 
     /**
@@ -19,7 +20,7 @@ public class ContestApprovalRequest extends ApprovalRequest<PointOfInterestConte
      * @param approvableItem the item to be approved.
      * @param contest the contest to which the request is addressed.
      */
-    public ContestApprovalRequest(User user, PointOfInterestContent approvableItem, Contest contest) {
+    public ContestApprovalRequest(User user, ContestContent approvableItem, Contest contest) {
         super(user, approvableItem);
         this.contest = contest;
     }
@@ -32,7 +33,7 @@ public class ContestApprovalRequest extends ApprovalRequest<PointOfInterestConte
      * @param contest the contest to which the request is addressed.
      * @param date the date of the request.
      */
-    public ContestApprovalRequest(User user, PointOfInterestContent approvableItem, Contest contest, Date date) {
+    public ContestApprovalRequest(User user, ContestContent approvableItem, Contest contest, Date date) {
         super(user, approvableItem, date);
         this.contest = contest;
     }

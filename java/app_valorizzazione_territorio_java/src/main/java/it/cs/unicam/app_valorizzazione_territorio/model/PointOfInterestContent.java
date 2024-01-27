@@ -22,8 +22,8 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
      * @param files the multimedia files of the content
      * @throws IllegalArgumentException if description, pointOfInterest or files are null
      */
-    public PointOfInterestContent(String description, PointOfInterest poi, List<File> files) {
-        super(description, files);
+    public PointOfInterestContent(String description, PointOfInterest poi, List<File> files, User user) {
+        super(description, files, user);
         if (poi == null)
             throw new IllegalArgumentException("Point of interest cannot be null");
 

@@ -3,12 +3,14 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -62,9 +64,8 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         this.contents = contents;
     }
 
-    public List<PointOfInterestContent> getContents() {
-        return this.contents;
-    }
+
+
 
     /**
      * Returns the contents associated to the geo-locatable object.
@@ -112,5 +113,10 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
                 super.getImages(),
                 this.contents.stream().map(PointOfInterestContent::getSynthesizedFormat).toList(),
                 super.getID());
+    }
+
+    @Override
+    public Collection<PointOfInterestContent> getContents() {
+        return this.contents;
     }
 }

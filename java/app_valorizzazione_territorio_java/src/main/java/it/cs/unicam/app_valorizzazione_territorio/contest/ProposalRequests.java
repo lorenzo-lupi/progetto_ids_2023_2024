@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
@@ -8,6 +7,7 @@ import java.util.*;
 
 public class ProposalRequests {
     private Map<ContestContent, Collection<User>> votes;
+    //private List<>
 
     public ProposalRequests() {
         votes = new HashMap<>();

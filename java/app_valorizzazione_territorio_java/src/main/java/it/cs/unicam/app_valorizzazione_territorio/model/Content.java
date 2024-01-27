@@ -10,10 +10,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Content<V extends Visualizable>  implements Approvable, Searchable, Visualizable{
+public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Approvable, Searchable, Visualizable{
     private String description;
     private final List<File> files;
     private ApprovalStatusEnum approvalStatus;
+    private final User user;
 
     private final long ID = MunicipalityRepository.getInstance().getNextContentID();
 
@@ -24,12 +25,13 @@ public abstract class Content<V extends Visualizable>  implements Approvable, Se
      * @param files the multimedia files of the content
      * @throws IllegalArgumentException if description, pointOfInterest or files are null
      */
-    public Content(String description, List<File> files)   {
+    public Content(String description, List<File> files, User user)   {
         if (description == null || files == null)
             throw new IllegalArgumentException("Description, point of interest and files cannot be null");
 
         this.description = description;
         this.files = files;
+        this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
@@ -72,6 +74,13 @@ public abstract class Content<V extends Visualizable>  implements Approvable, Se
         return this.files.remove(file);
     }
 
+    /**
+     * Returns the user who created the content.
+     * @return the user who created the content
+     */
+    public User getUser() {
+        return this.user;
+    }
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {

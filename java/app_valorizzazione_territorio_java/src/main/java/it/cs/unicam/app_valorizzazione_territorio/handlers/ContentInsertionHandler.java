@@ -1,37 +1,28 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 
 import java.io.File;
 import java.util.List;
 
-/**
- * This class handles the insertion of a content.
- */
-public class ContentInsertionHandler {
-    private User user;
-    private PointOfInterest poi;
-    private PointOfInterestContent content;
-    private PointOfInterestContentBuilder builder;
+public abstract class ContentInsertionHandler<V extends ContentHost<V> & Visualizable> {
+
+    private Content<V> content;
+    private ContentBuilder<V, ? extends Content<V>> builder;
     /**
      * Constructor for a ContentInsertionHandler.
-     *
-     * @param userId the ID of the user who is inserting the content
-     * @param poiId the ID of the point of interest to which the content is related
+     * @param builder the builder for the content to be inserted
      */
-    public ContentInsertionHandler(long userId, long poiId) {
-        this.user = UserRepository.getInstance().getItemByID(userId);
-        this.poi = MunicipalityRepository.getInstance().getPointOfInterestByID(poiId);
-        this.builder = new PointOfInterestContentBuilder(poi);
+    public ContentInsertionHandler(ContentBuilder<V, ? extends Content<V>> builder) {
+        if(builder == null)
+            throw new IllegalArgumentException("Builder cannot be null");
+        this.builder = builder;
     }
 
-     /**
+    /**
      * Inserts the description of the content.
      * @param description the description of the content
      */
@@ -86,7 +77,11 @@ public class ContentInsertionHandler {
     /**
      * Inserts the content in its Point of interest.
      */
-    public void insertContent(){
-        GeoLocatableControllerUtils.insertContent(content, user);
+    public abstract void insertContent();
+
+    protected Content<V> getContent() {
+        return content;
     }
+
+
 }
