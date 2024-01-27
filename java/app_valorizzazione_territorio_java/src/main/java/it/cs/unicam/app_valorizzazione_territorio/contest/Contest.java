@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
@@ -19,7 +20,7 @@ import java.util.Map;
  * A contest can have a geolocation or not.
  * A contest can have participants or not.
  */
-public interface Contest extends Identifiable, Searchable, Visualizable {
+public interface Contest extends Identifiable, Searchable, Visualizable, ContentHost<Contest> {
 
     /**
      * Returns true if the contest is private, false otherwise.

@@ -1,12 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.*;
 
 public class ProposalRequests {
-    private Map<Content, Collection<User>> votes;
+    private Map<ContestContent, Collection<User>> votes;
 
     public ProposalRequests() {
         votes = new HashMap<>();
@@ -47,7 +48,7 @@ public class ProposalRequests {
      * @throws IllegalArgumentException if the content or the user are null,
      * if the content is not in the list or if the user has already voted.
      */
-    public void addVote(Content content, User user) {
+    public void addVote(ContestContent content, User user) {
         if (content == null || user == null)
             throw new IllegalArgumentException("Parameters must not be null");
 
@@ -81,7 +82,7 @@ public class ProposalRequests {
      * @param content the content to be added.
      * @throws IllegalArgumentException if the content is already in the list.
      */
-    public void proposeContent(Content content) {
+    public void proposeContent(ContestContent content) {
         if (content == null)
             throw new IllegalArgumentException("Content must not be null");
 
@@ -97,7 +98,7 @@ public class ProposalRequests {
      * @param content the content to be removed.
      * @throws IllegalArgumentException if the content is not in the list.
      */
-    public Content removeProposal(Content content) {
+    public PointOfInterestContent removeProposal(PointOfInterestContent content) {
         if (content == null)
             throw new IllegalArgumentException("Content must not be null");
 
@@ -110,7 +111,7 @@ public class ProposalRequests {
     /**
      * Returns the content with the most votes.
      */
-    public Content getWinner(){
+    public ContestContent getWinner(){
         return votes.keySet()
                 .stream()
                 .max((content, content2) -> votes.get(content).size() - votes.get(content2).size())

@@ -2,12 +2,11 @@ package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -90,12 +89,12 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a map of all the content of the POIs of the municipalities
      */
-    public Map<Long, Content> getAllContentsMap() {
+    public Map<Long, PointOfInterestContent> getAllContentsMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getGeoLocatables().stream())
                 .filter(geoLocatable -> geoLocatable instanceof PointOfInterest)
                 .flatMap(pointOfInterest -> ((PointOfInterest) pointOfInterest).getContents().stream())
-                .collect(toMap(Content::getID, Function.identity()));
+                .collect(toMap(PointOfInterestContent::getID, Function.identity()));
     }
 
     /**
@@ -159,8 +158,8 @@ public class MunicipalityRepository extends Repository<Municipality> {
      * @return the content of the POIs of the municipalities in the repository with the given ID
      * @throws IllegalArgumentException if the content with the given ID is not found
      */
-    public Content getContentByID(long ID) {
-        Content content = getAllContentsMap().get(ID);
+    public PointOfInterestContent getContentByID(long ID) {
+        PointOfInterestContent content = getAllContentsMap().get(ID);
         if(content == null) throw new IllegalArgumentException("Content not found");
         return content;
     }
@@ -188,7 +187,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a stream of all the content of the POIs of the municipalities in the repository
      */
-    public Stream<Content> getAllContents() {
+    public Stream<PointOfInterestContent> getAllContents() {
         return getAllContentsMap().values().stream();
     }
 }

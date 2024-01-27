@@ -1,9 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -142,5 +146,10 @@ public class ContestBase implements Contest {
     @Override
     public long getID() {
         return this.ID;
+    }
+
+    @Override
+    public Collection<Content<Contest>> getContests() {
+        return this.proposalRequests.getProposals().stream().map(VotedContent::content).toList();
     }
 }

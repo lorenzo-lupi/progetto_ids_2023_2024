@@ -16,6 +16,7 @@ public enum Parameter {
     CONTEST_STATUS,
     CONTEST_TYPE,
     VOTE_NUMBER,
+    CONTEST_PARTICIPATION,
     ID;
 
     public static final Map<String, Parameter> stringToParameter;

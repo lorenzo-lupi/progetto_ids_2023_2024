@@ -16,7 +16,7 @@ import java.util.List;
  * @param ID
  */
 public record ContentDOF(String description,
-                         PointOfInterestSOF pointOfInterestDOF,
+                         Identifiable hostDOF,
                          List<File> files,
                          ApprovalStatusEnum approvalStatus,
                          long ID) implements Identifiable {

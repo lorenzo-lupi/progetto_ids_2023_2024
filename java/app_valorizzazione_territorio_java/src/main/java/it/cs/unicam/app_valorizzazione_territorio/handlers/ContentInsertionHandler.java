@@ -1,9 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
@@ -17,8 +17,8 @@ import java.util.List;
 public class ContentInsertionHandler {
     private User user;
     private PointOfInterest poi;
-    private Content content;
-    private ContentBuilder builder;
+    private PointOfInterestContent content;
+    private PointOfInterestContentBuilder builder;
     /**
      * Constructor for a ContentInsertionHandler.
      *
@@ -28,7 +28,7 @@ public class ContentInsertionHandler {
     public ContentInsertionHandler(long userId, long poiId) {
         this.user = UserRepository.getInstance().getItemByID(userId);
         this.poi = MunicipalityRepository.getInstance().getPointOfInterestByID(poiId);
-        this.builder = new ContentBuilder(poi);
+        this.builder = new PointOfInterestContentBuilder(poi);
     }
 
      /**

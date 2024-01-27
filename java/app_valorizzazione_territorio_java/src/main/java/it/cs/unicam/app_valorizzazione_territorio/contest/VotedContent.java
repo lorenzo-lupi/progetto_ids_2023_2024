@@ -5,6 +5,8 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.HashMap;
@@ -16,7 +18,7 @@ import java.util.Map;
  * @param content
  * @param votes
  */
-public record VotedContent(Content content, int votes) implements Searchable, Visualizable {
+public record VotedContent(Content<Contest> content, int votes) implements Searchable, Visualizable {
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {

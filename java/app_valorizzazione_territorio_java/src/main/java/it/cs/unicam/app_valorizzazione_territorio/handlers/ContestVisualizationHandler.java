@@ -64,7 +64,7 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     public static List<ContestSOF> viewFilteredContests(long userID, long municipalityID, List<SearchFilter> filters) {
         User user = UserRepository.getInstance().getItemByID(userID);
         List<SearchFilter> filtersWithUser = List.copyOf(filters);
-        filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), SearchCriterion.PERMITS_USER.toString(), user));
+        filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), SearchCriterion.CONTEST_PERMITS_USER.toString(), user));
         return (List<ContestSOF>) getFilteredItems(
                 MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests(),
                 filtersWithUser);
@@ -126,7 +126,7 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     @Override
     public void startSearch() {
         super.startSearch();
-        this.searchEngine.addCriterion(Parameter.THIS, SearchCriterion.PERMITS_USER, user);
+        this.searchEngine.addCriterion(Parameter.THIS, SearchCriterion.CONTEST_PERMITS_USER, user);
     }
 
     @Override

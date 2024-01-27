@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -34,9 +34,9 @@ public class GeoLocatableControllerUtils {
      * @param content the content to be inserted
      * @param user the user who is inserting the content
      */
-    public static void insertContent(Content content, User user) {
+    public static void insertContent(PointOfInterestContent content, User user) {
 
-        PointOfInterest pointOfInterest = content.getPointOfInterest();
+        PointOfInterest pointOfInterest = content.getHost();
         insertItemApprovableByContributors(content, user, pointOfInterest.getMunicipality(), pointOfInterest::addContent);
     }
 

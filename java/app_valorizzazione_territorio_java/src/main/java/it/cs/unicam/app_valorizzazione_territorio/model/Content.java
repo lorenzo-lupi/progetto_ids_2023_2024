@@ -3,7 +3,6 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -11,14 +10,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-/**
- * This class represents an indivisible set of logically coherent information that can contain
- * multimedia files and related textual descriptions that can be associated with a geo-localizable point.
- * It can be in the two states Unapproved (pending) and Approved (visible).
- */
-public class Content implements Approvable, Searchable, Visualizable {
+public abstract class Content<V extends Visualizable>  implements Approvable, Searchable, Visualizable{
     private String description;
-    private final PointOfInterest pointOfInterest;
     private final List<File> files;
     private ApprovalStatusEnum approvalStatus;
 
@@ -31,12 +24,11 @@ public class Content implements Approvable, Searchable, Visualizable {
      * @param files the multimedia files of the content
      * @throws IllegalArgumentException if description, pointOfInterest or files are null
      */
-    public Content(String description, PointOfInterest pointOfInterest, List<File> files) {
-        if (description == null || pointOfInterest == null || files == null)
+    public Content(String description, List<File> files)   {
+        if (description == null || files == null)
             throw new IllegalArgumentException("Description, point of interest and files cannot be null");
 
         this.description = description;
-        this.pointOfInterest = pointOfInterest;
         this.files = files;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
@@ -49,10 +41,6 @@ public class Content implements Approvable, Searchable, Visualizable {
         if (description == null)
             throw new IllegalArgumentException("Description cannot be null");
         this.description = description;
-    }
-
-    public PointOfInterest getPointOfInterest() {
-        return pointOfInterest;
     }
 
     /**
@@ -73,6 +61,7 @@ public class Content implements Approvable, Searchable, Visualizable {
         return this.files.add(file);
     }
 
+    public abstract V getHost();
     /**
      * Removes a file from the content.
      *
@@ -123,7 +112,7 @@ public class Content implements Approvable, Searchable, Visualizable {
     @Override
     public ContentDOF getDetailedFormat() {
         return new ContentDOF(this.getDescription(),
-                this.getPointOfInterest().getSynthesizedFormat(),
+                this.getHost().getSynthesizedFormat(),
                 this.getFiles(),
                 this.getApprovalStatus(),
                 this.getID());

@@ -1,8 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
@@ -14,9 +15,9 @@ import java.util.List;
  * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
  * represents an attraction, an event or an activity present on the territory. It can be included in a compound point.
  */
-public abstract class PointOfInterest extends GeoLocatable {
+public abstract class PointOfInterest extends GeoLocatable implements ContentHost<PointOfInterest> {
     private Position position;
-    private final List<Content> contents;
+    private final List<PointOfInterestContent> contents;
 
     /**
      * Constructor for a PointOfInterest.
@@ -55,13 +56,13 @@ public abstract class PointOfInterest extends GeoLocatable {
                                             Position coordinates,
                                             Municipality municipality,
                                             List<File> images,
-                                            List<Content> contents) {
+                                            List<PointOfInterestContent> contents) {
         super(name, description, municipality, images);
         this.position = coordinates;
         this.contents = contents;
     }
 
-    public List<Content> getContents() {
+    public List<PointOfInterestContent> getContents() {
         return this.contents;
     }
 
@@ -71,7 +72,7 @@ public abstract class PointOfInterest extends GeoLocatable {
      * @param content the contents associated to the geo-locatable object
      * @return true if the contents associated to the geo-locatable object has been added, false otherwise
      */
-    public boolean addContent(Content content) {
+    public boolean addContent(PointOfInterestContent content) {
         return this.contents.add(content);
     }
 
@@ -81,7 +82,7 @@ public abstract class PointOfInterest extends GeoLocatable {
      * @param content the content to remove
      * @return true if the content has been removed, false otherwise
      */
-    public boolean removeContent(Content content) {
+    public boolean removeContent(PointOfInterestContent content) {
         return this.contents.remove(content);
     }
 
@@ -109,7 +110,7 @@ public abstract class PointOfInterest extends GeoLocatable {
                 super.getMunicipality().getSynthesizedFormat(),
                 this.getClass().getSimpleName(),
                 super.getImages(),
-                this.contents.stream().map(Content::getSynthesizedFormat).toList(),
+                this.contents.stream().map(PointOfInterestContent::getSynthesizedFormat).toList(),
                 super.getID());
     }
 }
