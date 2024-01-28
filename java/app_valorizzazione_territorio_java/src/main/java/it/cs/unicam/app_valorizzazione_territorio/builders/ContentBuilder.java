@@ -3,13 +3,18 @@ package it.cs.unicam.app_valorizzazione_territorio.builders;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents a builder for a content.
+ * @param <V> the type of the content host
+ * @param <K> the type of the content that will be hosted
+ */
 public abstract class ContentBuilder<V extends ContentHost<V> & Visualizable
         , K extends Content<V>> {
 

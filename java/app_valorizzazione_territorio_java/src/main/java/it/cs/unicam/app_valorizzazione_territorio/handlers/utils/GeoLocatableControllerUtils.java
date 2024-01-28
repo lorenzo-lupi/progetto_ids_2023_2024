@@ -2,10 +2,9 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.contest.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;

@@ -3,18 +3,19 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.contest.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
 
-public class ContestContentInsertionHandler extends ContentInsertionHandler<Contest> {
+public class ContestContentInsertionHandler extends ContentInsertionHandler<Contest, ContestContent> {
     private User user;
     private Contest contest;
 
     public ContestContentInsertionHandler(long userID, long contestID){
+
         super(new ContestContentBuilder(MunicipalityRepository.getInstance().getContestByID(contestID),
                 UserRepository.getInstance().getItemByID(userID)));
 
@@ -27,12 +28,13 @@ public class ContestContentInsertionHandler extends ContentInsertionHandler<Cont
 
     @Override
     public void insertContent() {
+        ContestContent content = super.getContent();
         if(super.getContent() == null)
             throw new IllegalStateException("Content must first be created");
 
-        contest.getProposalRequests().proposeContent((ContestContent) super.getContent());
+        contest.getProposalRequests().proposeContent(content);
         ApprovalRequestRepository.getInstance().add(new
-                ContestApprovalRequest(user, (ContestContent) super.getContent(), contest));
+                ContestApprovalRequest(user, super.getContent(), contest));
     }
 
 }

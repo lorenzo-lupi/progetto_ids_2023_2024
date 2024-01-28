@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 
 import java.io.File;

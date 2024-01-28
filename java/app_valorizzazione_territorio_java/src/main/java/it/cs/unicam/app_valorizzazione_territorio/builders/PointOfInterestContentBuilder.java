@@ -1,12 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.builders;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Builder for a content.

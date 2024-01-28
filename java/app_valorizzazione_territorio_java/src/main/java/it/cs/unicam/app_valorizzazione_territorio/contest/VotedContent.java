@@ -2,9 +2,9 @@ package it.cs.unicam.app_valorizzazione_territorio.contest;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.HashMap;

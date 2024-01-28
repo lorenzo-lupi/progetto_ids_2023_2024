@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.*;

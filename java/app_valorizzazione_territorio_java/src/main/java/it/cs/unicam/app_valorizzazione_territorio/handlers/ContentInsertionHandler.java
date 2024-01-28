@@ -3,20 +3,26 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 
 import java.io.File;
 import java.util.List;
 
-public abstract class ContentInsertionHandler<V extends ContentHost<V> & Visualizable> {
+/**
+ * This class represents a handler for the insertion of a content.
+ * @param <V> the type of the content host
+ */
+public abstract class ContentInsertionHandler<V extends ContentHost<V> & Visualizable,
+        K extends Content<V>> {
 
-    private Content<V> content;
-    private ContentBuilder<V, ? extends Content<V>> builder;
+    private K content;
+    private ContentBuilder<V,
+            K> builder;
     /**
      * Constructor for a ContentInsertionHandler.
      * @param builder the builder for the content to be inserted
      */
-    public ContentInsertionHandler(ContentBuilder<V, ? extends Content<V>> builder) {
+    public ContentInsertionHandler(ContentBuilder<V, K> builder) {
         if(builder == null)
             throw new IllegalArgumentException("Builder cannot be null");
         this.builder = builder;
@@ -79,7 +85,7 @@ public abstract class ContentInsertionHandler<V extends ContentHost<V> & Visuali
      */
     public abstract void insertContent();
 
-    protected Content<V> getContent() {
+    protected K getContent() {
         return content;
     }
 
