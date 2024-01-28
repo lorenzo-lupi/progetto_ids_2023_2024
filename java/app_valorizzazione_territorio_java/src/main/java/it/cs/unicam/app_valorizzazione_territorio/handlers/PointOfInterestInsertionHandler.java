@@ -8,13 +8,12 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.PositionParser;
+import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import org.w3c.dom.Attr;
 
 import java.io.File;
 import java.io.IOException;

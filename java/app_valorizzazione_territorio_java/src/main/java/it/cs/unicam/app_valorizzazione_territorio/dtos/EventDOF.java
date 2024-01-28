@@ -4,17 +4,6 @@ import java.util.Date;
 
 /**
  * This class represents an event Detailed Output Format object.
- *
- * @param name
- * @param description
- * @param position
- * @param municipalitySOF
- * @param classification
- * @param images
- * @param contents
- * @param startDate
- * @param endDate
- * @param ID
  */
 public final class EventDOF extends PointOfInterestDOF{
     private final Date startDate;

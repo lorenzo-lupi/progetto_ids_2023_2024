@@ -1,8 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

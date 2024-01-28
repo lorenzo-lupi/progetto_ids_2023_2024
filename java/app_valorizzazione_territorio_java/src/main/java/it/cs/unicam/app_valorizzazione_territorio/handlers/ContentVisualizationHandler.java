@@ -1,9 +1,11 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
+import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.Content;
+import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * This class represents a handler for the search and visualization of the contents of a point of interest.
  */
-public class ContentVisualizationHandler extends SearchHandler<Content>{
+public class ContentVisualizationHandler extends SearchHandler<PointOfInterestContent>{
     private final PointOfInterest pointOfInterest;
 
     /**
@@ -104,7 +106,7 @@ public class ContentVisualizationHandler extends SearchHandler<Content>{
         return (List<ContentSOF>) super.getSearchResult();
     }
 
-    private static Content getContent(PointOfInterest pointOfInterest, long contentID) {
+    private static Content<PointOfInterest> getContent(PointOfInterest pointOfInterest, long contentID) {
         return pointOfInterest.getContents().stream()
                 .filter(content -> content.getID() == contentID)
                 .findFirst()

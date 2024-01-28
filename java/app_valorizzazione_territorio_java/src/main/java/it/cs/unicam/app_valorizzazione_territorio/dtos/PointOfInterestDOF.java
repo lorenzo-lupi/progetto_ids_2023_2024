@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.dtos;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-import it.cs.unicam.app_valorizzazione_territorio.model.PositionParser;
+import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 
 import java.io.File;
 import java.util.List;
@@ -11,14 +11,6 @@ import java.util.List;
 /**
  * This class represents a Point of Interest Detailed Output Format object.
  *
- * @param name
- * @param description
- * @param position
- * @param municipalitySOF
- * @param classification
- * @param images
- * @param contents
- * @param ID
  */
 public class PointOfInterestDOF implements Identifiable, Positionable {
     private final String name;

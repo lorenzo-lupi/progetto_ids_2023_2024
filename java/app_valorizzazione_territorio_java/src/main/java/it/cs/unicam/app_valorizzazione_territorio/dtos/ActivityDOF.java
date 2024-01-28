@@ -7,16 +7,6 @@ import java.util.List;
 /**
  * This class represents an activity Detailed Output Format object.
  *
- * @param name
- * @param description
- * @param position
- * @param municipalitySOF
- * @param classification
- * @param images
- * @param contents
- * @param type
- * @param timetable
- * @param ID
  */
 public final class ActivityDOF extends PointOfInterestDOF{
     private final String type;

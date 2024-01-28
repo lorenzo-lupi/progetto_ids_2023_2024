@@ -2,16 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
 /**
  * This class represents an attraction Detailed Output Format object.
- *
- * @param name
- * @param description
- * @param position
- * @param municipalitySOF
- * @param classification
- * @param images
- * @param contents
- * @param type
- * @param ID
+
  */
 public final class AttractionDOF extends PointOfInterestDOF {
     private final String type;

@@ -7,8 +7,7 @@ import java.util.Date;
 /**
  * This class represents a Municipality Request Synthesized Output Format object.
  *
- * @param username
- * @param municipalityName
+ *  @param municipalityName
  * @param date
  * @param ID
  */

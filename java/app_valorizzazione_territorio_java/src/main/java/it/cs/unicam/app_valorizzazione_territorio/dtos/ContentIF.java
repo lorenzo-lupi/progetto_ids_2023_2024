@@ -2,6 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
 import java.io.File;
 import java.util.List;
@@ -11,10 +12,12 @@ import java.util.List;
  *
  * @param description
  * @param files
+ * @param userId
  */
 public record ContentIF(String description,
-                        List<File> files) {
+                        List<File> files,
+                        long userId) {
     public PointOfInterestContent toContent(PointOfInterest pointOfInterest) {
-        return new PointOfInterestContent(this.description, pointOfInterest, this.files);
+        return new PointOfInterestContent(this.description, pointOfInterest, this.files, UserRepository.getInstance().getItemByID(userId));
     }
 }

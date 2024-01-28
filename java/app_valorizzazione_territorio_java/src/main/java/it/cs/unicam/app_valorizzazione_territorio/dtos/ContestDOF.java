@@ -13,7 +13,6 @@ import java.util.Date;
  * @param topic
  * @param rules
  * @param isPrivate
- * @param geoLocatable
  * @param contestStatus
  * @param startDate
  * @param votingStartDate

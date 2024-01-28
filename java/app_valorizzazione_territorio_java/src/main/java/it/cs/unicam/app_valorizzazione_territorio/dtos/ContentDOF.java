@@ -10,13 +10,13 @@ import java.util.List;
  * This class represents a Content Detailed Output Format object.
  *
  * @param description
- * @param pointOfInterestSOF
+ * @param hostSOF
  * @param files
  * @param approvalStatus
  * @param ID
  */
 public record ContentDOF(String description,
-                         GeoLocatableSOF pointOfInterestSOF,
+                         Identifiable hostSOF,
                          List<File> files,
                          ApprovalStatusEnum approvalStatus,
                          long ID) implements Identifiable {

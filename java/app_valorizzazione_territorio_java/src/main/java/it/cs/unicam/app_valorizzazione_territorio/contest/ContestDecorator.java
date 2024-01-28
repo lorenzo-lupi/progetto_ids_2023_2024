@@ -1,11 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +101,11 @@ public abstract class ContestDecorator implements Contest{
     @Override
     public Map<Parameter, Object> getParametersMapping() {
         return this.contest.getParametersMapping();
+    }
+
+    @Override
+    public Collection<? extends Content<Contest>> getContents() {
+        return this.contest.getContents();
     }
 
 }

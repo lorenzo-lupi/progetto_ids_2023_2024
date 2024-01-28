@@ -9,7 +9,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
  */
 public class PointOfInterestContentBuilder extends ContentBuilder<PointOfInterest, PointOfInterestContent>{
 
-    private PointOfInterest pointOfInterest;
+    private final PointOfInterest pointOfInterest;
 
 
     /**

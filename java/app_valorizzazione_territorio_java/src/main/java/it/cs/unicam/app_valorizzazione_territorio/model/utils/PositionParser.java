@@ -1,5 +1,6 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.model.utils;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**

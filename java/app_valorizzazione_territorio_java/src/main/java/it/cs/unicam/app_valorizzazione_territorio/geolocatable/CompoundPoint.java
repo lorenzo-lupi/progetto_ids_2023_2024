@@ -83,11 +83,6 @@ public class CompoundPoint extends GeoLocatable {
                 .orElseThrow();
     }
 
-    @Override
-    public Identifiable getSynthesizedFormat() {
-        //TODO
-        return null;
-    }
 
     @Override
     public Identifiable getDetailedFormat() {
