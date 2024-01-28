@@ -4,10 +4,10 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 
 import java.io.File;
 
-public record PointOfInterestSOF(String name,
-                                File representativeImage,
-                                String classification,
-                                long ID) implements Identifiable {
+public record GeoLocatableSOF(String name,
+                                 File representativeImage,
+                                 String geoLocatableType,
+                                 long ID) implements Identifiable {
     @Override
     public long getID() {
         return this.ID();

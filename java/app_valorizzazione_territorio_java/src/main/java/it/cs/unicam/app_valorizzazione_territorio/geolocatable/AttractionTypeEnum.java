@@ -15,12 +15,12 @@ public enum AttractionTypeEnum {
     STATION,
     OTHER;
 
-    public static final Map<String, Parameter> stringToAttractionType;
+    public static final Map<String, AttractionTypeEnum> stringToAttractionType;
 
     static {
         stringToAttractionType = new HashMap<>();
-        for (Parameter parameter : Parameter.values()) {
-            stringToAttractionType.put(parameter.toString(), parameter);
+        for (AttractionTypeEnum type : AttractionTypeEnum.values()) {
+            stringToAttractionType.put(type.toString(), type);
         }
     }
 }

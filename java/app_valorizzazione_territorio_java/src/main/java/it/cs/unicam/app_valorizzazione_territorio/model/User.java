@@ -1,24 +1,24 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * This class represents a user of the application.
  */
-public class User implements Identifiable, Visualizable {
+public class User implements Searchable, Visualizable {
     private String username;
     private final String email;
     private final List<Role> roles;
-
+    private final List<Notification> notifications;
     private final long ID = UserRepository.getInstance().getNextID();
 
     /**
@@ -31,6 +31,7 @@ public class User implements Identifiable, Visualizable {
         this.username = username;
         this.email = email;
         this.roles = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -57,6 +58,18 @@ public class User implements Identifiable, Visualizable {
         this.roles.add(new Role(municipality, roleTypeEnum));
     }
 
+    public List<Notification> getNotifications() {
+        return this.notifications;
+    }
+
+    public void addNotification(Notification notification) {
+        this.notifications.add(notification);
+    }
+
+    public void removeNotification(Notification notification) {
+        this.notifications.remove(notification);
+    }
+
     /**
      * Returns the authorizations of the user in the given municipality.
      *
@@ -68,6 +81,14 @@ public class User implements Identifiable, Visualizable {
                 .filter(role -> role.municipality().equals(municipality))
                 .map(Role::roleTypeEnum)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Map<Parameter, Object> getParametersMapping() {
+        Map<Parameter, Object> parameters = new HashMap<>();
+        parameters.put(Parameter.USERNAME, this.getUsername());
+        parameters.put(Parameter.EMAIL, this.getEmail());
+        return parameters;
     }
 
     @Override

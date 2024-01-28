@@ -27,7 +27,7 @@ public class ContestBuilder {
     private Date startDate;
     private Date votingStartDate;
     private Date endDate;
-    private User animator;
+    private final User animator;
     private Contest contest;
 
     /**
@@ -142,7 +142,6 @@ public class ContestBuilder {
     }
 
     public void build(){
-        checkBaseContestParameters();
         checkBaseContestParameters();
         Contest contest = new ContestBase(name, animator, topic, rules, startDate, votingStartDate, endDate);
         if(isPrivate) {

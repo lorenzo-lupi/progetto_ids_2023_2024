@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.CompoundPointBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TypeNotSetException;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.IdsUtils;
@@ -104,7 +104,7 @@ public class CompoundPointInsertionHandler {
      * @return the added point of interests
      * @throws TypeNotSetException if the type has not been inserted yet
      */
-    public List<PointOfInterestSOF> getAddedPointOfInterests() {
+    public List<GeoLocatableSOF> getAddedPointOfInterests() {
         if (builder == null)
             throw new TypeNotSetException("Type must be inserted first");
 
