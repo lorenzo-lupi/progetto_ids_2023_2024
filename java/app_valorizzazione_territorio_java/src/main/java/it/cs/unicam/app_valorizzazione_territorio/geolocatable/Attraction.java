@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.AttractionDOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 /**
  * This class represents an attraction, that is a particular point of interest associated with
@@ -10,8 +11,8 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Position;
  */
 public class Attraction extends PointOfInterest{
     private final AttractionTypeEnum type;
-    public Attraction(String title, String description, Position position, Municipality municipality, AttractionTypeEnum type) {
-        super(title, description, position, municipality);
+    public Attraction(String title, String description, Position position, Municipality municipality, AttractionTypeEnum type, User user) {
+        super(title, description, position, municipality, user);
         this.type = type;
     }
 

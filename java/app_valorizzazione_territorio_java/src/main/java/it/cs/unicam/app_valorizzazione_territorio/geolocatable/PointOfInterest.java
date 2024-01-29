@@ -3,8 +3,10 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,8 +35,8 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
      * @param coordinates the geographical coordinates of the PointOfInterest
      * @param municipality the municipality of the PointOfInterest
      */
-    public PointOfInterest(String name, Position coordinates, Municipality municipality) {
-        this(name, "", coordinates, municipality, new ArrayList<>(), new ArrayList<>());
+    public PointOfInterest(String name, Position coordinates, Municipality municipality, User user) {
+        this(name, "", coordinates, municipality, new ArrayList<>(), new ArrayList<>(), user);
     }
 
     /**
@@ -45,8 +47,8 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
      * @param coordinates the geographical coordinates of the PointOfInterest
      * @param municipality the municipality of the PointOfInterest
      */
-    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality) {
-        this(name, description, coordinates, municipality, new ArrayList<>(), new ArrayList<>());
+    public PointOfInterest(String name, String description, Position coordinates, Municipality municipality, User user) {
+        this(name, description, coordinates, municipality, new ArrayList<>(), new ArrayList<>(), user);
     }
 
     /**
@@ -63,8 +65,11 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
                                             Position coordinates,
                                             Municipality municipality,
                                             List<File> images,
-                                            List<PointOfInterestContent> contents) {
-        super(name, description, municipality, images);
+                                            List<PointOfInterestContent> contents,
+                                            User user) {
+        super(name, description, municipality, images, user);
+        if(!municipality.getCoordinatesBox().contains(coordinates))
+            throw new IllegalCoordinatesException("Position must be inside the municipality");
         this.position = coordinates;
         this.contents = contents;
     }

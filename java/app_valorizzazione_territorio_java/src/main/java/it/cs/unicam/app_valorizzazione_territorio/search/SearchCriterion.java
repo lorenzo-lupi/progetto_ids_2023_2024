@@ -36,6 +36,8 @@ public class SearchCriterion<T> implements Predicate<Object> {
             (a, b) ->  a instanceof Long la && b instanceof Identifiable ic && ic.getID() == la;
     public static final BiPredicate<Object,  Object> CONTEST_PERMITS_USER =
             (a, b) -> a instanceof Contest c && b instanceof User u && c.permitsUser(u);
+    public static final BiPredicate<Object, Object> USERNAME =
+            (a, b) -> a instanceof String u && b instanceof String s && u.equals(s);
 
     /**
      * A Map that maps a String format to a BiPredicate that can be used for search.
@@ -51,6 +53,7 @@ public class SearchCriterion<T> implements Predicate<Object> {
         stringToBiPredicate.put("includedInCompoundPoint", INCLUDED_IN_COMPOUND_POINT);
         stringToBiPredicate.put("equalsID", EQUALS_ID);
         stringToBiPredicate.put("permitsUser", CONTEST_PERMITS_USER);
+        stringToBiPredicate.put("username", USERNAME);
     }
 
     private final BiPredicate<Object, Object> predicate;

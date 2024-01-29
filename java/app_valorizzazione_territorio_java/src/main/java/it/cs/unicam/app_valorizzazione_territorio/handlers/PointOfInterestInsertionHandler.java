@@ -4,10 +4,13 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestIF;
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
@@ -17,6 +20,9 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.logging.SimpleFormatter;
 
 /**
  * This class handles the insertion of a point of interest.
@@ -36,7 +42,7 @@ public class PointOfInterestInsertionHandler {
     public PointOfInterestInsertionHandler(long userId, long municipalityId) throws IOException {
         this.user = UserRepository.getInstance().getItemByID(userId);
         this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityId);
-        this.builder = new PointOfInterestBuilder(municipality);
+        this.builder = new PointOfInterestBuilder(municipality, user);
         this.map = MapProvider.getEmptyMap(municipality);
     }
 
@@ -50,22 +56,23 @@ public class PointOfInterestInsertionHandler {
      * of interest is not valid
      */
     public static void insertPointOfInterest(long userId, long municipalityId, PointOfInterestIF poiIF) {
-        PointOfInterestBuilder builder = new PointOfInterestBuilder(MunicipalityRepository.getInstance().getItemByID(municipalityId));
+        PointOfInterestBuilder builder =
+                new PointOfInterestBuilder(MunicipalityRepository.getInstance().getItemByID(municipalityId),
+                        UserRepository.getInstance().getItemByID(userId));
 
         builder.setTitle(poiIF.name())
                 .setDescription(poiIF.description());
         poiIF.images().forEach(builder::addImage);
-
         builder.setPosition(poiIF.position())
                 .setClassification(PointOfInterest.stringToClass.get(poiIF.classification()));
 
         if (poiIF.classification().equals(Attraction.class.getSimpleName()))
-                builder.setAttractionType(AttractionTypeEnum.stringToAttractionType.get(poiIF.type()));
+                builder.setAttractionType(AttractionTypeEnum.fromString(poiIF.type()));
         else if (poiIF.classification().equals(Event.class.getSimpleName()))
                 builder.setStartDate(poiIF.startDate())
                         .setEndDate(poiIF.endDate());
         else if (poiIF.classification().equals(Activity.class.getSimpleName()))
-                builder.setActivityType(ActivityTypeEnum.stringToActivityType.get(poiIF.type()))
+                builder.setActivityType(ActivityTypeEnum.fromString(poiIF.type()))
                         .setTimetable(poiIF.timetable());
         else throw new IllegalArgumentException("Invalid classification");
 
@@ -74,7 +81,56 @@ public class PointOfInterestInsertionHandler {
         GeoLocatableControllerUtils.insertGeoLocatable(builder.obtainResult(), UserRepository.getInstance().getItemByID(userId));
     }
 
+    /**
+     * Inserts the type of the point of interest.
+     * @throws IllegalArgumentException if the type is not valid
+     */
+    public void insertClassification(String poiClassification) {
+        if (poiClassification == null)
+            throw new IllegalArgumentException("Type cannot be null");
 
+        builder.setClassification(PointOfInterest.stringToClass.get(poiClassification));
+    }
+
+    public void insertAttractionType(String type){
+        if (type == null)
+            throw new IllegalArgumentException("Type cannot be null");
+
+        builder.setAttractionType(AttractionTypeEnum.fromString(type));
+    }
+
+    public void insertActivityType(String type){
+        if (type == null)
+            throw new IllegalArgumentException("Type cannot be null");
+
+        builder.setActivityType(ActivityTypeEnum.fromString(type));
+    }
+
+
+    /**
+     * Inserts the start date of the point of interest.
+     * @param startDate
+     */
+    public void insertStartDate(String startDate){
+        if (startDate == null)
+            throw new IllegalArgumentException("Start date cannot be null");
+
+        builder.setStartDate(Date.valueOf(startDate));
+    }
+
+
+    /**
+     * Inserts the end date of the point of interest.
+     * @param endDate
+     */
+    public void insertEndDate(String endDate){
+        if (endDate == null)
+            throw new IllegalArgumentException("End date cannot be null");
+
+        builder.setEndDate(Date.valueOf(endDate));
+    }
+
+    //TODO: insert all poi classification details
     /**
      * Returns the map of the point of interest in the detailed format.
      */
@@ -95,10 +151,14 @@ public class PointOfInterestInsertionHandler {
     /**
      * Inserts the coordinates of the point of interest.
      * @param coordinates the coordinates of the point of interest
-     * @throws IllegalArgumentException if the coordinates are not valid
+     * @throws IllegalCoordinatesException the coordinates are not valid
+     * @throws PositionParserException if the coordinates are not valid
      */
     public void insertCoordinates(String coordinates)
-            throws IllegalArgumentException{
+            throws IllegalCoordinatesException, PositionParserException {
+        Position position = PositionParser.parse(coordinates);
+        if(!municipality.getCoordinatesBox().contains(position))
+            throw new IllegalCoordinatesException("The coordinates are not valid for this municipality");
         builder.setPosition(PositionParser.parse(coordinates));
     }
 

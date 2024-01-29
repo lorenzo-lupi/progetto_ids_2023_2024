@@ -17,4 +17,5 @@ class VisualizeGeoLocatableThroughMapHandlerTest {
     @Test
     void visualizeGeoLocatableInDetailedFormat() {
     }
+
 }

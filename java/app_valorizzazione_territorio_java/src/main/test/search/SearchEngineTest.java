@@ -9,6 +9,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchEngineTest {
-
+    {
+        SampleRepositoryProvider.setUpUsers();
+    }
     private static final Municipality[] municipalities = new Municipality[] {
             new Municipality("Macerata", "Comune di Macerata",
                     new Position(43.29812657107886, 13.451878161920886),
@@ -35,13 +38,14 @@ public class SearchEngineTest {
     private static final GeoLocatable[] GEO_LOCATABLES = new PointOfInterest[] {
             new Attraction("Università di Camerino", "Università di Camerino",
                     new Position(43.13644468556232, 13.067156069846892),
-                    municipalities[1], AttractionTypeEnum.BUILDING),
+                    municipalities[1], AttractionTypeEnum.BUILDING, SampleRepositoryProvider.users.get(2)),
             new Attraction("Via Madonna delle Carceri", "Via Madonna delle Carceri",
                     new Position(43.140, 13.069),
-                    municipalities[1], AttractionTypeEnum.OTHER),
+                    municipalities[1], AttractionTypeEnum.OTHER, SampleRepositoryProvider.users.get(2)),
+
             new Attraction("Piazza della Libertà", "Piazza della Libertà",
                     new Position(43.29812657107886, 13.451878161920886),
-                    municipalities[0], AttractionTypeEnum.SQUARE)
+                    municipalities[0], AttractionTypeEnum.SQUARE, SampleRepositoryProvider.users.get(1))
     };
     @BeforeAll
     public static void setUpCollections() {

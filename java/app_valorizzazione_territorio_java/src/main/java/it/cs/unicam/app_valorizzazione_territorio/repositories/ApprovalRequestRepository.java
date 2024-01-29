@@ -4,6 +4,8 @@ import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
 
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
@@ -26,7 +28,8 @@ public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
     @SuppressWarnings("unchecked")
     public Stream<MunicipalityApprovalRequest> getAllMunicipalityRequests() {
         return (Stream<MunicipalityApprovalRequest>) this.getItemStream()
-                .filter(request -> request instanceof MunicipalityApprovalRequest).toList();
+                .filter(request -> request instanceof MunicipalityApprovalRequest)
+                .map(request -> (MunicipalityApprovalRequest) request);
     }
 
     /**
@@ -36,8 +39,9 @@ public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
      */
     @SuppressWarnings("unchecked")
     public Stream<ContestApprovalRequest> getAllContestRequests() {
-        return (Stream<ContestApprovalRequest>) this.getItemStream()
-                .filter(request -> request instanceof ContestApprovalRequest).toList();
+        return  this.getItemStream()
+                .filter(request -> request instanceof ContestApprovalRequest)
+                .map(request -> (ContestApprovalRequest) request);
     }
 
     /**
