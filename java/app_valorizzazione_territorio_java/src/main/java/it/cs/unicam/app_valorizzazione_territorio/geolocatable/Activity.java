@@ -3,6 +3,10 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ActivityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represent a point of interest that is a service exercised as a private or public activity.
@@ -48,5 +52,12 @@ public class Activity extends PointOfInterest{
         return new ActivityDOF(super.getDetailedFormat(),
                 this.getType().toString(),
                 this.getTimetable().getRangesList());
+    }
+
+    @Override
+    public Map<Parameter, Object> getParametersMapping() {
+        Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
+        parametersMapping.put(Parameter.ACTIVITY_TYPE, getType());
+        return parametersMapping;
     }
 }

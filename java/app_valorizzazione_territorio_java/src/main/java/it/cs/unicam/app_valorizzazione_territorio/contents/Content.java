@@ -116,7 +116,9 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
 
     @Override
     public ContentSOF getSynthesizedFormat() {
-        return new ContentSOF(this.getFiles().get(0), this.ID);
+        return new ContentSOF(
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0),
+                this.ID);
     }
 
     @Override
@@ -126,5 +128,10 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
                 this.getFiles(),
                 this.getApprovalStatus(),
                 this.getID());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equalsID(obj);
     }
 }

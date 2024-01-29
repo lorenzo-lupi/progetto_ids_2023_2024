@@ -5,12 +5,10 @@ import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestConten
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
@@ -98,6 +96,12 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public Map<Parameter, Object> getParametersMapping() {
+        Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
+        parametersMapping.put(Parameter.CLASSIFICATION, this.getClass().getSimpleName());
+        return parametersMapping;
     }
 
     @Override

@@ -44,13 +44,13 @@ public class SearchCriterion<T> implements Predicate<Object> {
 
     static {
         stringToBiPredicate = new HashMap<>();
-        stringToBiPredicate.put("equals", EQUALS);
-        stringToBiPredicate.put("startsWith", STARTS_WITH);
-        stringToBiPredicate.put("contains", CONTAINS);
-        stringToBiPredicate.put("includedInBox", INCLUDED_IN_BOX);
-        stringToBiPredicate.put("includedInCompoundPoint", INCLUDED_IN_COMPOUND_POINT);
-        stringToBiPredicate.put("equalsID", EQUALS_ID);
-        stringToBiPredicate.put("permitsUser", CONTEST_PERMITS_USER);
+        stringToBiPredicate.put("EQUALS", EQUALS);
+        stringToBiPredicate.put("STARTS_WITH", STARTS_WITH);
+        stringToBiPredicate.put("CONTAINS", CONTAINS);
+        stringToBiPredicate.put("INCLUDED_IN_BOX", INCLUDED_IN_BOX);
+        stringToBiPredicate.put("INCLUDED_IN_COMPOUND_POINT", INCLUDED_IN_COMPOUND_POINT);
+        stringToBiPredicate.put("EQUALS_ID", EQUALS_ID);
+        stringToBiPredicate.put("CONTEST_PERMITS_USER", CONTEST_PERMITS_USER);
     }
 
     private final BiPredicate<Object, Object> predicate;

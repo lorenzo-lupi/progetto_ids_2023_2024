@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -153,5 +154,10 @@ public class ContestBase implements Contest {
                 .stream()
                 .map(VotedContent::content)
                 .toList();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equalsID(obj);
     }
 }

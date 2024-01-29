@@ -105,4 +105,9 @@ public class User implements Searchable, Visualizable {
     public UserDOF getDetailedFormat() {
         return new UserDOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equalsID(obj);
+    }
 }

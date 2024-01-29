@@ -16,7 +16,7 @@ import java.util.Map;
  * It includes fundamental details such as a name, a textual description and a representative
  * multimedia content.
  */
-public abstract class GeoLocatable implements Approvable, Searchable, Visualizable, Identifiable, Positionable {
+public abstract class GeoLocatable implements Approvable, Searchable, Visualizable, Positionable {
     private String name;
     private String description;
     private final Municipality municipality;
@@ -139,11 +139,11 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
-        return Map.of(Parameter.MUNICIPALITY, this.municipality,
+        return Map.of(Parameter.MUNICIPALITY, this.getMunicipality(),
                 Parameter.POSITION, this.getPosition(),
-                Parameter.DESCRIPTION, this.description,
-                Parameter.NAME, this.name,
-                Parameter.APPROVAL_STATUS, this.approvalStatus);
+                Parameter.DESCRIPTION, this.getDescription(),
+                Parameter.NAME, this.getName(),
+                Parameter.APPROVAL_STATUS, this.getApprovalStatus());
     }
 
     @Override
@@ -151,10 +151,16 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
         return this.ID;
     }
 
+    @Override
     public GeoLocatableSOF getSynthesizedFormat(){
         return new GeoLocatableSOF(this.getName(),
-                this.getImages().get(0),
+                this.getImages().isEmpty() ? null : this.getImages().get(0),
                 this.getClass().getSimpleName(),
                 this.getID());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equalsID(obj);
     }
 }

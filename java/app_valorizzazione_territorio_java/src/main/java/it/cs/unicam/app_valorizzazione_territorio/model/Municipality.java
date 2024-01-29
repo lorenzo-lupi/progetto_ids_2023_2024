@@ -145,11 +145,18 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
 
     @Override
     public MunicipalitySOF getSynthesizedFormat() {
-        return new MunicipalitySOF(this.getName(), this.getFiles().get(0), this.getID());
+        return new MunicipalitySOF(this.getName(),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0),
+                this.getID());
     }
 
     @Override
     public MunicipalityDOF getDetailedFormat() {
         return new MunicipalityDOF(this.getName(), this.getDescription(), this.getPosition(), this.getFiles(), this.getID());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equalsID(obj);
     }
 }

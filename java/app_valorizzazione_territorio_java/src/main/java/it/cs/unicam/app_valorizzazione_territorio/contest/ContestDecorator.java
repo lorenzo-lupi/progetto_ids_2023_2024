@@ -108,4 +108,9 @@ public abstract class ContestDecorator implements Contest{
         return this.contest.getContents();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return equalsID(obj);
+    }
+
 }

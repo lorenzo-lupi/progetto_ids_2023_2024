@@ -10,4 +10,12 @@ public interface Identifiable {
      * @return the unique identifier of the object
      */
     long getID();
+
+    default boolean equalsID(Object obj) {
+        if(obj == null) return false;
+        if (this == obj) return true;
+        if(obj instanceof Identifiable)
+            return this.getID() == ((Identifiable) obj).getID();
+        return false;
+    }
 }

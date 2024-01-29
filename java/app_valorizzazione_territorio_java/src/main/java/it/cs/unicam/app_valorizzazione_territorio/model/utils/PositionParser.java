@@ -37,6 +37,7 @@ public class PositionParser {
 
         string = string.substring(format.length());
 
+
         if (NumberUtils.isCreatable(string))
             return Double.parseDouble(string);
         else
