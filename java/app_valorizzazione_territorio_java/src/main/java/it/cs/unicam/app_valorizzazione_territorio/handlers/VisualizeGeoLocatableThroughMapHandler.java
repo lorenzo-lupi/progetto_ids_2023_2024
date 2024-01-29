@@ -25,7 +25,7 @@ public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLoc
      * @param municipality the municipality to search in
      */
     public VisualizeGeoLocatableThroughMapHandler(Municipality municipality) throws IOException {
-        super(municipality.getGeoLocatables());
+        super(municipality.getGeoLocatables().stream().filter(GeoLocatable::isApproved).toList());
         this.map = MapProvider.getMap(municipality);
     }
 

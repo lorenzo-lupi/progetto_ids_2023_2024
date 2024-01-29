@@ -1,13 +1,16 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +26,10 @@ public class ContentVisualizationHandler extends SearchHandler<PointOfInterestCo
      * @throws IllegalArgumentException if the point of interest corresponding to the given ID is not found
      */
     public ContentVisualizationHandler(long pointOfInterestID) {
-        super(MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID).getContents());
+        super(MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID).getContents().stream()
+                .filter(Content::isApproved)
+                .toList()
+        );
         this.pointOfInterest = MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID);
     }
 
@@ -78,7 +84,7 @@ public class ContentVisualizationHandler extends SearchHandler<PointOfInterestCo
     }
 
     /**
-     * Returns the Synthesized Format of all the contents of the point of interest.
+     * Returns the Synthesized Format of all the approved contents of the point of interest.
      *
      * @return the Synthesized Format of all the contents of the point of interest
      */
