@@ -4,6 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.DescriptionNotSetEx
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.TitleNotSetException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -15,12 +16,15 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
     private String description;
     private final List<File> images;
 
+    private final User user;
 
-    public GeoLocatableBuilder(Municipality municipality) {
-        if (municipality == null)
+
+    public GeoLocatableBuilder(Municipality municipality, User user) {
+        if (municipality == null || user == null)
             throw new IllegalArgumentException("User and municipality must not be null");
         this.images = new LinkedList<>();
         this.municipality = municipality;
+        this.user = user;
     }
 
     /**
@@ -28,10 +32,13 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      *
      * @return the municipality of the CompoundPoint
      */
-    public Municipality getMunicipality() {
+    protected Municipality getMunicipality() {
         return municipality;
     }
 
+    protected User getUser(){
+        return this.user;
+    }
 
 
     /**
@@ -112,4 +119,5 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
 
     public abstract GeoLocatableBuilder<T> build() throws IllegalStateException;
     public abstract T obtainResult() throws IllegalStateException;
+
 }

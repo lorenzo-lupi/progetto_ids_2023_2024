@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.awt.*;
@@ -35,9 +36,10 @@ public class CompoundPoint extends GeoLocatable {
                          Municipality municipality,
                          CompoundPointTypeEnum type,
                          Collection<PointOfInterest> pointsOfInterest,
-                         List<File> images) {
+                         List<File> images,
+                         User user) {
 
-        super(title, description, municipality, images);
+        super(title, description, municipality, images, user);
         checkArguments(type, pointsOfInterest);
 
         this.type = type;

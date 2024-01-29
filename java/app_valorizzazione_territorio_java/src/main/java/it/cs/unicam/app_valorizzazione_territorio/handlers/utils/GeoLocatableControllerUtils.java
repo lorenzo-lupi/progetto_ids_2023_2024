@@ -55,6 +55,6 @@ public class GeoLocatableControllerUtils {
             ApprovalRequestRepository.getInstance().add(
                     new MunicipalityApprovalRequest<>(user, item, municipality));
         }
-
     }
+
 }

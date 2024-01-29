@@ -8,5 +8,6 @@ class PointOfInterestContentInsertionHandlerTest {
 
     @Test
     void insertContent() {
+
     }
 }

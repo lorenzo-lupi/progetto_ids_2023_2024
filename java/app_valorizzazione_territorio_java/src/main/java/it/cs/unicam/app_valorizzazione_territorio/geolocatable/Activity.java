@@ -4,6 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.ActivityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +23,9 @@ public class Activity extends PointOfInterest{
                     String description,
                     Position position,
                     Municipality municipality,
-                    ActivityTypeEnum type) {
-        super(title, description, position, municipality);
+                    ActivityTypeEnum type,
+                    User user) {
+        super(title, description, position, municipality, user);
         this.type = type;
         this.timetable = new Timetable();
     }
@@ -33,8 +35,9 @@ public class Activity extends PointOfInterest{
                     Position position,
                     Municipality municipality,
                     ActivityTypeEnum type,
-                    Timetable timetable) {
-        super(title, description, position, municipality);
+                    Timetable timetable,
+                    User user) {
+        super(title, description, position, municipality, user);
         this.type = type;
         this.timetable = timetable;
     }

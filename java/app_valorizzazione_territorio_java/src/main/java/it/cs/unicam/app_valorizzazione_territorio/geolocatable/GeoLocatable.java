@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  * multimedia content.
  */
 public abstract class GeoLocatable implements Approvable, Searchable, Visualizable, Positionable {
+    private final User user;
     private String name;
     private String description;
     private final Municipality municipality;
@@ -37,16 +39,20 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     public GeoLocatable(String name,
                         String description,
                         Municipality municipality,
-                        List<File> images){
+                        List<File> images,
+                        User user){
         if(name == null || description == null)
             throw new IllegalArgumentException("title and description cannot be null");
         if(municipality == null || images == null)
             throw new IllegalArgumentException("Municipality and images must not be null");
+        if (user == null)
+            throw new IllegalArgumentException("user cannot be null");
 
         this.name = name;
         this.description = description;
         this.municipality = municipality;
         this.images = images;
+        this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
@@ -92,6 +98,10 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
         if (description == null)
             throw new IllegalArgumentException("description cannot be null");
         this.description = description;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     /**
@@ -144,6 +154,7 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
                 Parameter.DESCRIPTION, this.getDescription(),
                 Parameter.NAME, this.getName(),
                 Parameter.APPROVAL_STATUS, this.getApprovalStatus());
+                Parameter.USERNAME, this.user.getUsername());
     }
 
     @Override

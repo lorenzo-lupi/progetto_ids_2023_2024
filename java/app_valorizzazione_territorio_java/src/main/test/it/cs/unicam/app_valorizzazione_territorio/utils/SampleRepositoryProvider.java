@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio;
+package it.cs.unicam.app_valorizzazione_territorio.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
@@ -17,13 +17,33 @@ import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class SampleRepositoryProvider {
 
+    public static final Municipality MACERATA;
+    public static final Municipality CAMERINO;
+    public static final User CURATORE_CAMERINO;
+    public static final User ENTERTAINER_CAMERINO;
+    public static final User ENTERTAINER_MACERATA;
+
+    public static final User TURIST;
+
+    private static boolean municipalitiesAreSetUp = false;
+    private static boolean usersAreSetUp = false;
+    private static boolean requestsAreSetUp = false;
+
+
+    public static final List<Municipality> municipalities = Arrays.asList(
+            new Municipality("Macerata", "Comune di Macerata",
+                    new Position(43.29812657107886, 13.451878161920886),
+                    new CoordinatesBox(new Position(43.317324, 13.409422), new Position (43.271074, 13.499990)),
+                    new ArrayList<>()),
+            new Municipality("Camerino", "Comune di Camerino",
+                    new Position(43.13644468556232, 13.067156069846892),
+                    new CoordinatesBox(new Position(43.153712, 13.036414), new Position (43.123261, 13.095768)),
+                    new ArrayList<>())
+    );
     public static final List<Municipality> municipalities = new ArrayList<>();
     public static final List<User> users = new ArrayList<>();
     public static final List<GeoLocatable> geoLocatables = new ArrayList<>();
@@ -60,31 +80,31 @@ public class SampleRepositoryProvider {
                 //0 //Municiplaity: Camerino
                 new Attraction("Università di Camerino", "Università di Camerino",
                         new Position(43.13644468556232, 13.067156069846892),
-                        municipalities.get(1), AttractionTypeEnum.BUILDING),
+                        municipalities.get(1), AttractionTypeEnum.BUILDING, users.get(2)),
                 //1 //Municiplaity: Camerino
                 new Attraction("Via Madonna delle Carceri", "Via Madonna delle Carceri",
                         new Position(43.140, 13.069),
-                        municipalities.get(1), AttractionTypeEnum.OTHER),
+                        municipalities.get(1), AttractionTypeEnum.OTHER. users.get(1)),
                 //2 //Municiplaity: Macerata
                 new Attraction("Piazza della Libertà", "Piazza della Libertà",
                         new Position(43.29812657107886, 13.451878161920886),
-                        municipalities.get(0), AttractionTypeEnum.SQUARE),
+                        municipalities.get(0), AttractionTypeEnum.SQUARE, users.get(2)),
                 //3 //Municiplaity: Camerino
                 new Event("Corsa della Spada", "Celebrazione tradizionale della Corsa della Spada",
                         new Position(43.135812352706715, 13.068367879486194),
-                        municipalities.get(1), new Date(124, 5, 17), new Date(124, 5, 24)),
+                        municipalities.get(1), new Date(124, 5, 17), new Date(124, 5, 24), users.get(1)),
                 //4 //Municiplaity: Macerata //Not approved
                 new Event("September Fest", "Festa a tema Birra",
                         new Position(43.29812657107886, 13.451878161920886),
-                        municipalities.get(0), new Date(124, 9, 1), new Date(124, 9, 30)),
+                        municipalities.get(0), new Date(124, 9, 1), new Date(124, 9, 30), users.get(2)),
                 //5 //Municiplaity: Camerino
                 new Activity("Pizzeria Enjoy", "Pizzeria",
                         new Position(43.143290511951314, 13.078617450882426),
-                        municipalities.get(1), ActivityTypeEnum.RESTAURANT),
+                        municipalities.get(1), ActivityTypeEnum.RESTAURANT, users.get(2)),
                 //6 //Municiplaity: Camerino
                 new Activity("Basilica di San Venanzio", "Basilica di San Venanzio",
                         new Position(43.137753115974135, 13.073411976140818),
-                        municipalities.get(1), ActivityTypeEnum.CHURCH)
+                        municipalities.get(1), ActivityTypeEnum.CHURCH, users.get(1))
         ));
 
         geoLocatables.addAll(Arrays.asList(
@@ -94,13 +114,13 @@ public class SampleRepositoryProvider {
                         (PointOfInterest)geoLocatables.get(1),
                         (PointOfInterest)geoLocatables.get(0),
                         (PointOfInterest)geoLocatables.get(5)),
-                        new ArrayList<>()),
+                        new ArrayList<>(), users.get(2)),
                 //8 //Municiplaity: Camerino
                 new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
                         municipalities.get(1), CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
                         (PointOfInterest)geoLocatables.get(6),
                         (PointOfInterest)geoLocatables.get(3)),
-                        new ArrayList<>())
+                        new ArrayList<>(), users.get(1))
         ));
 
         contests.addAll(Arrays.asList(
@@ -169,9 +189,17 @@ public class SampleRepositoryProvider {
                 new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3))
         ));
 
-        users.get(3).addRole(municipalities.get(1), RoleTypeEnum.CURATOR);
-        users.get(4).addRole(municipalities.get(0), RoleTypeEnum.ENTERTAINER);
-        users.get(5).addRole(municipalities.get(1), RoleTypeEnum.ENTERTAINER);
+        MACERATA = municipalities.get(0);
+        CAMERINO = municipalities.get(1);
+
+        users.get(3).addRole(CAMERINO, RoleTypeEnum.CURATOR);
+        users.get(4).addRole(MACERATA, RoleTypeEnum.ENTERTAINER);
+        users.get(5).addRole(CAMERINO, RoleTypeEnum.ENTERTAINER);
+
+        CURATORE_CAMERINO = users.get(3);
+        ENTERTAINER_MACERATA = users.get(4);
+        ENTERTAINER_CAMERINO = users.get(5);
+        TURIST = users.get(0);
 
         municipalities.get(1).addGeoLocatable(geoLocatables.get(0)); geoLocatables.get(0).approve();
         municipalities.get(1).addGeoLocatable(geoLocatables.get(1)); geoLocatables.get(1).approve();
@@ -193,21 +221,30 @@ public class SampleRepositoryProvider {
         contests.get(3).getProposalRequests().proposeContent((ContestContent)contents.get(9));
     }
 
-    public static void setUpMunicipalityRepository () {
-        MunicipalityRepository.getInstance().addAll(municipalities);
+    public static void setUpMunicipalityRepository() {
+        if (!municipalitiesAreSetUp) {
+            MunicipalityRepository.getInstance().addAll(municipalities);
+            municipalitiesAreSetUp = true;
+        }
     }
 
     public static void setUpUsers () {
-        UserRepository.getInstance().addAll(users);
+        if (!usersAreSetUp) {
+            UserRepository.getInstance().addAll(users);
+            usersAreSetUp = true;
+        }
     }
 
-    public static void setUpRquests () {
-        ApprovalRequestRepository.getInstance().addAll(requests);
+    public static void setUpRequests() {
+        if (!requestsAreSetUp) {
+            ApprovalRequestRepository.getInstance().addAll(requests);
+            requestsAreSetUp = true;
+        }
     }
 
     public static void setUpAllRepositories() {
         setUpMunicipalityRepository();
         setUpUsers();
-        setUpRquests();
+        setUpRequests();
     }
 }

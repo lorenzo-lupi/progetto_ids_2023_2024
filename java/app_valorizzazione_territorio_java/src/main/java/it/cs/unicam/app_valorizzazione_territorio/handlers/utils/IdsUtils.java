@@ -16,7 +16,8 @@ import static it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion.
 
 public class IdsUtils {
     /**
-     * returns the point of interest from the given id
+     * returns the point of interest from the given id.
+     * wrapper method which throws an illegal argument exception if the id is not valid or the id is not a point of interest
      * @throws IllegalArgumentException if the id is not valid or the id is not a point of interest
      */
     public static PointOfInterest getPoiFromID(long pointOfInterestID, Municipality municipality){

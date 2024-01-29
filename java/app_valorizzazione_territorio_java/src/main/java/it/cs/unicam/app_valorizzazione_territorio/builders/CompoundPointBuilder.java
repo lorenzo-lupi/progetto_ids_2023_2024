@@ -26,9 +26,10 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      * @throws IllegalArgumentException if type, municipality or user are null
      */
     public CompoundPointBuilder(CompoundPointTypeEnum compoundPointType,
-                                Municipality municipality) {
+                                Municipality municipality,
+                                User user) {
 
-        super(municipality);
+        super(municipality, user);
         if (compoundPointType == null)
             throw new IllegalArgumentException("CompoundPointType must not be null");
 
@@ -138,7 +139,8 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
                 this.getMunicipality(),
                 this.type,
                 this.pointOfInterests,
-                this.getImages());
+                this.getImages(),
+                this.getUser());
         return this;
     }
 }

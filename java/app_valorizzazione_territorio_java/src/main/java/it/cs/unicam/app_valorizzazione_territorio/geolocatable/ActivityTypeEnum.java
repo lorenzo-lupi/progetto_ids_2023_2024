@@ -26,13 +26,27 @@ public enum ActivityTypeEnum {
     AMUSEMENT_PARK,
     OTHER;
 
-    public static final Map<String, ActivityTypeEnum> stringToActivityType;
+    private static final Map<String, ActivityTypeEnum> stringToActivityType;
 
     static {
         stringToActivityType = new HashMap<>();
         for (ActivityTypeEnum type : ActivityTypeEnum.values()) {
-            stringToActivityType.put(type.toString(), type);
+            stringToActivityType.put(type.toString().toLowerCase(), type);
         }
+    }
+
+    /**
+     * Returns the ActivityTypeEnum corresponding to the given string.
+     *
+     * @param string the string to be converted
+     * @return the corresponding ActivityTypeEnum
+     * @throws IllegalArgumentException if the string does not correspond to any ActivityTypeEnum
+     */
+    public static ActivityTypeEnum fromString(String string) {
+        ActivityTypeEnum type = stringToActivityType.get(string.toLowerCase());
+        if (type == null)
+            throw new IllegalArgumentException("Activity type not found");
+        return type;
     }
 
 }

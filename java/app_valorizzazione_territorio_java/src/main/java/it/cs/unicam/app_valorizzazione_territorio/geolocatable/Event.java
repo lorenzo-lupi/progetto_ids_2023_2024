@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.EventDOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.Date;
 
@@ -14,8 +15,8 @@ public class Event extends PointOfInterest{
     private Date startDate;
     private Date endDate;
 
-    public Event(String title, String description, Position position, Municipality municipality, Date startDate, Date endDate) {
-        super(title, description, position, municipality);
+    public Event(String title, String description, Position position, Municipality municipality, Date startDate, Date endDate, User user) {
+        super(title, description, position, municipality, user);
         this.startDate = startDate;
         this.endDate = endDate;
     }

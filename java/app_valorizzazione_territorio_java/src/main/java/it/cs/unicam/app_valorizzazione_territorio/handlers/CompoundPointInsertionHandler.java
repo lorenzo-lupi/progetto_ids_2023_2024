@@ -42,7 +42,7 @@ public class CompoundPointInsertionHandler {
 
 
         builder = new CompoundPointBuilder(CompoundPointTypeEnum.fromString(type),
-                municipality);
+                municipality, user);
     }
 
 
@@ -137,8 +137,6 @@ public class CompoundPointInsertionHandler {
         return builder.getImages();
     }
 
-
-    //TODO: del added file
     /**
      * Deletes a file from the compound point.
      * @param file the file to delete
