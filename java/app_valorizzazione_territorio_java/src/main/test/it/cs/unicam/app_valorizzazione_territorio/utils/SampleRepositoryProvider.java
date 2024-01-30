@@ -21,16 +21,16 @@ import java.util.*;
 
 public class SampleRepositoryProvider {
 
-    public static final Municipality MACERATA, CAMERINO;
-    public static final User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA;
-    public static final GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
+    public static Municipality MACERATA, CAMERINO;
+    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA;
+    public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO;
-    public static final Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
+    public static Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
             MANIFESTO_CORSA_SPADA, FOTO_STRADE_MACERATA, FOTO_TORRE_CIVICA, FOTO_PIZZA_REGINA, FOTO_PITTURA_1,
             FOTO_PITTURA_2;
 
-    public static final Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA;
-    public static final ApprovalRequest RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR;
+    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA;
+    public static ApprovalRequest RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR;
 
     private static boolean municipalitiesAreSetUp = false;
     private static boolean usersAreSetUp = false;
@@ -43,8 +43,11 @@ public class SampleRepositoryProvider {
     public static final List<Content> contents = new ArrayList<>();
     public static final List<ApprovalRequest> requests = new ArrayList<>();
 
-
     static {
+        createObjects();
+    }
+
+    private static void createObjects() {
 
         municipalities.addAll(Arrays.asList(
                 //0 //MACERATA
@@ -237,6 +240,11 @@ public class SampleRepositoryProvider {
         CAMERINO.addGeoLocatable(TORUR_STUDENTE); TORUR_STUDENTE.approve();
         CAMERINO.addGeoLocatable(TRADIZIONE_SAN_VENANZIO); TRADIZIONE_SAN_VENANZIO.approve();
 
+        MACERATA.addContest(CONCORSO_FOTO_2024);
+        MACERATA.addContest(CONCORSO_FOTO_2025);
+        CAMERINO.addContest(CONCORSO_FOTO_PIZZA);
+        CAMERINO.addContest(CONCORSO_PITTURA);
+
         ((PointOfInterest)BASILICA_SAN_VENANZIO).addContent((PointOfInterestContent)FOTO_SAN_VENANZIO);
         ((PointOfInterest)PIAZZA_LIBERTA).addContent((PointOfInterestContent)FOTO_PIAZZA_LIBERTA_1); FOTO_PIAZZA_LIBERTA_1.approve();
         ((PointOfInterest)PIAZZA_LIBERTA).addContent((PointOfInterestContent)FOTO_PIAZZA_LIBERTA_2); FOTO_PIAZZA_LIBERTA_2.approve();
@@ -250,21 +258,30 @@ public class SampleRepositoryProvider {
         CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent)FOTO_PITTURA_2);
     }
 
-    public static void setUpMunicipalityRepository() {
+    private static void clearObjects() {
+        municipalities.clear();
+        users.clear();
+        geoLocatables.clear();
+        contests.clear();
+        contents.clear();
+        requests.clear();
+    }
+
+    public static void setUpMunicipalitiesRepository() {
         if (!municipalitiesAreSetUp) {
             MunicipalityRepository.getInstance().addAll(municipalities);
             municipalitiesAreSetUp = true;
         }
     }
 
-    public static void setUpUsers () {
+    public static void setUpUsersRepository() {
         if (!usersAreSetUp) {
             UserRepository.getInstance().addAll(users);
             usersAreSetUp = true;
         }
     }
 
-    public static void setUpRequests() {
+    public static void setUpRequest5esRepositories() {
         if (!requestsAreSetUp) {
             ApprovalRequestRepository.getInstance().addAll(requests);
             requestsAreSetUp = true;
@@ -272,8 +289,31 @@ public class SampleRepositoryProvider {
     }
 
     public static void setUpAllRepositories() {
-        setUpMunicipalityRepository();
-        setUpUsers();
-        setUpRequests();
+        setUpMunicipalitiesRepository();
+        setUpUsersRepository();
+        setUpRequest5esRepositories();
+    }
+
+    public static void clearMunicipalitesRepository() {
+        MunicipalityRepository.getInstance().clear();
+        municipalitiesAreSetUp = false;
+    }
+
+    public static void clearUsersRepository() {
+        UserRepository.getInstance().clear();
+        usersAreSetUp = false;
+    }
+
+    public static void clearRequestsRepositories() {
+        ApprovalRequestRepository.getInstance().clear();
+        requestsAreSetUp = false;
+    }
+
+    public static void clearAllRepositories() {
+        clearMunicipalitesRepository();
+        clearUsersRepository();
+        clearRequestsRepositories();
+        clearObjects();
+        createObjects();
     }
 }

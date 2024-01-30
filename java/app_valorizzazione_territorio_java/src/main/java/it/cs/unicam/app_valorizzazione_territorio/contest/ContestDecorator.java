@@ -25,8 +25,8 @@ public abstract class ContestDecorator implements Contest{
     }
 
     @Override
-    public User getAnimator() {
-        return this.contest.getAnimator();
+    public User getEntertainer() {
+        return this.contest.getEntertainer();
     }
 
     @Override

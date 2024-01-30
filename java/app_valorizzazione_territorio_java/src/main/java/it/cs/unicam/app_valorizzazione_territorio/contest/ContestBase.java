@@ -55,7 +55,7 @@ public class ContestBase implements Contest {
         this.name = name;
     }
 
-    public User getAnimator() {
+    public User getEntertainer() {
         return animator;
     }
 

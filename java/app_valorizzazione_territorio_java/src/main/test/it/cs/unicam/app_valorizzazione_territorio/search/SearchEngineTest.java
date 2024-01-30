@@ -19,7 +19,7 @@ public class SearchEngineTest {
     private static List<GeoLocatable> geoLocatables;
     @BeforeAll
     public static void setUp() {
-        SampleRepositoryProvider.setUpMunicipalityRepository();
+        SampleRepositoryProvider.setUpMunicipalitiesRepository();
         municipalities = MunicipalityRepository.getInstance().getItemStream().toList();
         geoLocatables = MunicipalityRepository.getInstance().getAllGeoLocatables().toList();
     }

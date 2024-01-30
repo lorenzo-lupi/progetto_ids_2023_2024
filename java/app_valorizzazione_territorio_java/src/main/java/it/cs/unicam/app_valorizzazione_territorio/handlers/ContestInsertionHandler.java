@@ -50,11 +50,12 @@ public class ContestInsertionHandler {
      *
      * @param municipalityID the ID of the municipality
      * @param contestIF the DTO of the contest to insert
+     * @return the ID of the inserted contest
      * @throws IllegalArgumentException if the animator of the contest is not authorized to insert contests
      * in the municipality, or if the animator is null, or if the contest is null or if the contest is invalid
      */
-    public static void insertContest(long municipalityID, ContestIF contestIF){
-        ContestBuilder builder = new ContestBuilder(UserRepository.getInstance().getItemByID(contestIF.animatorID()));
+    public static long insertContest(long userID, long municipalityID, ContestIF contestIF){
+        ContestBuilder builder = new ContestBuilder(UserRepository.getInstance().getItemByID(userID));
 
         builder.setName(contestIF.name())
                 .setTopic(contestIF.topic())
@@ -75,7 +76,8 @@ public class ContestInsertionHandler {
         builder.build();
 
         MunicipalityRepository.getInstance().getItemByID(municipalityID).addContest(builder.getResult());
-        sendNotifications(builder.getResult(), INVITATION_MESSAGE);
+        if (contestIF.isPrivate()) sendNotifications(builder.getResult(), INVITATION_MESSAGE);
+        return builder.getResult().getID();
     }
 
     /**
@@ -314,8 +316,8 @@ public class ContestInsertionHandler {
      * Inserts the created contest in the municipality.
      * If the contest is private, a notification with a standard message is sent to all the participants.
      */
-    public void insertContest() {
-        insertContest(INVITATION_MESSAGE);
+    public long insertContest() {
+        return insertContest(INVITATION_MESSAGE);
     }
 
     /**
@@ -324,10 +326,11 @@ public class ContestInsertionHandler {
      *
      * @param message the message to send to the participants
      */
-    public void insertContest(String message) {
+    public long insertContest(String message) {
         this.builder.build();
         if (builder.getResult().isPrivate()) sendNotifications(builder.getResult(), message);
         municipality.addContest(builder.getResult());
+        return builder.getResult().getID();
     }
 
     private static void sendNotifications(Contest contest, String message) {

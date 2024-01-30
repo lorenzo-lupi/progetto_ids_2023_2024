@@ -17,7 +17,7 @@ class MunicipalityVisualizationHandlerTest {
 
     @BeforeAll
     static void setUpRepository() {
-        SampleRepositoryProvider.setUpMunicipalityRepository();
+        SampleRepositoryProvider.setUpMunicipalitiesRepository();
     }
 
     @Test

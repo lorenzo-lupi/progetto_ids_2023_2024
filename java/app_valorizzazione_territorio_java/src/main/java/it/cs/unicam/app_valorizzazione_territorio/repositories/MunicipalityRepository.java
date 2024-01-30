@@ -190,4 +190,12 @@ public class MunicipalityRepository extends Repository<Municipality> {
     public Stream<PointOfInterestContent> getAllContents() {
         return getAllContentsMap().values().stream();
     }
+
+    @Override
+    public void clear() {
+        super.clear();
+        nextGeoLocalizableID = 0L;
+        nextContestID = 0L;
+        nextContentID = 0L;
+    }
 }

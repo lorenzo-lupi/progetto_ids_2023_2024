@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 public record ContestIF(String name,
-                        long animatorID,
                         String topic,
                         String rules,
                         boolean isPrivate,

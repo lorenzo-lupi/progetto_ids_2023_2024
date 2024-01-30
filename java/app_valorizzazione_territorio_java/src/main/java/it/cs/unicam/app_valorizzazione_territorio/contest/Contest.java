@@ -70,7 +70,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * Returns the animator of the contest.
      * @return the animator of the contest.
      */
-    User getAnimator();
+    User getEntertainer();
     String getTopic();
     String getRules();
     Date getStartDate();
@@ -103,7 +103,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
     @Override
     default ContestDOF getDetailedFormat() {
         return new ContestDOF(this.getName(),
-                this.getAnimator().getSynthesizedFormat(),
+                this.getEntertainer().getSynthesizedFormat(),
                 this.getTopic(),
                 this.getRules(),
                 this.isPrivate(),

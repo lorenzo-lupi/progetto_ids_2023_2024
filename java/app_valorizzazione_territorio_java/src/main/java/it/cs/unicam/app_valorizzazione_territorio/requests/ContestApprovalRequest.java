@@ -43,7 +43,7 @@ public class ContestApprovalRequest extends ApprovalRequest<ContestContent>{
 
     @Override
     public boolean canBeApprovedBy(User user) {
-        return user.equals(contest.getAnimator());
+        return user.equals(contest.getEntertainer());
     }
 
     @Override

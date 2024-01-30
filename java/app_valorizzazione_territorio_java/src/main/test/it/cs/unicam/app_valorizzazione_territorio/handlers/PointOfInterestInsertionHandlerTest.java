@@ -28,9 +28,9 @@ class PointOfInterestInsertionHandlerTest {
 
     @BeforeAll
     void init() {
-        SampleRepositoryProvider.setUpMunicipalityRepository();
-        SampleRepositoryProvider.setUpUsers();
-        SampleRepositoryProvider.setUpRequests();
+        SampleRepositoryProvider.setUpMunicipalitiesRepository();
+        SampleRepositoryProvider.setUpUsersRepository();
+        SampleRepositoryProvider.setUpRequest5esRepositories();
         try {
             createHandlers();
         } catch (IOException e) {

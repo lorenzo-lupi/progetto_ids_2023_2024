@@ -107,4 +107,12 @@ public abstract class Repository<I extends Identifiable> {
     public long getNextID() {
         return nextID++;
     }
+
+    /**
+     * Resets the repository, removing all the items and resetting the next available ID.
+     */
+    public void clear() {
+        this.items.clear();
+        this.nextID = 0L;
+    }
 }
