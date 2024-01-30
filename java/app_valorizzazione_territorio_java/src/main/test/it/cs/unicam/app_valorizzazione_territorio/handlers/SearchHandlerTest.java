@@ -35,7 +35,7 @@ class SearchHandlerTest {
     }
 
     @BeforeEach
-    private void setUpSearchHandlers() {
+    public void setUpSearchHandlers() {
         municipalitySearchHandler = new SearchHandler<>(MunicipalityRepository.getInstance().getItemStream().toList());
         geoLocatableSearchHandler = new SearchHandler<>(MunicipalityRepository.getInstance().getAllGeoLocatables().toList());
         contentSearchHandler = new SearchHandler<>(MunicipalityRepository.getInstance().getAllContents().toList());

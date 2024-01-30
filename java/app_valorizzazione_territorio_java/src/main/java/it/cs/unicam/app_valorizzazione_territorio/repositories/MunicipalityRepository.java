@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.exceptions.GeoLocatableNotFoundException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
@@ -106,7 +107,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
      */
     public GeoLocatable getGeoLocatableByID(long ID) {
         GeoLocatable geoLocatable = getAllGeoLocatablesMap().get(ID);
-        if(geoLocatable == null) throw new IllegalArgumentException("GeoLocatable not found");
+        if(geoLocatable == null) throw new GeoLocatableNotFoundException("GeoLocatable not found");
         return geoLocatable;
     }
 

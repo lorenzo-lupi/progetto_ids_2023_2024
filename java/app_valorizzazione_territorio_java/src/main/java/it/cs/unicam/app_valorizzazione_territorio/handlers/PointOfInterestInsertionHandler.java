@@ -205,9 +205,11 @@ public class PointOfInterestInsertionHandler {
     /**
      * Inserts the point of interest in the Municipality.
      */
-    public void insertPointOfInterest(){
+    public long insertPointOfInterest(){
         GeoLocatableControllerUtils
                 .insertGeoLocatable(poi, user);
+
+        return poi.getID();
     }
 
 }

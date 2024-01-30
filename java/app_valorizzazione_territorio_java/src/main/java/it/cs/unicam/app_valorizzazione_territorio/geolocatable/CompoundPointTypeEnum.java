@@ -20,7 +20,7 @@ public enum CompoundPointTypeEnum {
 
 
     public static CompoundPointTypeEnum fromString(String type) {
-        return switch (type) {
+        return switch (type.toLowerCase()) {
             case "itinerary" -> ITINERARY;
             case "experience" -> EXPERIENCE;
             default -> throw new IllegalArgumentException("Unexpected value: " + type);

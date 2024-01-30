@@ -44,7 +44,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @param pointOfInterest the GeoLocatable to add
      */
-    public GeoLocatableBuilder<CompoundPoint> addPointOfInterest(PointOfInterest pointOfInterest) throws WrongMunicipalityException {
+    public CompoundPointBuilder addPointOfInterest(PointOfInterest pointOfInterest) throws WrongMunicipalityException {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("GeoLocatable must not be null");
         if (!pointOfInterest.getMunicipality().equals(this.getMunicipality()))
@@ -80,7 +80,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @throws IllegalStateException if the type of the CompoundPoint is not ITINERARY
      */
-    public GeoLocatableBuilder<CompoundPoint> invertPointOfInterest(PointOfInterest pointOfInterest1, PointOfInterest pointOfInterest2) throws CompoundPointIsNotItineraryException {
+    public CompoundPointBuilder invertPointOfInterest(PointOfInterest pointOfInterest1, PointOfInterest pointOfInterest2) throws CompoundPointIsNotItineraryException {
         if (this.type != CompoundPointTypeEnum.ITINERARY)
             throw new CompoundPointIsNotItineraryException("Type must be set to ITINERARY before inverting geo-localizable objects");
         if (pointOfInterest1 == null || pointOfInterest2 == null)
@@ -102,7 +102,7 @@ public class CompoundPointBuilder extends GeoLocatableBuilder<CompoundPoint> {
      *
      * @param pointOfInterest the PointOfInterest object to eliminate
      */
-    public GeoLocatableBuilder<CompoundPoint> eliminatePointOfInterest(PointOfInterest pointOfInterest) {
+    public CompoundPointBuilder eliminatePointOfInterest(PointOfInterest pointOfInterest) {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("GeoLocatable must not be null");
         if (!this.pointOfInterests.remove(pointOfInterest))
