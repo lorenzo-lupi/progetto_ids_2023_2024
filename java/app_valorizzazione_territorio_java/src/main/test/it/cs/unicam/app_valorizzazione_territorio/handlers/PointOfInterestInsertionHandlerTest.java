@@ -39,9 +39,9 @@ class PointOfInterestInsertionHandlerTest {
     }
 
     private void createHandlers() throws IOException {
-        pointOfInterestInsertionHandler1 = new PointOfInterestInsertionHandler(SampleRepositoryProvider.TURIST.getID(),
+        pointOfInterestInsertionHandler1 = new PointOfInterestInsertionHandler(SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.CAMERINO.getID());
-        pointOfInterestInsertionHandler2 = new PointOfInterestInsertionHandler(SampleRepositoryProvider.CURATORE_CAMERINO.getID(),
+        pointOfInterestInsertionHandler2 = new PointOfInterestInsertionHandler(SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 SampleRepositoryProvider.CAMERINO.getID());
 
     }
@@ -74,7 +74,7 @@ class PointOfInterestInsertionHandlerTest {
 
 
         ApprovalRequestRepository.getInstance().getAllMunicipalityRequests()
-                .filter(request -> request.canBeApprovedBy(SampleRepositoryProvider.CURATORE_CAMERINO))
+                .filter(request -> request.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .map(ApprovalRequest::getApprovableItem)
                 .filter(appr -> appr instanceof PointOfInterest)
                 .map(appr -> (PointOfInterest) appr)
@@ -84,7 +84,7 @@ class PointOfInterestInsertionHandlerTest {
                         (v ->
                             {assertNotNull(MunicipalityRepository.getInstance().getPointOfInterestByID(v.getID()));
                             assertFalse(v.isApproved());
-                            assertEquals(v.getUser(), SampleRepositoryProvider.TURIST);
+                            assertEquals(v.getUser(), SampleRepositoryProvider.TURIST_1);
                             }),
                         Assertions::fail);
     }
@@ -96,7 +96,7 @@ class PointOfInterestInsertionHandlerTest {
 
         SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(MunicipalityRepository.getInstance().getAllGeoLocatables().toList());
         searchEngine.addCriterion(Parameter.USERNAME,
-                new SearchCriterion<>(SearchCriterion.USERNAME, SampleRepositoryProvider.CURATORE_CAMERINO.getUsername()));
+                new SearchCriterion<>(SearchCriterion.USERNAME, SampleRepositoryProvider.CURATOR_CAMERINO.getUsername()));
 
         searchEngine.addCriterion(Parameter.NAME,
                 new SearchCriterion<>(SearchCriterion.EQUALS, "Test____NOME_PER_TEST2"));

@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.SampleRepositoryProvider;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
@@ -30,7 +30,7 @@ class SearchHandlerTest {
     private SearchHandler<User> userSearchHandler;
 
     @BeforeAll
-    static void setUp() {
+    static void setUpRepositories() {
         SampleRepositoryProvider.setUpAllRepositories();
     }
 
@@ -56,7 +56,7 @@ class SearchHandlerTest {
         List<? extends Identifiable> searchResult = municipalitySearchHandler.getSearchResult();
 
         assertEquals(1, searchResult.size());
-        assertEquals(SampleRepositoryProvider.municipalities.get(0).getID(), searchResult.get(0).getID());
+        assertEquals(SampleRepositoryProvider.MACERATA.getID(), searchResult.get(0).getID());
     }
 
     @Test
@@ -66,8 +66,8 @@ class SearchHandlerTest {
         List<? extends Identifiable> searchResult = contentSearchHandler.getSearchResult();
 
         assertEquals(2, searchResult.size());
-        assertEquals(Set.of(SampleRepositoryProvider.contents.get(1).getID(),
-                SampleRepositoryProvider.contents.get(2).getID()),
+        assertEquals(Set.of(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID(),
+                SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_2.getID()),
                 searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
     }
 
@@ -78,7 +78,7 @@ class SearchHandlerTest {
         List<? extends Identifiable> searchResult = userSearchHandler.getSearchResult();
 
         assertEquals(1, searchResult.size());
-        assertEquals(SampleRepositoryProvider.users.get(5).getID(), searchResult.get(0).getID());
+        assertEquals(SampleRepositoryProvider.ENTERTAINER_CAMERINO.getID(), searchResult.get(0).getID());
     }
 
     @Test
@@ -88,7 +88,7 @@ class SearchHandlerTest {
         List<? extends Identifiable> searchResult = geoLocatableSearchHandler.getSearchResult();
 
         assertEquals(1, searchResult.size());
-        assertEquals(SampleRepositoryProvider.geoLocatables.get(5).getID(), searchResult.get(0).getID());
+        assertEquals(SampleRepositoryProvider.PIZZERIA_ENJOY.getID(), searchResult.get(0).getID());
     }
 
     @Test
@@ -100,8 +100,8 @@ class SearchHandlerTest {
         List<? extends Identifiable> searchResult = geoLocatableSearchHandler.getSearchResult();
 
         assertEquals(2, searchResult.size());
-        assertEquals(Set.of(SampleRepositoryProvider.geoLocatables.get(0).getID(),
-                SampleRepositoryProvider.geoLocatables.get(1).getID()),
+        assertEquals(Set.of(SampleRepositoryProvider.UNIVERSITY_CAMERINO.getID(),
+                SampleRepositoryProvider.VIA_MADONNA_CARCERI.getID()),
                 searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
     }
 
@@ -142,7 +142,7 @@ class SearchHandlerTest {
                                 "EQUALS", ApprovalStatusEnum.PENDING)));
 
         assertEquals(1, searchResult.size());
-        assertEquals(SampleRepositoryProvider.contents.get(0).getID(), searchResult.get(0).getID());
+        assertEquals(SampleRepositoryProvider.FOTO_SAN_VENANZIO.getID(), searchResult.get(0).getID());
     }
 
     @Test
@@ -153,8 +153,8 @@ class SearchHandlerTest {
                         new SearchFilter(Parameter.EMAIL.toString(), "CONTAINS", "gmail")));
 
         assertEquals(2, searchResult.size());
-        assertEquals(Set.of(SampleRepositoryProvider.users.get(0).getID(),
-                        SampleRepositoryProvider.users.get(1).getID()),
+        assertEquals(Set.of(SampleRepositoryProvider.TURIST_1.getID(),
+                        SampleRepositoryProvider.TURIST_2.getID()),
                 searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
     }
 }

@@ -153,7 +153,7 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
                 Parameter.POSITION, this.getPosition(),
                 Parameter.DESCRIPTION, this.getDescription(),
                 Parameter.NAME, this.getName(),
-                Parameter.APPROVAL_STATUS, this.getApprovalStatus());
+                Parameter.APPROVAL_STATUS, this.getApprovalStatus(),
                 Parameter.USERNAME, this.user.getUsername());
     }
 
