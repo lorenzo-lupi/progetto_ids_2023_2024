@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
@@ -26,7 +27,7 @@ class SearchHandlerTest {
 
     private SearchHandler<Municipality> municipalitySearchHandler;
     private SearchHandler<GeoLocatable> geoLocatableSearchHandler;
-    private SearchHandler<PointOfInterestContent> contentSearchHandler;
+    private SearchHandler<Content> contentSearchHandler;
     private SearchHandler<User> userSearchHandler;
 
     @BeforeAll
