@@ -115,7 +115,7 @@ public class MapProvider {
             throw new IllegalArgumentException("The box must be contained in the municipality box");
 
         filters = new LinkedList<>(filters);
-        filters.add(new SearchFilter(Parameter.POSITION.toString(), SearchCriterion.INCLUDED_IN_BOX.toString(), box));
+        filters.add(new SearchFilter(Parameter.POSITION.toString(), "INCLUDED_IN_BOX", box));
 
         SearchEngine<GeoLocatable> geoLocatableSearchEngine = new SearchEngine<> (municipality.getGeoLocatables().stream().filter(GeoLocatable::isApproved).toList());
 
