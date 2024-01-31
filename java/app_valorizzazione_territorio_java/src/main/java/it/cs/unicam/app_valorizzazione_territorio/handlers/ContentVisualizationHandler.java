@@ -1,16 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,13 +31,29 @@ public class ContentVisualizationHandler extends SearchHandler<PointOfInterestCo
     }
 
     /**
-     * Returns the Synthesized Format of all the contents of the point of interest corresponding to the given ID.
+     * Returns the Synthesized Format of all the approved contents of the point of interest corresponding to the given ID.
+     *
+     * @param pointOfInterestID the ID of the point of interest
+     * @return the Synthesized Format of all the contents of the point of interest
+     */
+    public static List<ContentSOF> viewApprovedContents(long pointOfInterestID) {
+        return MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID)
+                .getApprovedContents()
+                .stream()
+                .map(Content::getSynthesizedFormat)
+                .toList();
+    }
+
+    /**
+     * Returns the Synthesized Format of all the contents of the point of interest corresponding to the given ID
      *
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
      */
     public static List<ContentSOF> viewAllContents(long pointOfInterestID) {
-        return MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID).getContents().stream()
+        return MunicipalityRepository.getInstance().getPointOfInterestByID(pointOfInterestID)
+                .getContents()
+                .stream()
                 .map(Content::getSynthesizedFormat)
                 .toList();
     }
@@ -88,7 +101,7 @@ public class ContentVisualizationHandler extends SearchHandler<PointOfInterestCo
      *
      * @return the Synthesized Format of all the contents of the point of interest
      */
-    public List<ContentSOF> viewAllContents() {
+    public List<ContentSOF> viewApprovedContents() {
         return this.pointOfInterest.getContents().stream()
                 .map(Content::getSynthesizedFormat)
                 .toList();
