@@ -11,6 +11,8 @@ import java.util.List;
  * This class represents an indivisible set of logically coherent information that can contain
  * multimedia files and related textual descriptions that can be associated with a geo-localizable point.
  * It can be in the two states Unapproved (pending) and Approved (visible).
+ *
+ * A PointOfInterestContent is hosted in a PointOfInterest.
  */
 public class PointOfInterestContent extends Content<PointOfInterest>{
 

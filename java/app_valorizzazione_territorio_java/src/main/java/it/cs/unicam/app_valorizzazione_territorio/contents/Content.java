@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.contest.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -11,6 +12,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a content.
+ * @param <V> the type of the ContentHost.
+ */
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Approvable, Searchable, Visualizable{
     private String description;
     private final List<File> files;

@@ -6,6 +6,9 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import java.io.File;
 import java.util.List;
 
+/**
+ * This class represents a contest content. A ContestContent is hosted in a Contest
+ */
 public class ContestContent extends Content<Contest> {
     private final Contest contest;
     /**

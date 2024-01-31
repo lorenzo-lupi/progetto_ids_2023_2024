@@ -1,12 +1,12 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -27,6 +27,8 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      *
      * @return true if the contest is private, false otherwise.
      */
+    Municipality getMunicipality();
+
     boolean isPrivate();
 
     /**

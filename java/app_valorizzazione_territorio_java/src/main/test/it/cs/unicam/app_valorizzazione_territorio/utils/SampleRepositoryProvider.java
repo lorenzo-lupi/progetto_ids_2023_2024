@@ -21,16 +21,16 @@ import java.util.*;
 
 public class SampleRepositoryProvider {
 
-    public static Municipality MACERATA, CAMERINO;
-    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA;
+    public static Municipality MACERATA, CAMERINO, COMUNE_DEI_TEST;
+    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO;
     public static Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
             MANIFESTO_CORSA_SPADA, FOTO_STRADE_MACERATA, FOTO_TORRE_CIVICA, FOTO_PIZZA_REGINA, FOTO_PITTURA_1,
             FOTO_PITTURA_2;
 
-    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA;
-    public static ApprovalRequest RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR;
+    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
+    public static ApprovalRequest RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
 
     private static boolean municipalitiesAreSetUp = false;
     private static boolean usersAreSetUp = false;
@@ -54,24 +54,48 @@ public class SampleRepositoryProvider {
                 new Municipality("Macerata", "Comune di Macerata",
                         new Position(43.29812657107886, 13.451878161920886),
                         new CoordinatesBox(new Position(43.317324, 13.409422),
-                                new Position (43.271074, 13.499990)),
+                                new Position(43.271074, 13.499990)),
                         new ArrayList<>()),
                 //1 //CAMERINO
                 new Municipality("Camerino", "Comune di Camerino",
                         new Position(43.13644468556232, 13.067156069846892),
                         new CoordinatesBox(new Position(43.153712, 13.036414),
-                                new Position (43.123261, 13.095768)),
+                                new Position(43.123261, 13.095768)),
+                        new ArrayList<>()),
+
+                new Municipality("ComuneDeiTest", "Comune di Macerata",
+                        new Position(43.29812657107886, 13.451878161920886),
+                        new CoordinatesBox(new Position(43.317324, 13.409422),
+                                new Position(43.271074, 13.499990)),
                         new ArrayList<>())
         ));
 
         users.addAll(Arrays.asList(
-                new User("Pippo00", "pippo00@gmail.com"),               //TURIST_1
-                new User("Pluto01", "pluto01@gmail.com"),               //TURIST_2
-                new User("Paperino02", "paperino02@bitmail.it"),        //TURIST_3
-                new User("Pinco03", "pinco03@bitmail.it"),              //CURATOR_CAMERINO
-                new User("Pallo04", "pallo04@blobmail.com"),            //ENTERTAINER_MACERATA
-                new User("MarioRossi05", "mario.rossi06@blobmail.com")  //ENTERTAINER_CAMERINO
+                /* 0 */     new User("Pippo00", "pippo00@gmail.com"),               //TURIST_1
+                /* 1 */     new User("Pluto01", "pluto01@gmail.com"),               //TURIST_2
+                /* 2 */    new User("Paperino02", "paperino02@bitmail.it"),        //TURIST_3
+                /* 3 */   new User("Pinco03", "pinco03@bitmail.it"),              //CURATOR_CAMERINO
+                /* 4 */     new User("Pallo04", "pallo04@blobmail.com"),            //ENTERTAINER_MACERATA
+                /* 5 */   new User("MarioRossi05", "mario.rossi06@blobmail.com"), //ENTERTAINER_CAMERINO
+                /* 6 */   new User("Zeb89", "mario.rossi06@blobmailcom") //ENTERTAINER_TEST
         ));
+
+        MACERATA = municipalities.get(0);
+        CAMERINO = municipalities.get(1);
+        COMUNE_DEI_TEST = municipalities.get(2);
+
+        TURIST_1 = users.get(0);
+        TURIST_2 = users.get(1);
+        TURIST_3 = users.get(2);
+        CURATOR_CAMERINO = users.get(3);
+        ENTERTAINER_MACERATA = users.get(4);
+        ENTERTAINER_CAMERINO = users.get(5);
+        ENTERTAINER_TEST = users.get(6);
+
+        CURATOR_CAMERINO.addRole(CAMERINO, RoleTypeEnum.CURATOR);
+        ENTERTAINER_MACERATA.addRole(MACERATA, RoleTypeEnum.ENTERTAINER);
+        ENTERTAINER_CAMERINO.addRole(CAMERINO, RoleTypeEnum.ENTERTAINER);
+        ENTERTAINER_TEST.addRole(COMUNE_DEI_TEST, RoleTypeEnum.ENTERTAINER);
 
         geoLocatables.addAll(Arrays.asList(
                 //0 //UNIVERSITY_CAMERINO //Municiplaity: Camerino
@@ -108,58 +132,64 @@ public class SampleRepositoryProvider {
                 //7 //TOUR_STUDENTE //Municiplaity: Camerino
                 new CompoundPoint("Tour dello studente", "Tour dello studente",
                         municipalities.get(1), CompoundPointTypeEnum.ITINERARY, Arrays.asList(
-                        (PointOfInterest)geoLocatables.get(1),
-                        (PointOfInterest)geoLocatables.get(0),
-                        (PointOfInterest)geoLocatables.get(5)),
+                        (PointOfInterest) geoLocatables.get(1),
+                        (PointOfInterest) geoLocatables.get(0),
+                        (PointOfInterest) geoLocatables.get(5)),
                         new ArrayList<>(), users.get(2)),
                 //8 //TRADIZIONE_SAN_VENANZIO //Municiplaity: Camerino
                 new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
                         municipalities.get(1), CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
-                        (PointOfInterest)geoLocatables.get(6),
-                        (PointOfInterest)geoLocatables.get(3)),
+                        (PointOfInterest) geoLocatables.get(6),
+                        (PointOfInterest) geoLocatables.get(3)),
                         new ArrayList<>(), users.get(1))
         ));
 
         contests.addAll(Arrays.asList(
                 //0 //CONCORSO_FOTO_2024 //Municiplaity: Macerata
-                new ContestBase("Concorso fotografico annuale", users.get(4),
+                new ContestBase("Concorso fotografico annuale", ENTERTAINER_MACERATA,
                         "Concorso fotografico generico edizione 2024", "Una foto per partecipante",
                         new Date(124, 0, 1), new Date(124, 9, 30),
-                        new Date(124, 11, 31)),
+                        new Date(124, 11, 31), MACERATA),
                 //1 //CONCORSO_FOTO_2025 //Municiplaity: Macerata
-                new ContestBase("Concorso fotografico annuale", users.get(4),
+                new ContestBase("Concorso fotografico annuale", ENTERTAINER_MACERATA,
                         "Concorso fotografico generico edizione 2025", "Una foto per partecipante",
                         new Date(125, 0, 1), new Date(125, 9, 30),
-                        new Date(125, 11, 31)),
+                        new Date(125, 11, 31), MACERATA),
                 //2 //CONCORSO_FOTO_PIZZA //Municiplaity: Camerino //GeoLocatable: Pizzeria Enjoy
-                new GeoLocatableContestDecorator(new ContestBase("Migliore foto di pizza Novembre", users.get(5),
+                new GeoLocatableContestDecorator(new ContestBase("Migliore foto di pizza Novembre", ENTERTAINER_CAMERINO,
                         "Concorso fotografico per la migliore foto di pizza", "Una foto per partecipante",
                         new Date(124, 0, 1), new Date(124, 9, 30),
-                        new Date(124, 11, 31)), geoLocatables.get(5)),
+                        new Date(124, 11, 31), CAMERINO), geoLocatables.get(5)),
                 //3 //CONCORSO_PITTURA //Municiplaity: Camerino
-                new PrivateContestDecorator(new ContestBase("Concorso pittura dei paesaggi", users.get(5),
+                new PrivateContestDecorator(new ContestBase("Concorso pittura dei paesaggi", ENTERTAINER_CAMERINO,
                         "Concorso di pittura dei paesaggi",
                         "Foto di una pittura fatta a mano di un pesaggio di Camerino",
                         new Date(124, 0, 1), new Date(124, 9, 30),
-                        new Date(124, 11, 31)), List.of(users.get(0), users.get(1), users.get(2)))
+                        new Date(124, 11, 31), CAMERINO), List.of(users.get(0), users.get(1), users.get(2))),
+                //4 CONCORSO PER REQUEST EVALUATION HANDLER TEST
+                new PrivateContestDecorator(new ContestBase("Concorso per quei famosi test", ENTERTAINER_TEST,
+                        "Concorso test",
+                        "Solo foto di test funzionanti",
+                        new Date(124, 0, 1), new Date(124, 9, 30),
+                        new Date(124, 11, 31), COMUNE_DEI_TEST), List.of(users.get(0), users.get(1), users.get(2)))
         ));
 
         contents.addAll(Arrays.asList(
                 //0 //FOTO_SAN_VENANZIO //Municiplality: Camerino //GeoLocatable: Basilica di San Venanzio //Not approved
                 new PointOfInterestContent("Foto della basilica di San Venanzio",
-                        (PointOfInterest)geoLocatables.get(6), new ArrayList<>(), users.get(0)),
+                        (PointOfInterest) geoLocatables.get(6), new ArrayList<>(), users.get(0)),
                 //1 //FOTO_PIAZZA_LIBERTA_1 //Municiplality: Macerata //GeoLocatable: Piazza della Libertà
                 new PointOfInterestContent("Foto della piazza della libertà",
-                        (PointOfInterest)geoLocatables.get(2), new ArrayList<>(), users.get(0)),
+                        (PointOfInterest) geoLocatables.get(2), new ArrayList<>(), users.get(0)),
                 //2 //FOTO_PIAZZA_LIBERTA_2 //Municiplality: Macerata //GeoLocatable: Piazza della Libertà
                 new PointOfInterestContent("Foto della piazza della libertà di notte",
-                        (PointOfInterest)geoLocatables.get(2), new ArrayList<>(), users.get(1)),
+                        (PointOfInterest) geoLocatables.get(2), new ArrayList<>(), users.get(1)),
                 //3 //FOTO_PIZZA_MARGHERITA //Municiplality: Camerino //GeoLocatable: Pizzeria Enjoy
                 new PointOfInterestContent("Foto delle pizze margerita",
-                        (PointOfInterest)geoLocatables.get(5), new ArrayList<>(), users.get(2)),
+                        (PointOfInterest) geoLocatables.get(5), new ArrayList<>(), users.get(2)),
                 //4 //MANIFESTO_CORSA_SPADA //Municiplality: Camerino //GeoLocatable: Corsa della Spada
                 new PointOfInterestContent("Manifesto della corsa della spada",
-                        (PointOfInterest)geoLocatables.get(3), new ArrayList<>(), users.get(3)),
+                        (PointOfInterest) geoLocatables.get(3), new ArrayList<>(), users.get(3)),
                 //5 //FOTO_STRADE_MACERATA //Municiplality: Macerata //Contest: Concorso fotografico annuale 2024
                 new ContestContent("Foto per le strade di Macerata",
                         contests.get(0), new ArrayList<>(), users.get(0)),
@@ -174,7 +204,13 @@ public class SampleRepositoryProvider {
                         contests.get(3), new ArrayList<>(), users.get(0)),
                 //9 //FOTO_PITTURA_2 //Municiplality: Camerino //Contest: Concorso pittura dei paesaggi //Not approved
                 new ContestContent("Pittura di Piazza Cavour",
-                        contests.get(3), new ArrayList<>(), users.get(1))
+                        contests.get(3), new ArrayList<>(), users.get(1)),
+                //10 //TEST MAL FUNZIONANTE
+                new ContestContent("Test mal funzionante",
+                        contests.get(4), new ArrayList<>(), users.get(1)),
+                //11 //TEST FATTO BENE ASSAI
+                new ContestContent("Test fatto bene assai",
+                        contests.get(4), new ArrayList<>(), users.get(1))
         ));
 
         requests.addAll(Arrays.asList(
@@ -183,18 +219,13 @@ public class SampleRepositoryProvider {
                 //1 //RICHIESTA_FOTO_BASILICA //User: Pluto02 //Content: Foto di Basilica di San Venanzio //GeoLocatable: Basilica di San Venanzio //Municipality: Camerino
                 new MunicipalityApprovalRequest(users.get(1), contents.get(0), municipalities.get(1)),
                 //2 //RICHIESTA_PITTURA_CAVOUR //User: Pluto02 //Content: Pittura piazza Cavour //Contest: Concorso pittura paessaggi //Municipality: Camerino
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3))
+                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3)),
+                //3 //NEG_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
+                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(10), contests.get(4)),
+                //4 //POS_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
+                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(11), contests.get(4))
         ));
 
-        MACERATA = municipalities.get(0);
-        CAMERINO = municipalities.get(1);
-
-        TURIST_1 = users.get(0);
-        TURIST_2 = users.get(1);
-        TURIST_3 = users.get(2);
-        CURATOR_CAMERINO = users.get(3);
-        ENTERTAINER_MACERATA = users.get(4);
-        ENTERTAINER_CAMERINO = users.get(5);
 
         UNIVERSITY_CAMERINO = geoLocatables.get(0);
         VIA_MADONNA_CARCERI = geoLocatables.get(1);
@@ -221,41 +252,58 @@ public class SampleRepositoryProvider {
         CONCORSO_FOTO_2025 = contests.get(1);
         CONCORSO_FOTO_PIZZA = contests.get(2);
         CONCORSO_PITTURA = contests.get(3);
+        CONCORSO_PER_TEST = contests.get(4);
 
         RICHIESTA_PIAZZA_LIBERTA = requests.get(0);
         RICHIESTA_FOTO_BASILICA = requests.get(1);
         RICHIESTA_PITTURA_CAVOUR = requests.get(2);
+        NEG_REQUEST = requests.get(3);
+        POS_REQUEST = requests.get(4);
 
-        CURATOR_CAMERINO.addRole(CAMERINO, RoleTypeEnum.CURATOR);
-        ENTERTAINER_MACERATA.addRole(MACERATA, RoleTypeEnum.ENTERTAINER);
-        ENTERTAINER_CAMERINO.addRole(CAMERINO, RoleTypeEnum.ENTERTAINER);
 
-        CAMERINO.addGeoLocatable(UNIVERSITY_CAMERINO); UNIVERSITY_CAMERINO.approve();
-        CAMERINO.addGeoLocatable(VIA_MADONNA_CARCERI); VIA_MADONNA_CARCERI.approve();
-        MACERATA.addGeoLocatable(PIAZZA_LIBERTA); PIAZZA_LIBERTA.approve();
-        CAMERINO.addGeoLocatable(CORSA_SPADA); CORSA_SPADA.approve();
+
+        CAMERINO.addGeoLocatable(UNIVERSITY_CAMERINO);
+        UNIVERSITY_CAMERINO.approve();
+        CAMERINO.addGeoLocatable(VIA_MADONNA_CARCERI);
+        VIA_MADONNA_CARCERI.approve();
+        MACERATA.addGeoLocatable(PIAZZA_LIBERTA);
+        PIAZZA_LIBERTA.approve();
+        CAMERINO.addGeoLocatable(CORSA_SPADA);
+        CORSA_SPADA.approve();
         MACERATA.addGeoLocatable(SEPTEMBER_FEST);
-        CAMERINO.addGeoLocatable(PIZZERIA_ENJOY); PIZZERIA_ENJOY.approve();
-        CAMERINO.addGeoLocatable(BASILICA_SAN_VENANZIO); BASILICA_SAN_VENANZIO.approve();
-        CAMERINO.addGeoLocatable(TORUR_STUDENTE); TORUR_STUDENTE.approve();
-        CAMERINO.addGeoLocatable(TRADIZIONE_SAN_VENANZIO); TRADIZIONE_SAN_VENANZIO.approve();
+        CAMERINO.addGeoLocatable(PIZZERIA_ENJOY);
+        PIZZERIA_ENJOY.approve();
+        CAMERINO.addGeoLocatable(BASILICA_SAN_VENANZIO);
+        BASILICA_SAN_VENANZIO.approve();
+        CAMERINO.addGeoLocatable(TORUR_STUDENTE);
+        TORUR_STUDENTE.approve();
+        CAMERINO.addGeoLocatable(TRADIZIONE_SAN_VENANZIO);
+        TRADIZIONE_SAN_VENANZIO.approve();
 
-        MACERATA.addContest(CONCORSO_FOTO_2024);
-        MACERATA.addContest(CONCORSO_FOTO_2025);
-        CAMERINO.addContest(CONCORSO_FOTO_PIZZA);
-        CAMERINO.addContest(CONCORSO_PITTURA);
+        ((PointOfInterest) BASILICA_SAN_VENANZIO).addContent((PointOfInterestContent) FOTO_SAN_VENANZIO);
+        ((PointOfInterest) PIAZZA_LIBERTA).addContent((PointOfInterestContent) FOTO_PIAZZA_LIBERTA_1);
+        FOTO_PIAZZA_LIBERTA_1.approve();
+        ((PointOfInterest) PIAZZA_LIBERTA).addContent((PointOfInterestContent) FOTO_PIAZZA_LIBERTA_2);
+        FOTO_PIAZZA_LIBERTA_2.approve();
+        ((PointOfInterest) PIZZERIA_ENJOY).addContent((PointOfInterestContent) FOTO_PIZZA_MARGHERITA);
+        FOTO_PIZZA_MARGHERITA.approve();
+        ((PointOfInterest) CORSA_SPADA).addContent((PointOfInterestContent) MANIFESTO_CORSA_SPADA);
+        MANIFESTO_CORSA_SPADA.approve();
 
-        ((PointOfInterest)BASILICA_SAN_VENANZIO).addContent((PointOfInterestContent)FOTO_SAN_VENANZIO);
-        ((PointOfInterest)PIAZZA_LIBERTA).addContent((PointOfInterestContent)FOTO_PIAZZA_LIBERTA_1); FOTO_PIAZZA_LIBERTA_1.approve();
-        ((PointOfInterest)PIAZZA_LIBERTA).addContent((PointOfInterestContent)FOTO_PIAZZA_LIBERTA_2); FOTO_PIAZZA_LIBERTA_2.approve();
-        ((PointOfInterest)PIZZERIA_ENJOY).addContent((PointOfInterestContent)FOTO_PIZZA_MARGHERITA); FOTO_PIZZA_MARGHERITA.approve();
-        ((PointOfInterest)CORSA_SPADA).addContent((PointOfInterestContent)MANIFESTO_CORSA_SPADA); MANIFESTO_CORSA_SPADA.approve();
+        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent) FOTO_STRADE_MACERATA);
+        FOTO_STRADE_MACERATA.approve();
+        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent) FOTO_TORRE_CIVICA);
+        FOTO_TORRE_CIVICA.approve();
+        CONCORSO_FOTO_PIZZA.getProposalRequests().proposeContent((ContestContent) FOTO_PIZZA_REGINA);
+        FOTO_PIZZA_REGINA.approve();
+        CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_1);
+        FOTO_PITTURA_1.approve();
+        CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_2);
+        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) POS_REQUEST.getApprovableItem());
+        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getApprovableItem());
 
-        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent)FOTO_STRADE_MACERATA); FOTO_STRADE_MACERATA.approve();
-        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent)FOTO_TORRE_CIVICA); FOTO_TORRE_CIVICA.approve();
-        CONCORSO_FOTO_PIZZA.getProposalRequests().proposeContent((ContestContent)FOTO_PIZZA_REGINA); FOTO_PIZZA_REGINA.approve();
-        CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent)FOTO_PITTURA_1); FOTO_PITTURA_1.approve();
-        CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent)FOTO_PITTURA_2);
+        contests.forEach(c -> c.getMunicipality().addContest(c));
+
     }
 
     private static void clearObjects() {
@@ -292,6 +340,11 @@ public class SampleRepositoryProvider {
         setUpMunicipalitiesRepository();
         setUpUsersRepository();
         setUpRequest5esRepositories();
+    }
+
+    public static void clearAndSetUpRepositories() {
+        clearAllRepositories();
+        setUpAllRepositories();
     }
 
     public static void clearMunicipalitesRepository() {

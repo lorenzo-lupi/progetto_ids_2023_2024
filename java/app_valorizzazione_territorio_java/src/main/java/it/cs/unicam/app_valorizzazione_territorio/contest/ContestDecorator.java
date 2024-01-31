@@ -4,6 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -113,4 +114,8 @@ public abstract class ContestDecorator implements Contest{
         return equalsID(obj);
     }
 
+    @Override
+    public Municipality getMunicipality() {
+        return this.contest.getMunicipality();
+    }
 }

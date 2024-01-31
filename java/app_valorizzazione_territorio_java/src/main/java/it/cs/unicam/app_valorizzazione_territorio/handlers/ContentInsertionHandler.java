@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.contest.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.contents.Content;

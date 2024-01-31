@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.handlers;
+package it.cs.unicam.app_valorizzazione_territorio.builders;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.CompoundPointIsNotItineraryException;

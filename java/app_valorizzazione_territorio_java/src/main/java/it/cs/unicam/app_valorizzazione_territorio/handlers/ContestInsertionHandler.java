@@ -40,7 +40,7 @@ public class ContestInsertionHandler {
         if (!user.getAuthorizations(municipality).contains(RoleTypeEnum.ENTERTAINER))
             throw new IllegalArgumentException("User is not authorized to insert contests in this municipality");
 
-        this.builder = new ContestBuilder(user);
+        this.builder = new ContestBuilder(user, municipality);
         this.geoLocatableSearchHandler = new SearchHandler<>(municipality.getGeoLocatables());
         this.userSearchHandler = new SearchHandler<>(UserRepository.getInstance().getItemStream().toList());
     }
@@ -55,7 +55,8 @@ public class ContestInsertionHandler {
      * in the municipality, or if the animator is null, or if the contest is null or if the contest is invalid
      */
     public static long insertContest(long userID, long municipalityID, ContestIF contestIF){
-        ContestBuilder builder = new ContestBuilder(UserRepository.getInstance().getItemByID(userID));
+        ContestBuilder builder = new ContestBuilder(UserRepository.getInstance().getItemByID(userID),
+                MunicipalityRepository.getInstance().getItemByID(municipalityID));
 
         builder.setName(contestIF.name())
                 .setTopic(contestIF.topic())

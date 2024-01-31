@@ -29,17 +29,19 @@ public class ContestBuilder {
     private Date endDate;
     private final User animator;
     private Contest contest;
+    private Municipality municipality;
 
     /**
      * Creates a new ContestBuilder
      * @param animator the animator of the contest
      */
-    public ContestBuilder(User animator){
-        if (animator == null)
-            throw new IllegalArgumentException("Animator must not be null");
+    public ContestBuilder(User animator, Municipality municipality){
+        if (animator == null || municipality == null)
+            throw new IllegalArgumentException("Animator and municipality must not be null");
         this.animator = animator;
         this.hasGeoLocation = false;
         this.isPrivate = false;
+        this.municipality = municipality;
     }
 
     /**
@@ -143,7 +145,7 @@ public class ContestBuilder {
 
     public void build(){
         checkBaseContestParameters();
-        Contest contest = new ContestBase(name, animator, topic, rules, startDate, votingStartDate, endDate);
+        Contest contest = new ContestBase(name, animator, topic, rules, startDate, votingStartDate, endDate, municipality);
         if(isPrivate) {
             contest = new PrivateContestDecorator(contest, participants);
         }

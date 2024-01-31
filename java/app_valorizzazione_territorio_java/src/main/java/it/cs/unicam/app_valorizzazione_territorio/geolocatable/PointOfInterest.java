@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.contest.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;

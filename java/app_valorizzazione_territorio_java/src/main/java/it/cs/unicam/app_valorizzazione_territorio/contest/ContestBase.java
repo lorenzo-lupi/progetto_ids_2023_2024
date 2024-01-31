@@ -3,6 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.contest;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 
@@ -20,6 +22,7 @@ public class ContestBase implements Contest {
     private Date votingStartDate;
     private Date endDate;
     private ProposalRequests proposalRequests;
+    private Municipality municipality;
     private final long ID = MunicipalityRepository.getInstance().getNextContestID();
 
     public ContestBase(String name,
@@ -28,12 +31,15 @@ public class ContestBase implements Contest {
                        String rules,
                        Date startDate,
                        Date votingStartDate,
-                       Date endDate) {
+                       Date endDate,
+                       Municipality municipality) {
 
-        if (name == null || animator == null || topic == null || startDate == null || votingStartDate == null || endDate == null || rules == null)
+        if (name == null || animator == null || topic == null || startDate == null || votingStartDate == null || endDate == null || rules == null || municipality == null)
             throw new IllegalArgumentException("All parameters must not be null");
         if (!checkDates(startDate, votingStartDate, endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
+        if (animator.getAuthorizations(municipality).stream().noneMatch(a -> a.equals(RoleTypeEnum.ENTERTAINER)))
+            throw new IllegalArgumentException("User must be animator of the municipality");
 
         this.name = name;
         this.animator = animator;
@@ -43,6 +49,7 @@ public class ContestBase implements Contest {
         this.votingStartDate = votingStartDate;
         this.endDate = endDate;
         this.proposalRequests = new ProposalRequests();
+        this.municipality = municipality;
     }
 
     public String getName() {
@@ -116,6 +123,11 @@ public class ContestBase implements Contest {
 
     private boolean checkDates(Date startDate, Date votingStartDate, Date endDate) {
         return (startDate.before(votingStartDate) && votingStartDate.before(endDate));
+    }
+
+    @Override
+    public Municipality getMunicipality() {
+        return this.municipality;
     }
 
     @Override
