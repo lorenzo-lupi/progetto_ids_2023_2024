@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 

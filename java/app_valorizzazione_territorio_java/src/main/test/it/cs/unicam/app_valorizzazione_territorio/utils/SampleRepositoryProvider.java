@@ -10,6 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contest.PrivateContestDecorato
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.ActivityTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
@@ -125,7 +126,13 @@ public class SampleRepositoryProvider {
                 //6 //BASILICA_SAN_VENANZIO //Municiplaity: Camerino
                 new Activity("Basilica di San Venanzio", "Basilica di San Venanzio",
                         new Position(43.137753115974135, 13.073411976140818),
-                        municipalities.get(1), ActivityTypeEnum.CHURCH, users.get(1))
+                        municipalities.get(1), ActivityTypeEnum.CHURCH, users.get(1)),
+                //7 //TORRONE
+                new Attraction("Gas facility", "Gas facility Camerino",
+                        new Position(43.1450445, 13.0893363),
+                        municipalities.get(1), AttractionTypeEnum.OTHER,
+                        users.get(1))
+
         ));
 
         geoLocatables.addAll(Arrays.asList(

@@ -1,15 +1,17 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
+import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,45 +19,72 @@ import java.io.IOException;
  */
 public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLocatable> {
 
-    private Map<GeoLocatable> map;
-    private Municipality municipality;
-
     /**
      * Creates a new search handler that searches in the given collection of searchable items.
-     * @param municipality the municipality to search in
+     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
      */
-    public VisualizeGeoLocatableThroughMapHandler(Municipality municipality) throws IOException {
-        super(municipality.getGeoLocatables().stream().filter(GeoLocatable::isApproved).toList());
-        this.map = MapProvider.getMap(municipality);
+    public VisualizeGeoLocatableThroughMapHandler(long municipalityId) throws IOException {
+        super(MunicipalityRepository.getInstance().getItemByID(municipalityId).getGeoLocatables());
     }
 
     /**
-     * builds a new map with the given coordinate boxes
-     * @param coordinatesBox the coordinates of the map
-     * @throws IOException if the map cannot be created
+     * creates a visualizable map of the given municipality
+     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
+     * @return the map
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public void handleMap(CoordinatesBox coordinatesBox) throws IOException {
-        this.map = MapProvider.getMap(this.municipality, coordinatesBox);
-    }
-
-    /**
-     *  Visualizes the map
-     */
-    public MapDOF visualizeMap() {
-        return map.getDetailedFormat();
-    }
-
-    /**
-     * Visualizes the given geo-localizable object in the detailed format.
-     * @param id the id of the geo-localizable object
-     * @return the geo-localizable object in the detailed format
-     */
-    public Identifiable visualizeGeoLocatableInDetailedFormat(long id) {
-
-        return MunicipalityRepository
+    public static MapDOF handleMap(long municipalityId) throws IOException {
+        return MapProvider.getMap(MunicipalityRepository
                 .getInstance()
-                .getGeoLocatableByID(id)
+                .getItemByID(municipalityId))
                 .getDetailedFormat();
     }
+
+    /**
+     * creates a visualizable map of the given municipality
+     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
+     * @param box the coordinates box
+     * @return the map
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
+     */
+    public static MapDOF handleMap(long municipalityId,
+                                   CoordinatesBox box) throws IOException {
+
+        return MapProvider.getMap(MunicipalityRepository
+                .getInstance()
+                .getItemByID(municipalityId), box)
+                .getDetailedFormat();
+    }
+
+    /**
+     * creates a filtered visualizable map of the given municipality
+     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
+     * @param filters the filters to apply
+     * @return the map
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
+     */
+    public static MapDOF handleFilteredMap(long municipalityId,
+                                   List<SearchFilter> filters) throws IOException{
+
+        return MapProvider.getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), filters)
+                .getDetailedFormat();
+    }
+
+    /**
+     * creates a filtered visualizable map of the given municipality
+     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
+     * @param box the coordinates box
+     * @param filters the filters to apply
+     * @return the map
+     * @throws IOException if an I/O error occurs during the OSM data retrieval
+     */
+    public static MapDOF handleFilteredMap(long municipalityId,
+                                   CoordinatesBox box,
+                                   List<SearchFilter> filters) throws IOException{
+
+        return MapProvider.getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), box, filters)
+                .getDetailedFormat();
+    }
+
 
 }

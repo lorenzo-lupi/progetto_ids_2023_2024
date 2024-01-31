@@ -1,9 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.builders;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
 import it.cs.unicam.app_valorizzazione_territorio.osm.OSMRequestHandler;
 

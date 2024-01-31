@@ -8,7 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesE
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
@@ -21,8 +21,6 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.logging.SimpleFormatter;
 
 /**
  * This class handles the insertion of a point of interest.

@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 

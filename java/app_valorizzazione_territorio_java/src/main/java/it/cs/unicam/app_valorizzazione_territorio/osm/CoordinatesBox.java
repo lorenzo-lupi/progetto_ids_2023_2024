@@ -1,4 +1,6 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.osm;
+
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 
 /**
  * This class represents a geographical box, that is a rectangle on the surface of the Earth.
@@ -71,6 +73,21 @@ public class CoordinatesBox {
                 position.getLatitude() >= getSouth() &&
                 position.getLongitude() >= getWest() &&
                 position.getLongitude() <= getEast();
+    }
+
+    /**
+     * Returns true if the geographical box contains the given geographical box.
+     * @param box the geographical box to check
+     * @return true if the geographical box contains the given geographical box, false otherwise
+     */
+    public boolean contains(CoordinatesBox box){
+        if(box == null)
+            throw new IllegalArgumentException("The box must not be null");
+
+        return box.getNorth() <= getNorth() &&
+                box.getSouth() >= getSouth() &&
+                box.getWest() >= getWest() &&
+                box.getEast() <= getEast();
     }
 
     @Override

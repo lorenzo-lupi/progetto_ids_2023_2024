@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.search;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
