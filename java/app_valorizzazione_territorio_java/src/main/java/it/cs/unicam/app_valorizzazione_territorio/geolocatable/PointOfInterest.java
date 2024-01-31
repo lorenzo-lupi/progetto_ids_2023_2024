@@ -103,6 +103,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         this.position = position;
     }
 
+    @Override
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
         parametersMapping.put(Parameter.CLASSIFICATION, this.getClass().getSimpleName());

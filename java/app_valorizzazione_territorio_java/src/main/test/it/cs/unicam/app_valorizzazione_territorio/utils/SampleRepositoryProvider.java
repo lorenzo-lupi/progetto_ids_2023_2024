@@ -124,24 +124,24 @@ public class SampleRepositoryProvider {
                 //0 //CONCORSO_FOTO_2024 //Municiplaity: Macerata
                 new ContestBase("Concorso fotografico annuale", users.get(4),
                         "Concorso fotografico generico edizione 2024", "Una foto per partecipante",
-                        new Date(124, 1, 1), new Date(124, 10, 30),
-                        new Date(124, 12, 31)),
+                        new Date(124, 0, 1), new Date(124, 9, 30),
+                        new Date(124, 11, 31)),
                 //1 //CONCORSO_FOTO_2025 //Municiplaity: Macerata
                 new ContestBase("Concorso fotografico annuale", users.get(4),
                         "Concorso fotografico generico edizione 2025", "Una foto per partecipante",
-                        new Date(125, 1, 1), new Date(125, 10, 30),
-                        new Date(125, 12, 31)),
+                        new Date(125, 0, 1), new Date(125, 9, 30),
+                        new Date(125, 11, 31)),
                 //2 //CONCORSO_FOTO_PIZZA //Municiplaity: Camerino //GeoLocatable: Pizzeria Enjoy
                 new GeoLocatableContestDecorator(new ContestBase("Migliore foto di pizza Novembre", users.get(5),
                         "Concorso fotografico per la migliore foto di pizza", "Una foto per partecipante",
-                        new Date(124, 1, 1), new Date(124, 10, 30),
-                        new Date(124, 12, 31)), geoLocatables.get(5)),
+                        new Date(124, 0, 1), new Date(124, 9, 30),
+                        new Date(124, 11, 31)), geoLocatables.get(5)),
                 //3 //CONCORSO_PITTURA //Municiplaity: Camerino
                 new PrivateContestDecorator(new ContestBase("Concorso pittura dei paesaggi", users.get(5),
                         "Concorso di pittura dei paesaggi",
                         "Foto di una pittura fatta a mano di un pesaggio di Camerino",
-                        new Date(126, 1, 1), new Date(126, 10, 30),
-                        new Date(126, 12, 31)), List.of(users.get(0), users.get(1), users.get(2)))
+                        new Date(124, 0, 1), new Date(124, 9, 30),
+                        new Date(124, 11, 31)), List.of(users.get(0), users.get(1), users.get(2)))
         ));
 
         contents.addAll(Arrays.asList(

@@ -92,7 +92,7 @@ class SearchHandlerTest {
     }
 
     @Test
-    void shouldSetMultipleSearchCriterion() {
+    void shouldSetMultipleSearchCriteria() {
         geoLocatableSearchHandler.setSearchCriterion(
                 Parameter.CLASSIFICATION.toString(), "EQUALS", "Attraction");
         geoLocatableSearchHandler.setSearchCriterion(
@@ -102,6 +102,18 @@ class SearchHandlerTest {
         assertEquals(2, searchResult.size());
         assertEquals(Set.of(SampleRepositoryProvider.UNIVERSITY_CAMERINO.getID(),
                 SampleRepositoryProvider.VIA_MADONNA_CARCERI.getID()),
+                searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
+    }
+
+    @Test
+    void shouldSetMultipleCriteriaOnSameParameter() {
+        contentSearchHandler.setSearchCriterion(Parameter.DESCRIPTION.toString(), "CONTAINS", "Foto");
+        contentSearchHandler.setSearchCriterion(Parameter.DESCRIPTION.toString(), "CONTAINS", "piazza");
+        List<? extends Identifiable> searchResult = contentSearchHandler.getSearchResult();
+
+        assertEquals(2, searchResult.size());
+        assertEquals(Set.of(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID(),
+                        SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_2.getID()),
                 searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
     }
 

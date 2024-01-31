@@ -1,10 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +29,7 @@ public class GeoLocatableContestDecorator extends ContestDecorator{
     @Override
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
+        parametersMapping.put(Parameter.THIS, this);
         parametersMapping.put(Parameter.CONTEST_TYPE, "GeoLocatable");
         parametersMapping.put(Parameter.POSITION, this.geoLocatable.getPosition());
         return parametersMapping;

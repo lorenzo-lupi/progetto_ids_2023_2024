@@ -11,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,8 +36,8 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     }
 
     /**
-     * Returns the Synthesized Format of all the contests that permits the user corresponding to the
-     * given ID among all registered contests in the municipality corresponding to the given ID.
+     * Returns the Synthesized Format of all the contests that permits the user with the
+     * given ID among all registered contests in the municipality with the given ID.
      *
      * @param userID the ID of the user
      * @param municipalityID the ID of the municipality
@@ -63,8 +64,8 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
     @SuppressWarnings("unchecked")
     public static List<ContestSOF> viewFilteredContests(long userID, long municipalityID, List<SearchFilter> filters) {
         User user = UserRepository.getInstance().getItemByID(userID);
-        List<SearchFilter> filtersWithUser = List.copyOf(filters);
-        filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), SearchCriterion.CONTEST_PERMITS_USER.toString(), user));
+        List<SearchFilter> filtersWithUser = new ArrayList<>(filters);
+        filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), "CONTEST_PERMITS_USER", user));
         return (List<ContestSOF>) getFilteredItems(
                 MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests(),
                 filtersWithUser);

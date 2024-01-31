@@ -115,11 +115,7 @@ public class ContestBase implements Contest {
     }
 
     private boolean checkDates(Date startDate, Date votingStartDate, Date endDate) {
-        return (new Date()).before(startDate)
-                &&
-                startDate.before(votingStartDate)
-                &&
-                votingStartDate.before(endDate);
+        return (startDate.before(votingStartDate) && votingStartDate.before(endDate));
     }
 
     @Override

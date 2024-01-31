@@ -149,10 +149,10 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
-        return Map.of(Parameter.MUNICIPALITY, this.getMunicipality(),
-                Parameter.POSITION, this.getPosition(),
+        return Map.of(Parameter.NAME, this.getName(),
                 Parameter.DESCRIPTION, this.getDescription(),
-                Parameter.NAME, this.getName(),
+                Parameter.MUNICIPALITY, this.getMunicipality(),
+                Parameter.POSITION, this.getPosition(),
                 Parameter.APPROVAL_STATUS, this.getApprovalStatus(),
                 Parameter.USERNAME, this.user.getUsername());
     }

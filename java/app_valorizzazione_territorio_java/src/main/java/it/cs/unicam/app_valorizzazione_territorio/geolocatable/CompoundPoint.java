@@ -80,8 +80,8 @@ public class CompoundPoint extends GeoLocatable {
     public Position getPosition() {
         return this.pointsOfInterest.stream()
                 .map(PointOfInterest::getPosition)
-                .reduce(Position::sum)
                 .map(position -> position.divide(this.pointsOfInterest.size()))
+                .reduce(Position::sum)
                 .orElseThrow();
     }
 

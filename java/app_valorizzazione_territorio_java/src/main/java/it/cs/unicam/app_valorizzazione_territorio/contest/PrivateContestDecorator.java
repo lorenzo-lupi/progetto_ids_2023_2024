@@ -31,6 +31,7 @@ public class PrivateContestDecorator extends ContestDecorator {
     @Override
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
+        parametersMapping.put(Parameter.THIS, this);
         parametersMapping.put(Parameter.CONTEST_TYPE, "Private");
         return parametersMapping;
     }

@@ -77,11 +77,11 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
     Date getVotingStartDate();
     Date getEndDate();
     default ContestStatusEnum getStatus() {
-        if (new Date().before(getStartDate()))
+        if ((new Date()).before(getStartDate()))
             return ContestStatusEnum.PLANNED;
-        else if (new Date().before(getVotingStartDate()))
+        else if ((new Date()).before(getVotingStartDate()))
             return ContestStatusEnum.OPEN;
-        else if (new Date().before(getEndDate()))
+        else if ((new Date()).before(getEndDate()))
             return ContestStatusEnum.VOTING;
         else
             return ContestStatusEnum.CLOSED;
