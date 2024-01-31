@@ -11,6 +11,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represent a set of logically coherent information that can contain multimedia files and
+ * their textual description. It is associated to a content host object.
+ *
+ * @param <V> the type of the content host
+ */
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Approvable, Searchable, Visualizable{
     private String description;
     private final List<File> files;

@@ -12,12 +12,7 @@ import java.util.List;
  *
  * @param description
  * @param files
- * @param userId
  */
 public record ContentIF(String description,
-                        List<File> files,
-                        long userId) {
-    public PointOfInterestContent toContent(PointOfInterest pointOfInterest) {
-        return new PointOfInterestContent(this.description, pointOfInterest, this.files, UserRepository.getInstance().getItemByID(userId));
-    }
+                        List<File> files) {
 }

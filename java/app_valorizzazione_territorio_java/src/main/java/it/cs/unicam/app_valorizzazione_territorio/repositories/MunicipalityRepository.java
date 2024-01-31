@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.GeoLocatableNotFoundException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
@@ -86,16 +87,24 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
-     * Returns a map of all the content of the POIs of the municipalities in the repository mapped with their IDs.
+     * Returns a map of all the content of the content hosts of the municipalities in the repository
+     * mapped with their IDs.
      *
-     * @return a map of all the content of the POIs of the municipalities
+     * @return a map of all the content of the content hosts of the municipalities
      */
-    public Map<Long, PointOfInterestContent> getAllContentsMap() {
-        return this.getItemStream().parallel()
+    public Map<Long, Content> getAllContentsMap() {
+        Map<Long, Content> poiContentsMap = this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getGeoLocatables().stream())
                 .filter(geoLocatable -> geoLocatable instanceof PointOfInterest)
                 .flatMap(pointOfInterest -> ((PointOfInterest) pointOfInterest).getContents().stream())
                 .collect(toMap(PointOfInterestContent::getID, Function.identity()));
+        Map<Long, Content> contestContentsMap = this.getItemStream().parallel()
+                .flatMap(municipality -> municipality.getContests().stream())
+                .flatMap(contest -> contest.getContents().stream())
+                .collect(toMap(Content::getID, Function.identity()));
+
+        return Stream.concat(poiContentsMap.entrySet().stream(), contestContentsMap.entrySet().stream())
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
@@ -153,14 +162,14 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
-     * Returns the content of the POIs of the municipalities in the repository with the given ID.
+     * Returns the content of the content hosts of the municipalities in the repository with the given ID.
      *
      * @param ID the ID of the content to be returned
-     * @return the content of the POIs of the municipalities in the repository with the given ID
+     * @return the content of the content hosts of the municipalities in the repository with the given ID
      * @throws IllegalArgumentException if the content with the given ID is not found
      */
-    public PointOfInterestContent getContentByID(long ID) {
-        PointOfInterestContent content = getAllContentsMap().get(ID);
+    public Content getContentByID(long ID) {
+        Content content = getAllContentsMap().get(ID);
         if(content == null) throw new IllegalArgumentException("Content not found");
         return content;
     }
@@ -184,11 +193,11 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
-     * Returns a stream of all the content of the POIs of the municipalities in the repository.
+     * Returns a stream of all the content of the content hosts of the municipalities in the repository.
      *
-     * @return a stream of all the content of the POIs of the municipalities in the repository
+     * @return a stream of all the content of the content hosts of the municipalities in the repository
      */
-    public Stream<PointOfInterestContent> getAllContents() {
+    public Stream<Content> getAllContents() {
         return getAllContentsMap().values().stream();
     }
 

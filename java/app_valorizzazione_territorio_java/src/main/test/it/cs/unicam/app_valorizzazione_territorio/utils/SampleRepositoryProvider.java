@@ -179,11 +179,11 @@ public class SampleRepositoryProvider {
 
         requests.addAll(Arrays.asList(
                 //0 //RICHIESTA_PIAZZA_LIBERTA //User: Pippo01 //GeoLocatable: Piazza della Libertà //Municipality: Macerata
-                new MunicipalityApprovalRequest(users.get(0), geoLocatables.get(4), municipalities.get(0)),
+                new MunicipalityApprovalRequest(TURIST_1, geoLocatables.get(4), municipalities.get(0)),
                 //1 //RICHIESTA_FOTO_BASILICA //User: Pluto02 //Content: Foto di Basilica di San Venanzio //GeoLocatable: Basilica di San Venanzio //Municipality: Camerino
-                new MunicipalityApprovalRequest(users.get(1), contents.get(0), municipalities.get(1)),
+                new MunicipalityApprovalRequest(TURIST_2, contents.get(0), municipalities.get(1)),
                 //2 //RICHIESTA_PITTURA_CAVOUR //User: Pluto02 //Content: Pittura piazza Cavour //Contest: Concorso pittura paessaggi //Municipality: Camerino
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3))
+                new ContestApprovalRequest(TURIST_2, (ContestContent) contents.get(9), contests.get(3))
         ));
 
         MACERATA = municipalities.get(0);
@@ -294,7 +294,7 @@ public class SampleRepositoryProvider {
         setUpRequest5esRepositories();
     }
 
-    public static void clearMunicipalitesRepository() {
+    public static void clearMunicipalitiesRepository() {
         MunicipalityRepository.getInstance().clear();
         municipalitiesAreSetUp = false;
     }
@@ -310,7 +310,7 @@ public class SampleRepositoryProvider {
     }
 
     public static void clearAllRepositories() {
-        clearMunicipalitesRepository();
+        clearMunicipalitiesRepository();
         clearUsersRepository();
         clearRequestsRepositories();
         clearObjects();
