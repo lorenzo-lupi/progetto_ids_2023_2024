@@ -39,12 +39,12 @@ class ContestContentVoteHandlerTest {
 
     void vote() {
         ContestContentVoteHandler.vote(SampleRepositoryProvider.TURIST_2.getID(),
-                SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID(),
-                SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
+                SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
+                SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID());
 
         ContestContentVoteHandler.vote(SampleRepositoryProvider.TURIST_1.getID(),
-                SampleRepositoryProvider.FOTO_TORRE_CIVICA.getID(),
-                SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
+                SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
+                SampleRepositoryProvider.FOTO_TORRE_CIVICA.getID());
     }
 
 
@@ -67,9 +67,9 @@ class ContestContentVoteHandlerTest {
 
     void removeVote() {
         ContestContentVoteHandler.removeVote(SampleRepositoryProvider.TURIST_2.getID(),
-                SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID());
+                SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
         ContestContentVoteHandler.removeVote(SampleRepositoryProvider.TURIST_1.getID(),
-                SampleRepositoryProvider.FOTO_TORRE_CIVICA.getID());
+                SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
 
     }
 }
