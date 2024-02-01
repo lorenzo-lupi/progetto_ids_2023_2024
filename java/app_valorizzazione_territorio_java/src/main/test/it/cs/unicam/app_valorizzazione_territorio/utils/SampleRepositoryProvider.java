@@ -25,7 +25,7 @@ public class SampleRepositoryProvider {
     public static Municipality MACERATA, CAMERINO, COMUNE_DEI_TEST;
     public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
-            SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO;
+            SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
     public static Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
             MANIFESTO_CORSA_SPADA, FOTO_STRADE_MACERATA, FOTO_TORRE_CIVICA, FOTO_PIZZA_REGINA, FOTO_PITTURA_1,
             FOTO_PITTURA_2;
@@ -126,12 +126,7 @@ public class SampleRepositoryProvider {
                 //6 //BASILICA_SAN_VENANZIO //Municiplaity: Camerino
                 new Activity("Basilica di San Venanzio", "Basilica di San Venanzio",
                         new Position(43.137753115974135, 13.073411976140818),
-                        municipalities.get(1), ActivityTypeEnum.CHURCH, users.get(1)),
-                //7 //TORRONE
-                new Attraction("Gas facility", "Gas facility Camerino",
-                        new Position(43.1450445, 13.0893363),
-                        municipalities.get(1), AttractionTypeEnum.OTHER,
-                        users.get(1))
+                        municipalities.get(1), ActivityTypeEnum.CHURCH, users.get(1))
 
         ));
 
@@ -148,7 +143,13 @@ public class SampleRepositoryProvider {
                         municipalities.get(1), CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
                         (PointOfInterest) geoLocatables.get(6),
                         (PointOfInterest) geoLocatables.get(3)),
-                        new ArrayList<>(), users.get(1))
+                        new ArrayList<>(), users.get(1)),
+                //9 //GAS FACILITY
+         new Attraction("Gas facility", "Gas facility Camerino",
+                new Position(43.1450445, 13.0893363),
+                municipalities.get(1), AttractionTypeEnum.OTHER,
+                users.get(1))
+
         ));
 
         contests.addAll(Arrays.asList(
@@ -243,6 +244,7 @@ public class SampleRepositoryProvider {
         BASILICA_SAN_VENANZIO = geoLocatables.get(6);
         TORUR_STUDENTE = geoLocatables.get(7);
         TRADIZIONE_SAN_VENANZIO = geoLocatables.get(8);
+        GAS_FACILITY = geoLocatables.get(9);
 
         FOTO_SAN_VENANZIO = contents.get(0);
         FOTO_PIAZZA_LIBERTA_1 = contents.get(1);
@@ -286,6 +288,10 @@ public class SampleRepositoryProvider {
         TORUR_STUDENTE.approve();
         CAMERINO.addGeoLocatable(TRADIZIONE_SAN_VENANZIO);
         TRADIZIONE_SAN_VENANZIO.approve();
+        CAMERINO.addGeoLocatable(GAS_FACILITY);
+        GAS_FACILITY.approve();
+
+
 
         ((PointOfInterest) BASILICA_SAN_VENANZIO).addContent((PointOfInterestContent) FOTO_SAN_VENANZIO);
         ((PointOfInterest) PIAZZA_LIBERTA).addContent((PointOfInterestContent) FOTO_PIAZZA_LIBERTA_1);
