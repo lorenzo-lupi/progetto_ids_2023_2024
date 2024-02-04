@@ -1,33 +1,30 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
-import it.cs.unicam.app_valorizzazione_territorio.repositories.Repositories;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.Repository;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * This class represents a search engine that can be used to search in the repositories  items
- * of a specific {@link Searchable} type.
+ * This class represents a search engine that can be used to search in a given collection of items
+ * of a specific {@link Searchable} and {@link Visualizable}type.
  *
  * @param <T> the type of the searchable items
  */
-public class SearchEngine<T extends Searchable> {
+public class SearchEngine<T extends Searchable & Visualizable> {
     private final Map<Parameter, List<SearchCriterion<?>>> criteria;
-    private final Class<T> typeParameterClass;
+    private final Collection<T> collection;
 
     /**
-     * Creates a new search engine for the specified type of searchable items.
+     * Creates a new search engine that searches in the given collection of searchable items.
      *
-     * @param typeParameterClass the type of searchable items.
+     * @param collection the collection of searchable items
      */
-    public SearchEngine(Class<T> typeParameterClass) {
+    public SearchEngine(Collection<T> collection) {
         this.criteria = new HashMap<>();
-        this.typeParameterClass = typeParameterClass;
+        this.collection = collection;
     }
 
     /**
@@ -39,9 +36,11 @@ public class SearchEngine<T extends Searchable> {
      * @param parameter the parameter to apply the criterion on
      * @param predicate the {@link BiPredicate} to add as a criterion
      * @param value the reference value
-     * @param <P> the type of the reference value
      */
-    public <P> void addCriterion(Parameter parameter, BiPredicate<Object, ? super P> predicate, P value) {
+    public void addCriterion(Parameter parameter, BiPredicate<Object, Object> predicate, Object value) {
+        if (parameter == null || predicate == null || value == null)
+            throw new IllegalArgumentException("Parameters must not be null");
+
         addCriterion(parameter, new SearchCriterion<>(predicate, value));
     }
 
@@ -53,9 +52,10 @@ public class SearchEngine<T extends Searchable> {
      * @param criterion the criterion to add
      */
     public void addCriterion(Parameter parameter, SearchCriterion<?> criterion) {
-        if (!this.criteria.containsKey(parameter)) {
-            this.criteria.put(parameter, new ArrayList<>());
-        }
+        if (parameter == null || criterion == null)
+            throw new IllegalArgumentException("Parameters must not be null");
+
+        this.criteria.computeIfAbsent(parameter, k -> new ArrayList<>());
         this.criteria.get(parameter).add(criterion);
     }
 
@@ -83,7 +83,7 @@ public class SearchEngine<T extends Searchable> {
     }
 
     /**
-     * Performs the search on the item repositories according to the given current criteria
+     * Performs the search on this engine collection according to the given current criteria
      * and returns the result.
      *
      * @return the result of the search
@@ -91,7 +91,7 @@ public class SearchEngine<T extends Searchable> {
     public SearchResult<T> search() {
         SearchResult<T> result = new SearchResult<>();
         Predicate<T> predicate = getCurrentPredicate();
-        Repositories.getInstance().getRepository(typeParameterClass).getItemStream()
+        this.collection.stream()
                 .filter(predicate)
                 .forEach(result::addResult);
         return result;

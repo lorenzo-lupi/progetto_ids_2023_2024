@@ -1,8 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

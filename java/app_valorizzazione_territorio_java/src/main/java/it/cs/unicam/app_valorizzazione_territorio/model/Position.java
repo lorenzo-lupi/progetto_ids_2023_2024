@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+
 /**
  * This class represents a geographical position, that is a
  * point on the surface of the Earth associated with geographical coordinates.
@@ -53,5 +54,28 @@ public class Position {
                 "latitude=" + latitude +
                 ", longitude=" + longitude + '}';
     }
+
+    /**
+     * Returns the distance between two positions.
+     *
+     * @param other the other position
+     * @return the distance between two positions
+     */
+    public Position sum(Position other){
+        return new Position(this.latitude + other.getLatitude(),
+                this.longitude + other.getLongitude());
+    }
+
+    /**
+     * Returns the distance between two positions.
+     *
+     * @param scalar the scalar to apply
+     * @return the distance between two positions
+     */
+    public Position divide(int scalar){
+        return new Position(this.latitude / scalar,
+                this.longitude / scalar);
+    }
+
 
 }

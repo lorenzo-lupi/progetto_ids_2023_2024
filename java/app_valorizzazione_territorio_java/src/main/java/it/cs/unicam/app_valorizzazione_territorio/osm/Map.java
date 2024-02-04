@@ -1,0 +1,60 @@
+package it.cs.unicam.app_valorizzazione_territorio.osm;
+
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
+
+import java.util.List;
+
+/**
+ * This class represents a geographical visualizable map, composed of geographical OSM data and
+ * {@link Positionable} objects that are also {@link Identifiable}.
+ */
+public class Map<P extends Positionable & Visualizable> implements Visualizable {
+    private final String osmData;
+    private final List<P> positionablePoints;
+
+    public Map(String osmData, List<P> positionablePoints) {
+        this.positionablePoints = positionablePoints;
+        this.osmData = osmData;
+    }
+
+    public String getOsmData() {
+        return osmData;
+    }
+
+    public List<P> getPointsList() {
+        return positionablePoints.stream().toList();
+    }
+
+    /**
+     * Returns the positionable point in this map with the given ID, if present.
+     *
+     * @param id the ID of the geo-locatable point
+     * @return the geo-locatable point with the given ID, if any, null otherwise
+     */
+    public P getPointByID(long id) {
+        return positionablePoints.stream()
+                .filter(p -> p.getID() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public long getID() {
+        return 0;
+    }
+
+    @Override
+    public MapDOF getSynthesizedFormat() {
+        return this.getDetailedFormat();
+    }
+
+    @Override
+    public MapDOF getDetailedFormat() {
+        return new MapDOF(osmData,
+                positionablePoints.stream().map(Visualizable::getSynthesizedFormat).toList(),
+                getID());
+    }
+}

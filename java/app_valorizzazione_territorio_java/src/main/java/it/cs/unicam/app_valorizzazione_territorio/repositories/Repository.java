@@ -1,6 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -9,11 +13,12 @@ import java.util.stream.Stream;
  *
  * @param <I> the type of the items
  */
-public class Repository<I> {
-    private Set<I> items;
+public abstract class Repository<I extends Identifiable> {
+    private final Map<Long, I> items;
+    private long nextID = 0L;
 
     public Repository() {
-        this.items = new HashSet<>();
+        this.items = new HashMap<>();
     }
 
     /**
@@ -21,51 +26,55 @@ public class Repository<I> {
      * @return the stream of items.
      */
     public Stream<I> getItemStream() {
-        return items.stream();
+        return items.values().stream();
     }
 
     /**
-     * Returns an iterator over the items of the repository.
-     * @return an iterator over the items of the repository
+     * Returns a copy of the map of all the items of the repository.
+     *
+     * @return a copy of the map of all the items of the repository
      */
-    public Iterator<I> getIterator() {
-        return this.items.iterator();
+    public Map<Long, I> getAllItemsMap() {
+        return items.values().stream().collect(Collectors.toMap(I::getID, Function.identity()));
     }
 
     /**
      * Adds an item to the repository.
+     * If the repository already contains an item with the same ID, the new item will not be added.
+     *
      * @param item the item to be added
-     * @return true if the item has been added, false otherwise
+     * @return the item already associated with the same ID, if any, null otherwise.
      */
-    public boolean add(I item) {
-        return this.items.add(item);
+    public I add(I item) {
+        return this.items.putIfAbsent(item.getID(), item);
     }
 
     /**
      * Removes an item from the repository.
+     * If the repository does not contain an item with the same ID that is equal to the given item,
+     * nothing will be removed.
+     *
      * @param item the item to be removed
      * @return true if the item has been removed, false otherwise
      */
     public boolean remove(I item) {
-        return this.items.remove(item);
+        return this.items.remove(item.getID(), item);
     }
 
     /**
      * Adds all the items of the specified collection to the repository.
      * @param items the items to be added
-     * @return true if some items have been added, false otherwise
      */
-    public boolean addAll(Collection<I> items) {
-        return this.items.addAll(items);
+    public void addAll(Collection<I> items) {
+        for (I item : items) this.add(item);
     }
 
     /**
      * Removes all the items of the specified collection from the repository.
      * @param items the items to be removed
-     * @return true if some items have been removed, false otherwise
      */
-    public boolean removeAll(Collection<I> items) {
-        return this.items.removeAll(items);
+    public void removeAll(Collection<I> items) {
+        for (I item : items) this.remove(item);
     }
 
     /**
@@ -74,6 +83,36 @@ public class Repository<I> {
      * @return true if the repository contains the specified item, false otherwise
      */
     public boolean contains(I item) {
-        return this.items.contains(item);
+        return this.items.containsValue(item);
+    }
+
+    /**
+     * Returns the item corresponding to the specified ID, if any.
+     *
+     * @param ID the ID of the item to be returned
+     * @return the item corresponding to the specified ID, if any
+     * @throws IllegalArgumentException if the item is not found
+     */
+    public I getItemByID(long ID) {
+        I item = this.items.get(ID);
+        if (item == null) throw new IllegalArgumentException("Item not found");
+        return item;
+    }
+
+    /**
+     * Returns and updates the next available ID for the items of the repository.
+     *
+     * @return the next available ID for the items of the repository
+     */
+    public long getNextID() {
+        return nextID++;
+    }
+
+    /**
+     * Resets the repository, removing all the items and resetting the next available ID.
+     */
+    public void clear() {
+        this.items.clear();
+        this.nextID = 0L;
     }
 }
