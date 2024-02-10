@@ -9,7 +9,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
 
 import java.util.function.Consumer;
 
@@ -53,7 +53,7 @@ public class GeoLocatableControllerUtils {
             item.approve();
         } else {
             ApprovalRequestRepository.getInstance().add(
-                    new MunicipalityApprovalRequest<>(user, item, municipality));
+                    new MunicipalityRequest<>(user, item, municipality));
         }
     }
 

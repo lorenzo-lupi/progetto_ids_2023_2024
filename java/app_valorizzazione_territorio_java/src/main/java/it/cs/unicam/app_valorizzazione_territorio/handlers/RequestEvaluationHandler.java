@@ -8,9 +8,9 @@ import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
 
 import java.util.List;
 
@@ -187,7 +187,7 @@ public class RequestEvaluationHandler {
     private static List<MunicipalityRequestSOF> viewMunicipalityRequestsApprovableBy(User user) {
         return ApprovalRequestRepository.getInstance().getAllMunicipalityRequests()
                 .filter(request -> request.canBeApprovedBy(user))
-                .map(MunicipalityApprovalRequest::getSynthesizedFormat)
+                .map(MunicipalityRequest::getSynthesizedFormat)
                 .toList();
     }
 
@@ -200,26 +200,26 @@ public class RequestEvaluationHandler {
     private static List<ContestRequestSOF> viewContestRequestsApprovableBy(User user) {
         return ApprovalRequestRepository.getInstance().getAllContestRequests()
                 .filter(request -> request.canBeApprovedBy(user))
-                .map(ContestApprovalRequest::getSynthesizedFormat)
+                .map(ContestRequest::getSynthesizedFormat)
                 .toList();
     }
 
     private static MunicipalityRequestDOF viewMunicipalityApprovableRequest(User user, long requestID) {
-        MunicipalityApprovalRequest request = ApprovalRequestRepository.getInstance().getMunicipalityRequestByID(requestID);
+        MunicipalityRequest request = ApprovalRequestRepository.getInstance().getMunicipalityRequestByID(requestID);
         if (!request.canBeApprovedBy(user))
             throw new UnsupportedOperationException("The user cannot access the municipality request");
         return request.getDetailedFormat();
     }
 
     private static ContestRequestDOF viewContestApprovableRequest(User user, long requestID) {
-        ContestApprovalRequest request = ApprovalRequestRepository.getInstance().getContestRequestByID(requestID);
+        ContestRequest request = ApprovalRequestRepository.getInstance().getContestRequestByID(requestID);
         if (!request.canBeApprovedBy(user))
             throw new UnsupportedOperationException("The user cannot access the contest request");
         return request.getDetailedFormat();
     }
 
     private static void setApprovation(User user, long requestID, boolean isApproved) {
-        ApprovalRequest request = ApprovalRequestRepository.getInstance().getItemByID(requestID);
+        Request request = ApprovalRequestRepository.getInstance().getItemByID(requestID);
         if (!request.canBeApprovedBy(user))
             throw new UnsupportedOperationException("The user cannot approve or disapprove the request");
 

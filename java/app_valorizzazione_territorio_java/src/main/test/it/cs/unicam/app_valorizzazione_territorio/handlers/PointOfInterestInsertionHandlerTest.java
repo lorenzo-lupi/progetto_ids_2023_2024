@@ -57,7 +57,7 @@ class PointOfInterestInsertionHandlerTest {
             assertFalse(poi.isApproved());
             assertTrue(ApprovalRequestRepository.getInstance()
                     .getAllMunicipalityRequests()
-                    .anyMatch(r -> r.getApprovableItem().equals(poi)));
+                    .anyMatch(r -> r.getItem().equals(poi)));
 
         }
         catch (IOException | GeoLocatableNotFoundException e ){
@@ -114,7 +114,7 @@ class PointOfInterestInsertionHandlerTest {
             
             assertTrue(ApprovalRequestRepository.getInstance()
                     .getAllMunicipalityRequests()
-                    .anyMatch(r -> r.getApprovableItem().equals(poi)));
+                    .anyMatch(r -> r.getItem().equals(poi)));
             assertFalse(poi.isApproved());
         }
         catch (GeoLocatableNotFoundException e){

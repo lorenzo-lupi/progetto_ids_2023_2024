@@ -8,6 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class represent a point of interest that is a service exercised as a private or public activity.
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public class Activity extends PointOfInterest{
 
-    private final ActivityTypeEnum type;
+    private ActivityTypeEnum type;
     private final Timetable timetable;
 
     public Activity(String title,
@@ -46,6 +47,10 @@ public class Activity extends PointOfInterest{
         return type;
     }
 
+    public void setType(ActivityTypeEnum type) {
+        this.type = type;
+    }
+
     public Timetable getTimetable() {
         return timetable;
     }
@@ -62,5 +67,12 @@ public class Activity extends PointOfInterest{
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
         parametersMapping.put(Parameter.ACTIVITY_TYPE, getType());
         return parametersMapping;
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        Map<Parameter, Consumer<Object>> settersMapping = new HashMap<>(super.getSettersMapping());
+        settersMapping.put(Parameter.ACTIVITY_TYPE, toObjectSetter(this::setType, ActivityTypeEnum.class));
+        return settersMapping;
     }
 }

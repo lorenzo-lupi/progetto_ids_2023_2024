@@ -15,13 +15,18 @@ public enum Parameter {
     CLASSIFICATION,
     ATTRACTION_TYPE,
     ACTIVITY_TYPE,
+
+    START_DATE,
+    END_DATE,
     CONTEST_TOPIC,
     CONTEST_STATUS,
     CONTEST_TYPE,
     VOTE_NUMBER,
     USERNAME,
     EMAIL,
-    ID;
+    ID,
+    ADD_FILE,
+    REMOVE_FILE;
 
     public static final Map<String, Parameter> stringToParameter;
 

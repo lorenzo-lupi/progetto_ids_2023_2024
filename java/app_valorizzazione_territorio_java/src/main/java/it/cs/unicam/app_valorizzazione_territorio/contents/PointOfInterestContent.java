@@ -38,4 +38,9 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
     public PointOfInterest getHost() {
         return this.poi;
     }
+
+    @Override
+    public Runnable getDeletionAction() {
+        return () -> this.poi.removeContent(this);
+    }
 }

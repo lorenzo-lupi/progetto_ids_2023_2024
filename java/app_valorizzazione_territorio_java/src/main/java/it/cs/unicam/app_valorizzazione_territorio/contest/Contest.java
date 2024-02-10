@@ -3,6 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.contest;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
+import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
@@ -94,7 +96,6 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * @return the proposal requests of the contest.
      */
     ProposalRequests getProposalRequests();
-
 
     default ContestSOF getSynthesizedFormat() {
         return new ContestSOF(this.getName(),

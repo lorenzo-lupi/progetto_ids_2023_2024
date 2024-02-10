@@ -4,8 +4,12 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.EventDOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class represents an event, that is a particular point of interest associated
@@ -52,6 +56,14 @@ public class Event extends PointOfInterest{
     	} else {
     		return EventStatusEnum.CLOSED;
     	}
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        Map<Parameter, Consumer<Object>> settersMapping = new HashMap<>(super.getSettersMapping());
+        settersMapping.put(Parameter.START_DATE, toObjectSetter(this::setStartDate, Date.class));
+        settersMapping.put(Parameter.END_DATE, toObjectSetter(this::setEndDate, Date.class));
+        return settersMapping;
     }
 
     @Override

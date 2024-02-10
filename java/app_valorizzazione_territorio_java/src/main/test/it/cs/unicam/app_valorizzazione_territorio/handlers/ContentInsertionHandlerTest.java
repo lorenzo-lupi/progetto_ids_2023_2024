@@ -12,8 +12,8 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,13 +96,13 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
                 sampleContent);
 
-        List<ContestApprovalRequest> contestRequests = ApprovalRequestRepository.getInstance().getAllContestRequests()
+        List<ContestRequest> contestRequests = ApprovalRequestRepository.getInstance().getAllContestRequests()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CONCORSO_FOTO_2024.getEntertainer()))
                 .toList();
 
         assertEquals(contestRequests.size(), 1);
-        assertEquals(contestRequests.get(0).getApprovableItem().getID(), contentID);
-        assertEquals(contestRequests.get(0).getUser(), SampleRepositoryProvider.TURIST_1);
+        assertEquals(contestRequests.get(0).getItem().getID(), contentID);
+        assertEquals(contestRequests.get(0).getSender(), SampleRepositoryProvider.TURIST_1);
     }
 
     @Test
@@ -112,13 +112,13 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
-        List<ApprovalRequest> requests = ApprovalRequestRepository.getInstance().getItemStream()
+        List<Request> requests = ApprovalRequestRepository.getInstance().getItemStream()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 
         assertEquals(2, requests.size());
-        assertEquals(((Identifiable)requests.get(1).getApprovableItem()).getID(), contentID);
-        assertEquals(requests.get(1).getUser(), SampleRepositoryProvider.TURIST_1);
+        assertEquals(((Identifiable)requests.get(1).getItem()).getID(), contentID);
+        assertEquals(requests.get(1).getSender(), SampleRepositoryProvider.TURIST_1);
     }
 
     @Test
@@ -128,7 +128,7 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
-        List<ApprovalRequest> requests = ApprovalRequestRepository.getInstance().getItemStream()
+        List<Request> requests = ApprovalRequestRepository.getInstance().getItemStream()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 

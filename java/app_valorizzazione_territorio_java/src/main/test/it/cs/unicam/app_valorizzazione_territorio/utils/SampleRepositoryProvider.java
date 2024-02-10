@@ -14,9 +14,9 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class SampleRepositoryProvider {
             FOTO_PITTURA_2;
 
     public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
-    public static ApprovalRequest RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
+    public static Request RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
 
     private static boolean municipalitiesAreSetUp = false;
     private static boolean usersAreSetUp = false;
@@ -42,7 +42,7 @@ public class SampleRepositoryProvider {
     public static final List<GeoLocatable> geoLocatables = new ArrayList<>();
     public static final List<Contest> contests = new ArrayList<>();
     public static final List<Content> contents = new ArrayList<>();
-    public static final List<ApprovalRequest> requests = new ArrayList<>();
+    public static final List<Request> requests = new ArrayList<>();
 
     static {
         createObjects();
@@ -223,15 +223,15 @@ public class SampleRepositoryProvider {
 
         requests.addAll(Arrays.asList(
                 //0 //RICHIESTA_PIAZZA_LIBERTA //User: Pippo01 //GeoLocatable: Piazza della Libertà //Municipality: Macerata
-                new MunicipalityApprovalRequest(users.get(0), geoLocatables.get(4), municipalities.get(0)),
+                new MunicipalityRequest(users.get(0), geoLocatables.get(4), municipalities.get(0)),
                 //1 //RICHIESTA_FOTO_BASILICA //User: Pluto02 //Content: Foto di Basilica di San Venanzio //GeoLocatable: Basilica di San Venanzio //Municipality: Camerino
-                new MunicipalityApprovalRequest(users.get(1), contents.get(0), municipalities.get(1)),
+                new MunicipalityRequest(users.get(1), contents.get(0), municipalities.get(1)),
                 //2 //RICHIESTA_PITTURA_CAVOUR //User: Pluto02 //Content: Pittura piazza Cavour //Contest: Concorso pittura paessaggi //Municipality: Camerino
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3)),
+                new ContestRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3)),
                 //3 //NEG_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(10), contests.get(4)),
+                new ContestRequest(users.get(1), (ContestContent) contents.get(10), contests.get(4)),
                 //4 //POS_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(11), contests.get(4))
+                new ContestRequest(users.get(1), (ContestContent) contents.get(11), contests.get(4))
         ));
 
 
@@ -312,8 +312,8 @@ public class SampleRepositoryProvider {
         CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_1);
         FOTO_PITTURA_1.approve();
         CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_2);
-        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) POS_REQUEST.getApprovableItem());
-        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getApprovableItem());
+        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) POS_REQUEST.getItem());
+        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getItem());
 
         contests.forEach(c -> c.getMunicipality().addContest(c));
 
