@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contest.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 
 import java.io.File;
 import java.util.List;
@@ -19,7 +19,7 @@ public abstract class ContentInsertionHandler<V extends ContentHost<V> & Visuali
         K extends Content<V>> {
 
     private K content;
-    private ContentBuilder<V, K> builder;
+    private final ContentBuilder<V, K> builder;
     /**
      * Constructor for a ContentInsertionHandler.
      * @param builder the builder for the content to be inserted

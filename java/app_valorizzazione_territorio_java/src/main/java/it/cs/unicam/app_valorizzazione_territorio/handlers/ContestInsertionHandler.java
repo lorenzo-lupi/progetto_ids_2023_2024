@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;

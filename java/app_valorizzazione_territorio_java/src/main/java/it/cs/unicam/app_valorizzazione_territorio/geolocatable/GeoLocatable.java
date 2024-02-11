@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.builders.GeoLocatableBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -117,6 +118,8 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
             throw new IllegalArgumentException("image cannot be null");
         return this.images.add(image);
     }
+
+
 
     /**
      * Removes a representative multimedia content from the geo-localizable object.

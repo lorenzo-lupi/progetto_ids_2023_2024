@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
@@ -24,6 +24,8 @@ import java.sql.Date;
 
 /**
  * This class handles the insertion of a point of interest.
+ *
+ *
  */
 public class PointOfInterestInsertionHandler {
     private final User user;

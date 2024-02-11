@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;

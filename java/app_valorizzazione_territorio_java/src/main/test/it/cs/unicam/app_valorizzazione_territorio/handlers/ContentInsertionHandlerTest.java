@@ -8,7 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;

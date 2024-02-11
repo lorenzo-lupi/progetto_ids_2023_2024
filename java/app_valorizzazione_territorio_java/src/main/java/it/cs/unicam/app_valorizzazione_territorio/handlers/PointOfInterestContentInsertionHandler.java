@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;

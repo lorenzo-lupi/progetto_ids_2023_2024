@@ -1,11 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContestIF;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
