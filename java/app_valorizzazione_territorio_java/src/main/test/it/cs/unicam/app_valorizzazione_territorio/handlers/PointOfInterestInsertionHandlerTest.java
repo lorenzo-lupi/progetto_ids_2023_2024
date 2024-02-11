@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.GeoLocatableNotFoun
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 
@@ -55,7 +55,7 @@ class PointOfInterestInsertionHandlerTest {
 
             GeoLocatable poi = getPoi(id);
             assertFalse(poi.isApproved());
-            assertTrue(ApprovalRequestRepository.getInstance()
+            assertTrue(RequestRepository.getInstance()
                     .getAllMunicipalityRequests()
                     .anyMatch(r -> r.getItem().equals(poi)));
 
@@ -112,7 +112,7 @@ class PointOfInterestInsertionHandlerTest {
         try {
             GeoLocatable poi = getPoi(id);
             
-            assertTrue(ApprovalRequestRepository.getInstance()
+            assertTrue(RequestRepository.getInstance()
                     .getAllMunicipalityRequests()
                     .anyMatch(r -> r.getItem().equals(poi)));
             assertFalse(poi.isApproved());

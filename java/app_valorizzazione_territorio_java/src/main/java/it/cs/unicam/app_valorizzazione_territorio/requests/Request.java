@@ -5,7 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnu
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +23,7 @@ public abstract class Request<I extends Visualizable> implements Approvable, Ide
     private final Date date;
     private String message;
     private ApprovalStatusEnum status;
-    private final long ID = ApprovalRequestRepository.getInstance().getNextID();
+    private final long ID = RequestRepository.getInstance().getNextID();
 
     /**
      * Constructor for a request.
@@ -83,6 +83,10 @@ public abstract class Request<I extends Visualizable> implements Approvable, Ide
 
     public Date getDate() {
         return date;
+    }
+
+    public RequestCommand<I> getCommand() {
+        return command;
     }
 
     /**

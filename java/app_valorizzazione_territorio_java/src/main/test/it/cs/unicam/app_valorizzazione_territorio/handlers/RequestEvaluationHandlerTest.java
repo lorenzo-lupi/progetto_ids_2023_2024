@@ -10,46 +10,41 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RequestEvaluationHandlerTest {
 
-    RequestEvaluationHandler handler;
+    private long entertainerID;
 
     @BeforeAll
     void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
-        handler = new RequestEvaluationHandler(SampleRepositoryProvider.ENTERTAINER_TEST.getID());
-
+        entertainerID = SampleRepositoryProvider.ENTERTAINER_TEST.getID();
     }
 
     @Test
-    void viewContestRequests() {
-        assertEquals(handler.viewContestRequests()
-                        .stream()
+    void shouldViewContestRequests() {
+        assertEquals(RequestEvaluationHandler.viewContestRequests(entertainerID).stream()
                         .filter(c -> c.contestName().equals(SampleRepositoryProvider.CONCORSO_PER_TEST.getName()))
                         .toList()
                         .size(),
                 2);
-        assertTrue(handler
-                .viewContestRequests()
-                .stream()
+        assertTrue(RequestEvaluationHandler.viewContestRequests(entertainerID).stream()
                 .map(r -> r.getID())
                 .anyMatch(id -> id == SampleRepositoryProvider.NEG_REQUEST.getID()));
 
-        assertTrue(handler
-                .viewContestRequests()
-                .stream()
+        assertTrue(RequestEvaluationHandler.viewContestRequests(entertainerID).stream()
                 .map(r -> r.getID())
                 .anyMatch(id -> id == SampleRepositoryProvider.POS_REQUEST.getID()));
 
     }
 
-
     @Test
     void viewMunicipalityRequests() {
-        assertThrows(UnsupportedOperationException.class, () -> handler.viewMunicipalityRequests());
+        assertThrows(UnsupportedOperationException.class, () ->
+                RequestEvaluationHandler.viewMunicipalityRequests(entertainerID));
     }
+
     @Test
     void evaluateRequest(){
-        handler.setApprovation(SampleRepositoryProvider.POS_REQUEST.getID(), true);
-        handler.setApprovation(SampleRepositoryProvider.NEG_REQUEST.getID(), false);
+        RequestEvaluationHandler.setApprovation(SampleRepositoryProvider.POS_REQUEST.getID(), true);
+        RequestEvaluationHandler.setApprovation(SampleRepositoryProvider.NEG_REQUEST.getID(), false);
         assertTrue(SampleRepositoryProvider.CONCORSO_PER_TEST.getApprovedContents().contains(SampleRepositoryProvider.POS_REQUEST.getItem()));
         assertFalse(SampleRepositoryProvider.CONCORSO_PER_TEST.getApprovedContents().contains(SampleRepositoryProvider.NEG_REQUEST.getItem()));
     }

@@ -6,7 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
@@ -44,7 +44,7 @@ public class ContestContentInsertionHandler extends ContentInsertionHandler<Cont
                 new ContestContentBuilder(contest, user), contentIF);
 
         contest.getProposalRequests().proposeContent(content);
-        ApprovalRequestRepository.getInstance().add(RequestFactory.getApprovalRequest(content));
+        RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(content));
         return content.getID();
     }
 
@@ -55,7 +55,7 @@ public class ContestContentInsertionHandler extends ContentInsertionHandler<Cont
             throw new IllegalStateException("Content must first be created");
 
         contest.getProposalRequests().proposeContent(content);
-        ApprovalRequestRepository.getInstance().add(RequestFactory.getApprovalRequest(super.getContent()));
+        RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(super.getContent()));
     }
 
 }
