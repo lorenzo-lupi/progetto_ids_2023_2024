@@ -20,10 +20,10 @@ import java.util.function.Consumer;
  * @param <V> the type of the content host
  */
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable{
+    private final User user;
     private String description;
     private final List<File> files;
     private ApprovalStatusEnum approvalStatus;
-    private final User user;
 
     private final long ID = MunicipalityRepository.getInstance().getNextContentID();
 

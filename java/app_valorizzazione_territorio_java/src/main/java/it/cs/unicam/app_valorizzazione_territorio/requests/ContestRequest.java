@@ -25,6 +25,14 @@ public class ContestRequest extends Request<ContestContent> {
     /**
      * Constructor for a contest approval request.
      */
+    public ContestRequest(User user, RequestCommand<ContestContent> command, String message) {
+        super(user, command, message);
+        this.contest = command.getItem().getHost();
+    }
+
+    /**
+     * Constructor for a contest approval request.
+     */
     public ContestRequest(User user, RequestCommand<ContestContent> command, Date date, String message) {
         super(user, command, date, message);
         this.contest = command.getItem().getHost();

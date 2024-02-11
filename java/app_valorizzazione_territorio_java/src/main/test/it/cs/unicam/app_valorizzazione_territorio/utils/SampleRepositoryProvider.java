@@ -17,6 +17,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
 
 import java.util.*;
 
@@ -145,10 +146,10 @@ public class SampleRepositoryProvider {
                         (PointOfInterest) geoLocatables.get(3)),
                         new ArrayList<>(), users.get(1)),
                 //9 //GAS FACILITY
-         new Attraction("Gas facility", "Gas facility Camerino",
-                new Position(43.1450445, 13.0893363),
-                municipalities.get(1), AttractionTypeEnum.OTHER,
-                users.get(1))
+             new Attraction("Gas facility", "Gas facility Camerino",
+                    new Position(43.1450445, 13.0893363),
+                    municipalities.get(1), AttractionTypeEnum.OTHER,
+                    users.get(1))
 
         ));
 
@@ -223,15 +224,15 @@ public class SampleRepositoryProvider {
 
         requests.addAll(Arrays.asList(
                 //0 //RICHIESTA_PIAZZA_LIBERTA //User: Pippo01 //GeoLocatable: Piazza della Libertà //Municipality: Macerata
-                new MunicipalityRequest(users.get(0), geoLocatables.get(4), municipalities.get(0)),
+                RequestFactory.getApprovalRequest(geoLocatables.get(0)),
                 //1 //RICHIESTA_FOTO_BASILICA //User: Pluto02 //Content: Foto di Basilica di San Venanzio //GeoLocatable: Basilica di San Venanzio //Municipality: Camerino
-                new MunicipalityRequest(users.get(1), contents.get(0), municipalities.get(1)),
+                RequestFactory.getApprovalRequest(contents.get(0)),
                 //2 //RICHIESTA_PITTURA_CAVOUR //User: Pluto02 //Content: Pittura piazza Cavour //Contest: Concorso pittura paessaggi //Municipality: Camerino
-                new ContestRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3)),
+                RequestFactory.getApprovalRequest(contents.get(9)),
                 //3 //NEG_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
-                new ContestRequest(users.get(1), (ContestContent) contents.get(10), contests.get(4)),
+                RequestFactory.getApprovalRequest(contents.get(10)),
                 //4 //POS_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
-                new ContestRequest(users.get(1), (ContestContent) contents.get(11), contests.get(4))
+                RequestFactory.getApprovalRequest(contents.get(11))
         ));
 
 

@@ -38,6 +38,17 @@ public abstract class Request<I extends Visualizable> implements Approvable, Ide
      *
      * @param sender the user who made the request.
      * @param command the command that represents the request.
+     * @param message the message of the request.
+     */
+    public Request(User sender, RequestCommand<I> command, String message) {
+        this(sender, command, Calendar.getInstance().getTime(), message);
+    }
+
+    /**
+     * Constructor for a request.
+     *
+     * @param sender the user who made the request.
+     * @param command the command that represents the request.
      * @param date the date of the request.
      * @param message the message of the request.
      */

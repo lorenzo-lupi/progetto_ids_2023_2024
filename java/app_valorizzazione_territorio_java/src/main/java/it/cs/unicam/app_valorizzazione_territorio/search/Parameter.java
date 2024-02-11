@@ -26,7 +26,10 @@ public enum Parameter {
     EMAIL,
     ID,
     ADD_FILE,
-    REMOVE_FILE;
+    REMOVE_FILE,
+    ADD_POI,
+    REMOVE_POI,
+    ADD_ROLE;
 
     public static final Map<String, Parameter> stringToParameter;
 

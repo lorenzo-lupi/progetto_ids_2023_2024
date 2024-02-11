@@ -9,7 +9,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
 
 public class ContestContentInsertionHandler extends ContentInsertionHandler<Contest, ContestContent> {

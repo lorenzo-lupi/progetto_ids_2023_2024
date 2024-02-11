@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Modifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
@@ -9,14 +10,15 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * This class represents a user of the application.
  */
-public class User implements Searchable, Visualizable {
+public class User implements Searchable, Visualizable, Modifiable {
     private String username;
-    private final String email;
+    private String email;
     private final List<Role> roles;
     private final List<Notification> notifications;
     private final long ID = UserRepository.getInstance().getNextID();
@@ -37,13 +39,14 @@ public class User implements Searchable, Visualizable {
     public String getUsername() {
         return this.username;
     }
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public String getEmail() {
         return this.email;
     }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Role> getRoles() {
@@ -109,5 +112,12 @@ public class User implements Searchable, Visualizable {
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        return Map.of(Parameter.USERNAME, toObjectSetter(this::setUsername, String.class),
+                Parameter.EMAIL, toObjectSetter(this::setEmail, String.class),
+                Parameter.ADD_ROLE, toObjectSetter(this::addRole, Role.class));
     }
 }

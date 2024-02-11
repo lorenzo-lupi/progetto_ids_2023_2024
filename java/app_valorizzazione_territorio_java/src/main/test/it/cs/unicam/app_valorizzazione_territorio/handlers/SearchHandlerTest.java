@@ -97,12 +97,12 @@ class SearchHandlerTest {
         geoLocatableSearchHandler.setSearchCriterion(
                 Parameter.CLASSIFICATION.toString(), "EQUALS", "Attraction");
         geoLocatableSearchHandler.setSearchCriterion(
-                Parameter.MUNICIPALITY.toString(), "EQUALS", SampleRepositoryProvider.municipalities.get(1));
+                Parameter.MUNICIPALITY.toString(), "EQUALS", SampleRepositoryProvider.CAMERINO);
         List<? extends Identifiable> searchResult = geoLocatableSearchHandler.getSearchResult();
 
-        assertEquals(2, searchResult.size());
+        assertEquals(3, searchResult.size());
         assertEquals(Set.of(SampleRepositoryProvider.UNIVERSITY_CAMERINO.getID(),
-                SampleRepositoryProvider.VIA_MADONNA_CARCERI.getID()),
+                SampleRepositoryProvider.VIA_MADONNA_CARCERI.getID(), SampleRepositoryProvider.GAS_FACILITY.getID()),
                 searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
     }
 

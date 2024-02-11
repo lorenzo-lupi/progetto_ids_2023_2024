@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * This class represents a compound point, i.e. a point composed by multiple points of interest objects.
@@ -62,18 +63,20 @@ public class CompoundPoint extends GeoLocatable {
         return type;
     }
 
-
     public List<PointOfInterest> getGeoLocalizablesList() {
         return pointsOfInterest.stream().toList();
     }
 
+    public void addPointOfInterest(PointOfInterest pointOfInterest) {
+        if (pointOfInterest == null)
+            throw new IllegalArgumentException("pointOfInterest cannot be null");
+        this.pointsOfInterest.add(pointOfInterest);
+    }
 
-    @Override
-    public Map<Parameter, Object> getParametersMapping() {
-        Map<Parameter, Object> parameters
-                = new HashMap<>(super.getParametersMapping());
-        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
-        return parameters;
+    public void removePointOfInterest(PointOfInterest pointOfInterest) {
+        if (pointOfInterest == null)
+            throw new IllegalArgumentException("pointOfInterest cannot be null");
+        this.pointsOfInterest.remove(pointOfInterest);
     }
 
     @Override
@@ -85,6 +88,21 @@ public class CompoundPoint extends GeoLocatable {
                 .orElseThrow();
     }
 
+    @Override
+    public Map<Parameter, Object> getParametersMapping() {
+        Map<Parameter, Object> parameters
+                = new HashMap<>(super.getParametersMapping());
+        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
+        return parameters;
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        Map<Parameter, Consumer<Object>> parameters = new HashMap<>(super.getSettersMapping());
+        parameters.put(Parameter.ADD_POI, toObjectSetter(this::addPointOfInterest, PointOfInterest.class));
+        parameters.put(Parameter.REMOVE_POI, toObjectSetter(this::removePointOfInterest, PointOfInterest.class));
+        return parameters;
+    }
 
     @Override
     public Identifiable getDetailedFormat() {

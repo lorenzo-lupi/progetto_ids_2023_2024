@@ -12,7 +12,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import java.util.Date;
 import java.util.Calendar;
 
-public class MunicipalityRequest<I extends Approvable & Visualizable> extends Request<I> {
+public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
 
     private final Municipality municipality;
 
@@ -24,6 +24,18 @@ public class MunicipalityRequest<I extends Approvable & Visualizable> extends Re
      */
     public MunicipalityRequest(RequestCommand<I> command, Municipality municipality) {
         super(command);
+        this.municipality = municipality;
+    }
+
+    /**
+     * Constructor for a municipality approval request.
+     *
+     * @param user the user who made the request.
+     * @param command the command that represents the request.
+     * @param municipality the municipality to which the request is addressed.
+     */
+    public MunicipalityRequest(User user, RequestCommand<I> command, Municipality municipality, String message) {
+        super(user, command, message);
         this.municipality = municipality;
     }
 
