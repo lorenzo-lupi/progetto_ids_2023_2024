@@ -2,15 +2,19 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
+import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
+import java.io.IOException;
+
 /**
  * This class handles the insertion of a point of interest.
- *
- *
  */
 public class PointOfInterestInsertionHandler {
 
@@ -51,5 +55,14 @@ public class PointOfInterestInsertionHandler {
         return geoLocatable.getID();
     }
 
+    /**
+     *  this method make you visualize an EmptyMap
+     * @param coordinatesBox coordinate box to visualize
+     * @return the detailed format of the MAP
+     */
+    public static MapDOF visualizeEmptyMap(CoordinatesBox coordinatesBox) throws IOException {
+        MapProvider provider = new MapProviderBase();
+        return provider.getEmptyMap(coordinatesBox).getDetailedFormat();
+    }
 
 }

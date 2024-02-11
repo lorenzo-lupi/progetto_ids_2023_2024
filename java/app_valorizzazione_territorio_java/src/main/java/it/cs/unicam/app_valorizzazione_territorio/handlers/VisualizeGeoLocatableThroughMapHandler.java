@@ -1,9 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderProxy;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -18,7 +17,12 @@ import java.util.List;
  */
 public class VisualizeGeoLocatableThroughMapHandler {
 
-
+    /**
+     *
+     */
+    public static Identifiable visualizeGeoLocatable(long geoLocatableId){
+        return MunicipalityRepository.getInstance().getGeoLocatableByID(geoLocatableId).getDetailedFormat();
+    }
 
     /**
      * creates a visualizable map of the given municipality

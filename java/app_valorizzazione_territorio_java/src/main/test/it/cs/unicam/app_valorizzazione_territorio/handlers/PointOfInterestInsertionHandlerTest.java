@@ -3,8 +3,9 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.Timetable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 
 import org.junit.jupiter.api.*;
@@ -38,7 +39,7 @@ class PointOfInterestInsertionHandlerTest {
                 SampleRepositoryProvider.CAMERINO.getID(),
                 poiIF);
 
-        assertTrue(ApprovalRequestRepository.getInstance()
+        assertTrue(RequestRepository.getInstance()
                 .getAllMunicipalityRequests()
                 .anyMatch(request -> request.getItem().getID() == id));
     }
@@ -64,7 +65,7 @@ class PointOfInterestInsertionHandlerTest {
                 SampleRepositoryProvider.CAMERINO.getID(),
                 poiIF);
 
-        assertFalse(ApprovalRequestRepository.getInstance()
+        assertFalse(RequestRepository.getInstance()
                 .getAllMunicipalityRequests()
                 .anyMatch(request -> request.getItem().getID() == id));
 
