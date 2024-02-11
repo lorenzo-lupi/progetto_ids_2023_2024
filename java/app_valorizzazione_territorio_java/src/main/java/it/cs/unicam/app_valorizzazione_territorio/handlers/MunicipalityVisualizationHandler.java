@@ -14,11 +14,7 @@ import java.util.List;
 /**
  * Controller class for the visualization of municipalities.
  */
-public class MunicipalityVisualizationHandler extends SearchHandler<Municipality> {
-
-    public MunicipalityVisualizationHandler() {
-        super(MunicipalityRepository.getInstance().getItemStream().toList());
-    }
+public class MunicipalityVisualizationHandler  {
 
     /**
      * Returns the Synthesized Format of all the municipalities registered in the system.
@@ -40,7 +36,7 @@ public class MunicipalityVisualizationHandler extends SearchHandler<Municipality
      */
     @SuppressWarnings("unchecked")
     public static List<MunicipalitySOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
-        return (List<MunicipalitySOF>) getFilteredItems(MunicipalityRepository.getInstance().getItemStream().toList(), filters);
+        return (List<MunicipalitySOF>) SearchHandler.getFilteredItems(MunicipalityRepository.getInstance().getItemStream().toList(), filters);
     }
 
     /**
@@ -54,9 +50,4 @@ public class MunicipalityVisualizationHandler extends SearchHandler<Municipality
         return MunicipalityRepository.getInstance().getItemByID(municipalityID).getDetailedFormat();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<MunicipalitySOF> getSearchResult(){
-        return (List<MunicipalitySOF>) super.getSearchResult();
-    }
 }

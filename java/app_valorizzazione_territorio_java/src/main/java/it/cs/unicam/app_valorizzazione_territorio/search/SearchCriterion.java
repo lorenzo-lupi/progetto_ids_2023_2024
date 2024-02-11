@@ -39,6 +39,8 @@ public class SearchCriterion<T> implements Predicate<Object> {
     public static final BiPredicate<Object, Object> USERNAME =
             (a, b) -> a instanceof String u && b instanceof String s && u.equals(s);
 
+    public static final BiPredicate<Object, Object> TAKE_ALL =
+            (a, b) -> true;
     /**
      * A Map that maps a String format to a BiPredicate that can be used for search.
      */
@@ -54,6 +56,7 @@ public class SearchCriterion<T> implements Predicate<Object> {
         stringToBiPredicate.put("EQUALS_ID", EQUALS_ID);
         stringToBiPredicate.put("CONTEST_PERMITS_USER", CONTEST_PERMITS_USER);
         stringToBiPredicate.put("USERNAME", USERNAME);
+        stringToBiPredicate.put("TAKE_ALL", TAKE_ALL);
     }
 
     private final BiPredicate<Object, Object> predicate;

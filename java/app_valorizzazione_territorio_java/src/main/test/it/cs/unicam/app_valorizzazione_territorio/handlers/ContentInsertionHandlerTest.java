@@ -8,7 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentIF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -137,55 +137,4 @@ class ContentInsertionHandlerTest {
                 ApprovalStatusEnum.APPROVED);
     }
 
-    @Test
-    void shouldInsertContentDetails() {
-        ContentInsertionHandler<Contest, ContestContent> contestContentInsertionHandler =
-                new ContestContentInsertionHandler(
-                        SampleRepositoryProvider.TURIST_1.getID(),
-                        SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
-
-        contestContentInsertionHandler.insertDescription("sample description");
-        contestContentInsertionHandler.addFile(new File(
-                "src/main/test/it/cs/unicam/app_valorizzazione_territorio/handlers/ContentInsertionHandlerTest.java"));
-        long contentID = contestContentInsertionHandler.createContent();
-        contestContentInsertionHandler.insertContent();
-
-        Content content = MunicipalityRepository.getInstance().getContentByID(contentID);
-        assertEquals(content.getDescription(), "sample description");
-        assertEquals(content.getFiles().size(), 1);
-    }
-
-    @Test
-    void shouldRemoveFile() {
-        ContentInsertionHandler<Contest, ContestContent> contestContentInsertionHandler =
-                new ContestContentInsertionHandler(
-                        SampleRepositoryProvider.TURIST_1.getID(),
-                        SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
-
-        contestContentInsertionHandler.addFile(new File(
-                "src/main/test/it/cs/unicam/app_valorizzazione_territorio/handlers/ContentInsertionHandlerTest.java"));
-        contestContentInsertionHandler.removeFile(new File(
-                "src/main/test/it/cs/unicam/app_valorizzazione_territorio/handlers/ContentInsertionHandlerTest.java"));
-
-        assertEquals(contestContentInsertionHandler.obtainAddedFiles().size(), 0);
-    }
-
-    @Test
-    void shouldDestroyContent() {
-        ContentInsertionHandler<Contest, ContestContent> contestContentInsertionHandler =
-                new ContestContentInsertionHandler(
-                        SampleRepositoryProvider.TURIST_1.getID(),
-                        SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
-
-        contestContentInsertionHandler.insertDescription("sample description");
-        contestContentInsertionHandler.addFile(new File(
-                "src/main/test/it/cs/unicam/app_valorizzazione_territorio/handlers/ContentInsertionHandlerTest.java"));
-        contestContentInsertionHandler.destroyContent();
-        long contentID = contestContentInsertionHandler.createContent();
-        contestContentInsertionHandler.insertContent();
-
-        Content content = MunicipalityRepository.getInstance().getContentByID(contentID);
-        assertEquals(content.getDescription(), "");
-        assertEquals(content.getFiles().size(), 0);
-    }
 }

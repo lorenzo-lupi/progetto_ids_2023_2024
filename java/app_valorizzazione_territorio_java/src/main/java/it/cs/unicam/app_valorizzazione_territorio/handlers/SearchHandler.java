@@ -58,19 +58,6 @@ public class SearchHandler<S extends Searchable & Visualizable> {
      * Adds a new criterion to the search engine.
      * Subsequent searches will be performed on the given parameters.
      *
-     * @param parameter the searchable item parameter to apply the criterion on
-     * @param criterion the criterion to add
-     * @param value the reference value
-     * @throws IllegalArgumentException if any of the arguments is null or invalid
-     */
-    public void setSearchCriterion(String parameter, String criterion, Object value){
-        this.setSearchCriterion(new SearchFilter(parameter, criterion, value));
-    }
-
-    /**
-     * Adds a new criterion to the search engine.
-     * Subsequent searches will be performed on the given parameters.
-     *
      * @param filter the filter to add
      * @throws IllegalArgumentException if the filter is null or any of the parameters
      * in the filter is null or invalid
@@ -95,4 +82,5 @@ public class SearchHandler<S extends Searchable & Visualizable> {
                 .map(S::getSynthesizedFormat)
                 .toList();
     }
+
 }

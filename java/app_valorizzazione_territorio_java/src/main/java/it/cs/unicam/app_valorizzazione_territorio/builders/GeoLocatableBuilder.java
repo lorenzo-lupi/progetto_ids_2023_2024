@@ -90,6 +90,16 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
     }
 
     /**
+     * Add an image to the CompoundPoint.
+     *
+     * @param image the images to add
+     */
+    public GeoLocatableBuilder<T> addImage(List<File> image) {
+        this.images.addAll(image);
+        return this;
+    }
+
+    /**
      * Remove an image from the CompoundPoint.
      *
      * @param image the image to remove

@@ -1,32 +1,27 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderProxy;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * A search handler that searches for GeoLocatable objects using a map.
  */
-public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLocatable> {
+public class VisualizeGeoLocatableThroughMapHandler {
 
     /**
-     * Creates a new search handler that searches in the given collection of searchable items.
-     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
+     *
      */
-    public VisualizeGeoLocatableThroughMapHandler(long municipalityId) throws IOException {
-        super(MunicipalityRepository.getInstance().getItemByID(municipalityId).getGeoLocatables());
+    public static Identifiable visualizeGeoLocatable(long geoLocatableId){
+        return MunicipalityRepository.getInstance().getGeoLocatableByID(geoLocatableId).getDetailedFormat();
     }
 
     /**
