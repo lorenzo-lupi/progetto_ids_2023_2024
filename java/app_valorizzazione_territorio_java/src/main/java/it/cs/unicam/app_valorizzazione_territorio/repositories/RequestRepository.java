@@ -6,15 +6,15 @@ import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
 
 import java.util.stream.Stream;
 
-public class ApprovalRequestRepository extends Repository<Request> {
-    private static ApprovalRequestRepository instance;
+public class RequestRepository extends Repository<Request> {
+    private static RequestRepository instance;
 
-    private ApprovalRequestRepository() {
+    private RequestRepository() {
         super();
     }
 
-    public static ApprovalRequestRepository getInstance() {
-        if (instance == null) instance = new ApprovalRequestRepository();
+    public static RequestRepository getInstance() {
+        if (instance == null) instance = new RequestRepository();
         return instance;
     }
 
@@ -25,7 +25,7 @@ public class ApprovalRequestRepository extends Repository<Request> {
      */
     @SuppressWarnings("unchecked")
     public Stream<MunicipalityRequest> getAllMunicipalityRequests() {
-        return (Stream<MunicipalityRequest>) this.getItemStream()
+        return this.getItemStream()
                 .filter(request -> request instanceof MunicipalityRequest)
                 .map(request -> (MunicipalityRequest) request);
     }

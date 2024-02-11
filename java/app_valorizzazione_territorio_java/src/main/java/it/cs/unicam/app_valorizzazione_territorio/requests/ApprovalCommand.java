@@ -14,6 +14,10 @@ public class ApprovalCommand<T extends Approvable & Visualizable> extends Reques
         super(item);
     }
 
+    public ConfirmationType getConfirmationType() {
+        return ConfirmationType.NONE;
+    }
+
     @Override
     public void accept() {
         super.getItem().approve();

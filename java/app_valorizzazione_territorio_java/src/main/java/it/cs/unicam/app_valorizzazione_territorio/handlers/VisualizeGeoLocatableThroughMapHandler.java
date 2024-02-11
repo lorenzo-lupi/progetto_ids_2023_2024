@@ -4,6 +4,8 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
+import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
+import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderProxy;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
@@ -25,7 +27,7 @@ public class VisualizeGeoLocatableThroughMapHandler {
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
     public static MapDOF handleMap(long municipalityId) throws IOException {
-        return MapProvider.getMap(MunicipalityRepository
+        return new MapProviderProxy(new MapProviderBase()).getMap(MunicipalityRepository
                 .getInstance()
                 .getItemByID(municipalityId))
                 .getDetailedFormat();
@@ -41,7 +43,7 @@ public class VisualizeGeoLocatableThroughMapHandler {
     public static MapDOF handleMap(long municipalityId,
                                    CoordinatesBox box) throws IOException {
 
-        return MapProvider.getMap(MunicipalityRepository
+        return new MapProviderProxy(new MapProviderBase()).getMap(MunicipalityRepository
                 .getInstance()
                 .getItemByID(municipalityId), box)
                 .getDetailedFormat();
@@ -57,7 +59,8 @@ public class VisualizeGeoLocatableThroughMapHandler {
     public static MapDOF handleFilteredMap(long municipalityId,
                                    List<SearchFilter> filters) throws IOException{
 
-        return MapProvider.getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), filters)
+        return new MapProviderProxy(new MapProviderBase())
+                .getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), filters)
                 .getDetailedFormat();
     }
 
@@ -73,7 +76,8 @@ public class VisualizeGeoLocatableThroughMapHandler {
                                    CoordinatesBox box,
                                    List<SearchFilter> filters) throws IOException{
 
-        return MapProvider.getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), box, filters)
+        return new MapProviderProxy(new MapProviderBase())
+                .getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), box, filters)
                 .getDetailedFormat();
     }
 

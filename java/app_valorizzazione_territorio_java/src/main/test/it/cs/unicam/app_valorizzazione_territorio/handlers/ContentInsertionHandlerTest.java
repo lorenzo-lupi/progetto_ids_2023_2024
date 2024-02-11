@@ -10,7 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestConten
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
@@ -96,7 +96,7 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
                 sampleContent);
 
-        List<ContestRequest> contestRequests = ApprovalRequestRepository.getInstance().getAllContestRequests()
+        List<ContestRequest> contestRequests = RequestRepository.getInstance().getAllContestRequests()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CONCORSO_FOTO_2024.getEntertainer()))
                 .toList();
 
@@ -112,7 +112,7 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
-        List<Request> requests = ApprovalRequestRepository.getInstance().getItemStream()
+        List<Request> requests = RequestRepository.getInstance().getItemStream()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 
@@ -128,7 +128,7 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
-        List<Request> requests = ApprovalRequestRepository.getInstance().getItemStream()
+        List<Request> requests = RequestRepository.getInstance().getItemStream()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 

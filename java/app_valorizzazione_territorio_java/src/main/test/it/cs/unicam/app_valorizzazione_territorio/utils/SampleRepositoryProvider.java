@@ -11,12 +11,10 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.ActivityTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
 import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
 
 import java.util.*;
@@ -345,7 +343,7 @@ public class SampleRepositoryProvider {
 
     public static void setUpRequest5esRepositories() {
         if (!requestsAreSetUp) {
-            ApprovalRequestRepository.getInstance().addAll(requests);
+            RequestRepository.getInstance().addAll(requests);
             requestsAreSetUp = true;
         }
     }
@@ -372,7 +370,7 @@ public class SampleRepositoryProvider {
     }
 
     public static void clearRequestsRepositories() {
-        ApprovalRequestRepository.getInstance().clear();
+        RequestRepository.getInstance().clear();
         requestsAreSetUp = false;
     }
 
