@@ -8,7 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
@@ -37,7 +37,7 @@ public class ContestInsertionHandler {
     public ContestInsertionHandler(long userID, long municipalityID) {
         this.user = UserRepository.getInstance().getItemByID(userID);
         this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityID);
-        if (!user.getAuthorizations(municipality).contains(RoleTypeEnum.ENTERTAINER))
+        if (!user.getAuthorizations(municipality).contains(AuthorizationEnum.ENTERTAINER))
             throw new IllegalArgumentException("User is not authorized to insert contests in this municipality");
 
         this.builder = new ContestBuilder(user, municipality);

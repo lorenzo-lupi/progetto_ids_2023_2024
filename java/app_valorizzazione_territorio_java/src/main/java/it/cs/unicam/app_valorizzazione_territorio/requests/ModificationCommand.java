@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.requests;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Modifiable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 /**
@@ -25,7 +25,7 @@ public class ModificationCommand<T extends Visualizable & Modifiable> extends Re
 
     public ConfirmationType getConfirmationType() {
         if (parameter == Parameter.ADD_ROLE && value instanceof Role r &&
-                r.roleTypeEnum() == RoleTypeEnum.ADMINISTRATOR) {
+                r.authorizationEnum() == AuthorizationEnum.ADMINISTRATOR) {
             return ConfirmationType.PROMOTION_TO_ADMIN;
         }
         else return ConfirmationType.NONE;

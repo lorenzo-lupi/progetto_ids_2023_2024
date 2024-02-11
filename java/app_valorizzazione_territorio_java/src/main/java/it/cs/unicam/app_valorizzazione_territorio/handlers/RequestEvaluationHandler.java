@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestSOF;
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
@@ -29,7 +29,7 @@ public class RequestEvaluationHandler {
      */
     public static List<MunicipalityRequestSOF> viewMunicipalityRequests(long userID) {
         User user = userRepository.getItemByID(userID);
-        if (!canAccessRequests(user, RoleTypeEnum.CURATOR))
+        if (!canAccessRequests(user, AuthorizationEnum.CURATOR))
             throw new UnsupportedOperationException("The user cannot access the municipality requests");
 
         return requestRepository.getAllMunicipalityRequests()
@@ -47,7 +47,7 @@ public class RequestEvaluationHandler {
      */
     public static List<ContestRequestSOF> viewContestRequests(long userID) {
         User user = userRepository.getItemByID(userID);
-        if (!canAccessRequests(user, RoleTypeEnum.ENTERTAINER))
+        if (!canAccessRequests(user, AuthorizationEnum.ENTERTAINER))
             throw new UnsupportedOperationException("The user cannot access the contest requests");
 
         return requestRepository.getAllContestRequests()
@@ -111,9 +111,9 @@ public class RequestEvaluationHandler {
      * @param user the user to check
      * @return true if the user can access the requests for the given role, false otherwise
      */
-    private static boolean canAccessRequests(User user, RoleTypeEnum role) {
+    private static boolean canAccessRequests(User user, AuthorizationEnum role) {
         return user.getRoles().stream()
-                .anyMatch(userRole -> userRole.roleTypeEnum().equals(role));
+                .anyMatch(userRole -> userRole.authorizationEnum().equals(role));
     }
 
 }
