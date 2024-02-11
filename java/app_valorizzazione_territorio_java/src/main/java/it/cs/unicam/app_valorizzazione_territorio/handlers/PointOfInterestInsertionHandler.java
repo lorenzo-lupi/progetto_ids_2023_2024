@@ -8,13 +8,11 @@ import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesE
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
-import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.osm.Map;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 
@@ -41,7 +39,7 @@ public class PointOfInterestInsertionHandler {
         this.user = UserRepository.getInstance().getItemByID(userId);
         this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityId);
         this.builder = new PointOfInterestBuilder(municipality, user);
-        this.map = MapProvider.getEmptyMap(municipality);
+        this.map = new MapProviderProxy(new MapProviderBase()).getEmptyMap(municipality);
     }
 
     /**
@@ -142,8 +140,7 @@ public class PointOfInterestInsertionHandler {
      * @throws IOException if the map cannot be created
      */
     public  void handleMap(CoordinatesBox box) throws IOException {
-        this.map = MapProvider
-                .getEmptyMap(box);
+        this.map = new MapProviderProxy(new MapProviderBase()).getEmptyMap(box);
     }
 
     /**

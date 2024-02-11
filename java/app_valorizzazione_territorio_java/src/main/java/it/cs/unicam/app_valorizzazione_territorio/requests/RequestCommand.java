@@ -20,12 +20,12 @@ public abstract class RequestCommand<T extends Visualizable> {
             return item;
         }
 
-    /**
-     * Returns the type of confirmation required to accept the request.
-     *
-     * @return the type of confirmation required to accept the request.
-     */
-    public abstract ConfirmationType getConfirmationType();
+        /**
+         * Returns the type of confirmation required to accept the request.
+         *
+         * @return the type of confirmation required to accept the request.
+         */
+        public abstract ConfirmationType getConfirmationType();
 
         /**
          * Accepts the request.

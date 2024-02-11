@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,17 +19,15 @@ import java.util.Map;
 public class OSMRequestHandler {
 
     public static final String OSM_API_URL = "https://api.openstreetmap.org/api/0.6/map";
-    private final URL url;
+    public static final String OSM_NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/reverse";
+    private final URL urlOsmApi;
+    private final URL urlNominatimApi;
     Map<String, String> parameters;
     private static OSMRequestHandler instance;
 
-
     private OSMRequestHandler() throws MalformedURLException {
-        this(OSM_API_URL);
-    }
-
-    private OSMRequestHandler(String url) throws MalformedURLException {
-        this.url = new URL(url);
+        this.urlOsmApi = new URL(OSM_API_URL);
+        this.urlNominatimApi = new URL(OSM_NOMINATIM_API_URL);
         this.parameters = new HashMap<>();
     }
 
@@ -70,7 +70,7 @@ public class OSMRequestHandler {
         parameters.clear();
         parameters.put("bbox", left + "," + bottom + "," + right + "," + top);
 
-        HttpURLConnection connection = (HttpURLConnection) getGETRequestURLFromParameters().openConnection();
+        HttpURLConnection connection = (HttpURLConnection) getGETRequestURLFromParameters(urlOsmApi).openConnection();
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
 
@@ -80,15 +80,33 @@ public class OSMRequestHandler {
         else throw new IOException("HTTP error code: " + connection.getResponseCode());
     }
 
+    public String getMunicipalityOfPosition(Position position) throws IOException {
+        parameters.clear();
+        parameters.put("format", "json");
+        parameters.put("lat", String.valueOf(position.getLatitude()));
+        parameters.put("lon", String.valueOf(position.getLongitude()));
+
+        HttpURLConnection connection =
+                (HttpURLConnection) getGETRequestURLFromParameters(urlNominatimApi).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
+
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+            return parseMunicipalityFromNominatimResponse(getResponse(connection));
+        else throw new IOException("HTTP error code: " + connection.getResponseCode());
+    }
+
     /**
      * Returns the URL of the GET request data obtained from the URL and the parameters,
      * that is ready to use in a GET request.
      *
      * @return the URL of the GET request obtained from the parameters
      */
-    private URL getGETRequestURLFromParameters() throws UnsupportedEncodingException, MalformedURLException {
+    private URL getGETRequestURLFromParameters(URL baseUrl) throws UnsupportedEncodingException, MalformedURLException {
         StringBuilder requestURL = new StringBuilder();
-        requestURL.append(url+(parameters.isEmpty() ? "" : "?"));
+        requestURL.append(baseUrl +(parameters.isEmpty() ? "" : "?"));
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             requestURL.append(entry.getKey());
             requestURL.append("=");
@@ -118,5 +136,11 @@ public class OSMRequestHandler {
             connection.disconnect();
         }
         return response.toString();
+    }
+
+    private String parseMunicipalityFromNominatimResponse(String response) {
+        return response.indexOf("\"town\":") != -1 ?
+                response.substring(response.indexOf("\"town\":") + 8, response.indexOf(",\"county\"")) :
+                "";
     }
 }
