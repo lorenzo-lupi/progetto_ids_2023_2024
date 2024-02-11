@@ -1,5 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,49 +13,60 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RequestEvaluationHandlerTest {
 
-    RequestEvaluationHandler handler;
-
     @BeforeAll
-    void setUp() {
+    static void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
-        handler = new RequestEvaluationHandler(SampleRepositoryProvider.ENTERTAINER_TEST.getID());
-
     }
 
     @Test
     void viewContestRequests() {
-        assertEquals(handler.viewContestRequests()
+        assertEquals(RequestEvaluationHandler.viewContestRequests(SampleRepositoryProvider.ENTERTAINER_TEST.getID())
                         .stream()
                         .filter(c -> c.contestName().equals(SampleRepositoryProvider.CONCORSO_PER_TEST.getName()))
                         .toList()
                         .size(),
                 2);
-        assertTrue(handler
-                .viewContestRequests()
+        assertTrue(RequestEvaluationHandler
+                .viewContestRequests(SampleRepositoryProvider.ENTERTAINER_TEST.getID())
                 .stream()
-                .map(r -> r.getID())
+                .map(ContestRequestSOF::getID)
                 .anyMatch(id -> id == SampleRepositoryProvider.NEG_REQUEST.getID()));
 
-        assertTrue(handler
-                .viewContestRequests()
+        assertTrue(RequestEvaluationHandler
+                .viewContestRequests(SampleRepositoryProvider.ENTERTAINER_TEST.getID())
                 .stream()
-                .map(r -> r.getID())
+                .map(ContestRequestSOF::getID)
                 .anyMatch(id -> id == SampleRepositoryProvider.POS_REQUEST.getID()));
 
     }
 
-
     @Test
     void viewMunicipalityRequests() {
-        assertThrows(UnsupportedOperationException.class, () -> handler.viewMunicipalityRequests());
+        assertThrows(UnsupportedOperationException.class, () -> RequestEvaluationHandler.viewMunicipalityRequests(SampleRepositoryProvider.ENTERTAINER_TEST.getID()));
     }
+
     @Test
     void evaluateRequest(){
-        handler.setApprovation(SampleRepositoryProvider.POS_REQUEST.getID(), true);
-        handler.setApprovation(SampleRepositoryProvider.NEG_REQUEST.getID(), false);
+        RequestEvaluationHandler.setApprovation(SampleRepositoryProvider.ENTERTAINER_TEST.getID(), SampleRepositoryProvider.POS_REQUEST.getID(), true);
+        RequestEvaluationHandler.setApprovation(SampleRepositoryProvider.ENTERTAINER_TEST.getID(), SampleRepositoryProvider.NEG_REQUEST.getID(), false);
         assertTrue(SampleRepositoryProvider.CONCORSO_PER_TEST.getApprovedContents().contains(SampleRepositoryProvider.POS_REQUEST.getItem()));
         assertFalse(SampleRepositoryProvider.CONCORSO_PER_TEST.getApprovedContents().contains(SampleRepositoryProvider.NEG_REQUEST.getItem()));
     }
+    @Test
+    void shouldNotThrowExceptionWhenUserWithoutPermissionTriesToViewContestRequests() {
+        assertDoesNotThrow(() -> RequestEvaluationHandler.viewContestRequests(SampleRepositoryProvider.ENTERTAINER_CAMERINO.getID()));
+    }
 
+    @Test
+    void shouldThrowExceptionWhenUserWithoutPermissionTriesToViewMunicipalityRequests() {
+        assertThrows(UnsupportedOperationException.class, () -> RequestEvaluationHandler.viewMunicipalityRequests(SampleRepositoryProvider.TURIST_1.getID()));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUserWithoutPermissionTriesToApproveOrDisapproveRequest() {
+        SampleRepositoryProvider.clearRequestsRepositories();
+        ApprovalRequestRepository.getInstance().add(SampleRepositoryProvider.POS_REQUEST);
+        assertThrows(UnsupportedOperationException.class, () -> RequestEvaluationHandler.setApprovation(SampleRepositoryProvider.TURIST_1.getID(), SampleRepositoryProvider.POS_REQUEST.getID(), true));
+    }
 
 }

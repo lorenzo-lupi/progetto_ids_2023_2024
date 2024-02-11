@@ -17,23 +17,7 @@ import java.util.List;
 /**
  * This class represents a handler for the search and visualization of the contests of a municipality.
  */
-public class ContestVisualizationHandler extends SearchHandler<Contest> {
-
-    private final User user;
-
-    private final Municipality municipality;
-
-    /**
-     * Creates a new ContestVisualizationHandler for the municipality corresponding to the given ID.
-     *
-     * @param userID the ID of the user
-     * @param municipalityID the ID of the municipality
-     */
-    public ContestVisualizationHandler(long userID, long municipalityID) {
-        super(MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests());
-        this.user = UserRepository.getInstance().getItemByID(userID);
-        this.municipality = MunicipalityRepository.getInstance().getItemByID(municipalityID);
-    }
+public class ContestVisualizationHandler {
 
     /**
      * Returns the Synthesized Format of all the contests that permits the user with the
@@ -66,7 +50,7 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
         User user = UserRepository.getInstance().getItemByID(userID);
         List<SearchFilter> filtersWithUser = new ArrayList<>(filters);
         filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), "CONTEST_PERMITS_USER", user));
-        return (List<ContestSOF>) getFilteredItems(
+        return (List<ContestSOF>) SearchHandler.getFilteredItems(
                 MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests(),
                 filtersWithUser);
     }
@@ -84,6 +68,14 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
         return getContest(MunicipalityRepository.getInstance().getItemByID(municipalityID), contestID).getDetailedFormat();
     }
 
+    private static Contest getContest(Municipality municipality, long contestID) {
+        if(municipality == null)
+            throw new IllegalArgumentException("Municipality can't be null");
+        return municipality.getContests().stream()
+                .filter(contest -> contest.getID() == contestID)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Contest not found"));
+    }
     /**
      * Returns the Detailed Format of a Contest in the system having the given ID.
      * The contest can belong to any municipality.
@@ -94,52 +86,5 @@ public class ContestVisualizationHandler extends SearchHandler<Contest> {
      **/
     public static ContestDOF viewContestFromRepository(long contestID) {
         return MunicipalityRepository.getInstance().getContestByID(contestID).getDetailedFormat();
-    }
-
-    /**
-     * Returns the Synthesized Format of all the contests that permits the user among all registered contests
-     * in the municipality.
-     *
-     * @return the Synthesized Format of all the suitable contests
-     */
-    public List<ContestSOF> viewAllContests() {
-        return municipality.getContests().stream()
-                .filter(contest -> contest.permitsUser(user))
-                .map(Contest::getSynthesizedFormat)
-                .toList();
-    }
-
-    /**
-     * Returns the Detailed Format of a Contest corresponding to the given ID in the municipality.
-     *
-     * @param contestID the ID of the Contest to visualize
-     * @return the Detailed Format of the Contest having the given ID
-     * @throws IllegalArgumentException if the Contest having the given ID is not found in the municipality
-     */
-    public ContestDOF viewContest(long contestID) {
-        return getContest(municipality, contestID).getDetailedFormat();
-    }
-
-    /**
-     * Starts a new search by resetting the criteria of the search engine.
-     * The started search is performed on the contests of the municipality that permit the user.
-     */
-    @Override
-    public void startSearch() {
-        super.startSearch();
-        this.searchEngine.addCriterion(Parameter.THIS, SearchCriterion.CONTEST_PERMITS_USER, user);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<ContestSOF> getSearchResult() {
-        return (List<ContestSOF>) super.getSearchResult();
-    }
-
-    private static Contest getContest(Municipality municipality, long contestID) {
-        return municipality.getContests().stream()
-                .filter(contest -> contest.getID() == contestID)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Contest not found"));
     }
 }

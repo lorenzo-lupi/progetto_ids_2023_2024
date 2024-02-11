@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class PointOfInterestContent extends Content<PointOfInterest>{
 
-    private PointOfInterest poi;
+    private final PointOfInterest poi;
 
     /**
      * Constructor for a content.

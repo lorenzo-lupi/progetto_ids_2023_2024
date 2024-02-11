@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,16 +19,6 @@ class MunicipalityVisualizationHandlerTest {
     @BeforeAll
     static void setUpRepository() {
         SampleRepositoryProvider.setUpMunicipalitiesRepository();
-    }
-
-    @Test
-    void shouldViewAllMunicipalities() {
-        List<MunicipalitySOF> municipalities = MunicipalityVisualizationHandler.viewAllMunicipalities();
-        assertEquals(2,municipalities.size());
-        assertEquals(Set.of(
-                SampleRepositoryProvider.MACERATA.getSynthesizedFormat(),
-                SampleRepositoryProvider.CAMERINO.getSynthesizedFormat()),
-                new HashSet<>(municipalities));
     }
 
     @Test
@@ -58,11 +49,12 @@ class MunicipalityVisualizationHandlerTest {
 
     @Test
     void shouldGetSearchResult() {
-        List<MunicipalitySOF> municipalities = new MunicipalityVisualizationHandler().getSearchResult();
-        assertEquals(2,municipalities.size());
+        List<MunicipalitySOF> municipalities = MunicipalityVisualizationHandler.viewFilteredMunicipalities(List.of());
+        assertEquals(3,municipalities.size());
         assertEquals(Set.of(
                 SampleRepositoryProvider.MACERATA.getSynthesizedFormat(),
-                SampleRepositoryProvider.CAMERINO.getSynthesizedFormat()),
+                SampleRepositoryProvider.CAMERINO.getSynthesizedFormat(),
+                SampleRepositoryProvider.COMUNE_DEI_TEST.getSynthesizedFormat()),
                 new HashSet<>(municipalities));
     }
 }

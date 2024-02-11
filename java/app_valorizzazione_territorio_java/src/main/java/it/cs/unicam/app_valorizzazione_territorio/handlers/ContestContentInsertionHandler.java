@@ -11,21 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
 
-public class ContestContentInsertionHandler extends ContentInsertionHandler<Contest, ContestContent> {
-    private User user;
-    private Contest contest;
-
-    public ContestContentInsertionHandler(long userID, long contestID){
-
-        super(new ContestContentBuilder(MunicipalityRepository.getInstance().getContestByID(contestID),
-                UserRepository.getInstance().getItemByID(userID)));
-
-        this.user = UserRepository.getInstance().getItemByID(userID);
-        this.contest = MunicipalityRepository.getInstance().getContestByID(contestID);
-
-        if(!contest.permitsUser(user))
-            throw new IllegalArgumentException("User cannot insert content in this contest");
-    }
+public class ContestContentInsertionHandler {
 
     /**
      * Inserts the content obtained from the given contentIF in the contest with the given ID.
@@ -48,14 +34,5 @@ public class ContestContentInsertionHandler extends ContentInsertionHandler<Cont
         return content.getID();
     }
 
-    @Override
-    public void insertContent() {
-        ContestContent content = super.getContent();
-        if(super.getContent() == null)
-            throw new IllegalStateException("Content must first be created");
-
-        contest.getProposalRequests().proposeContent(content);
-        ApprovalRequestRepository.getInstance().add(RequestFactory.getApprovalRequest(super.getContent()));
-    }
 
 }

@@ -19,16 +19,6 @@ import java.util.List;
  */
 public class RequestEvaluationHandler {
 
-    private final User user;
-    /**
-     * Creates a new search handler that searches in the given collection of searchable items.
-     *
-     * @param userID the ID of the user
-     */
-    public RequestEvaluationHandler(long userID) {
-        this.user = UserRepository.getInstance().getItemByID(userID);
-    }
-
     /**
      * Returns the Synthesized Format of all the municipality requests that can be approved by the user
      * corresponding to the given ID.
@@ -87,58 +77,6 @@ public class RequestEvaluationHandler {
     }
 
     /**
-     * Returns the Synthesized Format of all the municipality requests that can be approved by the user
-     * of this handler.
-     *
-     * @return the Synthesized Format of all the suitable municipality requests
-     * @throws UnsupportedOperationException if the user cannot access the municipality requests or, equivalently,
-     * if he has not the role of curator any municipality
-     */
-    public List<MunicipalityRequestSOF> viewMunicipalityRequests() {
-        if (!canAccessRequests(user, RoleTypeEnum.CURATOR))
-            throw new UnsupportedOperationException("The user cannot access the municipality requests");
-
-        return viewMunicipalityRequestsApprovableBy(user);
-    }
-
-    /**
-     * Returns the Synthesized Format of all the contest requests that can be approved by the user
-     * of this handler.
-     *
-     * @return the Synthesized Format of all the suitable contest requests
-     * @throws UnsupportedOperationException if the user cannot access the contest requests or, equivalently,
-     * if he has not the role of entertainer for any municipality
-     */
-    public List<ContestRequestSOF> viewContestRequests() {
-        if (!canAccessRequests(this.user, RoleTypeEnum.ENTERTAINER))
-            throw new UnsupportedOperationException("The user cannot access the contest requests");
-
-        return viewContestRequestsApprovableBy(user);
-    }
-
-    /**
-     * Returns the Detailed Format of the municipality request corresponding to the given ID, if any.
-     * The user of this handler must be able to access the municipality request.
-     *
-     * @param requestID the ID of the request
-     * @return the Detailed Format of the municipality request corresponding to the given ID
-     */
-    public MunicipalityRequestDOF viewMunicipalityRequest(long requestID) {
-        return viewMunicipalityApprovableRequest(this.user, requestID);
-    }
-
-    /**
-     * Returns the Detailed Format of the contest request corresponding to the given ID, if any.
-     * The user of this handler must be able to access the contest request.
-     *
-     * @param requestID the ID of the request
-     * @return the Detailed Format of the contest request corresponding to the given ID
-     */
-    public ContestRequestDOF viewContestRequest(long requestID) {
-        return viewContestApprovableRequest(this.user, requestID);
-    }
-
-    /**
      * Makes the user with the given ID approve or disapprove the municipality request corresponding to the given ID.
      * The user corresponding to the given ID must be able to access the request.
      *
@@ -149,21 +87,8 @@ public class RequestEvaluationHandler {
      * given ID is not found
      * @throws UnsupportedOperationException if the user cannot approve or reject the request
      */
-    public void setApprovation(long userID, long requestID, boolean isApproved) {
+    public static void setApprovation(long userID, long requestID, boolean isApproved) {
         setApprovation(UserRepository.getInstance().getItemByID(userID), requestID, isApproved);
-    }
-
-    /**
-     * Makes the user of this handler approve or disapprove the municipality request corresponding to the given ID.
-     * The user of this handler must be able to access the request.
-     *
-     * @param requestID the ID of the request
-     * @param isApproved true if the user approves the request, false otherwise
-     * @throws IllegalArgumentException if the request with the given ID is not found
-     * @throws UnsupportedOperationException if the user cannot approve or reject the request
-     */
-    public void setApprovation(long requestID, boolean isApproved) {
-        setApprovation(this.user, requestID, isApproved);
     }
 
     /**
@@ -219,7 +144,7 @@ public class RequestEvaluationHandler {
     }
 
     private static void setApprovation(User user, long requestID, boolean isApproved) {
-        Request request = ApprovalRequestRepository.getInstance().getItemByID(requestID);
+        Request<?> request = ApprovalRequestRepository.getInstance().getItemByID(requestID);
         if (!request.canBeApprovedBy(user))
             throw new UnsupportedOperationException("The user cannot approve or disapprove the request");
 

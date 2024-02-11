@@ -65,7 +65,7 @@ class ContestContentVoteHandlerTest {
     }
 
 
-    void removeVote() {
+    static void removeVote() {
         ContestContentVoteHandler.removeVote(SampleRepositoryProvider.TURIST_2.getID(),
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
         ContestContentVoteHandler.removeVote(SampleRepositoryProvider.TURIST_1.getID(),
