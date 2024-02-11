@@ -21,7 +21,4 @@ public record MunicipalityIF(String name,
                             Position position,
                             CoordinatesBox coordinatesBox,
                             List<File> files) {
-    public Municipality toMunicipality() {
-        return new Municipality(this.name, this.description, this.position, this.coordinatesBox, this.files);
-    }
 }

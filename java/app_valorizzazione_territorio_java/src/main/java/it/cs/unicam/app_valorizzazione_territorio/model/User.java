@@ -109,6 +109,7 @@ public class User implements Searchable, Visualizable, Modifiable {
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parameters = new HashMap<>();
         parameters.put(Parameter.USERNAME, this.getUsername());
+        parameters.put(Parameter.NAME, this.getName());
         parameters.put(Parameter.EMAIL, this.getEmail());
         return parameters;
     }
@@ -116,6 +117,7 @@ public class User implements Searchable, Visualizable, Modifiable {
     @Override
     public Map<Parameter, Consumer<Object>> getSettersMapping() {
         return Map.of(Parameter.USERNAME, toObjectSetter(this::setUsername, String.class),
+                Parameter.NAME, toObjectSetter(this::setName, String.class),
                 Parameter.EMAIL, toObjectSetter(this::setEmail, String.class),
                 Parameter.ADD_ROLE, toObjectSetter(this::addRole, Role.class));
     }
