@@ -74,14 +74,14 @@ public class SampleRepositoryProvider {
         ));
 
         users.addAll(Arrays.asList(
-                /* 0 */     new User("Pippo00", "pippo00@gmail.com"),               //TURIST_1
-                /* 1 */     new User("Pluto01", "pluto01@gmail.com"),               //TURIST_2
-                /* 2 */    new User("Paperino02", "paperino02@bitmail.it"),        //TURIST_3
-                /* 3 */   new User("Pinco03", "pinco03@bitmail.it"),              //CURATOR_CAMERINO
-                /* 4 */     new User("Pallo04", "pallo04@blobmail.com"),            //ENTERTAINER_MACERATA
-                /* 5 */   new User("MarioRossi05", "mario.rossi06@blobmail.com"), //ENTERTAINER_CAMERINO
-                /* 6 */   new User("Zeb89", "mario.rossi06@blobmailcom"), //ENTERTAINER_TEST
-                /* 7*/    new User("Admin", "ace.gamer@nonpagotasseinitalia.mt") //ADMINISTRATOR_CAMERINO
+                /* 0 */ new User("Pippo00", "pippo00@gmail.com", "Testpassword01"),               //TURIST_1
+                /* 1 */ new User("Pluto01", "pluto01@gmail.com", "Testpassword02"),               //TURIST_2
+                /* 2 */ new User("Paperino02", "paperino02@bitmail.it", "Testpassword02"),        //TURIST_3
+                /* 3 */ new User("Pinco03", "pinco03@bitmail.it", "Testpassword03"),              //CURATOR_CAMERINO
+                /* 4 */ new User("Pallo04", "pallo04@blobmail.com", "Testpassword04"),            //ENTERTAINER_MACERATA
+                /* 5 */ new User("MarioRossi05", "mario.rossi06@blobmail.com", "Testpassword05"), //ENTERTAINER_CAMERINO
+                /* 6 */ new User("Zeb89", "mario.rossi06@blobmail.com", "Testpassword06"), //ENTERTAINER_TEST
+                /* 7*/  new User("Admin", "ace.gamer@nonpagotasseinitalia.mt", "Testpassword07") //ADMINISTRATOR_CAMERINO
         ));
 
         MACERATA = municipalities.get(0);

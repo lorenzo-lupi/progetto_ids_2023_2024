@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public class Message implements Identifiable {
     public Message(String senderName, String senderEmail, String text, Date date, List<File> attachments) {
         if (senderName == null || senderEmail == null || text == null || date == null || attachments == null)
             throw new IllegalArgumentException("Parameters cannot be null");
-        if (!senderEmail.matches("^[\\w\\-.]+@([\\w-]+\\.)+[\\w-]{2,}$"))
+        if (!CredentialsUtils.isEmailValid(senderEmail))
             throw new IllegalArgumentException("Invalid email");
         this.senderName = senderName;
         this.senderEmail = senderEmail;

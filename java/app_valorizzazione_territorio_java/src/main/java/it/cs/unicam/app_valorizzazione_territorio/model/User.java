@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
@@ -19,6 +20,7 @@ public class User implements Searchable, Visualizable, Modifiable {
     private String username;
     private String name;
     private String email;
+    private String password;
     private final List<Role> roles;
     private final List<Notification> notifications;
     private final long ID = UserRepository.getInstance().getNextID();
@@ -29,11 +31,19 @@ public class User implements Searchable, Visualizable, Modifiable {
      * @param username the username of the user
      * @param email the email of the user
      */
-    public User(String username, String email) {
+    public User(String username, String email, String password) {
+        if (username == null || email == null || password == null)
+            throw new IllegalArgumentException("Parameters cannot be null");
+        if (!CredentialsUtils.isEmailValid(email))
+            throw new IllegalArgumentException("Invalid email");
+        if (!CredentialsUtils.isPasswordValid(password))
+            throw new IllegalArgumentException("Invalid username");
+
         this.username = username;
         this.email = email;
         this.roles = new ArrayList<>();
         this.notifications = new ArrayList<>();
+        this.password = password;
     }
 
     public String getUsername() {
@@ -41,6 +51,12 @@ public class User implements Searchable, Visualizable, Modifiable {
     }
     public void setUsername(String username) {
         this.username = username;
+    }
+    public String getEncryptedPassword() {
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
