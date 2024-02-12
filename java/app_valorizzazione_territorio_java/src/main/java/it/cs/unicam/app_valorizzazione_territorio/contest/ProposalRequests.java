@@ -106,6 +106,8 @@ public class ProposalRequests {
         if (!votes.containsKey(content))
             throw new IllegalArgumentException("Content not found");
 
+        votes.remove(content);
+
         return content;
     }
 

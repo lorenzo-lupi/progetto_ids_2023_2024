@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * It includes fundamental details such as a name, a textual description and a representative
  * multimedia content.
  */
-public abstract class GeoLocatable implements Requestable, Searchable, Positionable {
+public abstract class GeoLocatable implements Requestable, Searchable, Positionable, Deletable {
     private final User user;
     private String name;
     private String description;
@@ -153,7 +153,8 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
 
     @Override
     public Runnable getDeletionAction() {
-        return () -> this.getMunicipality().removeGeoLocatable(this);
+        return () -> {this.getMunicipality().removeGeoLocatable(this);
+        MunicipalityRepository.getInstance().removeGeoLocatable(this);};
     }
 
     @Override
@@ -191,4 +192,5 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     public boolean equals(Object obj) {
         return equalsID(obj);
     }
+
 }

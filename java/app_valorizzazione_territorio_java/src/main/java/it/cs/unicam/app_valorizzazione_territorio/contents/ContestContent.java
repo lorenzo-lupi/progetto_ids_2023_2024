@@ -2,6 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.io.File;
@@ -36,6 +37,9 @@ public class ContestContent extends Content<Contest> {
 
     @Override
     public Runnable getDeletionAction() {
-        return () -> this.contest.getProposalRequests().removeProposal(this);
+        return () -> {
+            this.contest.getProposalRequests().removeProposal(this);
+            MunicipalityRepository.getInstance().removeContent(this);
+        };
     }
 }

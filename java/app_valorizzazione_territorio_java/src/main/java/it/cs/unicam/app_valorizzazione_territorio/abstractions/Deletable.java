@@ -10,4 +10,5 @@ public interface Deletable {
      * @return the action to be performed to delete the object
      */
     Runnable getDeletionAction();
+
 }

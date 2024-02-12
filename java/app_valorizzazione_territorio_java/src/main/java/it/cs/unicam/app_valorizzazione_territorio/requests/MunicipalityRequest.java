@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.requests;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.contest.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestDOF;
@@ -73,4 +74,6 @@ public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
                 this.getMunicipality().getSynthesizedFormat(), this.getDate(),
                 this.getItem().getSynthesizedFormat(), this.getID());
     }
+
+
 }

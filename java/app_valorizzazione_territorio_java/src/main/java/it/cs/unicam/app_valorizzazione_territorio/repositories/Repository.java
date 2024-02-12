@@ -14,6 +14,7 @@ import java.util.stream.Stream;
  * @param <I> the type of the items
  */
 public abstract class Repository<I extends Identifiable> {
+
     private final Map<Long, I> items;
     private long nextID = 0L;
 
@@ -85,6 +86,16 @@ public abstract class Repository<I extends Identifiable> {
     public boolean contains(I item) {
         return this.items.containsValue(item);
     }
+
+    /**
+     * Checks if the repository contains an item with the specified ID.
+     * @param id the ID of the item to be checked
+     * @return true if the repository contains an item with the specified ID, false otherwise
+     */
+    public boolean contains(long id){
+        return this.items.containsKey(id);
+    }
+
 
     /**
      * Returns the item corresponding to the specified ID, if any.
