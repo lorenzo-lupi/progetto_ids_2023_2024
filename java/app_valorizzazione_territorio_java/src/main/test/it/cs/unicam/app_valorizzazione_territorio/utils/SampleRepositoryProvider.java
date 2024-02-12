@@ -94,11 +94,11 @@ public class SampleRepositoryProvider {
         ENTERTAINER_TEST = users.get(6);
         ADMINISTRATOR_CAMERINO = users.get(7);
 
-        CURATOR_CAMERINO.addRole(CAMERINO, RoleTypeEnum.CURATOR);
-        ENTERTAINER_MACERATA.addRole(MACERATA, RoleTypeEnum.ENTERTAINER);
-        ENTERTAINER_CAMERINO.addRole(CAMERINO, RoleTypeEnum.ENTERTAINER);
-        ENTERTAINER_TEST.addRole(COMUNE_DEI_TEST, RoleTypeEnum.ENTERTAINER);
-        ADMINISTRATOR_CAMERINO.addRole(CAMERINO, RoleTypeEnum.ADMINISTRATOR);
+        CURATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.CURATOR);
+        ENTERTAINER_MACERATA.addRole(MACERATA, AuthorizationEnum.ENTERTAINER);
+        ENTERTAINER_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ENTERTAINER);
+        ENTERTAINER_TEST.addRole(COMUNE_DEI_TEST, AuthorizationEnum.ENTERTAINER);
+        ADMINISTRATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ADMINISTRATOR);
 
         geoLocatables.addAll(Arrays.asList(
                 //0 //UNIVERSITY_CAMERINO //Municiplaity: Camerino

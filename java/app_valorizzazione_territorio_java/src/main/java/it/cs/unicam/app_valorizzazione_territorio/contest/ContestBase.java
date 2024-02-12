@@ -1,10 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 
@@ -38,7 +37,7 @@ public class ContestBase implements Contest {
             throw new IllegalArgumentException("All parameters must not be null");
         if (!checkDates(startDate, votingStartDate, endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
-        if (animator.getAuthorizations(municipality).stream().noneMatch(a -> a.equals(RoleTypeEnum.ENTERTAINER)))
+        if (animator.getAuthorizations(municipality).stream().noneMatch(a -> a.equals(AuthorizationEnum.ENTERTAINER)))
             throw new IllegalArgumentException("User must be animator of the municipality");
 
         this.name = name;
