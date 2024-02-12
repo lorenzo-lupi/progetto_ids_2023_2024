@@ -23,4 +23,17 @@ public record Role(Municipality municipality, RoleTypeEnum roleTypeEnum) {
         return isCuratorForMunicipality(municipality).or(isContributorForMunicipality(municipality));
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Role role = (Role) obj;
+        return municipality.equals(role.municipality) && roleTypeEnum == role.roleTypeEnum;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * municipality.hashCode() + roleTypeEnum.hashCode();
+    }
+
 }
