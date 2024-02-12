@@ -75,6 +75,5 @@ class PointOfInterestInsertionHandlerTest {
     @AfterAll
     static void clearRepositories() {
         SampleRepositoryProvider.clearAllRepositories();
-        SampleRepositoryProvider.clearAllRepositories();
     }
 }

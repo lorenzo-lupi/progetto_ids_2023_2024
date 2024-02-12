@@ -2,10 +2,11 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
@@ -26,7 +27,7 @@ public class ModifyAuthorizationHandler {
      * @param newRole the new role
      * @throws UnsupportedOperationException if the user is not an administrator of the municipality
      */
-    public static void modifyAuthorization(long administratorID, long userID, long municipalityID, RoleTypeEnum newRole) {
+    public static void modifyAuthorization(long administratorID, long userID, long municipalityID, AuthorizationEnum newRole) {
         modifyAuthorization(UserRepository.getInstance().getItemByID(administratorID),
                 UserRepository.getInstance().getItemByID(userID),
                 new Role(MunicipalityRepository.getInstance().getItemByID(municipalityID), newRole));
@@ -44,7 +45,7 @@ public class ModifyAuthorizationHandler {
 
     private static boolean isAdministrator(User user, Municipality municipality) {
         return user.getAuthorizations(municipality).stream()
-                .anyMatch(a -> a.equals(RoleTypeEnum.ADMINISTRATOR));
+                .anyMatch(a -> a.equals(AuthorizationEnum.ADMINISTRATOR));
     }
 
 

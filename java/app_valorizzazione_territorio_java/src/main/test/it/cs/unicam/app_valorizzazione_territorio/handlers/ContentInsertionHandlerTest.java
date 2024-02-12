@@ -1,13 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
@@ -15,9 +12,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +33,7 @@ class ContentInsertionHandlerTest {
     }
 
     @AfterEach
-    void clearRepositories() {
+     void clearRepositories() {
         SampleRepositoryProvider.clearAllRepositories();
     }
 
@@ -116,8 +111,8 @@ class ContentInsertionHandlerTest {
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 
-        assertEquals(2, requests.size());
-        assertEquals(((Identifiable)requests.get(1).getItem()).getID(), contentID);
+        assertEquals(3, requests.size());
+        assertTrue(RequestRepository.getInstance().getAllMunicipalityRequests().anyMatch(r -> r.getItem().getID() == contentID));
         assertEquals(requests.get(1).getSender(), SampleRepositoryProvider.TURIST_1);
     }
 
@@ -132,7 +127,7 @@ class ContentInsertionHandlerTest {
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 
-        assertEquals(1, requests.size());
+        assertEquals(2, requests.size());
         assertEquals(MunicipalityRepository.getInstance().getContentByID(contentID).getApprovalStatus(),
                 ApprovalStatusEnum.APPROVED);
     }

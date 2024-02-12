@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +24,10 @@ class ReportInsertionHandlerTest {
     void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
     }
-
+    @AfterAll
+    static void clearRepositories() {
+        SampleRepositoryProvider.clearAllRepositories();
+    }
     @Test
     void testCreateReportForGeoLocatable() {
         long reportId = ReportInsertionHandler.insertGeoLocatableReport(SampleRepositoryProvider.TURIST_1.getID(),

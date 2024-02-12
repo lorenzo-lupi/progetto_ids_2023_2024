@@ -7,7 +7,9 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,10 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ContestVisualizationHandlerTest {
 
-    @BeforeAll
-    static void setUpRepository() {
-        SampleRepositoryProvider.setUpMunicipalitiesRepository();
-        SampleRepositoryProvider.setUpUsersRepository();
+    @BeforeEach
+    void setUpRepository() {
+        SampleRepositoryProvider.clearAndSetUpRepositories();
+    }
+    @AfterEach
+    void clearRepositories() {
+        SampleRepositoryProvider.clearAllRepositories();
     }
 
     @Test

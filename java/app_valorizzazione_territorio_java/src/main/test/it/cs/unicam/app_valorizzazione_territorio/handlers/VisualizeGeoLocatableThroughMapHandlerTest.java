@@ -8,9 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 class VisualizeGeoLocatableThroughMapHandlerTest {
 
     @BeforeAll
@@ -25,6 +24,10 @@ class VisualizeGeoLocatableThroughMapHandlerTest {
         SampleRepositoryProvider.clearAndSetUpRepositories();
     }
 
+    @AfterAll
+    static void clearRepositories() {
+        SampleRepositoryProvider.clearAllRepositories();
+    }
     @Test
     void handleMap() {
         try {

@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Deletable;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
