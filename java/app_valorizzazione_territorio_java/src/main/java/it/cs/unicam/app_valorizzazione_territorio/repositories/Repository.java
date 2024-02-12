@@ -17,6 +17,7 @@ public abstract class Repository<I extends Identifiable> {
 
     private final Map<Long, I> items;
     private long nextID = 0L;
+    public static final long NULL_ID = -1L;
 
     public Repository() {
         this.items = new HashMap<>();
