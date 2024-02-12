@@ -6,7 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPoint;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
@@ -30,7 +30,7 @@ public class CompoundPointInsertionHandler {
                 UserRepository.getInstance().getItemByID(userID),
                 compoundPointIF
         );
-        return ApprovalRequestRepository.getInstance()
+        return RequestRepository.getInstance()
                 .add(RequestFactory.getApprovalRequest(compoundPoint)).getID();
     }
 
