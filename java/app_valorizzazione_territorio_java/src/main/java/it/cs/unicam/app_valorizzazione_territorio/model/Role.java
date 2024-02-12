@@ -28,12 +28,12 @@ public record Role(Municipality municipality, AuthorizationEnum authorizationEnu
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Role role = (Role) obj;
-        return municipality.equals(role.municipality) && roleTypeEnum == role.roleTypeEnum;
+        return municipality.equals(role.municipality) && authorizationEnum == role.authorizationEnum;
     }
 
     @Override
     public int hashCode() {
-        return 31 * municipality.hashCode() + roleTypeEnum.hashCode();
+        return 31 * municipality.hashCode() + authorizationEnum.hashCode();
     }
 
 }

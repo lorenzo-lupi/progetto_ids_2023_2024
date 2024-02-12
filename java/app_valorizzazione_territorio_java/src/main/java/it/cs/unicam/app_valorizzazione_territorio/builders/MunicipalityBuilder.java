@@ -60,7 +60,12 @@ public class MunicipalityBuilder {
         return coordinatesBox;
     }
 
-    public MunicipalityBuilder buildFile(File file) {
+    public MunicipalityBuilder buildFiles(List<File> files) {
+        this.files = files;
+        return this;
+    }
+
+    public MunicipalityBuilder addFile(File file) {
         this.files.add(file);
         return this;
     }

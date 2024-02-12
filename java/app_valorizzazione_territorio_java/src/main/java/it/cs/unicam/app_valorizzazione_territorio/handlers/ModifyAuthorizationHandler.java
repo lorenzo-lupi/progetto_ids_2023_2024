@@ -5,7 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
@@ -37,7 +37,7 @@ public class ModifyAuthorizationHandler {
 
     private static boolean isAdministrator(User user, Municipality municipality) {
         return user.getAuthorizations(municipality).stream()
-                .anyMatch(a -> a.equals(RoleTypeEnum.ADMINISTRATOR));
+                .anyMatch(a -> a.equals(AuthorizationEnum.ADMINISTRATOR));
     }
 
 

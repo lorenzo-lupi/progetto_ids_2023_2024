@@ -1,8 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
-import it.cs.unicam.app_valorizzazione_territorio.model.RoleTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
@@ -23,8 +24,8 @@ public class PromotionRequestHandler {
      * @return the possible promotions
      */
     public static List<String> obtainPossiblePromotions() {
-        return Arrays.stream(RoleTypeEnum.values())
-                .filter(p -> !p.equals(RoleTypeEnum.ADMINISTRATOR))
+        return Arrays.stream(AuthorizationEnum.values())
+                .filter(p -> !p.equals(AuthorizationEnum.ADMINISTRATOR))
                 .map(Enum::toString)
                 .toList();
     }
@@ -39,7 +40,7 @@ public class PromotionRequestHandler {
      */
     public static long insertPromotionRequest(long userId,
                                               long municipalityId,
-                                              RoleTypeEnum roleType,
+                                              AuthorizationEnum roleType,
                                               String message) {
         if (roleType == null || message == null)
             throw new IllegalArgumentException("parameters can't be null");

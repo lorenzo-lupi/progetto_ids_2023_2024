@@ -11,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.ActivityTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
@@ -35,6 +36,7 @@ public class SampleRepositoryProvider {
     private static boolean municipalitiesAreSetUp = false;
     private static boolean usersAreSetUp = false;
     private static boolean requestsAreSetUp = false;
+    private static boolean messagesAreSetUp = false;
 
     public static final List<Municipality> municipalities = new ArrayList<>();
     public static final List<User> users = new ArrayList<>();
@@ -42,6 +44,7 @@ public class SampleRepositoryProvider {
     public static final List<Contest> contests = new ArrayList<>();
     public static final List<Content> contents = new ArrayList<>();
     public static final List<Request> requests = new ArrayList<>();
+    public static final List<Message> messages = new ArrayList<>();
 
     static {
         createObjects();
@@ -236,6 +239,12 @@ public class SampleRepositoryProvider {
                 RequestFactory.getApprovalRequest(contents.get(11))
         ));
 
+        messages.addAll(Arrays.asList(
+                new Message("Mario Rossi", "mario.rossi@email.com",
+                        "Testo del messaggio", new Date(124, 0, 1), new ArrayList<>()),
+                new Message("Luigi Bianchi", "luigi.bianchi@email.it",
+                        "Testo del messaggio", new Date(124, 0, 21), new ArrayList<>())));
+
 
         UNIVERSITY_CAMERINO = geoLocatables.get(0);
         VIA_MADONNA_CARCERI = geoLocatables.get(1);
@@ -351,10 +360,18 @@ public class SampleRepositoryProvider {
         }
     }
 
+    public static void setUpMessagesRepository() {
+        if (!messagesAreSetUp) {
+            MessageRepository.getInstance().addAll(messages);
+            messagesAreSetUp = true;
+        }
+    }
+
     public static void setUpAllRepositories() {
         setUpMunicipalitiesRepository();
         setUpUsersRepository();
         setUpRequest5esRepositories();
+        setUpMessagesRepository();
     }
 
     public static void clearAndSetUpRepositories() {
@@ -377,10 +394,16 @@ public class SampleRepositoryProvider {
         requestsAreSetUp = false;
     }
 
+    public static void clearMessagesRepository() {
+        MessageRepository.getInstance().clear();
+        messagesAreSetUp = false;
+    }
+
     public static void clearAllRepositories() {
         clearMunicipalitesRepository();
         clearUsersRepository();
         clearRequestsRepositories();
+        clearMessagesRepository();
         clearObjects();
         createObjects();
     }

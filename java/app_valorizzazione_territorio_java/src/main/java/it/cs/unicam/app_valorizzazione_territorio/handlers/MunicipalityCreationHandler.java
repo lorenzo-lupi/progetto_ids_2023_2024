@@ -22,9 +22,9 @@ public class MunicipalityCreationHandler {
         builder.buildName(municipalityIF.name())
                 .buildDescription(municipalityIF.description())
                 .buildPosition(municipalityIF.position())
-                .buildCoordinatesBox(municipalityIF.coordinatesBox());
-        for (File file : municipalityIF.files()) builder.buildFile(file);
-        builder.build();
+                .buildCoordinatesBox(municipalityIF.coordinatesBox())
+                .buildFiles(municipalityIF.files().stream().toList())
+                .build();
 
         MunicipalityRepository.getInstance().add(builder.obtainResult());
         return builder.obtainResult().getID();
