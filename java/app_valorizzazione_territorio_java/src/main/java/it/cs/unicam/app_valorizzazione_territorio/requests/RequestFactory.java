@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.requests;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Deletable;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
@@ -367,6 +368,7 @@ public class RequestFactory {
     public static Request<ContestContent> getDeletionRequest(User user, ContestContent item, String message) {
         return new ContestRequest(user, new DeletionCommand<>(item), message);
     }
+
 
     /**
      * Returns a request for the promotion of a user to a role.

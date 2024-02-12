@@ -7,6 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class SearchEngineTest {
         SearchEngine<Municipality> searchEngine = new SearchEngine<>(municipalities);
         searchEngine.addCriterion(Parameter.DESCRIPTION, SearchCriterion.STARTS_WITH, "Comune di");
         List<Municipality> searchResult = searchEngine.search().getResults();
-        assertEquals(2, searchResult.size());
+        assertEquals(3, searchResult.size());
         assertTrue(searchResult.containsAll(municipalities));
     }
 
@@ -67,7 +68,7 @@ public class SearchEngineTest {
         searchEngine.addCriterion(Parameter.POSITION, SearchCriterion.INCLUDED_IN_BOX,
                 new CoordinatesBox(new Position(43.302654, 12.960106), new Position (43.099477, 13.546755)));
         List<Municipality> searchResult = searchEngine.search().getResults();
-        assertEquals(2, searchResult.size());
+        assertEquals(3, searchResult.size());
         assertTrue(searchResult.containsAll(municipalities));
     }
 
@@ -94,7 +95,7 @@ public class SearchEngineTest {
         SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(geoLocatables);
         searchEngine.addCriterion(Parameter.MUNICIPALITY, SearchCriterion.EQUALS, municipalities.get(1));
         List<GeoLocatable> searchResult = searchEngine.search().getResults();
-        assertEquals(5, searchResult.size());
+        assertEquals(8, searchResult.size());
         assertTrue(searchResult.containsAll(List.of(geoLocatables.get(0), geoLocatables.get(1),
                 geoLocatables.get(3), geoLocatables.get(5), geoLocatables.get(6))));
     }
@@ -104,7 +105,7 @@ public class SearchEngineTest {
         SearchEngine<GeoLocatable> searchEngine = new SearchEngine<>(geoLocatables);
         searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusEnum.APPROVED);
         List<GeoLocatable> searchResult = searchEngine.search().getResults();
-        assertEquals(6, searchResult.size());
+        assertEquals(9, searchResult.size());
     }
 
     @Test

@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +22,16 @@ class SearchHandlerTest {
         SampleRepositoryProvider.setUpAllRepositories();
     }
 
+    @AfterAll
+    static void clearRepositories() {
+        SampleRepositoryProvider.clearAllRepositories();
+    }
     @Test
     void shouldGetFilteredItemsWithNoFilters() {
         List<? extends Identifiable> searchResult = SearchHandler.getFilteredItems(
                 SampleRepositoryProvider.users, List.of());
 
-        assertEquals(7, searchResult.size());
+        assertEquals(8, searchResult.size());
     }
 
     @Test

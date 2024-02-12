@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,6 +17,10 @@ class RequestEvaluationHandlerTest {
     void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
         entertainerID = SampleRepositoryProvider.ENTERTAINER_TEST.getID();
+    }
+    @AfterAll
+    static void clearRepositories() {
+        SampleRepositoryProvider.clearAllRepositories();
     }
 
     @Test

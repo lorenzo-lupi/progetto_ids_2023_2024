@@ -2,11 +2,13 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
+
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
@@ -25,9 +27,15 @@ public class ModifyAuthorizationHandler {
      * @param newRole the new role
      * @throws UnsupportedOperationException if the user is not an administrator of the municipality
      */
-    public static void modifyAuthorization(long administratorID, long userID, Role newRole) {
-        User administrator = UserRepository.getInstance().getItemByID(administratorID);
-        User user = UserRepository.getInstance().getItemByID(userID);
+    public static void modifyAuthorization(long administratorID, long userID, long municipalityID, AuthorizationEnum newRole) {
+        modifyAuthorization(UserRepository.getInstance().getItemByID(administratorID),
+                UserRepository.getInstance().getItemByID(userID),
+                new Role(MunicipalityRepository.getInstance().getItemByID(municipalityID), newRole));
+    }
+
+    private static void modifyAuthorization(User administrator, User user, Role newRole) {
+        if(newRole == null)
+            throw new IllegalArgumentException("Role can't be null");
 
         if (!isAdministrator(administrator, newRole.municipality()))
             throw new UnsupportedOperationException("User is not an administrator of the municipality");
@@ -39,6 +47,8 @@ public class ModifyAuthorizationHandler {
         return user.getAuthorizations(municipality).stream()
                 .anyMatch(a -> a.equals(AuthorizationEnum.ADMINISTRATOR));
     }
+
+
 
 
     /**

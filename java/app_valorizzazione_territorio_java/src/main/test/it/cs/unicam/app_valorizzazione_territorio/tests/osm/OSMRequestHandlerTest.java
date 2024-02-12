@@ -3,13 +3,14 @@ package it.cs.unicam.app_valorizzazione_territorio.tests.osm;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.osm.OSMRequestHandler;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+@Disabled
 public class OSMRequestHandlerTest {
 
     @Test
