@@ -22,7 +22,7 @@ import java.util.*;
 public class SampleRepositoryProvider {
 
     public static Municipality MACERATA, CAMERINO, COMUNE_DEI_TEST;
-    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST;
+    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
     public static Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
@@ -77,7 +77,8 @@ public class SampleRepositoryProvider {
                 /* 3 */   new User("Pinco03", "pinco03@bitmail.it"),              //CURATOR_CAMERINO
                 /* 4 */     new User("Pallo04", "pallo04@blobmail.com"),            //ENTERTAINER_MACERATA
                 /* 5 */   new User("MarioRossi05", "mario.rossi06@blobmail.com"), //ENTERTAINER_CAMERINO
-                /* 6 */   new User("Zeb89", "mario.rossi06@blobmailcom") //ENTERTAINER_TEST
+                /* 6 */   new User("Zeb89", "mario.rossi06@blobmailcom"), //ENTERTAINER_TEST
+                /* 7*/    new User("Admin", "ace.gamer@nonpagotasseinitalia.mt") //ADMINISTRATOR_CAMERINO
         ));
 
         MACERATA = municipalities.get(0);
@@ -91,11 +92,13 @@ public class SampleRepositoryProvider {
         ENTERTAINER_MACERATA = users.get(4);
         ENTERTAINER_CAMERINO = users.get(5);
         ENTERTAINER_TEST = users.get(6);
+        ADMINISTRATOR_CAMERINO = users.get(7);
 
         CURATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.CURATOR);
         ENTERTAINER_MACERATA.addRole(MACERATA, AuthorizationEnum.ENTERTAINER);
         ENTERTAINER_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ENTERTAINER);
         ENTERTAINER_TEST.addRole(COMUNE_DEI_TEST, AuthorizationEnum.ENTERTAINER);
+        ADMINISTRATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ADMINISTRATOR);
 
         geoLocatables.addAll(Arrays.asList(
                 //0 //UNIVERSITY_CAMERINO //Municiplaity: Camerino
