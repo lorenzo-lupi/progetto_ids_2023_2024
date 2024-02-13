@@ -10,6 +10,9 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 /**
  * This class represents a factory for creating requests, providing a set of methods to create
@@ -131,18 +134,16 @@ public class RequestFactory {
      * and the sender is automatically set to the user who made the item.
      *
      * @param item the item to be modified
-     * @param parameter the parameter of th item to be modified
-     * @param value the new value of the parameter
+     * @param pairs the pairs of parameter and value to be modified
      * @return the request for the modification of the item
      * @param <T> the type of the item to be modified
      */
     public static <T extends Visualizable & Approvable> Request<?> getModificationRequest(T item,
-                                                                                         Parameter parameter,
-                                                                                         Object value) {
+                                                                                          List<Pair<Parameter, Object>> pairs) {
         if (item instanceof GeoLocatable g) {
-            return getModificationRequest(g, parameter, value);
+            return getModificationRequest(g, pairs);
         } else if (item instanceof Content<?> c) {
-            return getModificationRequest(c, parameter, value);
+            return getModificationRequest(c, pairs);
         }
         else throw new IllegalArgumentException("Unsupported item type");
     }
@@ -153,14 +154,12 @@ public class RequestFactory {
      * set to the user who made the item.
      *
      * @param item the geo-locatable item to be modified
-     * @param parameter the parameter of th item to be modified
-     * @param value the new value of the parameter
+     * @param pairs the pairs of parameter and value to be modified
      * @return the request for the modification of the item
      */
     public static Request<GeoLocatable> getModificationRequest(GeoLocatable item,
-                                                               Parameter parameter,
-                                                               Object value) {
-        return getModificationRequest(item, parameter, value, "");
+                                                               List<Pair<Parameter, Object>> pairs) {
+        return getModificationRequest(item, pairs, "");
     }
 
     /**
@@ -169,20 +168,19 @@ public class RequestFactory {
      * set to the user who made the item.
      *
      * @param item the geo-locatable item to be modified
-     * @param parameter the parameter of th item to be modified
-     * @param value the new value of the parameter
+     * @param pairs the pairs of parameter and value to be modified
      * @param message the message of the request
      * @return the request for the modification of the item
      */
     public static Request<GeoLocatable> getModificationRequest(GeoLocatable item,
-                                                               Parameter parameter,
-                                                               Object value,
+                                                               List<Pair<Parameter, Object>> pairs,
                                                                String message) {
         return new MunicipalityRequest<>(item.getUser(),
-                new ModificationCommand<>(item, parameter, value),
+                new ModificationCommand<>(item, pairs),
                 item.getMunicipality(),
                 message);
     }
+
 
     /**
      * Returns a request for the modification of a content item.
@@ -190,15 +188,15 @@ public class RequestFactory {
      * and the sender is automatically set to the user who made the item.
      *
      * @param item the content item to be modified
-     * @param parameter the parameter of the item to be modified
-     * @param value the new value of the parameter
+     * @param pairs the pairs of parameter and value to be modified
      * @return the request for the modification of the item
      */
     public static Request<? extends Content<?>> getModificationRequest(Content<?> item,
-                                                                       Parameter parameter,
-                                                                       Object value) {
-        return getModificationRequest(item, parameter, value, "");
+                                                                       List<Pair<Parameter, Object>> pairs) {
+        return getModificationRequest(item, pairs,  "");
     }
+
+
 
     /**
      * Returns a request for the modification of a content item with the given request message.
@@ -206,22 +204,22 @@ public class RequestFactory {
      * and the sender is automatically set to the user who made the item.
      *
      * @param item the content item to be modified
-     * @param parameter the parameter of the item to be modified
-     * @param value the new value of the parameter
+     *  @param pairs the pairs of parameter and value to be modified
      * @param message the message of the request
      * @return the request for the modification of the item
      */
     public static Request<? extends Content<?>> getModificationRequest(Content<?> item,
-                                                                       Parameter parameter,
-                                                                       Object value,
+                                                                       List<Pair<Parameter, Object>> pairs,
                                                                        String message) {
         if (item instanceof PointOfInterestContent c) {
-            return getModificationRequest(c, parameter, value, message);
+            return getModificationRequest(c, pairs, message);
         } else if (item instanceof ContestContent c) {
-            return getModificationRequest(c, parameter, value, message);
+            return getModificationRequest(c, pairs, message);
         }
         else throw new IllegalArgumentException("Unsupported content type");
     }
+
+
 
     /**
      * Returns a request for the modification of a point of interest content item with the given request message.
@@ -229,17 +227,15 @@ public class RequestFactory {
      * set to the user who made the item.
      *
      * @param item the point of interest content item to be modified
-     * @param parameter the parameter of the item to be modified
-     * @param value the new value of the parameter
+     * @param pairs the pairs of parameter and value to be modified
      * @param message the message of the request
      * @return the request for the modification of the item
      */
     public static Request<PointOfInterestContent> getModificationRequest(PointOfInterestContent item,
-                                                                         Parameter parameter,
-                                                                         Object value,
+                                                                         List<Pair<Parameter, Object>> pairs,
                                                                          String message) {
         return new MunicipalityRequest<>(item.getUser(),
-                new ModificationCommand<>(item, parameter, value),
+                new ModificationCommand<>(item, pairs),
                 item.getHost().getMunicipality(),
                 message);
     }
@@ -250,17 +246,15 @@ public class RequestFactory {
      * set to the user who made the item.
      *
      * @param item the contest content item to be modified
-     * @param parameter the parameter of the item to be modified
-     * @param value the new value of the parameter
+     * @param pairs the pairs of parameter and value to be modified
      * @param message the message of the request
      * @return the request for the modification of the item
      */
     public static Request<ContestContent> getModificationRequest(ContestContent item,
-                                                                 Parameter parameter,
-                                                                 Object value,
+                                                                 List<Pair<Parameter, Object>> pairs,
                                                                  String message) {
         return new ContestRequest(item.getUser(),
-                new ModificationCommand<>(item, parameter, value),
+                new ModificationCommand<>(item, pairs),
                 message);
     }
 
