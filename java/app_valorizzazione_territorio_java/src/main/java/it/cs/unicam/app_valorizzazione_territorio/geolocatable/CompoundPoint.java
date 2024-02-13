@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.CompoundPointDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -105,8 +107,18 @@ public class CompoundPoint extends GeoLocatable {
     }
 
     @Override
-    public Identifiable getDetailedFormat() {
-        //TODO
-        return null;
+    public CompoundPointDOF getDetailedFormat() {
+        return new CompoundPointDOF(this.getID(),
+                this.getName(),
+                this.getDescription(),
+                this.type,
+                this.getGeoLocatableSOFList()
+                );
+    }
+
+    private List<GeoLocatableSOF> getGeoLocatableSOFList() {
+        List<GeoLocatableSOF> geoLocatableSOF = new LinkedList<>();
+        this.pointsOfInterest.forEach(pointOfInterest -> geoLocatableSOF.add(pointOfInterest.getSynthesizedFormat()));
+        return geoLocatableSOF;
     }
 }
