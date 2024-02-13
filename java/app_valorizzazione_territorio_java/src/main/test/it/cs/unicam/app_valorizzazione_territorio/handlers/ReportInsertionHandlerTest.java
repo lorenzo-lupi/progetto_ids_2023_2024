@@ -12,12 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.*;
-/*
-        ((PointOfInterest) CORSA_SPADA).addContent((PointOfInterestContent) MANIFESTO_CORSA_SPADA);
-        MANIFESTO_CORSA_SPADA.approve();
 
-        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent) FOTO_STRADE_MACERATA);
- */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReportInsertionHandlerTest {
     @BeforeAll
@@ -30,7 +25,7 @@ class ReportInsertionHandlerTest {
     }
     @Test
     void testCreateReportForGeoLocatable() {
-        long reportId = ReportInsertionHandler.insertGeoLocatableReport(SampleRepositoryProvider.TURIST_1.getID(),
+        long reportId = ReportInsertionHandler.insertGeoLocatableReport(
                 SampleRepositoryProvider.GAS_FACILITY.getID(),
                 "Gas Facility è gestita dall'ERDIS"
                 );
@@ -41,7 +36,7 @@ class ReportInsertionHandlerTest {
 
     @Test
     void testCreateReportForPointOfInterestContent() {
-        long reportId = ReportInsertionHandler.insertPointerOfInterestReport(SampleRepositoryProvider.TURIST_1.getID(),
+        long reportId = ReportInsertionHandler.insertPointerOfInterestReport(
                 SampleRepositoryProvider.MANIFESTO_CORSA_SPADA.getID(),
                 "test"
         );
@@ -56,7 +51,7 @@ class ReportInsertionHandlerTest {
 
     @Test
     void testCreateReportForContestContent() {
-        long reportId = ReportInsertionHandler.insertContentContestReport(SampleRepositoryProvider.TURIST_1.getID(),
+        long reportId = ReportInsertionHandler.insertContentContestReport(
                 SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID(),
                 "test"
         );

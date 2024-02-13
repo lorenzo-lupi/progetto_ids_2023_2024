@@ -22,53 +22,49 @@ public class ReportInsertionHandler {
 
     /**
      * This method creates a new report for a GeoLocatable object.
-     * @param userID the id of the user who creates the report
      * @param objectID the id of the object to report
      * @param description the description of the report
      * @return the id of the report
      */
-    public static long insertGeoLocatableReport(long userID,
-                                                long objectID,
+    public static long insertGeoLocatableReport(long objectID,
                                                 String description){
             if(!MunicipalityRepository.getInstance().containsGeoLocatable(objectID))
                 throw new IllegalArgumentException("GeoLocatable not found");
             GeoLocatable item = MunicipalityRepository.getInstance().getGeoLocatableByID(objectID);
-            return addReport(RequestFactory.getDeletionRequest(getUser(userID), item, description));
+            return addReport(RequestFactory.getDeletionRequest(item, description));
     }
 
     /**
      * This method creates a new report for a PointOfInterestContent object.
-     * @param userID the id of the user who creates the report
      * @param objectID the id of the object to report
      * @param description the description of the report
      * @return the id of the report
      */
-    public static long insertPointerOfInterestReport(long userID,
-                                                     long objectID,
+    public static long insertPointerOfInterestReport(
+             long objectID,
                                                      String description){
         if(!MunicipalityRepository.getInstance().containsContent(objectID))
             throw new IllegalArgumentException("Content not found");
         if(!(MunicipalityRepository.getInstance().getContentByID(objectID) instanceof PointOfInterestContent item))
             throw new IllegalArgumentException("Content is not a PointOfInterestContent");
-        return addReport(RequestFactory.getDeletionRequest(getUser(userID), item, description));
+        return addReport(RequestFactory.getDeletionRequest(item, description));
 
     }
 
     /**
      * This method creates a new report for a ContestContent object.
-     * @param userID the id of the user who creates the report
      * @param objectID the id of the object to report
      * @param description the description of the report
      * @return the id of the report
      */
-    public static long insertContentContestReport(long userID,
+    public static long insertContentContestReport(
                                                   long objectID,
                                                   String description){
         if(!MunicipalityRepository.getInstance().containsContent(objectID))
             throw new IllegalArgumentException("Content not found");
         if(!(MunicipalityRepository.getInstance().getContentByID(objectID) instanceof ContestContent item))
             throw new IllegalArgumentException("Content is not a ContestContent");
-        return addReport(RequestFactory.getDeletionRequest(getUser(userID), item, description));
+        return addReport(RequestFactory.getDeletionRequest(item, description));
     }
 
     private static long addReport(Request<?> request){

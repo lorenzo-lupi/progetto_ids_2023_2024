@@ -288,6 +288,18 @@ public class RequestFactory {
     }
 
     /**
+     * Returns a request for the deletion of a geo-locatable item.
+     * The request is addressed to the municipality of the item, and the sender is not set.
+     *
+     * @param item the geo-locatable item to be deleted
+     * @param message the message of the request
+     * @return the request for the deletion of the item
+     */
+    public static Request<GeoLocatable> getDeletionRequest(GeoLocatable item, String message) {
+        return getDeletionRequest(null, item, message);
+    }
+
+    /**
      * Returns a request for the deletion of a geo-locatable item from the given user with the given request message.
      * The request is addressed to the municipality of the item.
      *
@@ -316,6 +328,18 @@ public class RequestFactory {
     }
 
     /**
+     * Returns a request for the deletion of a content item.
+     * The request is addressed to the municipality or the contest of the item, depending on its type,
+     * and the sender is not set.
+     *
+     * @param item the content item to be deleted
+     * @return the request for the deletion of the item
+     */
+    public static Request<? extends Content<?>> getDeletionRequest(Content<?> item, String message) {
+        return getDeletionRequest(null, item, message);
+    }
+
+    /**
      * Returns a request for the deletion of a content item from the given user with the given request message.
      * The request is addressed to the municipality or the contest of the item, depending on its type.
      *
@@ -331,6 +355,19 @@ public class RequestFactory {
             return getDeletionRequest(user, c, message);
         }
         else throw new IllegalArgumentException("Unsupported content type");
+    }
+
+    /**
+     * Returns a request for the deletion of a point of interest content item from the given user
+     * with the given request message.
+     * The request is addressed to the municipality of the item.
+
+     * @param item the point of interest content item to be deleted
+     * @param message the message of the request
+     * @return the request for the deletion of the item
+     */
+    public static Request<PointOfInterestContent> getDeletionRequest(PointOfInterestContent item, String message) {
+        return getDeletionRequest(null, item, message);
     }
 
     /**
