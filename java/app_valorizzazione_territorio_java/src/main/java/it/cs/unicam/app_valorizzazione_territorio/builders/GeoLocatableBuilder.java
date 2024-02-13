@@ -32,11 +32,11 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      *
      * @return the municipality of the CompoundPoint
      */
-    protected Municipality getMunicipality() {
+    public Municipality getMunicipality() {
         return municipality;
     }
 
-    protected User getUser(){
+    public User getUser(){
         return this.user;
     }
 

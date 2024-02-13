@@ -140,7 +140,7 @@ public class OSMRequestHandler {
 
     private String parseMunicipalityFromNominatimResponse(String response) {
         return response.indexOf("\"town\":") != -1 ?
-                response.substring(response.indexOf("\"town\":") + 8, response.indexOf(",\"county\"")) :
+                response.substring(response.indexOf("\"town\":") + 8, response.indexOf("\",\"county\"")) :
                 "";
     }
 }

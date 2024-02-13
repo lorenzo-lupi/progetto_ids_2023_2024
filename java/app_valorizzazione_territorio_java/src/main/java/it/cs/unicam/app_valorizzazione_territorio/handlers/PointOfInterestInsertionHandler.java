@@ -18,6 +18,8 @@ import java.io.IOException;
  */
 public class PointOfInterestInsertionHandler {
 
+    private static final MapProvider mapProvider = new MapProviderBase();
+
     /**
      * Inserts the given point of interest in the municipality corresponding to the given ID.
      *
@@ -35,6 +37,16 @@ public class PointOfInterestInsertionHandler {
         builder.setTitle(poiIF.name())
                 .setDescription(poiIF.description());
         poiIF.images().forEach(builder::addImage);
+
+        MapProvider mapProvider = new MapProviderBase();
+
+        try {
+            if (!builder.getMunicipality().equals(mapProvider.getMunicipalityByPosition(poiIF.position())))
+                throw new IllegalArgumentException("The position is not in the municipality");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error while checking the position");
+        }
+
         builder.setPosition(poiIF.position())
                 .setClassification(PointOfInterest.stringToClass.get(poiIF.classification()));
 
