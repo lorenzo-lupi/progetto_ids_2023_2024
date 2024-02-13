@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SMTPRequestHandler;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
@@ -29,7 +30,9 @@ public class MunicipalityAdminGenerationHandler {
         User municipalityAdmin = new User(municipality.getName() + "Admin", email, password);
         municipalityAdmin.addRole(new Role(municipality, AuthorizationEnum.ADMINISTRATOR));
 
-        //TODO: inviare email
+        //Google Workspace account needed
+        //SMTPRequestHandler.sendEmail(email, "Credenziali di accesso",
+        //   "Username: " + municipalityAdmin.getUsername() + "\nPassword: " + password);
 
         UserRepository.getInstance().add(municipalityAdmin);
         return municipalityAdmin.getID();
