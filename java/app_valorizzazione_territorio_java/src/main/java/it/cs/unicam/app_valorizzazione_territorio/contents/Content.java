@@ -11,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class represent a set of logically coherent information that can contain multimedia files and
@@ -18,11 +19,11 @@ import java.util.Map;
  *
  * @param <V> the type of the content host
  */
-public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Approvable, Searchable, Visualizable{
+public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable{
+    private final User user;
     private String description;
     private final List<File> files;
     private ApprovalStatusEnum approvalStatus;
-    private final User user;
 
     private final long ID = MunicipalityRepository.getInstance().getNextContentID();
 
@@ -76,7 +77,7 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
      * Removes a file from the content.
      *
      * @param file the file to removed
-     * @return
+     * @return true if the file was removed, false otherwise
      */
     public boolean removeFile(File file) {
         return this.files.remove(file);
@@ -114,6 +115,13 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     @Override
     public ApprovalStatusEnum getApprovalStatus() {
         return this.approvalStatus;
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        return Map.of(Parameter.DESCRIPTION, toObjectSetter(this::setDescription, String.class),
+                Parameter.ADD_FILE, toObjectSetter(this::addFile, File.class),
+                Parameter.REMOVE_FILE, toObjectSetter(this::removeFile, File.class));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.builders.GeoLocatableBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -10,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class represents a generic geo-localizable object, that is a physical point associated
@@ -17,7 +19,7 @@ import java.util.Map;
  * It includes fundamental details such as a name, a textual description and a representative
  * multimedia content.
  */
-public abstract class GeoLocatable implements Approvable, Searchable, Visualizable, Positionable {
+public abstract class GeoLocatable implements Requestable, Searchable, Positionable, Deletable {
     private final User user;
     private String name;
     private String description;
@@ -117,6 +119,8 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
         return this.images.add(image);
     }
 
+
+
     /**
      * Removes a representative multimedia content from the geo-localizable object.
      *
@@ -148,6 +152,20 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     }
 
     @Override
+    public Runnable getDeletionAction() {
+        return () -> {this.getMunicipality().removeGeoLocatable(this);
+        MunicipalityRepository.getInstance().removeGeoLocatable(this);};
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        return Map.of(Parameter.NAME, toObjectSetter(this::setName, String.class),
+                Parameter.DESCRIPTION, toObjectSetter(this::setDescription, String.class),
+                Parameter.ADD_FILE, toObjectSetter(this::addImage, File.class),
+                Parameter.REMOVE_FILE, toObjectSetter(this::removeImage, File.class));
+    }
+
+    @Override
     public Map<Parameter, Object> getParametersMapping() {
         return Map.of(Parameter.NAME, this.getName(),
                 Parameter.DESCRIPTION, this.getDescription(),
@@ -174,4 +192,5 @@ public abstract class GeoLocatable implements Approvable, Searchable, Visualizab
     public boolean equals(Object obj) {
         return equalsID(obj);
     }
+
 }

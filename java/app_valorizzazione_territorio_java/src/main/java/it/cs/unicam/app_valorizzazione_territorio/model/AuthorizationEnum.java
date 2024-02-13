@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * This enum represents the authorizations that a user can have in a municipality.
  */
-public enum RoleTypeEnum {
+public enum AuthorizationEnum {
     CONTRIBUTOR,
     ENTERTAINER,
     CURATOR,

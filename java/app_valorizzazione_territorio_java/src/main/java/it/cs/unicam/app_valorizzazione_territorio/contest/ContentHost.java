@@ -27,4 +27,6 @@ public interface ContentHost<V extends ContentHost<V> & Visualizable> extends Id
      default Collection<? extends Content<V>> getApprovedContents(){
         return getContents().stream().filter(Content::isApproved).toList();
      }
+
+
 }

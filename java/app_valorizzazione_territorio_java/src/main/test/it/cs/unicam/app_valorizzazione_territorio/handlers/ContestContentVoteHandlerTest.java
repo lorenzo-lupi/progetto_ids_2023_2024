@@ -3,9 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -24,7 +22,10 @@ class ContestContentVoteHandlerTest {
     void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
     }
-
+    @AfterAll
+    static void clearRepositories() {
+        SampleRepositoryProvider.clearAllRepositories();
+    }
     @Test
     void viewAllProposals() {
         assertTrue(
@@ -65,7 +66,7 @@ class ContestContentVoteHandlerTest {
     }
 
 
-    void removeVote() {
+    static void removeVote() {
         ContestContentVoteHandler.removeVote(SampleRepositoryProvider.TURIST_2.getID(),
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
         ContestContentVoteHandler.removeVote(SampleRepositoryProvider.TURIST_1.getID(),

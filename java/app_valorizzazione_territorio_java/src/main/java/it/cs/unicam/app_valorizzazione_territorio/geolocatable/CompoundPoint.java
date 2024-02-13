@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.CompoundPointDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * This class represents a compound point, i.e. a point composed by multiple points of interest objects.
@@ -62,18 +65,20 @@ public class CompoundPoint extends GeoLocatable {
         return type;
     }
 
-
     public List<PointOfInterest> getGeoLocalizablesList() {
         return pointsOfInterest.stream().toList();
     }
 
+    public void addPointOfInterest(PointOfInterest pointOfInterest) {
+        if (pointOfInterest == null)
+            throw new IllegalArgumentException("pointOfInterest cannot be null");
+        this.pointsOfInterest.add(pointOfInterest);
+    }
 
-    @Override
-    public Map<Parameter, Object> getParametersMapping() {
-        Map<Parameter, Object> parameters
-                = new HashMap<>(super.getParametersMapping());
-        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
-        return parameters;
+    public void removePointOfInterest(PointOfInterest pointOfInterest) {
+        if (pointOfInterest == null)
+            throw new IllegalArgumentException("pointOfInterest cannot be null");
+        this.pointsOfInterest.remove(pointOfInterest);
     }
 
     @Override
@@ -85,10 +90,35 @@ public class CompoundPoint extends GeoLocatable {
                 .orElseThrow();
     }
 
+    @Override
+    public Map<Parameter, Object> getParametersMapping() {
+        Map<Parameter, Object> parameters
+                = new HashMap<>(super.getParametersMapping());
+        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
+        return parameters;
+    }
 
     @Override
-    public Identifiable getDetailedFormat() {
-        //TODO
-        return null;
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        Map<Parameter, Consumer<Object>> parameters = new HashMap<>(super.getSettersMapping());
+        parameters.put(Parameter.ADD_POI, toObjectSetter(this::addPointOfInterest, PointOfInterest.class));
+        parameters.put(Parameter.REMOVE_POI, toObjectSetter(this::removePointOfInterest, PointOfInterest.class));
+        return parameters;
+    }
+
+    @Override
+    public CompoundPointDOF getDetailedFormat() {
+        return new CompoundPointDOF(this.getID(),
+                this.getName(),
+                this.getDescription(),
+                this.type,
+                this.getGeoLocatableSOFList()
+                );
+    }
+
+    private List<GeoLocatableSOF> getGeoLocatableSOFList() {
+        List<GeoLocatableSOF> geoLocatableSOF = new LinkedList<>();
+        this.pointsOfInterest.forEach(pointOfInterest -> geoLocatableSOF.add(pointOfInterest.getSynthesizedFormat()));
+        return geoLocatableSOF;
     }
 }

@@ -2,9 +2,13 @@ package it.cs.unicam.app_valorizzazione_territorio.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class represents a contest content. A ContestContent is hosted in a Contest
@@ -29,5 +33,13 @@ public class ContestContent extends Content<Contest> {
     @Override
     public Contest getHost() {
         return this.contest;
+    }
+
+    @Override
+    public Runnable getDeletionAction() {
+        return () -> {
+            this.contest.getProposalRequests().removeProposal(this);
+            MunicipalityRepository.getInstance().removeContent(this);
+        };
     }
 }

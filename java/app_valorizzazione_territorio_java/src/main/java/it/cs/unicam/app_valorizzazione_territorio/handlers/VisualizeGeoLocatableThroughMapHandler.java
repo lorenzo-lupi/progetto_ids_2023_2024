@@ -1,30 +1,27 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
+import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
+import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderProxy;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * A search handler that searches for GeoLocatable objects using a map.
  */
-public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLocatable> {
+public class VisualizeGeoLocatableThroughMapHandler {
 
     /**
-     * Creates a new search handler that searches in the given collection of searchable items.
-     * @param municipalityId the ID of the municipality to which the GeoLocatable objects are related
+     *
      */
-    public VisualizeGeoLocatableThroughMapHandler(long municipalityId) throws IOException {
-        super(MunicipalityRepository.getInstance().getItemByID(municipalityId).getGeoLocatables());
+    public static Identifiable visualizeGeoLocatable(long geoLocatableId){
+        return MunicipalityRepository.getInstance().getGeoLocatableByID(geoLocatableId).getDetailedFormat();
     }
 
     /**
@@ -34,7 +31,7 @@ public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLoc
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
     public static MapDOF handleMap(long municipalityId) throws IOException {
-        return MapProvider.getMap(MunicipalityRepository
+        return new MapProviderProxy(new MapProviderBase()).getMap(MunicipalityRepository
                 .getInstance()
                 .getItemByID(municipalityId))
                 .getDetailedFormat();
@@ -50,7 +47,7 @@ public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLoc
     public static MapDOF handleMap(long municipalityId,
                                    CoordinatesBox box) throws IOException {
 
-        return MapProvider.getMap(MunicipalityRepository
+        return new MapProviderProxy(new MapProviderBase()).getMap(MunicipalityRepository
                 .getInstance()
                 .getItemByID(municipalityId), box)
                 .getDetailedFormat();
@@ -66,7 +63,8 @@ public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLoc
     public static MapDOF handleFilteredMap(long municipalityId,
                                    List<SearchFilter> filters) throws IOException{
 
-        return MapProvider.getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), filters)
+        return new MapProviderProxy(new MapProviderBase())
+                .getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), filters)
                 .getDetailedFormat();
     }
 
@@ -82,7 +80,8 @@ public class VisualizeGeoLocatableThroughMapHandler extends SearchHandler<GeoLoc
                                    CoordinatesBox box,
                                    List<SearchFilter> filters) throws IOException{
 
-        return MapProvider.getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), box, filters)
+        return new MapProviderProxy(new MapProviderBase())
+                .getFilteredMap(MunicipalityRepository.getInstance().getItemByID(municipalityId), box, filters)
                 .getDetailedFormat();
     }
 

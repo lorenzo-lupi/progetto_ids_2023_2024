@@ -32,11 +32,11 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      *
      * @return the municipality of the CompoundPoint
      */
-    protected Municipality getMunicipality() {
+    public Municipality getMunicipality() {
         return municipality;
     }
 
-    protected User getUser(){
+    public User getUser(){
         return this.user;
     }
 
@@ -86,6 +86,16 @@ public abstract class GeoLocatableBuilder<T extends GeoLocatable> {
      */
     public GeoLocatableBuilder<T> addImage(File image) {
         this.images.add(image);
+        return this;
+    }
+
+    /**
+     * Add an image to the CompoundPoint.
+     *
+     * @param image the images to add
+     */
+    public GeoLocatableBuilder<T> addImage(List<File> image) {
+        this.images.addAll(image);
         return this;
     }
 

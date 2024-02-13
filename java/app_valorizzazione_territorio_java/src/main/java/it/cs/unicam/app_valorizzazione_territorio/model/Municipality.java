@@ -102,7 +102,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
         return this.geoLocatables.add(geoLocatable);
     }
 
-    public boolean removeGeoLocalizable(GeoLocatable geoLocatable) {
+    public boolean removeGeoLocatable(GeoLocatable geoLocatable) {
         return this.geoLocatables.remove(geoLocatable);
     }
 

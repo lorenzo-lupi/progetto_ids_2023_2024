@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 
 import java.io.File;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class PointOfInterestContent extends Content<PointOfInterest>{
 
-    private PointOfInterest poi;
+    private final PointOfInterest poi;
 
     /**
      * Constructor for a content.
@@ -37,5 +38,11 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
     @Override
     public PointOfInterest getHost() {
         return this.poi;
+    }
+
+    @Override
+    public Runnable getDeletionAction() {
+        return () -> {this.poi.removeContent(this);
+            MunicipalityRepository.getInstance().removeContent(this);};
     }
 }

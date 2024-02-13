@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.dtos;
+package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
@@ -21,7 +21,4 @@ public record MunicipalityIF(String name,
                             Position position,
                             CoordinatesBox coordinatesBox,
                             List<File> files) {
-    public Municipality toMunicipality() {
-        return new Municipality(this.name, this.description, this.position, this.coordinatesBox, this.files);
-    }
 }

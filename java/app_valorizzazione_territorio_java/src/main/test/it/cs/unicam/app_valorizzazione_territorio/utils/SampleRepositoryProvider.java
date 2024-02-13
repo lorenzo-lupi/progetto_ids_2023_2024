@@ -11,19 +11,19 @@ import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.ActivityTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
 
 import java.util.*;
 
 public class SampleRepositoryProvider {
 
     public static Municipality MACERATA, CAMERINO, COMUNE_DEI_TEST;
-    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST;
+    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
     public static Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
@@ -31,18 +31,20 @@ public class SampleRepositoryProvider {
             FOTO_PITTURA_2;
 
     public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
-    public static ApprovalRequest RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
+    public static Request RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
 
     private static boolean municipalitiesAreSetUp = false;
     private static boolean usersAreSetUp = false;
     private static boolean requestsAreSetUp = false;
+    private static boolean messagesAreSetUp = false;
 
     public static final List<Municipality> municipalities = new ArrayList<>();
     public static final List<User> users = new ArrayList<>();
     public static final List<GeoLocatable> geoLocatables = new ArrayList<>();
     public static final List<Contest> contests = new ArrayList<>();
     public static final List<Content> contents = new ArrayList<>();
-    public static final List<ApprovalRequest> requests = new ArrayList<>();
+    public static final List<Request> requests = new ArrayList<>();
+    public static final List<Message> messages = new ArrayList<>();
 
     static {
         createObjects();
@@ -72,13 +74,14 @@ public class SampleRepositoryProvider {
         ));
 
         users.addAll(Arrays.asList(
-                /* 0 */     new User("Pippo00", "pippo00@gmail.com"),               //TURIST_1
-                /* 1 */     new User("Pluto01", "pluto01@gmail.com"),               //TURIST_2
-                /* 2 */    new User("Paperino02", "paperino02@bitmail.it"),        //TURIST_3
-                /* 3 */   new User("Pinco03", "pinco03@bitmail.it"),              //CURATOR_CAMERINO
-                /* 4 */     new User("Pallo04", "pallo04@blobmail.com"),            //ENTERTAINER_MACERATA
-                /* 5 */   new User("MarioRossi05", "mario.rossi06@blobmail.com"), //ENTERTAINER_CAMERINO
-                /* 6 */   new User("Zeb89", "mario.rossi06@blobmailcom") //ENTERTAINER_TEST
+                /* 0 */ new User("Pippo00", "pippo00@gmail.com", "Testpassword01"),               //TURIST_1
+                /* 1 */ new User("Pluto01", "pluto01@gmail.com", "Testpassword02"),               //TURIST_2
+                /* 2 */ new User("Paperino02", "paperino02@bitmail.it", "Testpassword02"),        //TURIST_3
+                /* 3 */ new User("Pinco03", "pinco03@bitmail.it", "Testpassword03"),              //CURATOR_CAMERINO
+                /* 4 */ new User("Pallo04", "pallo04@blobmail.com", "Testpassword04"),            //ENTERTAINER_MACERATA
+                /* 5 */ new User("MarioRossi05", "mario.rossi06@blobmail.com", "Testpassword05"), //ENTERTAINER_CAMERINO
+                /* 6 */ new User("Zeb89", "mario.rossi06@blobmail.com", "Testpassword06"), //ENTERTAINER_TEST
+                /* 7*/  new User("Admin", "ace.gamer@nonpagotasseinitalia.mt", "Testpassword07") //ADMINISTRATOR_CAMERINO
         ));
 
         MACERATA = municipalities.get(0);
@@ -92,11 +95,13 @@ public class SampleRepositoryProvider {
         ENTERTAINER_MACERATA = users.get(4);
         ENTERTAINER_CAMERINO = users.get(5);
         ENTERTAINER_TEST = users.get(6);
+        ADMINISTRATOR_CAMERINO = users.get(7);
 
-        CURATOR_CAMERINO.addRole(CAMERINO, RoleTypeEnum.CURATOR);
-        ENTERTAINER_MACERATA.addRole(MACERATA, RoleTypeEnum.ENTERTAINER);
-        ENTERTAINER_CAMERINO.addRole(CAMERINO, RoleTypeEnum.ENTERTAINER);
-        ENTERTAINER_TEST.addRole(COMUNE_DEI_TEST, RoleTypeEnum.ENTERTAINER);
+        CURATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.CURATOR);
+        ENTERTAINER_MACERATA.addRole(MACERATA, AuthorizationEnum.ENTERTAINER);
+        ENTERTAINER_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ENTERTAINER);
+        ENTERTAINER_TEST.addRole(COMUNE_DEI_TEST, AuthorizationEnum.ENTERTAINER);
+        ADMINISTRATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ADMINISTRATOR);
 
         geoLocatables.addAll(Arrays.asList(
                 //0 //UNIVERSITY_CAMERINO //Municiplaity: Camerino
@@ -145,10 +150,10 @@ public class SampleRepositoryProvider {
                         (PointOfInterest) geoLocatables.get(3)),
                         new ArrayList<>(), users.get(1)),
                 //9 //GAS FACILITY
-         new Attraction("Gas facility", "Gas facility Camerino",
-                new Position(43.1450445, 13.0893363),
-                municipalities.get(1), AttractionTypeEnum.OTHER,
-                users.get(1))
+             new Attraction("Gas facility", "Gas facility Camerino",
+                    new Position(43.1450445, 13.0893363),
+                    municipalities.get(1), AttractionTypeEnum.OTHER,
+                    users.get(1))
 
         ));
 
@@ -223,16 +228,22 @@ public class SampleRepositoryProvider {
 
         requests.addAll(Arrays.asList(
                 //0 //RICHIESTA_PIAZZA_LIBERTA //User: Pippo01 //GeoLocatable: Piazza della Libertà //Municipality: Macerata
-                new MunicipalityApprovalRequest(users.get(0), geoLocatables.get(4), municipalities.get(0)),
+                RequestFactory.getApprovalRequest(geoLocatables.get(0)),
                 //1 //RICHIESTA_FOTO_BASILICA //User: Pluto02 //Content: Foto di Basilica di San Venanzio //GeoLocatable: Basilica di San Venanzio //Municipality: Camerino
-                new MunicipalityApprovalRequest(users.get(1), contents.get(0), municipalities.get(1)),
+                RequestFactory.getApprovalRequest(contents.get(0)),
                 //2 //RICHIESTA_PITTURA_CAVOUR //User: Pluto02 //Content: Pittura piazza Cavour //Contest: Concorso pittura paessaggi //Municipality: Camerino
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(9), contests.get(3)),
+                RequestFactory.getApprovalRequest(contents.get(9)),
                 //3 //NEG_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(10), contests.get(4)),
+                RequestFactory.getApprovalRequest(contents.get(10)),
                 //4 //POS_REQUEST PER REQUEST EVALUATION HANDLER TEST: PLEASE DON"T ADD NO MORE REQUESTS TO THIS CONTEST
-                new ContestApprovalRequest(users.get(1), (ContestContent) contents.get(11), contests.get(4))
+                RequestFactory.getApprovalRequest(contents.get(11))
         ));
+
+        messages.addAll(Arrays.asList(
+                new Message("Mario Rossi", "mario.rossi@email.com",
+                        "Testo del messaggio", new Date(124, 0, 1), new ArrayList<>()),
+                new Message("Luigi Bianchi", "luigi.bianchi@email.it",
+                        "Testo del messaggio", new Date(124, 0, 21), new ArrayList<>())));
 
 
         UNIVERSITY_CAMERINO = geoLocatables.get(0);
@@ -312,8 +323,8 @@ public class SampleRepositoryProvider {
         CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_1);
         FOTO_PITTURA_1.approve();
         CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_2);
-        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) POS_REQUEST.getApprovableItem());
-        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getApprovableItem());
+        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) POS_REQUEST.getItem());
+        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getItem());
 
         contests.forEach(c -> c.getMunicipality().addContest(c));
 
@@ -344,8 +355,15 @@ public class SampleRepositoryProvider {
 
     public static void setUpRequest5esRepositories() {
         if (!requestsAreSetUp) {
-            ApprovalRequestRepository.getInstance().addAll(requests);
+            RequestRepository.getInstance().addAll(requests);
             requestsAreSetUp = true;
+        }
+    }
+
+    public static void setUpMessagesRepository() {
+        if (!messagesAreSetUp) {
+            MessageRepository.getInstance().addAll(messages);
+            messagesAreSetUp = true;
         }
     }
 
@@ -353,6 +371,7 @@ public class SampleRepositoryProvider {
         setUpMunicipalitiesRepository();
         setUpUsersRepository();
         setUpRequest5esRepositories();
+        setUpMessagesRepository();
     }
 
     public static void clearAndSetUpRepositories() {
@@ -371,14 +390,20 @@ public class SampleRepositoryProvider {
     }
 
     public static void clearRequestsRepositories() {
-        ApprovalRequestRepository.getInstance().clear();
+        RequestRepository.getInstance().clear();
         requestsAreSetUp = false;
+    }
+
+    public static void clearMessagesRepository() {
+        MessageRepository.getInstance().clear();
+        messagesAreSetUp = false;
     }
 
     public static void clearAllRepositories() {
         clearMunicipalitesRepository();
         clearUsersRepository();
         clearRequestsRepositories();
+        clearMessagesRepository();
         clearObjects();
         createObjects();
     }

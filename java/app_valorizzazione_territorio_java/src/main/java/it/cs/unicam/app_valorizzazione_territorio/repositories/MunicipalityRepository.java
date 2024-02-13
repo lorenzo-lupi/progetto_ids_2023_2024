@@ -121,6 +121,25 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
+     * Returns true if the repository contains a geo-locatable point with the given ID.
+     *
+     * @param id the ID of the geo-locatable point to be checked
+     * @return true if the repository contains a geo-locatable point with the given ID
+     */
+    public boolean containsGeoLocatable(long id) {
+        return getAllGeoLocatablesMap().containsKey(id);
+    }
+
+    /**
+     * Returns true if the repository contains the given geo-locatable point.
+     * @param geoLocatable the geo-locatable point to be checked
+     * @return true if the repository contains the given geo-locatable point
+     */
+    public boolean containsGeoLocatable(GeoLocatable geoLocatable) {
+        return getAllGeoLocatablesMap().containsValue(geoLocatable);
+    }
+
+    /**
      * Returns the point of interest of the municipalities in the repository with the given ID.
      *
      * @param ID the ID of the point of interest to be returned
@@ -161,6 +180,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
         return contest;
     }
 
+
     /**
      * Returns the content of the content hosts of the municipalities in the repository with the given ID.
      *
@@ -172,6 +192,15 @@ public class MunicipalityRepository extends Repository<Municipality> {
         Content content = getAllContentsMap().get(ID);
         if(content == null) throw new IllegalArgumentException("Content not found");
         return content;
+    }
+
+    /**
+     * Returns true if the repository contains a contest with the given ID.
+     * @param id the ID of the contest to be checked
+     * @return true if the repository contains a contest with the given ID
+     */
+    public boolean containsContent(long id) {
+        return getAllContentsMap().containsKey(id);
     }
 
     /**
@@ -192,6 +221,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
         return getAllContestsMap().values().stream();
     }
 
+
     /**
      * Returns a stream of all the content of the content hosts of the municipalities in the repository.
      *
@@ -207,5 +237,23 @@ public class MunicipalityRepository extends Repository<Municipality> {
         nextGeoLocalizableID = 0L;
         nextContestID = 0L;
         nextContentID = 0L;
+    }
+
+    /**
+     * Removes a content from the repository.
+     * @param content the content to be removed
+     * @return true if the content point has been removed, false otherwise
+     */
+    public boolean removeContent(Content<?> content) {
+        return this.getAllContentsMap().remove(content.getID(), content);
+    }
+
+    /**
+     * Removes geo-locatable point to the repository.
+     * @param geoLocatable the geo-locatable point to be added
+     * @return true if the geo-locatable point has been added, false otherwise
+     */
+    public boolean removeGeoLocatable(GeoLocatable geoLocatable){
+        return this.getAllGeoLocatablesMap().remove(geoLocatable.getID(), geoLocatable);
     }
 }

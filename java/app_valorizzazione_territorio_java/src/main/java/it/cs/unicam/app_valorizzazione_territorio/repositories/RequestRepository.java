@@ -1,22 +1,20 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
-import it.cs.unicam.app_valorizzazione_territorio.requests.ApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestApprovalRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
 
-import java.util.LinkedList;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
-    private static ApprovalRequestRepository instance;
+public class RequestRepository extends Repository<Request> {
+    private static RequestRepository instance;
 
-    private ApprovalRequestRepository() {
+    private RequestRepository() {
         super();
     }
 
-    public static ApprovalRequestRepository getInstance() {
-        if (instance == null) instance = new ApprovalRequestRepository();
+    public static RequestRepository getInstance() {
+        if (instance == null) instance = new RequestRepository();
         return instance;
     }
 
@@ -26,10 +24,10 @@ public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
      * @return a stream of all the municipality approval requests n the system
      */
     @SuppressWarnings("unchecked")
-    public Stream<MunicipalityApprovalRequest> getAllMunicipalityRequests() {
-        return (Stream<MunicipalityApprovalRequest>) this.getItemStream()
-                .filter(request -> request instanceof MunicipalityApprovalRequest)
-                .map(request -> (MunicipalityApprovalRequest) request);
+    public Stream<MunicipalityRequest> getAllMunicipalityRequests() {
+        return this.getItemStream()
+                .filter(request -> request instanceof MunicipalityRequest)
+                .map(request -> (MunicipalityRequest) request);
     }
 
     /**
@@ -38,10 +36,10 @@ public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
      * @return a stream of all the contest approval requests n the system
      */
     @SuppressWarnings("unchecked")
-    public Stream<ContestApprovalRequest> getAllContestRequests() {
+    public Stream<ContestRequest> getAllContestRequests() {
         return  this.getItemStream()
-                .filter(request -> request instanceof ContestApprovalRequest)
-                .map(request -> (ContestApprovalRequest) request);
+                .filter(request -> request instanceof ContestRequest)
+                .map(request -> (ContestRequest) request);
     }
 
     /**
@@ -52,8 +50,8 @@ public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
      * @throws IllegalArgumentException if the request with the given ID is not found or if it is not a
      * municipality approval request
      */
-    public MunicipalityApprovalRequest getMunicipalityRequestByID(long requestID) {
-        if (!(this.getItemByID(requestID) instanceof MunicipalityApprovalRequest municipalityApprovalRequest))
+    public MunicipalityRequest getMunicipalityRequestByID(long requestID) {
+        if (!(this.getItemByID(requestID) instanceof MunicipalityRequest municipalityApprovalRequest))
             throw new IllegalArgumentException("The request with the given ID is not a municipality approval request");
         return municipalityApprovalRequest;
     }
@@ -66,8 +64,8 @@ public class ApprovalRequestRepository extends Repository<ApprovalRequest> {
      * @throws IllegalArgumentException if the request with the given ID is not found or if it is not a
      * contest approval request
      */
-    public ContestApprovalRequest getContestRequestByID(long requestID) {
-        if (!(this.getItemByID(requestID) instanceof ContestApprovalRequest contestApprovalRequest))
+    public ContestRequest getContestRequestByID(long requestID) {
+        if (!(this.getItemByID(requestID) instanceof ContestRequest contestApprovalRequest))
             throw new IllegalArgumentException("The request with the given ID is not a contest approval request");
         return contestApprovalRequest;
     }

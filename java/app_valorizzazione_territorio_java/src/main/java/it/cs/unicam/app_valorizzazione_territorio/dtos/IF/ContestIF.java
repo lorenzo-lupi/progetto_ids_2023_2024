@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.dtos;
+package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
 import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 

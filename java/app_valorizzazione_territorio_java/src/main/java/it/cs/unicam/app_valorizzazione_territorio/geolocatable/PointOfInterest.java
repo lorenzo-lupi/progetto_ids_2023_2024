@@ -11,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
@@ -72,9 +73,6 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         this.contents = contents;
     }
 
-
-
-
     /**
      * Returns the contents associated to the geo-locatable object.
      *
@@ -108,6 +106,13 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
         parametersMapping.put(Parameter.CLASSIFICATION, this.getClass().getSimpleName());
         return parametersMapping;
+    }
+
+    @Override
+    public Map<Parameter, Consumer<Object>> getSettersMapping() {
+        Map<Parameter, Consumer<Object>> parametersSetterMapping = new HashMap<>(super.getSettersMapping());
+        parametersSetterMapping.put(Parameter.POSITION, toObjectSetter(this::setPosition, Position.class));
+        return parametersSetterMapping;
     }
 
     @Override

@@ -99,12 +99,14 @@ public class ProposalRequests {
      * @param content the content to be removed.
      * @throws IllegalArgumentException if the content is not in the list.
      */
-    public PointOfInterestContent removeProposal(PointOfInterestContent content) {
+    public ContestContent removeProposal(ContestContent content) {
         if (content == null)
             throw new IllegalArgumentException("Content must not be null");
 
         if (!votes.containsKey(content))
             throw new IllegalArgumentException("Content not found");
+
+        votes.remove(content);
 
         return content;
     }

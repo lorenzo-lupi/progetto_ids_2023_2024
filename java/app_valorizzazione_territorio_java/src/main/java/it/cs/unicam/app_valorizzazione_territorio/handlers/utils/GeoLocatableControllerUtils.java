@@ -8,8 +8,8 @@ import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestConten
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.ApprovalRequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityApprovalRequest;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
 
 import java.util.function.Consumer;
 
@@ -52,8 +52,7 @@ public class GeoLocatableControllerUtils {
         if (Role.isAtLeastContributorForMunicipality(municipality).test(user)) {
             item.approve();
         } else {
-            ApprovalRequestRepository.getInstance().add(
-                    new MunicipalityApprovalRequest<>(user, item, municipality));
+            RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(item));
         }
     }
 
