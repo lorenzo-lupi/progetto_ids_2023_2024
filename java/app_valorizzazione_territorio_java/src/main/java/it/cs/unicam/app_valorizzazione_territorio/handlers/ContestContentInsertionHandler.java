@@ -26,7 +26,7 @@ public class ContestContentInsertionHandler {
         User user = UserRepository.getInstance().getItemByID(userID);
         Contest contest = MunicipalityRepository.getInstance().getContestByID(contestID);
 
-        ContestContent content = ContentInsertionHandler.createContent(
+        ContestContent content = ContentHandler.createContent(
                 new ContestContentBuilder(contest, user), contentIF);
 
         contest.getProposalRequests().proposeContent(content);

@@ -5,27 +5,26 @@ import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder
 import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
+import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ContentInsertionHandlerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ContentHandlerTest {
 
-    private static final ContentIF sampleContent = new ContentIF(
-            "sample description",
-            new ArrayList<>()
-    );
+    private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+    private static final RequestRepository requestRepository = RequestRepository.getInstance();
 
     @BeforeEach
     void setUpRepositories() {
@@ -33,13 +32,44 @@ class ContentInsertionHandlerTest {
     }
 
     @AfterEach
-     void clearRepositories() {
+    void clearRepositories() {
         SampleRepositoryProvider.clearAllRepositories();
     }
 
     @Test
+    void viewAllContents() {
+        SampleRepositoryProvider.clearAndSetUpRepositories();
+
+        SampleRepositoryProvider
+                .geoLocatables.stream()
+                .filter(g -> g instanceof PointOfInterest)
+                .forEach(g -> viewAllContents((PointOfInterest) g));
+
+    }
+
+    void viewAllContents(PointOfInterest geoLocatable){
+        assertEquals(ContentHandler.viewApprovedContents(geoLocatable.getID())
+                .stream()
+                .map(c  -> ContentHandler.viewContentFromRepository(c.getID()))
+                .map(ContentDOF::getID)
+                .map(id -> municipalityRepository.getContentByID(id))
+                .toList(),
+
+                geoLocatable
+                        .getApprovedContents()
+                        .stream()
+                        .toList()
+        );
+    }
+
+    private static final ContentIF sampleContent = new ContentIF(
+            "sample description",
+            new ArrayList<>()
+    );
+
+    @Test
     void shouldCreateContestContent() {
-        ContestContent content = ContentInsertionHandler.createContent(
+        ContestContent content = ContentHandler.createContent(
                 new ContestContentBuilder(SampleRepositoryProvider.CONCORSO_FOTO_2024, SampleRepositoryProvider.TURIST_1),
                 sampleContent);
 
@@ -50,7 +80,7 @@ class ContentInsertionHandlerTest {
 
     @Test
     void shouldCreatePointOfInterestContent() {
-        PointOfInterestContent content = ContentInsertionHandler.createContent(
+        PointOfInterestContent content = ContentHandler.createContent(
                 new PointOfInterestContentBuilder(
                         (PointOfInterest) SampleRepositoryProvider.CORSA_SPADA,
                         SampleRepositoryProvider.TURIST_1), sampleContent);
@@ -69,19 +99,19 @@ class ContentInsertionHandlerTest {
 
         assertEquals(3, SampleRepositoryProvider.CONCORSO_FOTO_2024.getContents().size());
         assertTrue(SampleRepositoryProvider.CONCORSO_FOTO_2024.getContents().contains(
-                MunicipalityRepository.getInstance().getContentByID(contentID)));
+                municipalityRepository.getContentByID(contentID)));
     }
 
     @Test
     void shouldInsertPointOfInterestContent() {
-        long contentID = PointOfInterestContentInsertionHandler.insertContent(
+        long contentID = ContentHandler.insertContent(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
         assertEquals(2, ((PointOfInterest)SampleRepositoryProvider.CORSA_SPADA).getContents().size());
         assertTrue(((PointOfInterest)SampleRepositoryProvider.CORSA_SPADA).getContents().contains(
-                MunicipalityRepository.getInstance().getContentByID(contentID)));
+                municipalityRepository.getContentByID(contentID)));
     }
 
     @Test
@@ -91,7 +121,7 @@ class ContentInsertionHandlerTest {
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
                 sampleContent);
 
-        List<ContestRequest> contestRequests = RequestRepository.getInstance().getAllContestRequests()
+        List<ContestRequest> contestRequests = requestRepository.getAllContestRequests()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CONCORSO_FOTO_2024.getEntertainer()))
                 .toList();
 
@@ -102,33 +132,33 @@ class ContentInsertionHandlerTest {
 
     @Test
     void shouldCreateRequestAfterPointOfInterestContentInsertion() {
-        long contentID = PointOfInterestContentInsertionHandler.insertContent(
+        long contentID = ContentHandler.insertContent(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
-        List<Request> requests = RequestRepository.getInstance().getItemStream()
+        List<Request> requests = requestRepository.getItemStream()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 
         assertEquals(3, requests.size());
-        assertTrue(RequestRepository.getInstance().getAllMunicipalityRequests().anyMatch(r -> r.getItem().getID() == contentID));
+        assertTrue(requestRepository.getAllMunicipalityRequests().anyMatch(r -> r.getItem().getID() == contentID));
         assertEquals(requests.get(1).getSender(), SampleRepositoryProvider.TURIST_1);
     }
 
     @Test
     void shouldNotCreateRequestAfterPointOfInterestContentInsertion() {
-        long contentID = PointOfInterestContentInsertionHandler.insertContent(
+        long contentID = ContentHandler.insertContent(
                 SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 SampleRepositoryProvider.CORSA_SPADA.getID(),
                 sampleContent);
 
-        List<Request> requests = RequestRepository.getInstance().getItemStream()
+        List<Request> requests = requestRepository.getItemStream()
                 .filter(r -> r.canBeApprovedBy(SampleRepositoryProvider.CURATOR_CAMERINO))
                 .toList();
 
         assertEquals(2, requests.size());
-        assertEquals(MunicipalityRepository.getInstance().getContentByID(contentID).getApprovalStatus(),
+        assertEquals(municipalityRepository.getContentByID(contentID).getApprovalStatus(),
                 ApprovalStatusEnum.APPROVED);
     }
 
