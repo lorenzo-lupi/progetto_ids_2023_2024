@@ -1,17 +1,17 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.builders.CompoundPointBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;

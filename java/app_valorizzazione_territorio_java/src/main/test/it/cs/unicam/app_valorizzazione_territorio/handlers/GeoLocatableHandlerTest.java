@@ -1,15 +1,14 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.NotEnoughGeoLocatablesException;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.Timetable;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Timetable;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;

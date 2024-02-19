@@ -1,22 +1,21 @@
 package it.cs.unicam.app_valorizzazione_territorio.utils;
 
-import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
-import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.contest.ContestBase;
-import it.cs.unicam.app_valorizzazione_territorio.contest.GeoLocatableContestDecorator;
-import it.cs.unicam.app_valorizzazione_territorio.contest.PrivateContestDecorator;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.*;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBase;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.GeoLocatableContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.PrivateContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.ActivityTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
-import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 
 import java.util.*;
 

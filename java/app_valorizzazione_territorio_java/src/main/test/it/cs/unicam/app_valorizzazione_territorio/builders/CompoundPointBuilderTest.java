@@ -1,9 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.builders;
 
-import it.cs.unicam.app_valorizzazione_territorio.builders.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.CompoundPointIsNotItineraryException;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.CompoundPointTypeEnum;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

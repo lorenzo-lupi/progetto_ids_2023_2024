@@ -1,17 +1,19 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
-import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.ContestRequest;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 
@@ -25,6 +27,8 @@ class ContentHandlerTest {
 
     private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
     private static final RequestRepository requestRepository = RequestRepository.getInstance();
+
+    private static final UserRepository userRepository = UserRepository.getInstance();
 
     @BeforeEach
     void setUpRepositories() {
@@ -160,6 +164,40 @@ class ContentHandlerTest {
         assertEquals(2, requests.size());
         assertEquals(municipalityRepository.getContentByID(contentID).getApprovalStatus(),
                 ApprovalStatusEnum.APPROVED);
+    }
+
+    @Test
+    void shouldSaveContent() {
+        long userID = SampleRepositoryProvider.TURIST_1.getID();
+        long contentID = SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID();
+        ContentHandler.saveContent(userID, contentID);
+
+        assertTrue(userRepository.getItemByID(userID).getSavedContents()
+                .contains(municipalityRepository.getContentByID(contentID)));
+    }
+
+    @Test
+    void shouldDeleteSavedContent() {
+        long userID = SampleRepositoryProvider.TURIST_1.getID();
+        long contentID = SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID();
+        ContentHandler.saveContent(userID, contentID);
+        ContentHandler.removeSavedContent(userID, contentID);
+
+        assertFalse(userRepository.getItemByID(userID).getSavedContents()
+                .contains(municipalityRepository.getContentByID(contentID)));
+    }
+
+    @Test
+    void shouldViewSavedContents() {
+        long userID = SampleRepositoryProvider.TURIST_1.getID();
+        long contentID = SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID();
+        ContentHandler.saveContent(userID, contentID);
+
+        List<ContentSOF> savedContents = ContentHandler.viewSavedContents(userID);
+        ContentSOF content = userRepository.getItemByID(userID).getSavedContents().get(0).getSynthesizedFormat();
+        assertTrue(content.equals(savedContents.get(0)));
+
+
     }
 
 }

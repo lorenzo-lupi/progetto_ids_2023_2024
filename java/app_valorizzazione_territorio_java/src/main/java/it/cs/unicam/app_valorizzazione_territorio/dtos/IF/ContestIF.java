@@ -1,7 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-
 import java.util.Date;
 import java.util.List;
 

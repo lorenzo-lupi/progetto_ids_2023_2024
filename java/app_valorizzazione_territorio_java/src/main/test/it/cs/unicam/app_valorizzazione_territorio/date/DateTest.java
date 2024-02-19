@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.date;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.date.Date;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

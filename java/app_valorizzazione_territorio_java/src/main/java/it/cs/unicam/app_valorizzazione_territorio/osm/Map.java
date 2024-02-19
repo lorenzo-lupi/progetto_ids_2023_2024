@@ -1,8 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Positionable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
 
 import java.util.List;

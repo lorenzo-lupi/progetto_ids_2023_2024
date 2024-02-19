@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.contest.VotedContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.VotedContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;

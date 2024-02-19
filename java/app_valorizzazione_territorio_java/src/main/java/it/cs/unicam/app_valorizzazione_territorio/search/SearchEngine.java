@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 
 import java.util.*;
 import java.util.function.BiPredicate;

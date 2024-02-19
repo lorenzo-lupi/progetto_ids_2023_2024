@@ -1,15 +1,15 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.builders.ContestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 
 public class ContestContentInsertionHandler {
 

@@ -1,21 +1,21 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestSOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.*;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.Repository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import org.apache.commons.lang3.tuple.Pair;
 

@@ -1,10 +1,11 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Modifiable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Searchable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Modifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -23,6 +24,8 @@ public class User implements Searchable, Visualizable, Modifiable {
     private String password;
     private final List<Role> roles;
     private final List<Notification> notifications;
+
+    private final List<Content> savedContents;
     private final long ID = UserRepository.getInstance().getNextID();
 
     /**
@@ -41,9 +44,10 @@ public class User implements Searchable, Visualizable, Modifiable {
 
         this.username = username;
         this.email = email;
+        this.password = password;
         this.roles = new ArrayList<>();
         this.notifications = new ArrayList<>();
-        this.password = password;
+        this.savedContents = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -94,6 +98,18 @@ public class User implements Searchable, Visualizable, Modifiable {
 
     public void removeNotification(Notification notification) {
         this.notifications.remove(notification);
+    }
+
+    public List<Content> getSavedContents() {
+        return this.savedContents;
+    }
+
+    public boolean addSavedContent(Content content) {
+        return this.savedContents.add(content);
+    }
+
+    public boolean removeSavedContent(Content content) {
+        return this.savedContents.remove(content);
     }
 
     /**

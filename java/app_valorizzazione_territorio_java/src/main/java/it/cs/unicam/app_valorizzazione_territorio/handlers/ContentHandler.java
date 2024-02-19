@@ -1,15 +1,15 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.builders.ContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.builders.PointOfInterestContentBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.contents.Content;
-import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.contest.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContentBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -143,5 +143,47 @@ public class ContentHandler {
         builder.buildDescription(contentIF.description());
         contentIF.files().forEach(builder::buildFile);
         return builder.build();
+    }
+
+    /**
+     * Saves the content with the given ID for the user with the given ID.
+     * If the content is already saved, the method returns false.
+     *
+     * @param userID the ID of the user who is saving the content
+     * @param contentID the ID of the content to save
+     * @return true if the content is saved, false otherwise
+     */
+    public static boolean saveContent(long userID, long contentID){
+        User user = userRepository.getItemByID(userID);
+        Content<?> content = municipalityRepository.getContentByID(contentID);
+        return user.addSavedContent(content);
+    }
+
+    /**
+     * Removes the content with the given ID from the saved contents of the user with the given ID.
+     * If the content is not saved, the method returns false.
+     *
+     * @param userID the ID of the user who is removing the content
+     * @param contentID the ID of the content to remove
+     * @return true if the content is removed, false otherwise
+     */
+    public static boolean removeSavedContent(long userID, long contentID){
+        User user = userRepository.getItemByID(userID);
+        Content<?> content = municipalityRepository.getContentByID(contentID);
+        return user.removeSavedContent(content);
+    }
+
+    /**
+     * Returns the Synthesized Format of all the saved contents of the user with the given ID.
+     *
+     * @param userID the ID of the user
+     * @return the Synthesized Format of all the saved contents of the user
+     */
+    public static List<ContentSOF> viewSavedContents(long userID) {
+        return userRepository.getItemByID(userID)
+                .getSavedContents()
+                .stream()
+                .map(Content::getSynthesizedFormat)
+                .toList();
     }
 }

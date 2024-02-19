@@ -1,10 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;

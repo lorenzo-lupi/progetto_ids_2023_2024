@@ -1,10 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.builders.MunicipalityBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-
-import java.io.File;
 
 /**
  * This class represents a handler for the creation of a municipality.

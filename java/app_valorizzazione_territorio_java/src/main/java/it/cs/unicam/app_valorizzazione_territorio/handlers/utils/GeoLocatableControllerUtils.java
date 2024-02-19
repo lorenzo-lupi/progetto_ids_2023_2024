@@ -1,15 +1,15 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Approvable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Approvable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.requests.RequestFactory;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 
 import java.util.function.Consumer;
 

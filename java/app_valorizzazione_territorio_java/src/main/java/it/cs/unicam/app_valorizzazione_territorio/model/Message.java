@@ -1,7 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;

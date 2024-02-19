@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 
 /**
  * This class represents a User Synthesized Output Format object.

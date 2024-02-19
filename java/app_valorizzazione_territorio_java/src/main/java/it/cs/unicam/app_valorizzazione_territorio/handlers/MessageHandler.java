@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.builders.MessageBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.MessageBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
