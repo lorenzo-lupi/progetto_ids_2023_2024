@@ -172,7 +172,8 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
                 Parameter.MUNICIPALITY, this.getMunicipality(),
                 Parameter.POSITION, this.getPosition(),
                 Parameter.APPROVAL_STATUS, this.getApprovalStatus(),
-                Parameter.USERNAME, this.user.getUsername());
+                Parameter.USERNAME, this.user.getUsername(),
+                Parameter.THIS, this);
     }
 
     @Override

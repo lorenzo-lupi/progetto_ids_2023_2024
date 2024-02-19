@@ -21,7 +21,6 @@ import java.util.function.Predicate;
  * @param <T> the type of the value used for the search
  */
 public class SearchCriterion<T> implements Predicate<Object> {
-
     public static final BiPredicate<Object,Object> EQUALS =
             (a, b) -> b.equals(a);
     public static final BiPredicate<Object,Object> STARTS_WITH =
@@ -41,6 +40,8 @@ public class SearchCriterion<T> implements Predicate<Object> {
 
     public static final BiPredicate<Object, Object> TAKE_ALL =
             (a, b) -> true;
+    public static final BiPredicate<Object, Object> CLASS_IS_POI =
+            (a, b) -> a instanceof PointOfInterest;
     /**
      * A Map that maps a String format to a BiPredicate that can be used for search.
      */
@@ -57,6 +58,7 @@ public class SearchCriterion<T> implements Predicate<Object> {
         stringToBiPredicate.put("CONTEST_PERMITS_USER", CONTEST_PERMITS_USER);
         stringToBiPredicate.put("USERNAME", USERNAME);
         stringToBiPredicate.put("TAKE_ALL", TAKE_ALL);
+        stringToBiPredicate.put("CLASS_IS_POI", CLASS_IS_POI);
     }
 
     private final BiPredicate<Object, Object> predicate;
