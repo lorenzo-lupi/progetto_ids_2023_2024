@@ -29,11 +29,12 @@ import java.util.List;
  */
 public class GeoLocatableHandler {
     private static final MapProvider mapProvider = new MapProviderBase();
-    
     private static final UserRepository userRepository = UserRepository.getInstance();
     private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+
     /**
      * Returns the Detailed Format of a map which contains all geoLocatable points
+     *
      * @param municipalityID the ID of the municipality
      * @return the Detailed Format of the map
      */
@@ -45,6 +46,7 @@ public class GeoLocatableHandler {
 
     /**
      * Returns the Detailed Format of a map which contains all geoLocatable points
+     *
      * @param municipalityID the ID of the municipality
      * @param coordinatesBox the coordinates box
      * @return the Detailed Format of the map
@@ -64,6 +66,7 @@ public class GeoLocatableHandler {
 
     /**
      * Returns the Detailed Format of an empty map
+     *
      * @param municipalityID the ID of the municipality
      * @return the Detailed Format of the empty map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
@@ -77,6 +80,7 @@ public class GeoLocatableHandler {
 
     /**
      * Returns the Detailed Format of an empty map
+     *
      * @param coordinatesBox the coordinates box
      * @return the Detailed Format of the empty map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
@@ -89,12 +93,13 @@ public class GeoLocatableHandler {
 
     /**
      * Returns the Synthesized Format of all the geoLocatables that correspond to the given criteria
+     *
      * @param municipalityID the ID of the municipality
-     * @param filters the filters to apply
+     * @param filters        the filters to apply
      * @return the Synthesized Format of all the geoLocatables that correspond to the given criteria
      */
     @SuppressWarnings("unchecked")
-    public static List<GeoLocatableSOF> searchGeoLocatables(long municipalityID, List<SearchFilter> filters){
+    public static List<GeoLocatableSOF> searchGeoLocatables(long municipalityID, List<SearchFilter> filters) {
         return (List<GeoLocatableSOF>) SearchHandler.getFilteredItems(
                 municipalityRepository.getItemByID(municipalityID).getGeoLocatables(),
                 filters
@@ -103,32 +108,34 @@ public class GeoLocatableHandler {
 
     /**
      * Returns the Detailed Format of a geoLocatable
+     *
      * @param geoLocatableID the ID of the geoLocatable
      * @return the Detailed Format of the geoLocatable
      */
-    public static Identifiable visualizeDetailedGeoLocatable(long geoLocatableID){
+    public static Identifiable visualizeDetailedGeoLocatable(long geoLocatableID) {
         return municipalityRepository.getGeoLocatableByID(geoLocatableID).getDetailedFormat();
     }
 
     /**
      * Returns true if the given position is in the municipality corresponding to the given ID
+     *
      * @param municipalityID the ID of the municipality
-     * @param position the position
+     * @param position       the position
      * @return true if the given position is in the municipality
      */
-    public static boolean isPositionInMunicipality(long municipalityID, Position position){
+    public static boolean isPositionInMunicipality(long municipalityID, Position position) {
         return municipalityRepository.getItemByID(municipalityID).getCoordinatesBox().contains(position);
     }
 
     /**
      * Inserts the given point of interest in the municipality corresponding to the given ID.
      *
-     * @param userID the ID of the user who is inserting the point of interest
+     * @param userID            the ID of the user who is inserting the point of interest
      * @param pointOfInterestIF the DTO of the point of interest to be inserted
      * @throws IllegalArgumentException if the user or the municipality are not found, or if the point
-     * of interest is not valid
+     *                                  of interest is not valid
      */
-    public static long insertPointOfInterest(long userID, PointOfInterestIF pointOfInterestIF){
+    public static long insertPointOfInterest(long userID, PointOfInterestIF pointOfInterestIF) {
         User user = userRepository.getItemByID(userID);
 
         PointOfInterestBuilder builder =
@@ -146,26 +153,29 @@ public class GeoLocatableHandler {
 
     /**
      * Returns the Synthesized Format of all the point of interests that correspond to the given criteria
+     *
      * @param municipalityID the ID of the municipality
-     * @param filters the filters to apply
+     * @param filters        the filters to apply
      * @return the Synthesized Format of all the point of interests that correspond to the given criteria
      */
-    public static List<GeoLocatableSOF> getFilteredPointOfInterests(long municipalityID, List<SearchFilter> filters){
+    public static List<GeoLocatableSOF> getFilteredPointOfInterests(long municipalityID,
+                                                                    List<SearchFilter> filters) {
         List<SearchFilter> userFilters = new LinkedList<>(filters);
         userFilters.add(new SearchFilter("THIS", "CLASS_IS_POI", ""));
         return searchGeoLocatables(municipalityID, userFilters);
     }
 
     //TODO
-    public static List<String> obtainPointOfInterestSearchParameters(){
+    public static List<String> obtainPointOfInterestSearchParameters() {
         return null;
     }
 
 
     /**
      * Inserts the given compound point in the municipality corresponding to the given ID.
-     * @param municipalityID the ID of the municipality
-     * @param userID the ID of the user who is inserting the compound point
+     *
+     * @param municipalityID  the ID of the municipality
+     * @param userID          the ID of the user who is inserting the compound point
      * @param compoundPointIF the DTO of the compound point to be inserted
      * @throws IllegalArgumentException if the user or the municipality are not found, or if the compound
      *                                  point is not valid
@@ -200,12 +210,12 @@ public class GeoLocatableHandler {
                 .map(id -> MunicipalityRepository.getInstance().getGeoLocatableByID(id))
                 .map(PointOfInterest.class::cast)
                 .forEach(builder::addPointOfInterest);
-        
+
         return builder.obtainResult();
     }
 
 
-    private static void fillPointOfInterestBuilderFields(PointOfInterestBuilder builder, PointOfInterestIF pointOfInterestIF){
+    private static void fillPointOfInterestBuilderFields(PointOfInterestBuilder builder, PointOfInterestIF pointOfInterestIF) {
         builder.setTitle(pointOfInterestIF.name())
                 .setDescription(pointOfInterestIF.description());
         pointOfInterestIF.images().forEach(builder::addImage);
@@ -222,7 +232,8 @@ public class GeoLocatableHandler {
         setPointOfInterestClassification(builder, pointOfInterestIF);
     }
 
-    private static void setPointOfInterestClassification(PointOfInterestBuilder builder, PointOfInterestIF pointOfInterestIF){
+    private static void setPointOfInterestClassification(PointOfInterestBuilder builder,
+                                                         PointOfInterestIF pointOfInterestIF) {
         builder.setClassification(PointOfInterest.stringToClass.get(pointOfInterestIF.classification()));
         if (pointOfInterestIF.classification().equals(Attraction.class.getSimpleName()))
             builder.setAttractionType(AttractionTypeEnum.fromString(pointOfInterestIF.type()));

@@ -40,7 +40,7 @@ public class User implements Searchable, Visualizable, Modifiable {
         if (!CredentialsUtils.isEmailValid(email))
             throw new IllegalArgumentException("Invalid email");
         if (!CredentialsUtils.isPasswordValid(password))
-            throw new IllegalArgumentException("Invalid username");
+            throw new IllegalArgumentException("Invalid password");
 
         this.username = username;
         this.email = email;
