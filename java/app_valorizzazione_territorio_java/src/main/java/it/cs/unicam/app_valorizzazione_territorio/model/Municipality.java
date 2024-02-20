@@ -1,10 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.*;
-import it.cs.unicam.app_valorizzazione_territorio.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -26,6 +29,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     private final List<File> files;
     private final List<GeoLocatable> geoLocatables;
     private final List<Contest> contests;
+    private final List<Notification> notifications;
     private final long ID = MunicipalityRepository.getInstance().getNextID();
 
     /**
@@ -60,6 +64,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
         this.files = files;
         this.geoLocatables = geoLocatables;
         this.contests = contests;
+        this.notifications = new ArrayList<>();
     }
 
     public String getName() {
@@ -112,6 +117,14 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
 
     public boolean removeContest(Contest contest) {
         return this.contests.remove(contest);
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public boolean addNotification(Notification notification) {
+        return this.notifications.add(notification);
     }
 
     /**

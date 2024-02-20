@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.ApprovalStatusEnum;
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 
 import java.io.File;
 import java.util.List;

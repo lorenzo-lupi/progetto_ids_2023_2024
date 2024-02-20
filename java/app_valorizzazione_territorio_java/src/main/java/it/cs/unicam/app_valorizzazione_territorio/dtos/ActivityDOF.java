@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.geolocatable.TimeRange;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.TimeRange;
 
 import java.util.List;
 

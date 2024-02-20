@@ -1,8 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
-import it.cs.unicam.app_valorizzazione_territorio.requests.Request;
-import it.cs.unicam.app_valorizzazione_territorio.requests.ContestRequest;
-import it.cs.unicam.app_valorizzazione_territorio.requests.MunicipalityRequest;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.ContestRequest;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.MunicipalityRequest;
 
 import java.util.stream.Stream;
 

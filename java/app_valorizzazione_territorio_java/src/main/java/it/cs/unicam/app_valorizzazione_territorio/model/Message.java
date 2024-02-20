@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 
@@ -9,7 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
 
-public class Message implements Identifiable {
+public class Message implements Visualizable {
 
     private final String senderName;
     private final String senderEmail;
@@ -86,4 +88,26 @@ public class Message implements Identifiable {
         return ID;
     }
 
+    @Override
+    public MessageSOF getSynthesizedFormat() {
+        return new MessageSOF(
+                this.getSenderName(),
+                this.getDate(),
+                this.isRead(),
+                this.getID()
+        );
+    }
+
+    @Override
+    public MessageDOF getDetailedFormat() {
+        return new MessageDOF(
+                this.getSenderName(),
+                this.getSenderEmail(),
+                this.getText(),
+                this.getDate(),
+                this.getAttachments(),
+                this.isRead(),
+                this.getID()
+        );
+    }
 }

@@ -29,7 +29,8 @@ public enum Parameter {
     REMOVE_FILE,
     ADD_POI,
     REMOVE_POI,
-    ADD_ROLE;
+    ADD_ROLE,
+    CLASS;
 
     public static final Map<String, Parameter> stringToParameter;
 
