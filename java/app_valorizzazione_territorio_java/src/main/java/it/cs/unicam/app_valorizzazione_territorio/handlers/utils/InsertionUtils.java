@@ -16,31 +16,18 @@ import java.util.function.Consumer;
 /**
  * This class contains utility methods for the controllers of the geo-locatable items.
  */
-public class GeoLocatableControllerUtils {
+public class InsertionUtils {
+    private static final RequestRepository requestRepository = RequestRepository.getInstance();
 
     /**
-     * Inserts a geo-locatable item.
-     * @param geoLocatable the geo-locatable item to be inserted
+     * Inserts the given item in the municipality and, if the user is a contributor, approves it.
+     * @param item the item to insert
      * @param user the user who is inserting the item
+     * @param municipality the municipality in which the item is inserted
+     * @param storingAction the action to perform to store the item
+     * @param <T> the type of the item
      */
-    public static void insertGeoLocatable(GeoLocatable geoLocatable, User user) {
-
-        Municipality municipality = geoLocatable.getMunicipality();
-        insertItemApprovableByContributors(geoLocatable, user, municipality, municipality::addGeoLocatable);
-    }
-
-    /**
-     * Inserts a content.
-     * @param content the content to be inserted
-     * @param user the user who is inserting the content
-     */
-    public static void insertPoiContent(PointOfInterestContent content, User user) {
-        PointOfInterest pointOfInterest = content.getHost();
-        insertItemApprovableByContributors(content, user, pointOfInterest.getMunicipality(), pointOfInterest::addContent);
-    }
-
-
-    private static <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
+    public static <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
                                                                                                  User user,
                                                                                                  Municipality municipality,
                                                                                                  Consumer<T> storingAction) {
@@ -52,7 +39,7 @@ public class GeoLocatableControllerUtils {
         if (Role.isAtLeastContributorForMunicipality(municipality).test(user)) {
             item.approve();
         } else {
-            RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(item));
+            requestRepository.add(RequestFactory.getApprovalRequest(item));
         }
     }
 

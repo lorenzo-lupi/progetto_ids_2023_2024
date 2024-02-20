@@ -6,16 +6,13 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 class UserHandlerTest {
 
     private static final UserIF user1Pos = new UserIF(
@@ -37,11 +34,11 @@ class UserHandlerTest {
             "Password4!"
     );
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
         testMultipleAdministrator = new User("multipltore3", "test122@email.it", "asasdfddA1!");
-        camerinoAdministrator = new User("vamerino2", "test222@gmail.it" , "asasdfddA1!");
+        camerinoAdministrator = new User("vamerino2", "test222@gmail.it", "asasdfddA1!");
         testMultipleAdministrator.addRole(new Role(SampleRepositoryProvider.CAMERINO, AuthorizationEnum.ADMINISTRATOR));
         testMultipleAdministrator.addRole(new Role(SampleRepositoryProvider.MACERATA, AuthorizationEnum.ADMINISTRATOR));
         camerinoAdministrator.addRole(new Role(SampleRepositoryProvider.CAMERINO, AuthorizationEnum.ADMINISTRATOR));
@@ -56,7 +53,7 @@ class UserHandlerTest {
     }
 
     @Test
-     void testCreateUser2() {
+    void testCreateUser2() {
         UserHandler.registerUser(user2Pos);
         assertThrows(IllegalArgumentException.class, () -> UserHandler.registerUser(user4Neg));
     }
@@ -71,8 +68,8 @@ class UserHandlerTest {
     void testShouldNotModifyAuthorization1() {
         assertTrue(SampleRepositoryProvider.TURIST_1.getRoles().isEmpty());
         assertThrows(IllegalArgumentException.class, () -> UserHandler.modifyUserAuthorization(testMultipleAdministrator.getID(),
-                    SampleRepositoryProvider.TURIST_1.getID(),
-                    List.of(AuthorizationEnum.CURATOR)));
+                SampleRepositoryProvider.TURIST_1.getID(),
+                List.of(AuthorizationEnum.CURATOR)));
         UserHandler.modifyUserAuthorization(camerinoAdministrator.getID(),
                 SampleRepositoryProvider.TURIST_1.getID(),
                 List.of(AuthorizationEnum.CURATOR));
@@ -81,7 +78,7 @@ class UserHandlerTest {
     }
 
     @Test
-    void testModifyAuthorization2(){
+    void testModifyAuthorization2() {
         assertTrue(SampleRepositoryProvider.TURIST_2.getRoles().isEmpty());
         UserHandler.modifyUserAuthorization(SampleRepositoryProvider.MACERATA.getID(),
                 testMultipleAdministrator.getID(),
@@ -91,12 +88,32 @@ class UserHandlerTest {
     }
 
     @Test
-    void testModifyAuthorization3(){
+    void testModifyAuthorization3() {
         assertTrue(UserHandler.isAllowedToModifyAuthorizations(testMultipleAdministrator.getID()));
     }
     //endregion
 
-    @AfterAll
+    @Test
+    public void shouldGenerateMunicipalityAdmin() {
+        long id = UserHandler.generateMunicipalityAdministrator(
+                SampleRepositoryProvider.CAMERINO.getID(), "pippo01@yopmail.com");
+
+        assertEquals(11, UserRepository.getInstance().getItemStream().toList().size());
+        assertEquals("CamerinoAdmin", UserRepository.getInstance().getItemByID(id).getUsername());
+        assertEquals(AuthorizationEnum.ADMINISTRATOR,
+                UserRepository.getInstance().getItemByID(id).getRoles().get(0).authorizationEnum());
+    }
+
+    @Test
+    public void shouldNotGenerateMunicipalityAdmin() {
+        assertThrows(IllegalArgumentException.class, () ->
+                UserHandler.generateMunicipalityAdministrator(
+                        SampleRepositoryProvider.CAMERINO.getID(), "invalidEmail"));
+
+        assertEquals(10, UserRepository.getInstance().getItemStream().toList().size());
+    }
+
+    @AfterEach
     public void tearDown() {
         SampleRepositoryProvider.clearAllRepositories();
     }

@@ -1,36 +1,64 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MunicipalityVisualizationHandlerTest {
+class MunicipalityHandlerTest {
+    MunicipalityIF municipalitySample1 = new MunicipalityIF("Matelica",
+            "Decrizione di Matelica",
+            new Position(43.251227, 13.009103),
+            new CoordinatesBox(new Position(43.277326, 12.973482),
+                    new Position(43.239917, 13.047051) ),
+            new ArrayList<>());
+
+    MunicipalityIF municipalitySample2 = new MunicipalityIF("Tolentino",
+            "Descrizione di Tolentino", null, null, null);
 
     @BeforeEach
-    void setUpRepository() {
+    public void setUp() {
         SampleRepositoryProvider.setUpMunicipalitiesRepository();
     }
 
     @AfterEach
-    void clearRepositories() {
+    public void clearRepositories() {
         SampleRepositoryProvider.clearAllRepositories();
     }
 
     @Test
+    public void shouldCreateMunicipality() {
+        long id = MunicipalityHandler.createMunicipality(municipalitySample1);
+
+        assertEquals(4, MunicipalityRepository.getInstance().getItemStream().toList().size());
+        assertEquals("Matelica", MunicipalityRepository.getInstance().getItemByID(id).getName());
+    }
+
+    @Test
+    public void shouldNotCreateMunicipality() {
+        assertThrows(NullPointerException.class, () ->
+                MunicipalityHandler.createMunicipality(municipalitySample2));
+
+        assertEquals(3, MunicipalityRepository.getInstance().getItemStream().toList().size());
+    }
+
+    @Test
     void shouldViewFilteredMunicipalities1() {
-        List<MunicipalitySOF> municipalities = MunicipalityVisualizationHandler.viewFilteredMunicipalities(List.of(
+        List<MunicipalitySOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of(
                 new SearchFilter("NAME", "EQUALS", "Macerata")));
         assertEquals(1, municipalities.size());
         assertEquals(Set.of(SampleRepositoryProvider.MACERATA.getSynthesizedFormat()),
@@ -39,7 +67,7 @@ class MunicipalityVisualizationHandlerTest {
 
     @Test
     void shouldViewFilteredMunicipalities2() {
-        List<MunicipalitySOF> municipalities = MunicipalityVisualizationHandler.viewFilteredMunicipalities(List.of(
+        List<MunicipalitySOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of(
                 new SearchFilter(Parameter.NAME.toString(), "EQUALS", "Macerata"),
                 new SearchFilter(Parameter.POSITION.toString(), "INCLUDED_IN_BOX",
                         SampleRepositoryProvider.MACERATA.getCoordinatesBox())));
@@ -51,12 +79,12 @@ class MunicipalityVisualizationHandlerTest {
     @Test
     void shouldViewMunicipality() {
         assertEquals(SampleRepositoryProvider.CAMERINO.getDetailedFormat(),
-                MunicipalityVisualizationHandler.viewMunicipality(SampleRepositoryProvider.CAMERINO.getID()));
+                MunicipalityHandler.viewMunicipality(SampleRepositoryProvider.CAMERINO.getID()));
     }
 
     @Test
     void shouldGetSearchResult() {
-        List<MunicipalitySOF> municipalities = MunicipalityVisualizationHandler.viewFilteredMunicipalities(List.of());
+        List<MunicipalitySOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of());
         assertEquals(3, municipalities.size());
         assertEquals(Set.of(
                         SampleRepositoryProvider.MACERATA.getSynthesizedFormat(),

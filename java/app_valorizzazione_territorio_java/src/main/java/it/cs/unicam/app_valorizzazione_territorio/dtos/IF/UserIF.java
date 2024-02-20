@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
-import it.cs.unicam.app_valorizzazione_territorio.abstractions.Identifiable;
 
+/**
+ * This class represents the Input Format of a User
+ */
 public record UserIF (String username, String email, String password) {
 }

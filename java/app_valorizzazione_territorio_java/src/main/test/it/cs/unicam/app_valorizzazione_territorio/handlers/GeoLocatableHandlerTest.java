@@ -16,9 +16,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -28,8 +26,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GeoLocatableHandlerTest {
+
     private static final PointOfInterestIF poiIFSample1 = new PointOfInterestIF(
             "Test POI",
             "Test Description",
@@ -94,9 +92,19 @@ public class GeoLocatableHandlerTest {
             List.of(SampleRepositoryProvider.UNIVERSITY_CAMERINO.getID()),
             Collections.emptyList()
     );
+
+    @BeforeEach
+    public void setUp() {
+        SampleRepositoryProvider.clearAndSetUpRepositories();
+    }
+
+    @AfterEach
+    public void clear() {
+        SampleRepositoryProvider.clearAllRepositories();
+    }
+
     @Test
     void shouldInsertPointOfInterest() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
 
         long id = GeoLocatableHandler.insertPointOfInterest(
                 SampleRepositoryProvider.TURIST_1.getID(),
@@ -111,7 +119,6 @@ public class GeoLocatableHandlerTest {
 
     @Test
     void shouldInsertPointOfInterest2() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
 
         long id = GeoLocatableHandler.insertPointOfInterest(
                 SampleRepositoryProvider.TURIST_1.getID(),
@@ -126,8 +133,6 @@ public class GeoLocatableHandlerTest {
 
     @Test
     void shouldNotInsertPointOfInterestWithInvalidClassification() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
-
         long id = GeoLocatableHandler.insertPointOfInterest(
                 SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 poiIFSample1);
@@ -149,7 +154,6 @@ public class GeoLocatableHandlerTest {
 
     @Test
     public void shouldInsertCompoundPoint() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
         long id = GeoLocatableHandler.insertCompoundPoint(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 SampleRepositoryProvider.TURIST_1.getID(),
@@ -163,21 +167,18 @@ public class GeoLocatableHandlerTest {
     }
 
     @Test
-    public void shouldInsertCompoundPointWithNoRequest(){
-        SampleRepositoryProvider.clearAndSetUpRepositories();
+    public void shouldInsertCompoundPointWithNoRequest() {
         long id = GeoLocatableHandler.insertCompoundPoint(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 cpointInsertableSample);
 
         assertTrue(MunicipalityRepository.getInstance().getGeoLocatableByID(id).isApproved());
-        SampleRepositoryProvider.clearAndSetUpRepositories();
     }
 
     @Test
-    public void shouldNotInsertCompoundPoint1(){
-SampleRepositoryProvider.clearAndSetUpRepositories();
-        assertThrows( IllegalArgumentException.class , () -> GeoLocatableHandler.insertCompoundPoint(
+    public void shouldNotInsertCompoundPoint1() {
+        assertThrows(IllegalArgumentException.class, () -> GeoLocatableHandler.insertCompoundPoint(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 SampleRepositoryProvider.TURIST_1.getID(),
                 cpointNonInsertableSample));
@@ -186,8 +187,7 @@ SampleRepositoryProvider.clearAndSetUpRepositories();
     }
 
     @Test
-    public void shouldObtainOnlyPointOfInterests(){
-        SampleRepositoryProvider.clearAndSetUpRepositories();
+    public void shouldObtainOnlyPointOfInterests() {
         GeoLocatableHandler.insertCompoundPoint(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
@@ -201,23 +201,21 @@ SampleRepositoryProvider.clearAndSetUpRepositories();
                 .map(GeoLocatableSOF::getID)
                 .map(id -> MunicipalityRepository.getInstance().getGeoLocatableByID(id))
                 .allMatch(poi -> poi instanceof PointOfInterest));
-        SampleRepositoryProvider.clearAndSetUpRepositories();
     }
 
     @Test
-    public void shouldNotInsertCompoundPoint2(){
-        SampleRepositoryProvider.clearAndSetUpRepositories();
+    public void shouldNotInsertCompoundPoint2() {
 
-        assertThrows( NotEnoughGeoLocatablesException.class , () -> GeoLocatableHandler.insertCompoundPoint(
+        assertThrows(NotEnoughGeoLocatablesException.class, () -> GeoLocatableHandler.insertCompoundPoint(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 SampleRepositoryProvider.TURIST_1.getID(),
                 cpointNonInsertableSample2));
 
 
     }
+
     @Test
     void handleMap() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
         try {
             assertEquals(GeoLocatableHandler
                             .visualizeMap(SampleRepositoryProvider.CAMERINO.getID(), SampleRepositoryProvider.CAMERINO.getCoordinatesBox())
@@ -240,7 +238,6 @@ SampleRepositoryProvider.clearAndSetUpRepositories();
 
     @Test
     void handleMap1() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
         try {
             assertEquals(1, GeoLocatableHandler
                     .visualizeFilteredMap(SampleRepositoryProvider.CAMERINO.getID(),
@@ -255,7 +252,6 @@ SampleRepositoryProvider.clearAndSetUpRepositories();
 
     @Test
     void handleMap2() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
         try {
             List<Long> ids = GeoLocatableHandler
                     .visualizeFilteredMap(SampleRepositoryProvider.CAMERINO.getID(),
@@ -276,7 +272,6 @@ SampleRepositoryProvider.clearAndSetUpRepositories();
 
     @Test
     void handleMap3() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
         try {
             assertEquals(0, GeoLocatableHandler.visualizeFilteredMap(SampleRepositoryProvider.CAMERINO.getID(),
                             SampleRepositoryProvider.CAMERINO.getCoordinatesBox(),
@@ -290,10 +285,5 @@ SampleRepositoryProvider.clearAndSetUpRepositories();
         } catch (IOException e) {
             fail();
         }
-    }
-
-    @AfterAll
-    static void clearRepositories() {
-        SampleRepositoryProvider.clearAllRepositories();
     }
 }

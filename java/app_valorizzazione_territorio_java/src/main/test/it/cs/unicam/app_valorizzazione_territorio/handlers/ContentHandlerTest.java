@@ -96,7 +96,7 @@ class ContentHandlerTest {
 
     @Test
     void shouldInsertContestContent() {
-        long contentID = ContestContentInsertionHandler.insertContent(
+        long contentID = ContestHandler.insertContent(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
                 sampleContent);
@@ -120,7 +120,7 @@ class ContentHandlerTest {
 
     @Test
     void shouldCreateRequestAfterContestContentInsertion() {
-        long contentID = ContestContentInsertionHandler.insertContent(
+        long contentID = ContestHandler.insertContent(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID(),
                 sampleContent);

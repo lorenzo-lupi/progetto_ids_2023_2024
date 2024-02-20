@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchHandler;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterestBuilder;
@@ -7,7 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.GeoLocatableControllerUtils;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -17,11 +18,13 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents a handler for the search, insertion
@@ -99,11 +102,33 @@ public class GeoLocatableHandler {
      * @return the Synthesized Format of all the geoLocatables that correspond to the given criteria
      */
     @SuppressWarnings("unchecked")
-    public static List<GeoLocatableSOF> searchGeoLocatables(long municipalityID, List<SearchFilter> filters) {
+    public static List<GeoLocatableSOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
         return (List<GeoLocatableSOF>) SearchHandler.getFilteredItems(
                 municipalityRepository.getItemByID(municipalityID).getGeoLocatables(),
                 filters
         );
+    }
+
+    /**
+     * Returns the set of all the criteria available for the search.
+     * @return the set of all the criteria available for the search
+     */
+    public static Set<String> getSearchCriteria() {
+        return SearchHandler.getSearchCriteria();
+    }
+
+    /**
+     * This method returns the search parameters for the user entity.
+     * @return the search parameters for the user entity
+     */
+    public static List<String> getParameters(){
+        return  List.of(Parameter.NAME.toString(),
+                Parameter.DESCRIPTION.toString(),
+                Parameter.MUNICIPALITY.toString(),
+                Parameter.POSITION.toString(),
+                Parameter.APPROVAL_STATUS.toString(),
+                Parameter.USERNAME.toString(),
+                Parameter.THIS.toString());
     }
 
     /**
@@ -146,7 +171,7 @@ public class GeoLocatableHandler {
 
         GeoLocatable geoLocatable = builder.build().obtainResult();
 
-        GeoLocatableControllerUtils.insertGeoLocatable(geoLocatable, user);
+        insertGeoLocatable(geoLocatable, user);
 
         return geoLocatable.getID();
     }
@@ -162,7 +187,7 @@ public class GeoLocatableHandler {
                                                                     List<SearchFilter> filters) {
         List<SearchFilter> userFilters = new LinkedList<>(filters);
         userFilters.add(new SearchFilter("THIS", "CLASS_IS_POI", ""));
-        return searchGeoLocatables(municipalityID, userFilters);
+        return searchFilteredGeoLocatables(municipalityID, userFilters);
     }
 
     //TODO
@@ -190,7 +215,7 @@ public class GeoLocatableHandler {
                 user,
                 compoundPointIF
         );
-        GeoLocatableControllerUtils.insertGeoLocatable(compoundPoint, user);
+        insertGeoLocatable(compoundPoint, user);
 
         return compoundPoint.getID();
     }
@@ -246,6 +271,10 @@ public class GeoLocatableHandler {
         else throw new IllegalArgumentException("Invalid classification");
     }
 
+    private static void insertGeoLocatable(GeoLocatable geoLocatable, User user) {
+        Municipality municipality = geoLocatable.getMunicipality();
+        InsertionUtils.insertItemApprovableByContributors(geoLocatable, user, municipality, municipality::addGeoLocatable);
+    }
 
 }
 
