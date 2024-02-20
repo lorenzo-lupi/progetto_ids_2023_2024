@@ -29,6 +29,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     private final List<File> files;
     private final List<GeoLocatable> geoLocatables;
     private final List<Contest> contests;
+    private final List<Notification> notifications;
     private final long ID = MunicipalityRepository.getInstance().getNextID();
 
     /**
@@ -63,6 +64,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
         this.files = files;
         this.geoLocatables = geoLocatables;
         this.contests = contests;
+        this.notifications = new ArrayList<>();
     }
 
     public String getName() {
@@ -115,6 +117,14 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
 
     public boolean removeContest(Contest contest) {
         return this.contests.remove(contest);
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public boolean addNotification(Notification notification) {
+        return this.notifications.add(notification);
     }
 
     /**

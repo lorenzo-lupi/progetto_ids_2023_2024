@@ -20,7 +20,7 @@ public class ContestBase implements Contest {
     private Date startDate;
     private Date votingStartDate;
     private Date endDate;
-    private ProposalRequests proposalRequests;
+    private ProposalRegister proposalRegister;
     private Municipality municipality;
     private final long ID = MunicipalityRepository.getInstance().getNextContestID();
 
@@ -47,7 +47,7 @@ public class ContestBase implements Contest {
         this.startDate = startDate;
         this.votingStartDate = votingStartDate;
         this.endDate = endDate;
-        this.proposalRequests = new ProposalRequests();
+        this.proposalRegister = new ProposalRegister();
         this.municipality = municipality;
     }
 
@@ -116,8 +116,8 @@ public class ContestBase implements Contest {
     }
 
     @Override
-    public ProposalRequests getProposalRequests() {
-        return this.proposalRequests;
+    public ProposalRegister getProposalRequests() {
+        return this.proposalRegister;
     }
 
     private boolean checkDates(Date startDate, Date votingStartDate, Date endDate) {
@@ -156,7 +156,7 @@ public class ContestBase implements Contest {
 
     @Override
     public Collection<ContestContent> getContents() {
-        return this.proposalRequests
+        return this.proposalRegister
                 .getProposals()
                 .stream()
                 .map(VotedContent::content)

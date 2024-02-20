@@ -5,12 +5,11 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.*;
 
-public class ProposalRequests {
-    private Map<ContestContent, Collection<User>> votes;
-    //private List<>
+public class ProposalRegister {
+    private Set<ContestContent> proposals;
 
-    public ProposalRequests() {
-        votes = new HashMap<>();
+    public ProposalRegister() {
+        proposals = new HashSet<>();
     }
 
     /**
@@ -19,9 +18,9 @@ public class ProposalRequests {
      * @return the list of proposals.
      */
     public List<VotedContent> getProposals() {
-        return votes.keySet()
+        return proposals
                 .stream()
-                .map(content -> new VotedContent(content, votes.get(content).size()))
+                .map(content -> new VotedContent(content, content.getVoters().size()))
                 .toList();
     }
 
@@ -35,9 +34,9 @@ public class ProposalRequests {
         if (user == null)
             throw new IllegalArgumentException("User must not be null");
 
-        return votes.values()
+        return proposals
                 .stream()
-                .anyMatch(users -> users.contains(user));
+                .anyMatch(content -> content.getVoters().contains(user));
     }
 
     /**
@@ -52,17 +51,17 @@ public class ProposalRequests {
         if (content == null || user == null)
             throw new IllegalArgumentException("Parameters must not be null");
 
-        if (!votes.containsKey(content))
+        if (!proposals.contains(content))
             throw new IllegalArgumentException("Content not found");
 
-        if (votes.get(content).contains(user))
+        if (hasVoted(user))
             throw new IllegalArgumentException("User already voted");
 
-        votes.get(content).add(user);
+        content.addVoter(user);
     }
 
     /**
-     * Removes a user's vote from a content.
+     * Removes a user's vote from his voted content of this contest, if any.
      *
      * @param user the user who wants to remove his vote.
      * @throws IllegalArgumentException if the user has not voted for any content.
@@ -71,9 +70,12 @@ public class ProposalRequests {
         if (user == null)
             throw new IllegalArgumentException("Parameters must not be null");
 
-        votes.values()
-                .stream().filter(users -> users.contains(user))
-                .forEach(users -> users.remove(user));
+        if (!hasVoted(user))
+            throw new IllegalArgumentException("User has not voted");
+
+        proposals.stream()
+                .filter(content -> content.getVoters().contains(user))
+                .forEach(content -> content.removeVoter(user));
     }
 
     /**
@@ -86,10 +88,10 @@ public class ProposalRequests {
         if (content == null)
             throw new IllegalArgumentException("Content must not be null");
 
-        if (votes.containsKey(content))
+        if (proposals.contains(content))
             throw new IllegalArgumentException("Content already exists");
 
-        votes.put(content, new HashSet<>());
+        proposals.add(content);
     }
 
     /**
@@ -102,21 +104,22 @@ public class ProposalRequests {
         if (content == null)
             throw new IllegalArgumentException("Content must not be null");
 
-        if (!votes.containsKey(content))
+        if (!proposals.contains(content))
             throw new IllegalArgumentException("Content not found");
 
-        votes.remove(content);
+        proposals.remove(content);
 
         return content;
     }
 
     /**
      * Returns the content with the most votes.
+     * If there are no proposals, the method returns null.
      */
     public ContestContent getWinner(){
-        return votes.keySet()
+        return proposals
                 .stream()
-                .max((content, content2) -> votes.get(content).size() - votes.get(content2).size())
+                .max(Comparator.comparingInt(content -> content.getVoters().size()))
                 .orElse(null);
     }
 

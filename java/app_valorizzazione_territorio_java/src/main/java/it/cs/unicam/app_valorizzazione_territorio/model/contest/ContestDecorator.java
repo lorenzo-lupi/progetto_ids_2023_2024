@@ -61,7 +61,7 @@ public abstract class ContestDecorator implements Contest{
     }
 
     @Override
-    public ProposalRequests getProposalRequests() {
+    public ProposalRegister getProposalRequests() {
         return this.contest.getProposalRequests();
     }
 

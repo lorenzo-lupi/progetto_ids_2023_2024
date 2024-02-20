@@ -74,8 +74,8 @@ class ContentHandlerTest {
     @Test
     void shouldCreateContestContent() {
         ContestContent content = ContentHandler.createContent(
-                new ContestContentBuilder(SampleRepositoryProvider.CONCORSO_FOTO_2024, SampleRepositoryProvider.TURIST_1),
-                sampleContent);
+                new ContestContentBuilder(SampleRepositoryProvider.CONCORSO_FOTO_2024),
+                SampleRepositoryProvider.TURIST_1, sampleContent);
 
         assertEquals(content.getDescription(), sampleContent.description());
         assertEquals(0, content.getFiles().size());
@@ -86,8 +86,8 @@ class ContentHandlerTest {
     void shouldCreatePointOfInterestContent() {
         PointOfInterestContent content = ContentHandler.createContent(
                 new PointOfInterestContentBuilder(
-                        (PointOfInterest) SampleRepositoryProvider.CORSA_SPADA,
-                        SampleRepositoryProvider.TURIST_1), sampleContent);
+                        (PointOfInterest) SampleRepositoryProvider.CORSA_SPADA),
+                        SampleRepositoryProvider.TURIST_1, sampleContent);
 
         assertEquals(content.getDescription(), sampleContent.description());
         assertEquals(0, content.getFiles().size());
@@ -195,7 +195,7 @@ class ContentHandlerTest {
 
         List<ContentSOF> savedContents = ContentHandler.viewSavedContents(userID);
         ContentSOF content = userRepository.getItemByID(userID).getSavedContents().get(0).getSynthesizedFormat();
-        assertTrue(content.equals(savedContents.get(0)));
+        assertEquals(content, savedContents.get(0));
 
 
     }

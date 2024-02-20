@@ -93,7 +93,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * Returns the proposal requests of the contest.
      * @return the proposal requests of the contest.
      */
-    ProposalRequests getProposalRequests();
+    ProposalRegister getProposalRequests();
 
     default ContestSOF getSynthesizedFormat() {
         return new ContestSOF(this.getName(),

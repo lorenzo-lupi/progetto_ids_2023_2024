@@ -8,15 +8,23 @@ public class ContestContentBuilder extends ContentBuilder<Contest, ContestConten
 
     private final Contest contest;
 
-    public ContestContentBuilder(Contest contest, User user){
-        super(user);
+    public ContestContentBuilder(Contest contest){
+        super();
         if (contest == null)
             throw new IllegalArgumentException("Contest cannot be null");
         this.contest = contest;
     }
     @Override
-    public ContestContent build( ){
-        return new ContestContent(super.getDescription(), this.contest, super.getFiles(), super.getUser());
+    public ContentBuilder<Contest, ContestContent> build( ){
+        this.result = new ContestContent(super.getDescription(), this.contest, super.getFiles(), super.getUser());
+        return this;
     }
 
+    /**
+     * Returns the built contest associated to the content bulder.
+     * @return the built contest associated to the content bulder
+     */
+    public Contest getContest() {
+        return contest;
+    }
 }

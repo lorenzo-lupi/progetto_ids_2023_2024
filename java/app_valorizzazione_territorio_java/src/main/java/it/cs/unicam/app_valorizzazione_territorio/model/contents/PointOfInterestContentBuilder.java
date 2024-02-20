@@ -16,8 +16,8 @@ public class PointOfInterestContentBuilder extends ContentBuilder<PointOfInteres
      *
      * @param pointOfInterest the geo-localizable point associated to the content to build
      */
-    public PointOfInterestContentBuilder(PointOfInterest pointOfInterest, User user) {
-        super(user);
+    public PointOfInterestContentBuilder(PointOfInterest pointOfInterest) {
+        super();
         if (pointOfInterest == null)
             throw new IllegalArgumentException("Point of interest cannot be null");
         this.pointOfInterest = pointOfInterest;
@@ -28,16 +28,17 @@ public class PointOfInterestContentBuilder extends ContentBuilder<PointOfInteres
      * Builds the content.
      * @return the content built
      */
-    public PointOfInterestContent build() {
-        return new PointOfInterestContent(super.getDescription(), this.pointOfInterest, super.getFiles(), super.getUser());
+    public ContentBuilder<PointOfInterest, PointOfInterestContent> build() {
+        this.result = new PointOfInterestContent(super.getDescription(), this.pointOfInterest, super.getFiles(), super.getUser());
+        return this;
     }
 
 
     /**
-     * Returns the built geo-localizable point associated to the content bulder.
-     * @return the built geo-localizable point associated to the content bulder
+     * Returns the built point of interest associated to the content bulder.
+     * @return the built point of interest associated to the content bulder
      */
-    public PointOfInterest getGeoLocalizable() {
+    public PointOfInterest getPointOfInterest() {
         return pointOfInterest;
     }
 }

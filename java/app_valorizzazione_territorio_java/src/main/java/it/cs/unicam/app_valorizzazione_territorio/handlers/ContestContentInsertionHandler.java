@@ -27,7 +27,7 @@ public class ContestContentInsertionHandler {
         Contest contest = MunicipalityRepository.getInstance().getContestByID(contestID);
 
         ContestContent content = ContentHandler.createContent(
-                new ContestContentBuilder(contest, user), contentIF);
+                new ContestContentBuilder(contest), user, contentIF);
 
         contest.getProposalRequests().proposeContent(content);
         RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(content));

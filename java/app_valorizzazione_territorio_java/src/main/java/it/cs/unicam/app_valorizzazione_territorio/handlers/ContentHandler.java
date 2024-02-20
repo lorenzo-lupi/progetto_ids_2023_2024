@@ -117,7 +117,7 @@ public class ContentHandler {
         PointOfInterest pointOfInterest = municipalityRepository.getPointOfInterestByID(poiID);
 
         PointOfInterestContent content = createContent(
-                new PointOfInterestContentBuilder(pointOfInterest, user), contentIF);
+                new PointOfInterestContentBuilder(pointOfInterest), user, contentIF);
 
         GeoLocatableControllerUtils.insertPoiContent(content, user);
         return content.getID();
@@ -127,6 +127,7 @@ public class ContentHandler {
      * Creates a content from the specified contentIF.
      *
      * @param builder the builder for the content to be created
+     * @param user the user who is creating the content
      * @param contentIF the contentIF from which the content will be created
      * @return the created content
      * @param <V> the type of the content host
@@ -134,15 +135,15 @@ public class ContentHandler {
      * @throws IllegalArgumentException if the builder or the contentIF are null
      */
     static <V extends ContentHost<V> & Visualizable, K extends Content<V>>
-    K createContent(ContentBuilder<V, K> builder, ContentIF contentIF){
+    K createContent(ContentBuilder<V, K> builder, User user, ContentIF contentIF){
         if(builder == null)
             throw new IllegalArgumentException("Builder cannot be null");
         if(contentIF == null)
             throw new IllegalArgumentException("ContentIF cannot be null");
 
-        builder.buildDescription(contentIF.description());
+        builder.buildUser(user).buildDescription(contentIF.description());
         contentIF.files().forEach(builder::buildFile);
-        return builder.build();
+        return builder.build().getResult();
     }
 
     /**

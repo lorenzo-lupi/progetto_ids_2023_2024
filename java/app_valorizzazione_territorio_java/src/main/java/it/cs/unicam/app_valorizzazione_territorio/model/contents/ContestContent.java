@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public class ContestContent extends Content<Contest> {
     private final Contest contest;
+    private final List<User> voters;
     /**
      * Constructor for a content.
      *
@@ -24,7 +26,19 @@ public class ContestContent extends Content<Contest> {
         if (contest == null)
             throw new IllegalArgumentException("Contest cannot be null");
         this.contest = contest;
+        this.voters = new ArrayList<>();
+    }
 
+    public List<User> getVoters() {
+        return this.voters;
+    }
+
+    public boolean addVoter(User user) {
+        return this.voters.add(user);
+    }
+
+    public boolean removeVoter(User user) {
+        return this.voters.remove(user);
     }
 
     @Override

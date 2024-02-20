@@ -17,18 +17,22 @@ import java.util.List;
 public abstract class ContentBuilder<V extends ContentHost<V> & Visualizable
         , K extends Content<V>> {
 
-    private K contentHost;
+    protected K result;
     private String description;
     private List<File> files;
-    private final User user;
+    private User user;
 
     /**
      * Creates a builder for a content associated to the specified geo-localizable point.
      */
-    public ContentBuilder(User user) {
+    public ContentBuilder() {
         this.files = new ArrayList<>();
         this.description = "";
+    }
+
+    public ContentBuilder<V, K> buildUser(User user){
         this.user = user;
+        return this;
     }
 
     /**
@@ -51,32 +55,9 @@ public abstract class ContentBuilder<V extends ContentHost<V> & Visualizable
         return this;
     }
 
-    /**
-     * Removes a file from the content to be built.
-     * @param description the file to removed
-     * @return the builder
-     */
     public ContentBuilder<V, K> buildDescription(String description) {
         this.description = description;
         return this;
-    }
-
-    /**
-     * Sets the content host.
-     * @param contentHost  the host in which the content will be inserted
-     * @return the builder
-     */
-    public ContentBuilder<V, K> buildContentHost(K contentHost) {
-        this.contentHost = contentHost;
-        return this;
-    }
-
-    /**
-     * Returns the content host.
-     * @return the content host
-     */
-    public K getContentHost() {
-        return contentHost;
     }
 
     /**
@@ -87,6 +68,19 @@ public abstract class ContentBuilder<V extends ContentHost<V> & Visualizable
         this.files = new ArrayList<>();
         this.description = "";
         return this;
+    }
+
+    /**
+     * Builds the content.
+     */
+    public abstract ContentBuilder<V, K> build();
+
+    /**
+     * Returns the content host.
+     * @return the content host
+     */
+    public K getResult() {
+        return result;
     }
 
     /**
@@ -112,8 +106,4 @@ public abstract class ContentBuilder<V extends ContentHost<V> & Visualizable
     public User getUser() {
         return user;
     }
-    /**
-     * Builds the content.
-     */
-    public abstract K build();
 }
