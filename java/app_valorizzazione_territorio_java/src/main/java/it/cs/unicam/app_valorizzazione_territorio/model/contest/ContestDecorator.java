@@ -7,17 +7,26 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatabl
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ContestDecorator implements Contest{
+@Entity
+@DiscriminatorValue("Decorator")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "decorator_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class ContestDecorator extends Contest{
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Contest contest;
 
     public ContestDecorator(Contest contest){
+        super(contest.getMunicipality());
         this.contest = contest;
+        this.contest.setValid(false);
     }
 
     @Override

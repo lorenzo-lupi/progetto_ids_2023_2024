@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalSta
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Requestable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;

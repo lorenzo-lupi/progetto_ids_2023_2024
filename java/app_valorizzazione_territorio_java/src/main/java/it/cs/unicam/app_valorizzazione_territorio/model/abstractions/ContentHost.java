@@ -1,7 +1,5 @@
-package it.cs.unicam.app_valorizzazione_territorio.model.contest;
+package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 
 import java.util.Collection;

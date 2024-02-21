@@ -2,10 +2,17 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import jakarta.persistence.*;
 
 import java.util.*;
 
+@Entity
 public class ProposalRegister {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+    @Transient // TODO : @OneToMany(fetch = FetchType.EAGER, mappedBy = "contest")
     private Set<ContestContent> proposals;
 
     public ProposalRegister() {

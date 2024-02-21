@@ -6,7 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;

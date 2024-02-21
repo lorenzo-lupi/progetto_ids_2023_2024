@@ -37,7 +37,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     private final List<File> files;
     @Transient // TODO : @OneToMany(fetch = FetchType.EAGER, mappedBy = "municipality")
     private final List<GeoLocatable> geoLocatables;
-    @Transient // TODO : @OneToMany(fetch = FetchType.EAGER, mappedBy = "municipality")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "municipality")
     private final List<Contest> contests;
     @OneToMany(fetch = FetchType.EAGER)
     private final List<Notification> notifications;

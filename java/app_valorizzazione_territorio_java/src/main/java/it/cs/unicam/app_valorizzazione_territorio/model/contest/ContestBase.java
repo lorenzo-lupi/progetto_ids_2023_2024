@@ -6,23 +6,30 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import jakarta.persistence.*;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class ContestBase implements Contest {
+@Entity
+@DiscriminatorValue("Base")
+public class ContestBase extends Contest {
 
     private String name;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "app_user_id")
     private final User animator;
     private String topic;
     private String rules;
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+    @Temporal(TemporalType.DATE)
     private Date votingStartDate;
+    @Temporal(TemporalType.DATE)
     private Date endDate;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private ProposalRegister proposalRegister;
-    private Municipality municipality;
-    private final long ID = MunicipalityRepository.getInstance().getNextContestID();
 
     public ContestBase(String name,
                        User animator,
@@ -33,7 +40,9 @@ public class ContestBase implements Contest {
                        Date endDate,
                        Municipality municipality) {
 
-        if (name == null || animator == null || topic == null || startDate == null || votingStartDate == null || endDate == null || rules == null || municipality == null)
+        super(municipality);
+
+        if (name == null || animator == null || topic == null || startDate == null || votingStartDate == null || endDate == null || rules == null )
             throw new IllegalArgumentException("All parameters must not be null");
         if (!checkDates(startDate, votingStartDate, endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
@@ -48,7 +57,6 @@ public class ContestBase implements Contest {
         this.votingStartDate = votingStartDate;
         this.endDate = endDate;
         this.proposalRegister = new ProposalRegister();
-        this.municipality = municipality;
     }
 
     public String getName() {
@@ -125,11 +133,6 @@ public class ContestBase implements Contest {
     }
 
     @Override
-    public Municipality getMunicipality() {
-        return this.municipality;
-    }
-
-    @Override
     public boolean isPrivate() {
         return false;
     }
@@ -147,11 +150,6 @@ public class ContestBase implements Contest {
     @Override
     public GeoLocatable getGeoLocation() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("ContestBase has no geo location");
-    }
-
-    @Override
-    public long getID() {
-        return this.ID;
     }
 
     @Override

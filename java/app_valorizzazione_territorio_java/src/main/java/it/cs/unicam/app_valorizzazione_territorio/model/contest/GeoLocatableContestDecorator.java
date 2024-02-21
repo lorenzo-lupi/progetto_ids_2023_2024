@@ -2,13 +2,21 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
+@DiscriminatorValue("GeoLocatable")
 public class GeoLocatableContestDecorator extends ContestDecorator{
 
+    @Transient
+    // TODO :
+    //  @ManyToOne(fetch = FetchType.EAGER)
+    //  @JoinColumn(name = "geoLocatable_id") //Attenzione, forse non è il nome giusto, provare con geo_locatable_id
     private final GeoLocatable geoLocatable;
+
     public GeoLocatableContestDecorator(Contest contest, GeoLocatable geoLocatable) {
         super(contest);
         if(geoLocatable == null)
