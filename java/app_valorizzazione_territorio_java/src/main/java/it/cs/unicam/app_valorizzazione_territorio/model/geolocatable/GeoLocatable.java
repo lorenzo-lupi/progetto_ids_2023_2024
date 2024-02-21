@@ -42,28 +42,16 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     private String name;
     @Getter
     private String description;
-    /**
-     * -- GETTER --
-     *  Returns the representative multimedia content of the geo-localizable object.
-     *
-     * @return the representative multimedia content of the geo-localizable object
-     */
     @Getter
     @ElementCollection
     private final List<File> images;
     @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
-
-    /**
-     * -- GETTER --
-     *  Returns the municipality of the geo-localizable object.
-     *
-     * @return the municipality of the geo-localizable object
-     */
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "municipality_id")
     private final Municipality municipality;
+
     @Getter
     @Embedded
     private Position position;

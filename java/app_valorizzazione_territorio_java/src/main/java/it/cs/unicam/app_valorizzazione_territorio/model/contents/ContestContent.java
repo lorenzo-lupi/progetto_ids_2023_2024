@@ -3,6 +3,9 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,8 +14,17 @@ import java.util.List;
 /**
  * This class represents a contest content. A ContestContent is hosted in a Contest
  */
+@Entity
+@NoArgsConstructor(force = true)
 public class ContestContent extends Content<Contest> {
+    @ManyToOne(fetch = FetchType.EAGER)
     private final Contest contest;
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "contest_content_voters",
+            joinColumns = @JoinColumn(name = "contest_content_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id", referencedColumnName = "ID"))
     private final List<User> voters;
     /**
      * Constructor for a content.
@@ -29,14 +41,11 @@ public class ContestContent extends Content<Contest> {
         this.voters = new ArrayList<>();
     }
 
-    public List<User> getVoters() {
-        return this.voters;
-    }
-
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addVoter(User user) {
         return this.voters.add(user);
     }
-
+    @SuppressWarnings("UnusedReturnValue")
     public boolean removeVoter(User user) {
         return this.voters.remove(user);
     }

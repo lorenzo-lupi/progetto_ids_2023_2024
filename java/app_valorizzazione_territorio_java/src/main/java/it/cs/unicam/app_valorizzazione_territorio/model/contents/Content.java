@@ -10,6 +10,9 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.List;
@@ -22,14 +25,23 @@ import java.util.function.Consumer;
  *
  * @param <V> the type of the content host
  */
+@MappedSuperclass
+@NoArgsConstructor(force = true)
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable {
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private final User user;
+    @Getter
     private String description;
+    @Getter
+    @ElementCollection
     private final List<File> files;
+    @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
-
-    private final long ID = MunicipalityRepository.getInstance().getNextContentID();
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
     /**
      * Constructor for a content.
      *
@@ -47,10 +59,6 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
         this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         if (description == null)
             throw new IllegalArgumentException("Description cannot be null");
@@ -58,23 +66,16 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     }
 
     /**
-     * Returns the multimedia files of the content.
-     * @return the multimedia files of the content
-     */
-    public List<File> getFiles() {
-        return files;
-    }
-
-    /**
      * Adds a file to the content.
      *
      * @param file the file to added
-     * @return
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addFile(File file) {
         return this.files.add(file);
     }
 
+    @Transient
     public abstract V getHost();
     /**
      * Removes a file from the content.
@@ -82,16 +83,9 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
      * @param file the file to removed
      * @return true if the file was removed, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean removeFile(File file) {
         return this.files.remove(file);
-    }
-
-    /**
-     * Returns the user who created the content.
-     * @return the user who created the content
-     */
-    public User getUser() {
-        return this.user;
     }
 
     @Override

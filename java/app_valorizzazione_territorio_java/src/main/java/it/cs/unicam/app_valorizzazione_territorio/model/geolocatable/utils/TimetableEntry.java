@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import java.io.Serializable;
 import java.time.DayOfWeek;
 
@@ -27,19 +28,20 @@ public class TimetableEntry {
     }
     @Transient
     public DayOfWeek getDayOfWeek() {
-        return keyEntry.dayOfWeek;
+        return keyEntry.getDayOfWeek();
     }
     @Transient
     public Timetable timetable() {
-        return keyEntry.timetable;
+        return keyEntry.getTimetable();
     }
-
+    @Getter
+    @Setter
     @Embeddable
     class KeyEntry implements Serializable {
         @ManyToOne(fetch = FetchType.EAGER)
-        Timetable timetable;
+        private Timetable timetable;
         @Enumerated(EnumType.STRING)
-        DayOfWeek dayOfWeek;
+        private DayOfWeek dayOfWeek;
 
         protected KeyEntry(Timetable timetable,
                            DayOfWeek dayOfWeek){

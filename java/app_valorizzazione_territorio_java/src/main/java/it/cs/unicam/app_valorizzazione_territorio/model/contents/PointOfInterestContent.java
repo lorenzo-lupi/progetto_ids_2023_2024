@@ -4,6 +4,8 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.List;
@@ -15,10 +17,11 @@ import java.util.List;
  *
  * A PointOfInterestContent is hosted in a PointOfInterest.
  */
+@Entity
+@NoArgsConstructor(force = true)
 public class PointOfInterestContent extends Content<PointOfInterest>{
-
-    private final PointOfInterest poi;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PointOfInterest poi;
     /**
      * Constructor for a content.
      *
@@ -35,10 +38,12 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
     }
 
 
+
     @Override
     public PointOfInterest getHost() {
         return this.poi;
     }
+
 
     @Override
     public Runnable getDeletionAction() {
