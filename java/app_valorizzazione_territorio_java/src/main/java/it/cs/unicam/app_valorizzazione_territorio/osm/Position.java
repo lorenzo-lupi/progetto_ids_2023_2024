@@ -1,10 +1,13 @@
-package it.cs.unicam.app_valorizzazione_territorio.model;
+package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+
+import jakarta.persistence.Embeddable;
 
 /**
  * This class represents a geographical position, that is a
  * point on the surface of the Earth associated with geographical coordinates.
  */
+@Embeddable
 public class Position {
     private final double latitude;
     private final double longitude;

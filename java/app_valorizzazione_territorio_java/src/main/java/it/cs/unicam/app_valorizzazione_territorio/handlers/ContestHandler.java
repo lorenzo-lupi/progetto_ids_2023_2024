@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.*;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContestIF;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchHandler;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -77,7 +77,7 @@ public class ContestHandler {
      */
     @SuppressWarnings("unchecked")
     public static List<VotedContentSOF> viewFilteredProposals(long contestID, List<SearchFilter> filters) {
-        return (List<VotedContentSOF>) SearchHandler.getFilteredItems(
+        return (List<VotedContentSOF>) SearchUltils.getFilteredItems(
                 municipalityRepository.getContestByID(contestID).getProposalRequests().getProposals(),
                 filters);
     }
@@ -173,7 +173,7 @@ public class ContestHandler {
      */
     @SuppressWarnings("unchecked")
     public static List<UserSOF> viewFilteredUsers(List<SearchFilter> filters) {
-        return (List<UserSOF>) SearchHandler.getFilteredItems(
+        return (List<UserSOF>) SearchUltils.getFilteredItems(
                 userRepository.getItemStream().toList(),
                 filters);
     }
@@ -187,7 +187,7 @@ public class ContestHandler {
      */
     @SuppressWarnings("unchecked")
     public static List<GeoLocatableSOF> viewFilteredGeoLocatables(List<SearchFilter> filters) {
-        return (List<GeoLocatableSOF>) SearchHandler.getFilteredItems(
+        return (List<GeoLocatableSOF>) SearchUltils.getFilteredItems(
                 municipalityRepository.getAllGeoLocatables().toList(),
                 filters);
     }
@@ -223,7 +223,7 @@ public class ContestHandler {
         User user = UserRepository.getInstance().getItemByID(userID);
         List<SearchFilter> filtersWithUser = new ArrayList<>(filters);
         filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), "CONTEST_PERMITS_USER", user));
-        return (List<ContestSOF>) SearchHandler.getFilteredItems(
+        return (List<ContestSOF>) SearchUltils.getFilteredItems(
                 MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests(),
                 filtersWithUser);
     }
@@ -234,7 +234,7 @@ public class ContestHandler {
      * @return the set of all the criteria available for the search
      */
     public static Set<String> getSearchCriteria(){
-        return SearchHandler.getSearchCriteria();
+        return SearchUltils.getSearchCriteria();
     }
 
     /**
@@ -275,7 +275,7 @@ public class ContestHandler {
 
 
     private static void sendNotifications(Contest contest, String message) {
-        Notification contestNotification = new Notification(contest, message);
+        Notification contestNotification = Notification.createNotification(contest, message);
         contest.getParticipants().forEach(user -> user.addNotification(contestNotification));
     }
 

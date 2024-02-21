@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 
 import java.io.File;

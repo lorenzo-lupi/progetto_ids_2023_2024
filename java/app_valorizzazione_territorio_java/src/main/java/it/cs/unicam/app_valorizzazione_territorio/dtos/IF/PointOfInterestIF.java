@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Timetable;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 
 import java.io.File;
 import java.util.Date;

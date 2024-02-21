@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchHandler;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContentBuilder;
@@ -15,11 +15,9 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils.insertItemApprovableByContributors;
@@ -73,7 +71,7 @@ public class ContentHandler {
      */
     @SuppressWarnings("unchecked")
     public static List<ContentSOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
-        return (List<ContentSOF>) SearchHandler.getFilteredItems(MunicipalityRepository.getInstance().getAllContents().toList(), filters);
+        return (List<ContentSOF>) SearchUltils.getFilteredItems(MunicipalityRepository.getInstance().getAllContents().toList(), filters);
     }
 
 
@@ -82,7 +80,7 @@ public class ContentHandler {
      * @return the set of all the criteria available for the search
      */
     public static Set<String> getSearchCriteria() {
-        return SearchHandler.getSearchCriteria();
+        return SearchUltils.getSearchCriteria();
     }
 
     /**

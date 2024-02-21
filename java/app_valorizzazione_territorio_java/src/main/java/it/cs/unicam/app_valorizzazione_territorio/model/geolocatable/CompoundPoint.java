@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.CompoundPointDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 

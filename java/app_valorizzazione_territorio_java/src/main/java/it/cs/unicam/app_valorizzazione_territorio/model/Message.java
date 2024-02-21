@@ -5,21 +5,27 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
+import jakarta.persistence.*;
 
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
 
+@Entity
 public class Message implements Visualizable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
     private final String senderName;
     private final String senderEmail;
     private final String text;
+    @Temporal(TemporalType.DATE)
     private final Date date;
+    @ElementCollection
     private final List<File> attachments;
     private boolean read;
-    private final long ID = MessageRepository.getInstance().getNextID();
 
     /**
      * Constructor for a message.

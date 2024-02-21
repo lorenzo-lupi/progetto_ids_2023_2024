@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class SearchHandler<S extends Searchable & Visualizable> {
+public class SearchUltils<S extends Searchable & Visualizable> {
     protected final SearchEngine<S> searchEngine;
 
     /**
@@ -20,7 +20,7 @@ public class SearchHandler<S extends Searchable & Visualizable> {
      *
      * @param collection the collection of searchable items
      */
-    public SearchHandler(Collection<S> collection) {
+    public SearchUltils(Collection<S> collection) {
         this.searchEngine = new SearchEngine<>(collection);
     }
 

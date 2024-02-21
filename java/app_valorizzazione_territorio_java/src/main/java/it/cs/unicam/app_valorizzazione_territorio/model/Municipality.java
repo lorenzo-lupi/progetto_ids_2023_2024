@@ -9,8 +9,9 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,16 +22,25 @@ import java.util.Map;
  * Representative entity of a municipal territory registered in the system.
  * It acts as a container for geo-locatable points.
  */
+@Entity
 public class Municipality implements Searchable, Identifiable, Visualizable, Positionable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
     private final String name;
     private final String description;
+    @Embedded
     private final Position position;
+    @Embedded
     private final CoordinatesBox coordinatesBox;
+    @ElementCollection
     private final List<File> files;
+    @Transient // TODO : @OneToMany(fetch = FetchType.EAGER, mappedBy = "municipality")
     private final List<GeoLocatable> geoLocatables;
+    @Transient // TODO : @OneToMany(fetch = FetchType.EAGER, mappedBy = "municipality")
     private final List<Contest> contests;
+    @OneToMany(fetch = FetchType.EAGER)
     private final List<Notification> notifications;
-    private final long ID = MunicipalityRepository.getInstance().getNextID();
 
     /**
      * Constructor for a municipality.

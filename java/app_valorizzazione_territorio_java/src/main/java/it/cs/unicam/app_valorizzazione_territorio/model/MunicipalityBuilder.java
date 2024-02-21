@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 
 import java.io.File;
 import java.util.ArrayList;

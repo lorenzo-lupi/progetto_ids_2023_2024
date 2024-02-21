@@ -3,16 +3,14 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchHandler;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -62,7 +60,7 @@ public class MunicipalityHandler {
      */
     @SuppressWarnings("unchecked")
     public static List<MunicipalitySOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
-        return (List<MunicipalitySOF>) SearchHandler
+        return (List<MunicipalitySOF>) SearchUltils
                 .getFilteredItems(municipalityRepository.getItemStream().toList(), filters);
     }
 
@@ -72,7 +70,7 @@ public class MunicipalityHandler {
      * @return the set of all the criteria available for the search
      */
     public static Set<String> getSearchCriteria() {
-        return SearchHandler.getSearchCriteria();
+        return SearchUltils.getSearchCriteria();
     }
 
     /**

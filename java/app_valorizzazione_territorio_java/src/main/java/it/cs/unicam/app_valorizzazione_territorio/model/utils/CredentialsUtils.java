@@ -1,8 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.utils;
 
-
-
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Random;
 
@@ -15,7 +13,7 @@ public class CredentialsUtils {
     private static final int rightLimit = 122; //'z'
     private static final int targetStringLength = 10;
 
-    //private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     private static final Random random = new Random();
 
 
@@ -43,11 +41,9 @@ public class CredentialsUtils {
      * @param password the password to encrypt
      * @return the encrypted password
      */
-    /*
     public static String getEncryptedPassword(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
-    */
 
     /**
      * This method checks if a raw password matches a crypted password.
@@ -56,11 +52,9 @@ public class CredentialsUtils {
      * @param cryptedPassword the crypted password
      * @return true if the raw password matches the crypted password, false otherwise
      */
-    /*
     public static boolean matchesPassword(String rawPassword, String cryptedPassword) {
         return bCryptPasswordEncoder.matches(rawPassword, cryptedPassword);
     }
-    */
 
     /**
      * This method checks if an email is valid.

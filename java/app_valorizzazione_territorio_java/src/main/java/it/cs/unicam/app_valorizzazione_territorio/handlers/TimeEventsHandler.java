@@ -1,7 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Event;
@@ -30,7 +29,7 @@ public class TimeEventsHandler {
         Contest contest = municipalityRepository.getContestByID(contestId);
         ContestContent winner = contest.getProposalRequests().getWinner();
         if (winner != null) {
-            Notification winnerNotification = new Notification(winner,
+            Notification winnerNotification = Notification.createNotification(winner,
                     "Proclaimed the winner of the contest: " + contest.getName() + "!");
             contest.getMunicipality().addNotification(winnerNotification);
             if (contest.isPrivate()) {
@@ -58,7 +57,7 @@ public class TimeEventsHandler {
         PointOfInterest event = municipalityRepository.getPointOfInterestByID(eventId);
         if (event instanceof Event e) {
             e.getMunicipality().addNotification(
-                    new Notification(e, "The event " + e.getName() + " has started!"));
+                    Notification.createNotification(e, "The event " + e.getName() + " has started!"));
         }
     }
 }

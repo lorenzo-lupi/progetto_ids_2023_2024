@@ -10,6 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.PrivateContestDe
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;

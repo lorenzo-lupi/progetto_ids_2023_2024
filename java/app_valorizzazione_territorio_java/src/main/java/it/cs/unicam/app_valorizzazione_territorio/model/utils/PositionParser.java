@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**

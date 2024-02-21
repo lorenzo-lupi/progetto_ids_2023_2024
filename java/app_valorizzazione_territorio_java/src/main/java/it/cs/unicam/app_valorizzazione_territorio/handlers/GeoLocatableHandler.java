@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchHandler;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterestBuilder;
@@ -10,7 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
@@ -103,7 +103,7 @@ public class GeoLocatableHandler {
      */
     @SuppressWarnings("unchecked")
     public static List<GeoLocatableSOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
-        return (List<GeoLocatableSOF>) SearchHandler.getFilteredItems(
+        return (List<GeoLocatableSOF>) SearchUltils.getFilteredItems(
                 municipalityRepository.getItemByID(municipalityID).getGeoLocatables(),
                 filters
         );
@@ -114,7 +114,7 @@ public class GeoLocatableHandler {
      * @return the set of all the criteria available for the search
      */
     public static Set<String> getSearchCriteria() {
-        return SearchHandler.getSearchCriteria();
+        return SearchUltils.getSearchCriteria();
     }
 
     /**

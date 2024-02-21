@@ -7,8 +7,8 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -17,16 +17,38 @@ import java.util.stream.Collectors;
 /**
  * This class represents a user of the application.
  */
+@Entity
+@Table(name = "app_user")
 public class User implements Searchable, Visualizable, Modifiable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
     private String username;
     private String name;
     private String email;
-    private String password;
+    private String encryptedPassword;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = {@JoinColumn(name = "role_municipality_ID", referencedColumnName = "municipality_ID"),
+                    @JoinColumn(name = "role_authorizationEnum", referencedColumnName = "authorizationEnum")})
     private final List<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_notifications",
+            joinColumns = @JoinColumn(name = "user_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "notification_ID", referencedColumnName = "ID"))
     private final List<Notification> notifications;
 
+    //TODO:
+    // @ManyToMany
+    // @JoinTable(
+    //  name = "users_savedcontents",
+    //  joinColumns = @JoinColumn(name = "user_ID"),
+    //  inverseJoinColumns = @JoinColumn(name = "content_ID"))
+    @Transient
     private final List<Content> savedContents;
-    private final long ID = UserRepository.getInstance().getNextID();
 
     /**
      * Creates a new user with the given username and email.
@@ -34,17 +56,17 @@ public class User implements Searchable, Visualizable, Modifiable {
      * @param username the username of the user
      * @param email the email of the user
      */
-    public User(String username, String email, String password) {
-        if (username == null || email == null || password == null)
+    public User(String username, String email, String encryptedPassword) {
+        if (username == null || email == null || encryptedPassword == null)
             throw new IllegalArgumentException("Parameters cannot be null");
         if (!CredentialsUtils.isEmailValid(email))
             throw new IllegalArgumentException("Invalid email");
-        if (!CredentialsUtils.isPasswordValid(password))
+        if (!CredentialsUtils.isPasswordValid(encryptedPassword))
             throw new IllegalArgumentException("Invalid password");
 
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.encryptedPassword = encryptedPassword;
         this.roles = new ArrayList<>();
         this.notifications = new ArrayList<>();
         this.savedContents = new ArrayList<>();
@@ -57,10 +79,13 @@ public class User implements Searchable, Visualizable, Modifiable {
         this.username = username;
     }
     public String getEncryptedPassword() {
-        return this.password;
+        return this.encryptedPassword;
     }
     public void setPassword(String password) {
-        this.password = password;
+        this.encryptedPassword = CredentialsUtils.getEncryptedPassword(password);
+    }
+    public boolean matchesPassword(String password) {
+        return CredentialsUtils.matchesPassword(password, this.encryptedPassword);
     }
 
     public String getName() {

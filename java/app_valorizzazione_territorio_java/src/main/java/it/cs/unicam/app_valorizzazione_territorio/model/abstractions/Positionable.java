@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 
 /**
  * Class implementing this interface represent objects that have a position,
