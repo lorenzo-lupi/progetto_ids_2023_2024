@@ -6,10 +6,15 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
+@Entity
+@DiscriminatorValue("Contest")
 public class ContestRequest extends Request<ContestContent> {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contest_id")
     private final Contest contest;
 
     /**

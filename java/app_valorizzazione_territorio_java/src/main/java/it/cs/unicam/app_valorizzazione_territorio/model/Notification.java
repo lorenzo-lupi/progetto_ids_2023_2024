@@ -41,8 +41,8 @@ public abstract class Notification {
     @DiscriminatorValue("Content")
     private static class ContentNotification extends Notification {
         @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER)
-        private final Content content;
-        public ContentNotification(Content content, String message) {
+        private final Content<?> content;
+        public ContentNotification(Content<?> content, String message) {
             super(message);
             this.content = content;
         }
@@ -68,7 +68,7 @@ public abstract class Notification {
     @Entity
     @DiscriminatorValue("Contest")
     private static class ContestNotification extends Notification {
-        @Transient //TODO : @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER)
         private final Contest contest;
 
         public ContestNotification(Contest contest, String message) {

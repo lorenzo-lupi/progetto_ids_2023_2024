@@ -6,11 +6,21 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
+/**
+ * This class represents a request made to a municipality.
+ *
+ * @param <I> the type of the item of the request.
+ */
+@Entity
+@DiscriminatorValue("Municipality")
 public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "municipality_id")
     private final Municipality municipality;
 
     /**

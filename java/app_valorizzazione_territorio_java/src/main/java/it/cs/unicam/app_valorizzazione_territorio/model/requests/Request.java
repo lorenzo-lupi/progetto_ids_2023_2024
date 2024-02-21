@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiabl
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
+import jakarta.persistence.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,14 +17,24 @@ import java.util.Date;
  *
  * @param <I> the type of the item related to the request.
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "request_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Request<I extends Visualizable> implements Approvable, Identifiable, Visualizable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User sender;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "command_id")
     private final RequestCommand<I> command;
+    @Temporal(TemporalType.DATE)
     private final Date date;
     private String message;
+    @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum status;
-    private final long ID = RequestRepository.getInstance().getNextID();
 
     /**
      * Constructor for a request.

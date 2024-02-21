@@ -61,7 +61,7 @@ public class RequestFactory {
      */
     public static Request<GeoLocatable> getApprovalRequest(GeoLocatable item, String message) {
         return new MunicipalityRequest<>(item.getUser(),
-                new ApprovalCommand<>(item),
+                ApprovalCommand.createApprovalCommand(item),
                 item.getMunicipality(),
                 message);
     }
@@ -107,7 +107,7 @@ public class RequestFactory {
      */
     public static Request<PointOfInterestContent> getApprovalRequest(PointOfInterestContent content, String message) {
         return new MunicipalityRequest<>(content.getUser(),
-                new ApprovalCommand<>(content),
+                ApprovalCommand.createApprovalCommand(content),
                 content.getHost().getMunicipality(),
                 message);
     }
@@ -123,7 +123,7 @@ public class RequestFactory {
      */
     public static Request<ContestContent> getApprovalRequest(ContestContent content, String message) {
         return new ContestRequest(content.getUser(),
-                new ApprovalCommand<>(content),
+                ApprovalCommand.createApprovalCommand(content),
                 message);
     }
 
@@ -175,7 +175,7 @@ public class RequestFactory {
                                                                List<Pair<Parameter, Object>> pairs,
                                                                String message) {
         return new MunicipalityRequest<>(item.getUser(),
-                new ModificationCommand<>(item, pairs),
+                ModificationCommand.createModificationCommand(item, pairs),
                 item.getMunicipality(),
                 message);
     }
@@ -234,7 +234,7 @@ public class RequestFactory {
                                                                          List<Pair<Parameter, Object>> pairs,
                                                                          String message) {
         return new MunicipalityRequest<>(item.getUser(),
-                new ModificationCommand<>(item, pairs),
+                ModificationCommand.createModificationCommand(item, pairs),
                 item.getHost().getMunicipality(),
                 message);
     }
@@ -253,7 +253,7 @@ public class RequestFactory {
                                                                  List<Pair<Parameter, Object>> pairs,
                                                                  String message) {
         return new ContestRequest(item.getUser(),
-                new ModificationCommand<>(item, pairs),
+                ModificationCommand.createModificationCommand(item, pairs),
                 message);
     }
 
@@ -309,7 +309,7 @@ public class RequestFactory {
      */
     public static Request<GeoLocatable> getDeletionRequest(User user, GeoLocatable item, String message) {
         return new MunicipalityRequest<>(user,
-                new DeletionCommand<>(item),
+                DeletionCommand.createDeletionCommand(item),
                 item.getMunicipality(),
                 message);
     }
@@ -381,7 +381,7 @@ public class RequestFactory {
      */
     public static Request<PointOfInterestContent> getDeletionRequest(User user, PointOfInterestContent item, String message) {
         return new MunicipalityRequest<>(user,
-                new DeletionCommand<>(item),
+                DeletionCommand.createDeletionCommand(item),
                 item.getHost().getMunicipality(),
                 message);
     }
@@ -396,7 +396,7 @@ public class RequestFactory {
      * @return the request for the deletion of the item
      */
     public static Request<ContestContent> getDeletionRequest(User user, ContestContent item, String message) {
-        return new ContestRequest(user, new DeletionCommand<>(item), message);
+        return new ContestRequest(user, DeletionCommand.createDeletionCommand(item), message);
     }
 
 
@@ -425,7 +425,7 @@ public class RequestFactory {
      */
     public static Request<User> getPromotionRequest(User user, Role role, String message) {
         return new MunicipalityRequest<>(user,
-                new ModificationCommand<>(user, Parameter.ADD_ROLE, role),
+                ModificationCommand.createModificationCommand(user, Parameter.ADD_ROLE, role),
                 role.municipality(),
                 message);
     }
