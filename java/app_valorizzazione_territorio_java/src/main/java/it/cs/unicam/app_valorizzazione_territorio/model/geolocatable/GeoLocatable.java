@@ -4,8 +4,12 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.List;
@@ -18,14 +22,51 @@ import java.util.function.Consumer;
  * It includes fundamental details such as a name, a textual description and a representative
  * multimedia content.
  */
+@Entity
+@NoArgsConstructor(force = true)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class GeoLocatable implements Requestable, Searchable, Positionable, Deletable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
     private final User user;
+    /**
+     * -- GETTER --
+     *  Returns the name of the geo-localizable object.
+     *
+     * @return the name of the geo-localizable object
+     */
+    @Getter
     private String name;
+    @Getter
     private String description;
-    private final Municipality municipality;
+    /**
+     * -- GETTER --
+     *  Returns the representative multimedia content of the geo-localizable object.
+     *
+     * @return the representative multimedia content of the geo-localizable object
+     */
+    @Getter
+    @ElementCollection
     private final List<File> images;
+    @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
-    private final long ID = MunicipalityRepository.getInstance().getNextGeoLocalizableID();
+
+    /**
+     * -- GETTER --
+     *  Returns the municipality of the geo-localizable object.
+     *
+     * @return the municipality of the geo-localizable object
+     */
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "municipality_id")
+    private final Municipality municipality;
+    @Getter
+    @Embedded
+    private Position position;
 
 
     /**
@@ -57,16 +98,9 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.approvalStatus = ApprovalStatusEnum.PENDING;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public Municipality getMunicipality() {
-        return municipality;
-    }
-
-    public List<File> getImages() {
-        return images;
+    protected void setPosition(Position position){
+        this.position = position;
     }
 
     /**
@@ -81,13 +115,6 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.name = name;
     }
 
-    /**
-     * Returns the description of the geo-localizable object.
-     * @return the description of the geo-localizable object
-     */
-    public String getDescription() {
-        return this.description;
-    }
 
     /**
      * Sets the description of the geo-localizable object.
@@ -101,10 +128,6 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     /**
      * Adds a representative multimedia content to the geo-localizable object.
      *
@@ -112,6 +135,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
      * @return true if the representative multimedia content has been added, false otherwise
      * @throws IllegalArgumentException if image is null
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addImage(File image) {
         if (image == null)
             throw new IllegalArgumentException("image cannot be null");
@@ -126,6 +150,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
      * @param image the representative multimedia content to remove
      * @return true if the representative multimedia content has been removed, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean removeImage(File image) {
         return this.images.remove(image);
     }

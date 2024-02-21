@@ -3,12 +3,14 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
 @DiscriminatorValue("GeoLocatable")
+@NoArgsConstructor(force = true)
 public class GeoLocatableContestDecorator extends ContestDecorator{
 
     @Transient

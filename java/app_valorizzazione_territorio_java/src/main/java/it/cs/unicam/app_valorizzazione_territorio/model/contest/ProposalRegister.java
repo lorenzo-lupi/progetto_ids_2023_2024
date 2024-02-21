@@ -3,12 +3,12 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 
 @Entity
 public class ProposalRegister {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;

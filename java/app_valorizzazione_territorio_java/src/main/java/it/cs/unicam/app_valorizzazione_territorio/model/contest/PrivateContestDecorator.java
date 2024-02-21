@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Entity
 @DiscriminatorValue("Private")
+@NoArgsConstructor(force = true)
 public class PrivateContestDecorator extends ContestDecorator {
 
     @ManyToMany(fetch = FetchType.EAGER)

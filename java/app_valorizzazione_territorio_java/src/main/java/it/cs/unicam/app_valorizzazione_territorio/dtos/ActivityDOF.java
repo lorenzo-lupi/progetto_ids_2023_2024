@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.TimeRange;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.TimeRange;
 
 import java.util.List;
 
@@ -12,7 +12,9 @@ public final class ActivityDOF extends PointOfInterestDOF{
     private final String type;
     private final List<TimeRange> timetable;
 
-    public ActivityDOF(PointOfInterestDOF pointOfInterestDOF, String type, List<TimeRange> timetable) {
+    public ActivityDOF(PointOfInterestDOF pointOfInterestDOF,
+                       String type,
+                       List<TimeRange> timetable) {
         super(pointOfInterestDOF.name(),
                 pointOfInterestDOF.description(),
                 pointOfInterestDOF.position(),

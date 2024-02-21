@@ -6,6 +6,9 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.*;
@@ -21,8 +24,18 @@ import java.util.function.Consumer;
  * connected to each other. An ITINERARY is a compound point composed by multiple points of interest objects
  * that are connected to each other.
  */
+@Entity
+@NoArgsConstructor(force = true)
 public class CompoundPoint extends GeoLocatable {
-    private final CompoundPointTypeEnum type;
+
+    @Getter
+    private CompoundPointTypeEnum type;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "compound_point_points_of_interest",
+            joinColumns = @JoinColumn(name = "compound_point_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "point_of_interest_ID", referencedColumnName = "ID"))
     private final Collection<PointOfInterest> pointsOfInterest;
     /**
      * Constructor for a compound point.
@@ -45,8 +58,9 @@ public class CompoundPoint extends GeoLocatable {
 
         this.type = type;
         this.pointsOfInterest = pointsOfInterest;
-
+        this.setPosition(this.calculatePosition());
     }
+
 
     private void checkArguments(CompoundPointTypeEnum type,
                                 Collection<PointOfInterest> pointOfInterests) {
@@ -59,10 +73,6 @@ public class CompoundPoint extends GeoLocatable {
             throw new IllegalArgumentException("pointOfInterests must contain at least 2 elements");
     }
 
-    public CompoundPointTypeEnum getType() {
-        return type;
-    }
-
     public List<PointOfInterest> getGeoLocalizablesList() {
         return pointsOfInterest.stream().toList();
     }
@@ -71,21 +81,14 @@ public class CompoundPoint extends GeoLocatable {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("pointOfInterest cannot be null");
         this.pointsOfInterest.add(pointOfInterest);
+        this.setPosition(this.calculatePosition());
     }
 
     public void removePointOfInterest(PointOfInterest pointOfInterest) {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("pointOfInterest cannot be null");
         this.pointsOfInterest.remove(pointOfInterest);
-    }
-
-    @Override
-    public Position getPosition() {
-        return this.pointsOfInterest.stream()
-                .map(PointOfInterest::getPosition)
-                .map(position -> position.divide(this.pointsOfInterest.size()))
-                .reduce(Position::sum)
-                .orElseThrow();
+        this.setPosition(this.calculatePosition());
     }
 
     @Override
@@ -118,5 +121,12 @@ public class CompoundPoint extends GeoLocatable {
         List<GeoLocatableSOF> geoLocatableSOF = new LinkedList<>();
         this.pointsOfInterest.forEach(pointOfInterest -> geoLocatableSOF.add(pointOfInterest.getSynthesizedFormat()));
         return geoLocatableSOF;
+    }
+    private Position calculatePosition() {
+        return this.pointsOfInterest.stream()
+                .map(PointOfInterest::getPosition)
+                .map(position -> position.divide(this.pointsOfInterest.size()))
+                .reduce(Position::sum)
+                .orElseThrow();
     }
 }

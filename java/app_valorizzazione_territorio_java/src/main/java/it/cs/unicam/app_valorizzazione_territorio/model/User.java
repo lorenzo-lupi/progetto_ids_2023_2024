@@ -9,6 +9,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -19,9 +20,10 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Table(name = "app_user")
+@NoArgsConstructor(force = true)
 public class User implements Searchable, Visualizable, Modifiable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private long ID;
     private String username;
     private String name;

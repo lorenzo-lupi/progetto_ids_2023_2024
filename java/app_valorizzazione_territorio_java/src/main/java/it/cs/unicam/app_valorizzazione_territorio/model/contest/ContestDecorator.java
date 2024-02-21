@@ -8,6 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Map;
 @DiscriminatorValue("Decorator")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "decorator_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
 public abstract class ContestDecorator extends Contest{
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
