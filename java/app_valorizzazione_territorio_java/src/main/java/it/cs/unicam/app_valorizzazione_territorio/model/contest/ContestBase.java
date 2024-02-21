@@ -7,6 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("Base")
+@NoArgsConstructor(force = true)
 public class ContestBase extends Contest {
 
     private String name;

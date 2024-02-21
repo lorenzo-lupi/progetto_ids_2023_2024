@@ -160,7 +160,7 @@ public class ContestHandler {
         builder.build();
 
         municipalityRepository.getItemByID(municipalityID).addContest(builder.getResult());
-        if (contestIF.isPrivate()) sendNotifications(builder.getResult(), INVITATION_MESSAGE);
+        if (contestIF.isPrivate()) sendNotifications(builder.getResult());
         return builder.getResult().getID();
     }
 
@@ -274,8 +274,8 @@ public class ContestHandler {
     }
 
 
-    private static void sendNotifications(Contest contest, String message) {
-        Notification contestNotification = Notification.createNotification(contest, message);
+    private static void sendNotifications(Contest contest) {
+        Notification contestNotification = Notification.createNotification(contest, ContestHandler.INVITATION_MESSAGE);
         contest.getParticipants().forEach(user -> user.addNotification(contestNotification));
     }
 

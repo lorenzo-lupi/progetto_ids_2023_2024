@@ -5,6 +5,13 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,30 +22,20 @@ import java.util.function.Consumer;
  * This class represents an event, that is a particular point of interest associated
  * with a date of start and a date of end.
  */
+@Setter
+@Getter
+@Entity
+@NoArgsConstructor(force = true)
 public class Event extends PointOfInterest{
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+    @Temporal(TemporalType.DATE)
     private Date endDate;
 
     public Event(String title, String description, Position position, Municipality municipality, Date startDate, Date endDate, User user) {
         super(title, description, position, municipality, user);
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-    	this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-    	this.endDate = endDate;
     }
 
     /**
@@ -59,6 +56,7 @@ public class Event extends PointOfInterest{
     }
 
     @Override
+    @Transient
     public Map<Parameter, Consumer<Object>> getSettersMapping() {
         Map<Parameter, Consumer<Object>> settersMapping = new HashMap<>(super.getSettersMapping());
         settersMapping.put(Parameter.START_DATE, toObjectSetter(this::setStartDate, Date.class));
@@ -67,6 +65,7 @@ public class Event extends PointOfInterest{
     }
 
     @Override
+    @Transient
     public EventDOF getDetailedFormat() {
         return new EventDOF(super.getDetailedFormat(), this.getStartDate(), this.getEndDate());
     }

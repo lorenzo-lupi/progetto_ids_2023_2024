@@ -176,6 +176,7 @@ public class ContentHandler {
      * @param contentID the ID of the content to save
      * @return true if the content is saved, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue") // This method is used for its side effects
     public static boolean saveContent(long userID, long contentID) {
         User user = userRepository.getItemByID(userID);
         Content<?> content = municipalityRepository.getContentByID(contentID);
@@ -190,6 +191,7 @@ public class ContentHandler {
      * @param contentID the ID of the content to remove
      * @return true if the content is removed, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue") // This method is used for its side effects
     public static boolean removeSavedContent(long userID, long contentID) {
         User user = userRepository.getItemByID(userID);
         Content<?> content = municipalityRepository.getContentByID(contentID);

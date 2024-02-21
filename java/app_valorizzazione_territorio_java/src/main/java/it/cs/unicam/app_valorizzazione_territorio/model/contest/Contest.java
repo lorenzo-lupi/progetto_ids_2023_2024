@@ -12,6 +12,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "contest_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
 public abstract class Contest implements Searchable, Visualizable, ContentHost<Contest> {
 
     @Id

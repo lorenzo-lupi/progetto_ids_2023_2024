@@ -8,6 +8,8 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.*;
@@ -17,9 +19,15 @@ import java.util.function.Consumer;
  * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
  * represents an attraction, an event or an activity present on the territory. It can be included in a compound point.
  */
+@Entity
+@NoArgsConstructor(force = true)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class PointOfInterest extends GeoLocatable implements ContentHost<PointOfInterest> {
-    private Position position;
+
+    @Transient
+    //TODO change to a list of PointOfInterestContent
     private final List<PointOfInterestContent> contents;
+
 
     public static final Map<String, Class<? extends PointOfInterest>> stringToClass = Map.of(
             Attraction.class.getSimpleName(), Attraction.class,
@@ -69,7 +77,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         super(name, description, municipality, images, user);
         if(!municipality.getCoordinatesBox().contains(coordinates))
             throw new IllegalCoordinatesException("Position must be inside the municipality");
-        this.position = coordinates;
+        this.setPosition(coordinates);
         this.contents = contents;
     }
 
@@ -79,6 +87,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
      * @param content the contents associated to the geo-locatable object
      * @return true if the contents associated to the geo-locatable object has been added, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addContent(PointOfInterestContent content) {
         return this.contents.add(content);
     }
@@ -89,19 +98,15 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
      * @param content the content to remove
      * @return true if the content has been removed, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean removeContent(PointOfInterestContent content) {
         return this.contents.remove(content);
     }
 
-    public Position getPosition() {
-        return this.position;
-    }
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
 
     @Override
+    @Transient
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
         parametersMapping.put(Parameter.CLASSIFICATION, this.getClass().getSimpleName());
@@ -109,6 +114,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     }
 
     @Override
+    @Transient
     public Map<Parameter, Consumer<Object>> getSettersMapping() {
         Map<Parameter, Consumer<Object>> parametersSetterMapping = new HashMap<>(super.getSettersMapping());
         parametersSetterMapping.put(Parameter.POSITION, toObjectSetter(this::setPosition, Position.class));
@@ -116,6 +122,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     }
 
     @Override
+    @Transient
     public PointOfInterestDOF getDetailedFormat() {
         return new PointOfInterestDOF(super.getName(),
                 super.getDescription(),
@@ -128,6 +135,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     }
 
     @Override
+    @Transient
     public Collection<PointOfInterestContent> getContents() {
         return this.contents;
     }

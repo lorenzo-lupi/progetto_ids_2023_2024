@@ -1,8 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
 import jakarta.persistence.*;
-import org.hibernate.boot.jaxb.hbm.spi.JaxbHbmUnsavedValueCompositeIdEnum;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.function.Predicate;
 
 /**
@@ -10,6 +11,7 @@ import java.util.function.Predicate;
  * It is used to represent the role of a {@link User} in a {@link Municipality}.
  */
 @Entity
+@NoArgsConstructor(force = true)
 public class Role {
     @EmbeddedId
     private RoleKey roleKey;
@@ -56,8 +58,10 @@ public class Role {
     }
 
     @Embeddable
-    private class RoleKey {
+    @NoArgsConstructor(force = true)
+    private class RoleKey implements Serializable {
         @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "municipality_id", referencedColumnName = "ID")
         private final Municipality municipality;
 
         @Enumerated(EnumType.STRING)

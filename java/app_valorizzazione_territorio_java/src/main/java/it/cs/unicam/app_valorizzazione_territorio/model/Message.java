@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Date;
 
 @Entity
+@NoArgsConstructor(force = true)
 public class Message implements Visualizable {
 
     @Id
