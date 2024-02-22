@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +10,7 @@ import java.time.LocalTime;
 /**
  * This class represents a time range composed by an opening {@link LocalTime} and a closing {@link LocalTime}.
  */
+@JsonView(View.Synthesized.class)
 @Embeddable
 @NoArgsConstructor(force = true)
 public class TimeRange {

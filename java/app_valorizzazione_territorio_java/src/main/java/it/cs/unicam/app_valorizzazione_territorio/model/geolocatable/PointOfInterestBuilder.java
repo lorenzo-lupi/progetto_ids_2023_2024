@@ -2,11 +2,13 @@ package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.TimeRange;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.Timetable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import java.util.Date;
+import java.util.List;
 
 public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest> {
     private Position position;
@@ -72,10 +74,10 @@ public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest>
         return this;
     }
 
-    public PointOfInterestBuilder setTimetable(Timetable timetable) {
+    public PointOfInterestBuilder setTimetable(List<TimeRange> timeRanges) {
         if(this.classification != Activity.class)
             throw new IllegalStateException("Classification must be Activity");
-        this.timetable = timetable;
+        this.timetable = new Timetable(timeRanges);
         return this;
     }
 

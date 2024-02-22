@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.EventDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.EventOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -66,8 +66,8 @@ public class Event extends PointOfInterest{
 
     @Override
     @Transient
-    public EventDOF getDetailedFormat() {
-        return new EventDOF(super.getDetailedFormat(), this.getStartDate(), this.getEndDate());
+    public EventOF getOutputFormat() {
+        return new EventOF(super.getOutputFormat(), this.getStartDate(), this.getEndDate());
     }
 
 }

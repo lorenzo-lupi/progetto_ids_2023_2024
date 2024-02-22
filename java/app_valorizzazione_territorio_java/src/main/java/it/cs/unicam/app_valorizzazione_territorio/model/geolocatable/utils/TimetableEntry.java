@@ -1,56 +1,57 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-
 import java.io.Serializable;
 import java.time.DayOfWeek;
-
 
 @Getter
 @Setter
 @Entity
+@IdClass(TimetableEntry.EntryKey.class)
 public class TimetableEntry {
-    @EmbeddedId
-    private KeyEntry keyEntry;
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Timetable timetable;
+    @JsonView(View.Synthesized.class)
+    @Id
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek dayOfWeek;
+    @JsonView(View.Synthesized.class)
     @Embedded
     private TimeRange timeRange;
 
-    public TimetableEntry() {
+    public TimetableEntry() {}
 
-    }
-
-    public TimetableEntry(DayOfWeek first, TimeRange second, Timetable timetable){
-        this.keyEntry = new KeyEntry(timetable, first);
-        this.timeRange = second;
+    public TimetableEntry(DayOfWeek dayOfWeek, TimeRange timeRange, Timetable timetable){
+        this.dayOfWeek = dayOfWeek;
+        this.timetable = timetable;
+        this.timeRange = timeRange;
     }
     @Transient
     public DayOfWeek getDayOfWeek() {
-        return keyEntry.getDayOfWeek();
+        return this.dayOfWeek;
     }
     @Transient
-    public Timetable timetable() {
-        return keyEntry.getTimetable();
+    public Timetable getTimetable() {
+        return this.timetable;
     }
     @Getter
     @Setter
-    @Embeddable
-    class KeyEntry implements Serializable {
-        @ManyToOne(fetch = FetchType.EAGER)
+    protected static class EntryKey implements Serializable {
         private Timetable timetable;
-        @Enumerated(EnumType.STRING)
         private DayOfWeek dayOfWeek;
 
-        protected KeyEntry(Timetable timetable,
+        protected EntryKey(Timetable timetable,
                            DayOfWeek dayOfWeek){
             this.timetable = timetable;
             this.dayOfWeek = dayOfWeek;
         }
 
-        public KeyEntry() {
-
-        }
+        public EntryKey() {}
     }
 }

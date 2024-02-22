@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.AttractionDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.AttractionOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -32,8 +32,8 @@ public class Attraction extends PointOfInterest{
 
     @Override
     @Transient
-    public AttractionDOF getDetailedFormat() {
-        return new AttractionDOF(super.getDetailedFormat(), this.getType().toString());
+    public AttractionOF getOutputFormat() {
+        return new AttractionOF(super.getOutputFormat(), this.getType().toString());
     }
 
     @Override

@@ -5,10 +5,8 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Requestable
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -127,16 +125,10 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     }
 
     @Override
-    public ContentSOF getSynthesizedFormat() {
-        return new ContentSOF(
+    public ContentOF getOutputFormat() {
+        return new ContentOF(this.getDescription(),
+                this.getHost().getOutputFormat(),
                 this.getFiles().isEmpty() ? null : this.getFiles().get(0),
-                this.ID);
-    }
-
-    @Override
-    public ContentDOF getDetailedFormat() {
-        return new ContentDOF(this.getDescription(),
-                this.getHost().getSynthesizedFormat(),
                 this.getFiles(),
                 this.getApprovalStatus(),
                 this.getID());

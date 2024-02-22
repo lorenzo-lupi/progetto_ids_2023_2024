@@ -1,7 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.CompoundPointDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.CompoundPointOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -73,7 +72,7 @@ public class CompoundPoint extends GeoLocatable {
             throw new IllegalArgumentException("pointOfInterests must contain at least 2 elements");
     }
 
-    public List<PointOfInterest> getGeoLocalizablesList() {
+    public List<PointOfInterest> getPointsOfInterest() {
         return pointsOfInterest.stream().toList();
     }
 
@@ -108,20 +107,20 @@ public class CompoundPoint extends GeoLocatable {
     }
 
     @Override
-    public CompoundPointDOF getDetailedFormat() {
-        return new CompoundPointDOF(this.getID(),
+    public CompoundPointOF getOutputFormat() {
+        return new CompoundPointOF(
                 this.getName(),
                 this.getDescription(),
-                this.type,
-                this.getGeoLocatableSOFList()
-                );
+                this.getPosition(),
+                this.getMunicipality().getOutputFormat(),
+                this.getType(),
+                this.getImages().isEmpty() ? null : this.getImages().get(0),
+                this.getImages(),
+                this.getPointsOfInterest().stream().map(PointOfInterest::getOutputFormat).toList(),
+                this.getID()
+        );
     }
 
-    private List<GeoLocatableSOF> getGeoLocatableSOFList() {
-        List<GeoLocatableSOF> geoLocatableSOF = new LinkedList<>();
-        this.pointsOfInterest.forEach(pointOfInterest -> geoLocatableSOF.add(pointOfInterest.getSynthesizedFormat()));
-        return geoLocatableSOF;
-    }
     private Position calculatePosition() {
         return this.pointsOfInterest.stream()
                 .map(PointOfInterest::getPosition)

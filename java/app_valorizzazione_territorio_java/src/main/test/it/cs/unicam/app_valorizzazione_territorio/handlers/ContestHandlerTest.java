@@ -1,9 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContestIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.VotedContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestStatusEnum;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ContestHandlerTest {
 
 
-    private static ContestIF sampleInputBaseContest = new ContestIF(
+    private static final ContestIF sampleInputBaseContest = new ContestIF(
             "Sample Contest",
             "Sample Topic",
             "Sample rules",
@@ -37,7 +36,7 @@ public class ContestHandlerTest {
             new Date(124, 10, 30),
             new Date(124, 11, 10));
 
-    private static ContestIF sampleInputPrivateContest = new ContestIF(
+    private static final ContestIF sampleInputPrivateContest = new ContestIF(
             "Sample Contest",
             "Sample Topic",
             "Sample rules",
@@ -48,7 +47,7 @@ public class ContestHandlerTest {
             new Date(124, 10, 30),
             new Date(124, 11, 10));
 
-    private static ContestIF sampleInputGeoLocatableContest = new ContestIF(
+    private static final ContestIF sampleInputGeoLocatableContest = new ContestIF(
             "Sample Contest",
             "Sample Topic",
             "Sample rules",
@@ -81,34 +80,34 @@ public class ContestHandlerTest {
     }
     @Test
     void shouldViewAllContestsWithPrivate() {
-        List<ContestSOF> contests = ContestHandler.viewAllContests(
+        List<ContestOF> contests = ContestHandler.viewAllContests(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.CAMERINO.getID());
 
         assertEquals(2, contests.size());
-        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getSynthesizedFormat(),
-                        SampleRepositoryProvider.CONCORSO_PITTURA.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat(),
+                        SampleRepositoryProvider.CONCORSO_PITTURA.getOutputFormat()),
                 Set.copyOf(contests));
     }
 
     @Test
     void shouldViewAllContestsWithoutPrivate() {
-        List<ContestSOF> contests = ContestHandler.viewAllContests(
+        List<ContestOF> contests = ContestHandler.viewAllContests(
                 SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 SampleRepositoryProvider.CAMERINO.getID());
 
         assertEquals(1, contests.size());
-        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat()),
                 Set.copyOf(contests));
     }
 
     @Test
     void shouldViewContest() {
-        ContestDOF contest = ContestHandler.viewContest(
+        ContestOF contest = ContestHandler.viewContest(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getID());
 
-        assertEquals(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getDetailedFormat(), contest);
+        assertEquals(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat(), contest);
     }
 
     @Test
@@ -120,48 +119,48 @@ public class ContestHandlerTest {
 
     @Test
     void shouldViewContestWithNoFilters() {
-        List<ContestSOF> contests = ContestHandler.viewFilteredContests(
+        List<ContestOF> contests = ContestHandler.viewFilteredContests(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.MACERATA.getID(),
                 List.of());
 
         assertEquals(2, contests.size());
-        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_2024.getSynthesizedFormat(),
-                        SampleRepositoryProvider.CONCORSO_FOTO_2025.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_2024.getOutputFormat(),
+                        SampleRepositoryProvider.CONCORSO_FOTO_2025.getOutputFormat()),
                 Set.copyOf(contests));
     }
 
     @Test
     void shouldViewContestWithOneFilter() {
-        List<ContestSOF> contests = ContestHandler.viewFilteredContests(
+        List<ContestOF> contests = ContestHandler.viewFilteredContests(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.MACERATA.getID(),
                 List.of(new SearchFilter(Parameter.CONTEST_STATUS.toString(), "EQUALS", ContestStatusEnum.OPEN)));
 
         assertEquals(1, contests.size());
-        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_2024.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_2024.getOutputFormat()),
                 Set.copyOf(contests));
     }
 
     @Test
     void shouldViewContestWithMoreFilters() {
-        List<ContestSOF> contests = ContestHandler.viewFilteredContests(
+        List<ContestOF> contests = ContestHandler.viewFilteredContests(
                 SampleRepositoryProvider.TURIST_1.getID(),
                 SampleRepositoryProvider.MACERATA.getID(),
                 List.of(new SearchFilter(Parameter.CONTEST_STATUS.toString(), "EQUALS", ContestStatusEnum.PLANNED),
                         new SearchFilter(Parameter.CONTEST_TOPIC.toString(), "CONTAINS", "foto")));
 
         assertEquals(1, contests.size());
-        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_2025.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.CONCORSO_FOTO_2025.getOutputFormat()),
                 Set.copyOf(contests));
     }
 
     @Test
     void shouldViewContestFromRepository() {
-        ContestDOF contest = ContestHandler.viewContestFromRepository(
+        ContestOF contest = ContestHandler.viewContestFromRepository(
                 SampleRepositoryProvider.CONCORSO_PITTURA.getID());
 
-        assertEquals(SampleRepositoryProvider.CONCORSO_PITTURA.getDetailedFormat(), contest);
+        assertEquals(SampleRepositoryProvider.CONCORSO_PITTURA.getOutputFormat(), contest);
     }
 
     @Test
@@ -265,13 +264,13 @@ public class ContestHandlerTest {
         assertTrue(ContestHandler
                 .viewAllProposals(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID())
                 .stream()
-                .map(VotedContentSOF::votes)
+                .map(VotedContentOF::votes)
                 .allMatch(votes -> votes == 1));
         removeVote();
         assertTrue(ContestHandler
                 .viewAllProposals(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID())
                 .stream()
-                .map(VotedContentSOF::votes)
+                .map(VotedContentOF::votes)
                 .allMatch(votes -> votes == 0));
     }
 

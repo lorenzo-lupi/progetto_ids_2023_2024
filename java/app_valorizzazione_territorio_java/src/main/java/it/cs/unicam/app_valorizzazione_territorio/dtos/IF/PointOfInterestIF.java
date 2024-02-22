@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.Timetable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.TimeRange;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 
 import java.io.File;
@@ -16,5 +16,5 @@ public record PointOfInterestIF(String name,
                                 String type,
                                 Date startDate,
                                 Date endDate,
-                                Timetable timetable) {
+                                List<TimeRange> timetable) {
 }

@@ -1,8 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -23,7 +22,7 @@ import java.util.Map;
 public abstract class ContestDecorator extends Contest{
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Contest contest;
+    private final Contest contest;
 
     public ContestDecorator(Contest contest){
         super(contest.getMunicipality());
@@ -101,13 +100,8 @@ public abstract class ContestDecorator extends Contest{
     }
 
     @Override
-    public ContestSOF getSynthesizedFormat() {
-        return this.contest.getSynthesizedFormat();
-    }
-
-    @Override
-    public ContestDOF getDetailedFormat() {
-        return this.contest.getDetailedFormat();
+    public ContestOF getOutputFormat() {
+        return this.contest.getOutputFormat();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContentBuilder;
@@ -7,8 +8,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterest
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -39,11 +38,11 @@ public class ContentHandler {
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
      */
-    public static List<ContentSOF> viewApprovedContents(long pointOfInterestID) {
+    public static List<ContentOF> viewApprovedContents(long pointOfInterestID) {
         return municipalityRepository.getPointOfInterestByID(pointOfInterestID)
                 .getApprovedContents()
                 .stream()
-                .map(Content::getSynthesizedFormat)
+                .map(Content::getOutputFormat)
                 .toList();
     }
 
@@ -53,11 +52,11 @@ public class ContentHandler {
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
      */
-    public static List<ContentSOF> viewAllContents(long pointOfInterestID) {
+    public static List<ContentOF> viewAllContents(long pointOfInterestID) {
         return municipalityRepository.getPointOfInterestByID(pointOfInterestID)
                 .getContents()
                 .stream()
-                .map(Content::getSynthesizedFormat)
+                .map(Content::getOutputFormat)
                 .toList();
     }
 
@@ -70,8 +69,8 @@ public class ContentHandler {
      * @return the Synthesized Format of all the contest in the point of interest corresponding to the given filters
      */
     @SuppressWarnings("unchecked")
-    public static List<ContentSOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
-        return (List<ContentSOF>) SearchUltils.getFilteredItems(MunicipalityRepository.getInstance().getAllContents().toList(), filters);
+    public static List<ContentOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
+        return (List<ContentOF>) SearchUltils.getFilteredItems(MunicipalityRepository.getInstance().getAllContents().toList(), filters);
     }
 
 
@@ -101,9 +100,9 @@ public class ContentHandler {
      * @return the Detailed Format of the Content having the given ID
      * @throws IllegalArgumentException if the Content having the given ID is not found
      */
-    public static ContentDOF viewContent(long pointOfInterestID, long contentID) {
+    public static ContentOF viewContent(long pointOfInterestID, long contentID) {
         return getContent(municipalityRepository.getPointOfInterestByID(pointOfInterestID), contentID)
-                .getDetailedFormat();
+                .getOutputFormat();
     }
 
     /**
@@ -113,8 +112,8 @@ public class ContentHandler {
      * @param contentID the ID of the Content to visualize
      * @return the Detailed Format of the Content having the given ID
      */
-    public static ContentDOF viewContentFromRepository(long contentID) {
-        return municipalityRepository.getContentByID(contentID).getDetailedFormat();
+    public static ContentOF viewContentFromRepository(long contentID) {
+        return municipalityRepository.getContentByID(contentID).getOutputFormat();
     }
 
     private static Content<PointOfInterest> getContent(PointOfInterest pointOfInterest, long contentID) {
@@ -204,11 +203,11 @@ public class ContentHandler {
      * @param userID the ID of the user
      * @return the Synthesized Format of all the saved contents of the user
      */
-    public static List<ContentSOF> viewSavedContents(long userID) {
+    public static List<ContentOF> viewSavedContents(long userID) {
         return userRepository.getItemByID(userID)
                 .getSavedContents()
                 .stream()
-                .map(Content::getSynthesizedFormat)
+                .map(Content::getOutputFormat)
                 .toList();
     }
 

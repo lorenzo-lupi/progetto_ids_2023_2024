@@ -1,12 +1,11 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -55,7 +54,7 @@ class ContentHandlerTest {
         assertEquals(ContentHandler.viewApprovedContents(geoLocatable.getID())
                 .stream()
                 .map(c  -> ContentHandler.viewContentFromRepository(c.getID()))
-                .map(ContentDOF::getID)
+                .map(ContentOF::getID)
                 .map(id -> municipalityRepository.getContentByID(id))
                 .toList(),
 
@@ -193,8 +192,8 @@ class ContentHandlerTest {
         long contentID = SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID();
         ContentHandler.saveContent(userID, contentID);
 
-        List<ContentSOF> savedContents = ContentHandler.viewSavedContents(userID);
-        ContentSOF content = userRepository.getItemByID(userID).getSavedContents().get(0).getSynthesizedFormat();
+        List<ContentOF> savedContents = ContentHandler.viewSavedContents(userID);
+        ContentOF content = userRepository.getItemByID(userID).getSavedContents().get(0).getOutputFormat();
         assertEquals(content, savedContents.get(0));
 
 

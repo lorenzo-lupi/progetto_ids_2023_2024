@@ -5,8 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionabl
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
@@ -177,15 +176,14 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     }
 
     @Override
-    public MunicipalitySOF getSynthesizedFormat() {
-        return new MunicipalitySOF(this.getName(),
+    public MunicipalityOF getOutputFormat() {
+        return new MunicipalityOF(
+                this.getName(),
+                this.getDescription(),
+                this.getPosition(),
                 this.getFiles().isEmpty() ? null : this.getFiles().get(0),
+                this.getFiles(),
                 this.getID());
-    }
-
-    @Override
-    public MunicipalityDOF getDetailedFormat() {
-        return new MunicipalityDOF(this.getName(), this.getDescription(), this.getPosition(), this.getFiles(), this.getID());
     }
 
     @Override

@@ -1,8 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
@@ -45,9 +44,9 @@ public class MunicipalityHandler {
      *
      * @return the Synthesized Format of all the municipalities in the system
      */
-    public static List<MunicipalitySOF> viewAllMunicipalities() {
+    public static List<MunicipalityOF> viewAllMunicipalities() {
         return municipalityRepository.getItemStream()
-                .map(Municipality::getSynthesizedFormat)
+                .map(Municipality::getOutputFormat)
                 .toList();
     }
 
@@ -59,8 +58,8 @@ public class MunicipalityHandler {
      * @return the Synthesized Format of all the municipalities in the system corresponding to the given filters
      */
     @SuppressWarnings("unchecked")
-    public static List<MunicipalitySOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
-        return (List<MunicipalitySOF>) SearchUltils
+    public static List<MunicipalityOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
+        return (List<MunicipalityOF>) SearchUltils
                 .getFilteredItems(municipalityRepository.getItemStream().toList(), filters);
     }
 
@@ -97,7 +96,7 @@ public class MunicipalityHandler {
      * @return the Detailed Format of the Municipality having the given ID
      * @throws IllegalArgumentException if the Municipality having the given ID is not found
      **/
-    public static MunicipalityDOF viewMunicipality(long municipalityID) {
-        return municipalityRepository.getItemByID(municipalityID).getDetailedFormat();
+    public static MunicipalityOF viewMunicipality(long municipalityID) {
+        return municipalityRepository.getItemByID(municipalityID).getOutputFormat();
     }
 }

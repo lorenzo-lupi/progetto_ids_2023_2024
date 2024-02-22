@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -10,11 +12,18 @@ import java.util.function.Predicate;
  * This class represents relationship between a {@link Municipality} and a {@link AuthorizationEnum}.
  * It is used to represent the role of a {@link User} in a {@link Municipality}.
  */
+@JsonView(View.Synthesized.class)
 @Entity
+@IdClass(Role.RoleKey.class)
 @NoArgsConstructor(force = true)
 public class Role {
-    @EmbeddedId
-    private RoleKey roleKey;
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "municipality_id", referencedColumnName = "ID")
+    private final Municipality municipality;
+    @Id
+    @Enumerated(EnumType.STRING)
+    private final AuthorizationEnum authorizationEnum;
 
     public static Predicate<User> isCuratorForMunicipality(Municipality municipality){
         return user -> user.getRoles().stream()
@@ -33,15 +42,16 @@ public class Role {
     }
 
     public Role(Municipality municipality, AuthorizationEnum authorizationEnum) {
-        this.roleKey = new RoleKey(municipality, authorizationEnum);
+        this.municipality = municipality;
+        this.authorizationEnum = authorizationEnum;
     }
 
     public Municipality municipality() {
-        return roleKey.municipality;
+        return this.municipality;
     }
 
     public AuthorizationEnum authorizationEnum() {
-        return roleKey.authorizationEnum;
+        return this.authorizationEnum;
     }
 
     @Override
@@ -49,22 +59,16 @@ public class Role {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Role role = (Role) obj;
-        return roleKey.municipality.equals(role.municipality()) && roleKey.authorizationEnum == role.authorizationEnum();
+        return this.municipality.equals(role.municipality()) && this.authorizationEnum == role.authorizationEnum();
     }
 
     @Override
     public int hashCode() {
-        return 31 * roleKey.municipality.hashCode() + roleKey.authorizationEnum.hashCode();
+        return 31 * this.municipality.hashCode() + this.authorizationEnum.hashCode();
     }
 
-    @Embeddable
-    @NoArgsConstructor(force = true)
-    private class RoleKey implements Serializable {
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "municipality_id", referencedColumnName = "ID")
+    protected static class RoleKey implements Serializable {
         private final Municipality municipality;
-
-        @Enumerated(EnumType.STRING)
         private final AuthorizationEnum authorizationEnum;
 
         public RoleKey(Municipality municipality, AuthorizationEnum authorizationEnum) {

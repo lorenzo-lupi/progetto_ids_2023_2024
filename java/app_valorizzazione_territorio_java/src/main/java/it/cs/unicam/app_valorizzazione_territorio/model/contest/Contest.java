@@ -1,15 +1,12 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -138,16 +135,9 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     public abstract ProposalRegister getProposalRequests();
 
     @Override
-    public ContestSOF getSynthesizedFormat() {
-        return new ContestSOF(this.getName(),
-                this.getStatus().toString(),
-                this.getID());
-    }
-
-    @Override
-    public ContestDOF getDetailedFormat() {
-        return new ContestDOF(this.getName(),
-                this.getEntertainer().getSynthesizedFormat(),
+    public ContestOF getOutputFormat() {
+        return new ContestOF(this.getName(),
+                this.getEntertainer().getOutputFormat(),
                 this.getTopic(),
                 this.getRules(),
                 this.isPrivate(),

@@ -2,8 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.MessageBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MessageOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Message;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 
@@ -38,10 +37,10 @@ public class MessageHandler {
      * Returns a list of all the messages in the system in a synthesized format.
      * @return a list of all the messages in the system
      */
-    public static List<MessageSOF> viewMessages() {
+    public static List<MessageOF> viewMessages() {
         return messageRepository
                 .getItemStream()
-                .map(Message::getSynthesizedFormat)
+                .map(Message::getOutputFormat)
                 .toList();
     }
 
@@ -53,9 +52,9 @@ public class MessageHandler {
      * @return the message in a detailed format
      * @throws IllegalArgumentException if the message with the given id does not exist
      */
-    public static MessageDOF viewMessage(long id) {
+    public static MessageOF viewMessage(long id) {
         Message message = messageRepository.getItemByID(id);
         message.setRead(true);
-        return message.getDetailedFormat();
+        return message.getOutputFormat();
     }
 }

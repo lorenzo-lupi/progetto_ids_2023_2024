@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ActivityDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ActivityOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.Timetable;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
@@ -58,8 +58,8 @@ public class Activity extends PointOfInterest{
     @Override
     @Transient
     //TODO: remove List.of
-    public ActivityDOF getDetailedFormat() {
-        return new ActivityDOF(super.getDetailedFormat(),
+    public ActivityOF getOutputFormat() {
+        return new ActivityOF(super.getOutputFormat(),
                 this.getType().toString(),
                List.of());
     }

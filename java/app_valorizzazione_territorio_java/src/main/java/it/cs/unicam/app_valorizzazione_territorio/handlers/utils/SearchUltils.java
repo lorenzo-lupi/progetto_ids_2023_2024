@@ -43,7 +43,7 @@ public class SearchUltils<S extends Searchable & Visualizable> {
                 filter.value()));
 
         return searchEngine.search().getResults().stream()
-                .map(S::getSynthesizedFormat)
+                .map(S::getOutputFormat)
                 .toList();
     }
 

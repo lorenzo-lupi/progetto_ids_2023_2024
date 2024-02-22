@@ -1,9 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.UserIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.UserOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
@@ -80,10 +79,10 @@ public class UserHandler {
      *
      * @return the municipalities of the system
      */
-    public static List<MunicipalitySOF> getMunicipalities() {
+    public static List<MunicipalityOF> getMunicipalities() {
         return municipalityRepository
                 .getItemStream()
-                .map(Municipality::getSynthesizedFormat)
+                .map(Municipality::getOutputFormat)
                 .toList();
     }
 
@@ -109,10 +108,10 @@ public class UserHandler {
      * @param userID the id of the user
      * @return the user with the given id
      */
-    public static UserDOF visualizeDetailedUser(long userID) {
+    public static UserOF visualizeDetailedUser(long userID) {
         return userRepository
                 .getItemByID(userID)
-                .getDetailedFormat();
+                .getOutputFormat();
     }
 
     /**
@@ -122,8 +121,8 @@ public class UserHandler {
      * @return the users of the system
      */
     @SuppressWarnings("unchecked")
-    public static List<UserSOF> getFilteredUsers(List<SearchFilter> filters) {
-        return (List<UserSOF>) SearchUltils
+    public static List<UserOF> getFilteredUsers(List<SearchFilter> filters) {
+        return (List<UserOF>) SearchUltils
                 .getFilteredItems(userRepository.getItemStream().toList(), filters);
     }
 
@@ -193,14 +192,14 @@ public class UserHandler {
      * @param userID the id of the user
      * @return the municipalities administrated by the user with the given id
      */
-    public static List<MunicipalitySOF> getMunicipalitiesAdministratedByUser(long userID) {
+    public static List<MunicipalityOF> getMunicipalitiesAdministratedByUser(long userID) {
         return userRepository
                 .getItemByID(userID)
                 .getRoles()
                 .stream()
                 .filter(r -> r.authorizationEnum() == AuthorizationEnum.ADMINISTRATOR)
                 .map(Role::municipality)
-                .map(Municipality::getSynthesizedFormat)
+                .map(Municipality::getOutputFormat)
                 .toList();
     }
 

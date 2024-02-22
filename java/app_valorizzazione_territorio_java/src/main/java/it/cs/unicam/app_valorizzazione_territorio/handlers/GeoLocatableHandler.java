@@ -4,10 +4,10 @@ import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterestBuilder;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.GeoLocatableOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MapOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
@@ -41,10 +41,10 @@ public class GeoLocatableHandler {
      * @param municipalityID the ID of the municipality
      * @return the Detailed Format of the map
      */
-    public static MapDOF visualizeInitialMap(long municipalityID) throws IOException {
+    public static MapOF visualizeInitialMap(long municipalityID) throws IOException {
         return mapProvider
                 .getMap(municipalityRepository.getItemByID(municipalityID))
-                .getDetailedFormat();
+                .getOutputFormat();
     }
 
     /**
@@ -54,16 +54,16 @@ public class GeoLocatableHandler {
      * @param coordinatesBox the coordinates box
      * @return the Detailed Format of the map
      */
-    public static MapDOF visualizeMap(long municipalityID, CoordinatesBox coordinatesBox) throws IOException {
+    public static MapOF visualizeMap(long municipalityID, CoordinatesBox coordinatesBox) throws IOException {
         return mapProvider
                 .getMap(municipalityRepository.getItemByID(municipalityID), coordinatesBox)
-                .getDetailedFormat();
+                .getOutputFormat();
     }
 
-    public static MapDOF visualizeFilteredMap(long municipalityID, CoordinatesBox coordinatesBox, List<SearchFilter> filters) throws IOException {
+    public static MapOF visualizeFilteredMap(long municipalityID, CoordinatesBox coordinatesBox, List<SearchFilter> filters) throws IOException {
         return mapProvider
                 .getFilteredMap(municipalityRepository.getItemByID(municipalityID), filters)
-                .getDetailedFormat();
+                .getOutputFormat();
     }
 
 
@@ -74,10 +74,10 @@ public class GeoLocatableHandler {
      * @return the Detailed Format of the empty map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static MapDOF getEmptyMap(long municipalityID) throws IOException {
+    public static MapOF getEmptyMap(long municipalityID) throws IOException {
         return mapProvider
                 .getEmptyMap(municipalityRepository.getItemByID(municipalityID))
-                .getDetailedFormat();
+                .getOutputFormat();
 
     }
 
@@ -88,10 +88,10 @@ public class GeoLocatableHandler {
      * @return the Detailed Format of the empty map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static MapDOF getEmptyMap(CoordinatesBox coordinatesBox) throws IOException {
+    public static MapOF getEmptyMap(CoordinatesBox coordinatesBox) throws IOException {
         return mapProvider
                 .getEmptyMap(coordinatesBox)
-                .getDetailedFormat();
+                .getOutputFormat();
     }
 
     /**
@@ -102,8 +102,8 @@ public class GeoLocatableHandler {
      * @return the Synthesized Format of all the geoLocatables that correspond to the given criteria
      */
     @SuppressWarnings("unchecked")
-    public static List<GeoLocatableSOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
-        return (List<GeoLocatableSOF>) SearchUltils.getFilteredItems(
+    public static List<GeoLocatableOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
+        return (List<GeoLocatableOF>) SearchUltils.getFilteredItems(
                 municipalityRepository.getItemByID(municipalityID).getGeoLocatables(),
                 filters
         );
@@ -138,7 +138,7 @@ public class GeoLocatableHandler {
      * @return the Detailed Format of the geoLocatable
      */
     public static Identifiable visualizeDetailedGeoLocatable(long geoLocatableID) {
-        return municipalityRepository.getGeoLocatableByID(geoLocatableID).getDetailedFormat();
+        return municipalityRepository.getGeoLocatableByID(geoLocatableID).getOutputFormat();
     }
 
     /**
@@ -183,8 +183,8 @@ public class GeoLocatableHandler {
      * @param filters        the filters to apply
      * @return the Synthesized Format of all the point of interests that correspond to the given criteria
      */
-    public static List<GeoLocatableSOF> getFilteredPointOfInterests(long municipalityID,
-                                                                    List<SearchFilter> filters) {
+    public static List<GeoLocatableOF> getFilteredPointOfInterests(long municipalityID,
+                                                                   List<SearchFilter> filters) {
         List<SearchFilter> userFilters = new LinkedList<>(filters);
         userFilters.add(new SearchFilter("THIS", "CLASS_IS_POI", ""));
         return searchFilteredGeoLocatables(municipalityID, userFilters);
@@ -231,7 +231,7 @@ public class GeoLocatableHandler {
         builder.setTitle(compoundPointIF.title())
                 .setDescription(compoundPointIF.description())
                 .addImage(compoundPointIF.images());
-        compoundPointIF.pointsOfInterests().stream()
+        compoundPointIF.pointsOfInterestIDs().stream()
                 .map(id -> MunicipalityRepository.getInstance().getGeoLocatableByID(id))
                 .map(PointOfInterest.class::cast)
                 .forEach(builder::addPointOfInterest);

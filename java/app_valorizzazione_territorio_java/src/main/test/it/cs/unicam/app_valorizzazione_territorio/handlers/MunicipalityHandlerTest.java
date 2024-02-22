@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalitySOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -58,38 +58,38 @@ class MunicipalityHandlerTest {
 
     @Test
     void shouldViewFilteredMunicipalities1() {
-        List<MunicipalitySOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of(
+        List<MunicipalityOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of(
                 new SearchFilter("NAME", "EQUALS", "Macerata")));
         assertEquals(1, municipalities.size());
-        assertEquals(Set.of(SampleRepositoryProvider.MACERATA.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.MACERATA.getOutputFormat()),
                 new HashSet<>(municipalities));
     }
 
     @Test
     void shouldViewFilteredMunicipalities2() {
-        List<MunicipalitySOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of(
+        List<MunicipalityOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of(
                 new SearchFilter(Parameter.NAME.toString(), "EQUALS", "Macerata"),
                 new SearchFilter(Parameter.POSITION.toString(), "INCLUDED_IN_BOX",
                         SampleRepositoryProvider.MACERATA.getCoordinatesBox())));
         assertEquals(1, municipalities.size());
-        assertEquals(Set.of(SampleRepositoryProvider.MACERATA.getSynthesizedFormat()),
+        assertEquals(Set.of(SampleRepositoryProvider.MACERATA.getOutputFormat()),
                 new HashSet<>(municipalities));
     }
 
     @Test
     void shouldViewMunicipality() {
-        assertEquals(SampleRepositoryProvider.CAMERINO.getDetailedFormat(),
+        assertEquals(SampleRepositoryProvider.CAMERINO.getOutputFormat(),
                 MunicipalityHandler.viewMunicipality(SampleRepositoryProvider.CAMERINO.getID()));
     }
 
     @Test
     void shouldGetSearchResult() {
-        List<MunicipalitySOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of());
+        List<MunicipalityOF> municipalities = MunicipalityHandler.viewFilteredMunicipalities(List.of());
         assertEquals(3, municipalities.size());
         assertEquals(Set.of(
-                        SampleRepositoryProvider.MACERATA.getSynthesizedFormat(),
-                        SampleRepositoryProvider.CAMERINO.getSynthesizedFormat(),
-                        SampleRepositoryProvider.COMUNE_DEI_TEST.getSynthesizedFormat()),
+                        SampleRepositoryProvider.MACERATA.getOutputFormat(),
+                        SampleRepositoryProvider.CAMERINO.getOutputFormat(),
+                        SampleRepositoryProvider.COMUNE_DEI_TEST.getOutputFormat()),
                 new HashSet<>(municipalities));
     }
 }

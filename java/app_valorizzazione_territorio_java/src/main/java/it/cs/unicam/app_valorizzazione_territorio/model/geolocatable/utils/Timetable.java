@@ -17,12 +17,19 @@ import java.util.List;
 public class Timetable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @OneToMany(fetch = FetchType.EAGER)
-    private final List<TimetableEntry> timetable;
+    private long ID;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "timetable")
+    private final List<TimetableEntry> timetableEntries;
 
     public Timetable() {
-        this.timetable = new LinkedList<>();
+        this.timetableEntries = new LinkedList<>();
+    }
+
+    public Timetable(List<TimeRange> timeRanges) {
+        this.timetableEntries = new LinkedList<>();
+        for (int i = 0; i < timeRanges.size(); i++) {
+            this.timetableEntries.add(new TimetableEntry(DayOfWeek.of(i + 1), timeRanges.get(i), this));
+        }
     }
 
     /**
@@ -32,9 +39,9 @@ public class Timetable {
      * @param openingTime the opening time
      * @param closingTime the closing time
      */
-    public void setOpeningHours(DayOfWeek dayOfWeek, LocalTime openingTime, LocalTime closingTime, Timetable timetable) {
-        if (this.timetable.stream().noneMatch(pair -> pair.getDayOfWeek().equals(dayOfWeek))) {
-            this.timetable.add(new TimetableEntry(dayOfWeek, new TimeRange(openingTime, closingTime), timetable));
+    public void setOpeningHours(DayOfWeek dayOfWeek, LocalTime openingTime, LocalTime closingTime) {
+        if (this.timetableEntries.stream().noneMatch(entry -> entry.getDayOfWeek().equals(dayOfWeek))) {
+            this.timetableEntries.add(new TimetableEntry(dayOfWeek, new TimeRange(openingTime, closingTime), this));
         }
     }
 
@@ -56,9 +63,9 @@ public class Timetable {
      */
     public boolean isOpen(DayOfWeek dayOfWeek, LocalTime time) {
 
-        return timetable.stream().anyMatch(p -> p.getDayOfWeek().equals(dayOfWeek))
+        return timetableEntries.stream().anyMatch(p -> p.getDayOfWeek().equals(dayOfWeek))
                 &&
-                timetable.stream().filter(p -> p.getDayOfWeek().equals(dayOfWeek))
+                timetableEntries.stream().filter(p -> p.getDayOfWeek().equals(dayOfWeek))
                         .findFirst()
                         .get()
                         .getTimeRange()
@@ -75,7 +82,7 @@ public class Timetable {
      */
     @Transient
     public List<TimetableEntry> getRangesList() {
-        return this.timetable;
+        return this.timetableEntries;
     }
 
 }

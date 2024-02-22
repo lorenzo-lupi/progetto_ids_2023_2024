@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.GeoLocatableOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.*;
@@ -194,10 +194,15 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     }
 
     @Override
-    public GeoLocatableSOF getSynthesizedFormat(){
-        return new GeoLocatableSOF(this.getName(),
-                this.getImages().isEmpty() ? null : this.getImages().get(0),
+    public GeoLocatableOF getOutputFormat(){
+        return new GeoLocatableOF(
+                this.getName(),
                 this.getClass().getSimpleName(),
+                this.getImages().isEmpty() ? null : this.getImages().get(0),
+                this.getMunicipality().getOutputFormat(),
+                this.getPosition(),
+                this.getDescription(),
+                this.getImages(),
                 this.getID());
     }
 

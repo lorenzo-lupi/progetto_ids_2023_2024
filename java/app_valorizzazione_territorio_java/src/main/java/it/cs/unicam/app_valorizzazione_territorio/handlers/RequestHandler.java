@@ -2,10 +2,8 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestRequestOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityRequestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
@@ -44,14 +42,14 @@ public class RequestHandler {
      * @param userID the ID of the user
      * @return the Synthesized Format of all the suitable municipality requests
      */
-    public static List<MunicipalityRequestSOF> viewMunicipalityRequests(long userID) {
+    public static List<MunicipalityRequestOF> viewMunicipalityRequests(long userID) {
         User user = userRepository.getItemByID(userID);
         if (!canAccessRequests(user, AuthorizationEnum.CURATOR))
             throw new UnsupportedOperationException("The user cannot access the municipality requests");
 
         return requestRepository.getAllMunicipalityRequests()
                 .filter(request -> request.canBeApprovedBy(user))
-                .map(MunicipalityRequest::getSynthesizedFormat)
+                .map(MunicipalityRequest::getOutputFormat)
                 .toList();
     }
 
@@ -62,14 +60,14 @@ public class RequestHandler {
      * @param userID the ID of the user
      * @return the Synthesized Format of all the suitable contest requests
      */
-    public static List<ContestRequestSOF> viewContestRequests(long userID) {
+    public static List<ContestRequestOF> viewContestRequests(long userID) {
         User user = userRepository.getItemByID(userID);
         if (!canAccessRequests(user, AuthorizationEnum.ENTERTAINER))
             throw new UnsupportedOperationException("The user cannot access the contest requests");
 
         return requestRepository.getAllContestRequests()
                 .filter(request -> request.canBeApprovedBy(user))
-                .map(ContestRequest::getSynthesizedFormat)
+                .map(ContestRequest::getOutputFormat)
                 .toList();
     }
 
@@ -81,8 +79,8 @@ public class RequestHandler {
      * @throws IllegalArgumentException if the request with the given ID is not found or if it is not a
      * municipality request
      */
-    public static MunicipalityRequestDOF viewMunicipalityRequest(long requestID) {
-        return requestRepository.getMunicipalityRequestByID(requestID).getDetailedFormat();
+    public static MunicipalityRequestOF viewMunicipalityRequest(long requestID) {
+        return requestRepository.getMunicipalityRequestByID(requestID).getOutputFormat();
     }
 
     /**
@@ -93,8 +91,8 @@ public class RequestHandler {
      * @throws IllegalArgumentException if the request with the given ID is not found or if it is not a
      * contest request
      */
-    public static ContestRequestDOF viewContestRequest(long requestID) {
-        return requestRepository.getContestRequestByID(requestID).getDetailedFormat();
+    public static ContestRequestOF viewContestRequest(long requestID) {
+        return requestRepository.getContestRequestByID(requestID).getOutputFormat();
     }
 
     /**

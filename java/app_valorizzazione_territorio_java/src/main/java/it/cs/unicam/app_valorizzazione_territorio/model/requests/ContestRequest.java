@@ -1,8 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.requests;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestRequestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
@@ -53,13 +52,13 @@ public class ContestRequest extends Request<ContestContent> {
     }
 
     @Override
-    public ContestRequestSOF getSynthesizedFormat() {
-        return new ContestRequestSOF(this.getSender().getUsername(), this.getContest().getName(), this.getDate(), this.getID());
-    }
-
-    @Override
-    public ContestRequestDOF getDetailedFormat() {
-        return new ContestRequestDOF(this.getSender().getSynthesizedFormat(), this.getContest().getSynthesizedFormat(),
-                this.getDate(), this.getItem().getDetailedFormat(), this.getID());
+    public ContestRequestOF getOutputFormat() {
+        return new ContestRequestOF(
+                this.getSender().getOutputFormat(),
+                this.getContest().getName(),
+                this.getContest().getOutputFormat(),
+                this.getDate(),
+                this.getItem().getOutputFormat(),
+                this.getID());
     }
 }

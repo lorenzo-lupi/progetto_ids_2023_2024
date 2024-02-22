@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MapOF;
 
 import java.util.List;
 
@@ -47,14 +47,9 @@ public class Map<P extends Positionable & Visualizable> implements Visualizable 
     }
 
     @Override
-    public MapDOF getSynthesizedFormat() {
-        return this.getDetailedFormat();
-    }
-
-    @Override
-    public MapDOF getDetailedFormat() {
-        return new MapDOF(osmData,
-                positionablePoints.stream().map(Visualizable::getSynthesizedFormat).toList(),
+    public MapOF getOutputFormat() {
+        return new MapOF(osmData,
+                positionablePoints.stream().map(Visualizable::getOutputFormat).toList(),
                 getID());
     }
 }

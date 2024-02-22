@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.PointOfInterestOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
@@ -123,14 +123,15 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
 
     @Override
     @Transient
-    public PointOfInterestDOF getDetailedFormat() {
-        return new PointOfInterestDOF(super.getName(),
+    public PointOfInterestOF getOutputFormat() {
+        return new PointOfInterestOF(super.getName(),
                 super.getDescription(),
-                this.getPosition().toString(),
-                super.getMunicipality().getSynthesizedFormat(),
+                this.getPosition(),
+                super.getMunicipality().getOutputFormat(),
                 this.getClass().getSimpleName(),
+                super.getImages().isEmpty() ? null : super.getImages().get(0),
                 super.getImages(),
-                this.contents.stream().map(PointOfInterestContent::getSynthesizedFormat).toList(),
+                this.contents.stream().map(PointOfInterestContent::getOutputFormat).toList(),
                 super.getID());
     }
 

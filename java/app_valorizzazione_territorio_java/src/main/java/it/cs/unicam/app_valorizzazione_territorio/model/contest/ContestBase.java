@@ -5,7 +5,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatabl
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -31,7 +30,7 @@ public class ContestBase extends Contest {
     @Temporal(TemporalType.DATE)
     private Date endDate;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private ProposalRegister proposalRegister;
+    private final ProposalRegister proposalRegister;
 
     public ContestBase(String name,
                        User animator,

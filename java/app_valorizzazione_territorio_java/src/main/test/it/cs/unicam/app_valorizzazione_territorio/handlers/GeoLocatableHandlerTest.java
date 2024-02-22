@@ -1,14 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.GeoLocatableOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.NotEnoughGeoLocatablesException;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.Timetable;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
@@ -19,6 +18,7 @@ import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +38,7 @@ public class GeoLocatableHandlerTest {
             "Monument",
             new Date(),
             new Date(),
-            new Timetable()
+            new ArrayList<>()
     );
 
     private static final PointOfInterestIF poiIFSample2 = new PointOfInterestIF(
@@ -51,7 +51,7 @@ public class GeoLocatableHandlerTest {
             "Monument",
             new Date(),
             new Date(),
-            new Timetable()
+            new ArrayList<>()
     );
 
     private static final PointOfInterestIF poiIFSample3 = new PointOfInterestIF(
@@ -64,7 +64,7 @@ public class GeoLocatableHandlerTest {
             "Monument",
             new Date(),
             new Date(),
-            new Timetable()
+            new ArrayList<>()
     );
 
     private static final CompoundPointIF cpointInsertableSample = new CompoundPointIF(
@@ -193,12 +193,12 @@ public class GeoLocatableHandlerTest {
                 SampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 cpointInsertableSample);
 
-        List<GeoLocatableSOF> vals = GeoLocatableHandler.getFilteredPointOfInterests(
+        List<GeoLocatableOF> vals = GeoLocatableHandler.getFilteredPointOfInterests(
                 SampleRepositoryProvider.CAMERINO.getID(),
                 List.of());
         assertTrue(vals
                 .stream()
-                .map(GeoLocatableSOF::getID)
+                .map(GeoLocatableOF::getID)
                 .map(id -> MunicipalityRepository.getInstance().getGeoLocatableByID(id))
                 .allMatch(poi -> poi instanceof PointOfInterest));
     }

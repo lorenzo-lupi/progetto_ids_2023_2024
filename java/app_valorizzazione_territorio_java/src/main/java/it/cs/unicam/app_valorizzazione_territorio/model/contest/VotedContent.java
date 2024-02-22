@@ -1,10 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.VotedContentOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.VotedContentSOF;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 
 import java.util.HashMap;
@@ -32,12 +32,11 @@ public record VotedContent(ContestContent content, int votes) implements Searcha
     }
 
     @Override
-    public VotedContentSOF getSynthesizedFormat() {
-        return new VotedContentSOF(content.getSynthesizedFormat(), votes);
-    }
-
-    @Override
-    public VotedContentDOF getDetailedFormat() {
-        return new VotedContentDOF(content.getDetailedFormat(), votes);
+    public VotedContentOF getOutputFormat() {
+        return new VotedContentOF(
+                content.getOutputFormat(),
+                votes,
+                content.getVoters().stream().map(User::getOutputFormat).toList()
+        );
     }
 }
