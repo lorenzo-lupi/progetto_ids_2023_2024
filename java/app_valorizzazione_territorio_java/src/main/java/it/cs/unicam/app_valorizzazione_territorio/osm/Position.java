@@ -4,6 +4,7 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.Embeddable;
+import lombok.NoArgsConstructor;
 
 /**
  * This class represents a geographical position, that is a
@@ -11,9 +12,10 @@ import jakarta.persistence.Embeddable;
  */
 @JsonView(View.Synthesized.class)
 @Embeddable
+@NoArgsConstructor(force = true)
 public class Position {
-    private final double latitude;
-    private final double longitude;
+    private double latitude;
+    private double longitude;
 
     /**
      * Constructor for a geographical position.
@@ -34,6 +36,7 @@ public class Position {
         this.latitude = position.getLatitude();
         this.longitude = position.getLongitude();
     }
+
 
     public double getLatitude() {
         return latitude;

@@ -9,6 +9,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ import java.util.List;
 @DiscriminatorValue("Modification")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "modifiable_item", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
 public abstract class ModificationCommand<T extends Visualizable & Modifiable> extends RequestCommand<T>{
 
     @ElementCollection
@@ -86,6 +88,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     }
 
     @Embeddable
+    @NoArgsConstructor(force = true)
     private static class Modification implements Serializable {
         @Enumerated(EnumType.STRING)
         private final Parameter parameter;
@@ -106,6 +109,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
 
     @Entity
     @DiscriminatorValue("ModifiableContent")
+    @NoArgsConstructor(force = true)
     private static class ContentModificationCommand extends ModificationCommand<Content<?>> {
         @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
         private final Content<?> content;

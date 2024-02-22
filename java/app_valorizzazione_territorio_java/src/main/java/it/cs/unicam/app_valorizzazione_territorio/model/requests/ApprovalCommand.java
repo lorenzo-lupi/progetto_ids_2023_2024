@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizabl
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 /**
  * Objects implementing this class encapsulate the actions to be performed on an approvable item in order
@@ -42,12 +43,14 @@ public abstract class ApprovalCommand<T extends Approvable & Visualizable> exten
 
     @Entity
     @DiscriminatorValue("ApprovableContent")
+    @NoArgsConstructor(force = true)
     private static class ContentApprovalCommand extends ApprovalCommand<Content<?>> {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
+        @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
         private final Content<?> content;
         public ContentApprovalCommand(Content<?> content) {
             this.content = content;
         }
+        @Transient
         public Content<?> getItem() {
             return content;
         }
@@ -55,12 +58,14 @@ public abstract class ApprovalCommand<T extends Approvable & Visualizable> exten
 
     @Entity
     @DiscriminatorValue("ApprovableGeoLocatable")
+    @NoArgsConstructor(force = true)
     private static class GeoLocatableApprovalCommand extends ApprovalCommand<GeoLocatable> {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "geoLocatable_id")
+        @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "geoLocatable_id")
         private final GeoLocatable geoLocatable;
         public GeoLocatableApprovalCommand(GeoLocatable geoLocatable) {
             this.geoLocatable = geoLocatable;
         }
+        @Transient
         public GeoLocatable getItem() {
             return geoLocatable;
         }

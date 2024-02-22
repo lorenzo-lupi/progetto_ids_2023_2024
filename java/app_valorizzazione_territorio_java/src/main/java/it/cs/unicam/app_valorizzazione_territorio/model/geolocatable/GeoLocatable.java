@@ -24,11 +24,13 @@ import java.util.function.Consumer;
  */
 @Entity
 @NoArgsConstructor(force = true)
+@DiscriminatorValue("GeoLocatable")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class GeoLocatable implements Requestable, Searchable, Positionable, Deletable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
+
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     private final User user;

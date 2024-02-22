@@ -24,6 +24,7 @@ import java.util.function.Consumer;
  * that are connected to each other.
  */
 @Entity
+@DiscriminatorValue("CompoundPoint")
 @NoArgsConstructor(force = true)
 public class CompoundPoint extends GeoLocatable {
 

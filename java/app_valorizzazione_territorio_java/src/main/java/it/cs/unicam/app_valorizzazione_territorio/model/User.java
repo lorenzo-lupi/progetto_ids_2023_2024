@@ -3,7 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Modifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.UserOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(force = true)
 public class User implements Searchable, Visualizable, Modifiable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private long ID;
     private String username;
     private String name;
@@ -49,7 +50,7 @@ public class User implements Searchable, Visualizable, Modifiable {
     //  joinColumns = @JoinColumn(name = "user_ID"),
     //  inverseJoinColumns = @JoinColumn(name = "content_ID"))
     @Transient
-    private final List<Content<?>> savedContents;
+    private final List<Content> savedContents;
 
     /**
      * Creates a new user with the given username and email.
@@ -126,15 +127,15 @@ public class User implements Searchable, Visualizable, Modifiable {
         this.notifications.remove(notification);
     }
 
-    public List<Content<?>> getSavedContents() {
+    public List<Content> getSavedContents() {
         return this.savedContents;
     }
 
-    public boolean addSavedContent(Content<?> content) {
+    public boolean addSavedContent(Content content) {
         return this.savedContents.add(content);
     }
 
-    public boolean removeSavedContent(Content<?> content) {
+    public boolean removeSavedContent(Content content) {
         return this.savedContents.remove(content);
     }
 
@@ -186,8 +187,13 @@ public class User implements Searchable, Visualizable, Modifiable {
     }
 
     @Override
-    public UserOF getOutputFormat() {
-        return new UserOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
+    public UserSOF getSynthesizedFormat() {
+        return new UserSOF(this.getUsername(), this.getID());
+    }
+
+    @Override
+    public UserDOF getDetailedFormat() {
+        return new UserDOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
     }
 
     @Override

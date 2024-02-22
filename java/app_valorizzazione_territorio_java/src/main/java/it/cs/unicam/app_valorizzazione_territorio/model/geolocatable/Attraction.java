@@ -5,8 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,14 +19,23 @@ import java.util.function.Consumer;
  * a generic object of interest present on a territory that is always accessible to the public.
  */
 @Setter
-@Getter
 @Entity
+@DiscriminatorValue("Attraction")
 @NoArgsConstructor(force = true)
 public class Attraction extends PointOfInterest{
-    private AttractionTypeEnum type;
+    public AttractionTypeEnum getType() {
+        return attractionType;
+    }
+
+    public void setType(AttractionTypeEnum attractionType) {
+        this.attractionType = attractionType;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private AttractionTypeEnum attractionType;
     public Attraction(String title, String description, Position position, Municipality municipality, AttractionTypeEnum type, User user) {
         super(title, description, position, municipality, user);
-        this.type = type;
+        this.attractionType = type;
     }
 
     @Override

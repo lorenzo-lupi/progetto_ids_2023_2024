@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import java.util.Date;
  */
 @Entity
 @DiscriminatorValue("Municipality")
+@NoArgsConstructor(force = true)
 public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -23,7 +23,9 @@ import java.util.function.Consumer;
  *
  * @param <V> the type of the content host
  */
-@MappedSuperclass
+@Entity
+@DiscriminatorValue("Content")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(force = true)
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable {
     @Getter

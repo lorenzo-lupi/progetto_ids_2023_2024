@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @NoArgsConstructor(force = true)
+@DiscriminatorValue("ContestContent")
 public class ContestContent extends Content<Contest> {
     @ManyToOne(fetch = FetchType.EAGER)
     private final Contest contest;

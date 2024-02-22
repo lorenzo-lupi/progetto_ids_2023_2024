@@ -7,6 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizabl
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.Date;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "request_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
 public abstract class Request<I extends Visualizable> implements Approvable, Identifiable, Visualizable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

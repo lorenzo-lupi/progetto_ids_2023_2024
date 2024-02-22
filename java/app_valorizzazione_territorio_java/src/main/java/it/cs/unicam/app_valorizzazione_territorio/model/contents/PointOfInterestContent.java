@@ -18,6 +18,7 @@ import java.util.List;
  * A PointOfInterestContent is hosted in a PointOfInterest.
  */
 @Entity
+@DiscriminatorValue("PointOfInterestContent")
 @NoArgsConstructor(force = true)
 public class PointOfInterestContent extends Content<PointOfInterest>{
     @ManyToOne(fetch = FetchType.EAGER)

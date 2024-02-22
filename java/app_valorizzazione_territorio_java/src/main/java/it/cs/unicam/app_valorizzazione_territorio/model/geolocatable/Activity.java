@@ -21,24 +21,25 @@ import java.util.function.Consumer;
  * At a given moment, an activity can be in one of the states between "Open" and "Closed" depending on the
  * associated weekly timetable.
  */
-@Getter
 @Entity
+@DiscriminatorValue("Activity")
 @NoArgsConstructor(force = true)
 public class Activity extends PointOfInterest{
 
     @Setter
     @Enumerated(EnumType.STRING)
-    private ActivityTypeEnum type;
+    private ActivityTypeEnum activityType;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Getter
     private final Timetable timetable;
     public Activity(String title,
                     String description,
                     Position position,
                     Municipality municipality,
-                    ActivityTypeEnum type,
+                    ActivityTypeEnum activityType,
                     User user) {
         super(title, description, position, municipality, user);
-        this.type = type;
+        this.activityType = activityType;
         this.timetable = new Timetable();
     }
 
@@ -46,14 +47,21 @@ public class Activity extends PointOfInterest{
                     String description,
                     Position position,
                     Municipality municipality,
-                    ActivityTypeEnum type,
+                    ActivityTypeEnum activityType,
                     Timetable timetable,
                     User user) {
         super(title, description, position, municipality, user);
-        this.type = type;
+        this.activityType = activityType;
         this.timetable = timetable;
     }
 
+    public ActivityTypeEnum getType() {
+        return activityType;
+    }
+
+    public void setType(ActivityTypeEnum activityType) {
+        this.activityType  = activityType;
+    }
 
     @Override
     @Transient

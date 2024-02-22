@@ -327,7 +327,7 @@ public class SampleRepositoryProvider {
         CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getItem());
 
         contests.forEach(c -> c.getMunicipality().addContest(c));
-
+        geoLocatables.remove(GAS_FACILITY);
     }
 
     private static void clearObjects() {
