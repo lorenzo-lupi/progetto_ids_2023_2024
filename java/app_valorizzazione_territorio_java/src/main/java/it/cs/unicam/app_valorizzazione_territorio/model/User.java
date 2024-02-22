@@ -1,10 +1,10 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.UserOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Modifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.UserDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.UserSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(force = true)
 public class User implements Searchable, Visualizable, Modifiable {
     @Id
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
     private String username;
     private String name;
@@ -50,13 +50,13 @@ public class User implements Searchable, Visualizable, Modifiable {
     //  joinColumns = @JoinColumn(name = "user_ID"),
     //  inverseJoinColumns = @JoinColumn(name = "content_ID"))
     @Transient
-    private final List<Content> savedContents;
+    private final List<Content<?>> savedContents;
 
     /**
      * Creates a new user with the given username and email.
      *
      * @param username the username of the user
-     * @param email the email of the user
+     * @param email    the email of the user
      */
     public User(String username, String email, String encryptedPassword) {
         if (username == null || email == null || encryptedPassword == null)
@@ -77,15 +77,19 @@ public class User implements Searchable, Visualizable, Modifiable {
     public String getUsername() {
         return this.username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getEncryptedPassword() {
         return this.encryptedPassword;
     }
+
     public void setPassword(String password) {
         this.encryptedPassword = CredentialsUtils.getEncryptedPassword(password);
     }
+
     public boolean matchesPassword(String password) {
         return CredentialsUtils.matchesPassword(password, this.encryptedPassword);
     }
@@ -93,12 +97,15 @@ public class User implements Searchable, Visualizable, Modifiable {
     public String getName() {
         return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getEmail() {
         return this.email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -127,15 +134,15 @@ public class User implements Searchable, Visualizable, Modifiable {
         this.notifications.remove(notification);
     }
 
-    public List<Content> getSavedContents() {
+    public List<Content<?>> getSavedContents() {
         return this.savedContents;
     }
 
-    public boolean addSavedContent(Content content) {
+    public boolean addSavedContent(Content<?> content) {
         return this.savedContents.add(content);
     }
 
-    public boolean removeSavedContent(Content content) {
+    public boolean removeSavedContent(Content<?> content) {
         return this.savedContents.remove(content);
     }
 
@@ -157,7 +164,7 @@ public class User implements Searchable, Visualizable, Modifiable {
      * The previous roles in the given municipality are removed and replaced with the new ones.
      *
      * @param authorizations the new authorizations
-     * @param municipality the municipality
+     * @param municipality   the municipality
      */
     public void setNewRoles(List<AuthorizationEnum> authorizations, Municipality municipality) {
         this.roles.removeIf(role -> role.municipality().equals(municipality));
@@ -187,13 +194,8 @@ public class User implements Searchable, Visualizable, Modifiable {
     }
 
     @Override
-    public UserSOF getSynthesizedFormat() {
-        return new UserSOF(this.getUsername(), this.getID());
-    }
-
-    @Override
-    public UserDOF getDetailedFormat() {
-        return new UserDOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
+    public UserOF getOutputFormat() {
+        return new UserOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
     }
 
     @Override
