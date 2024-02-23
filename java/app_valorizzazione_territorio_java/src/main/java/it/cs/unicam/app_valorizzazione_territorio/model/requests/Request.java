@@ -29,7 +29,7 @@ public abstract class Request<I extends Visualizable> implements Approvable, Ide
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User sender;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "command_id")
     private final RequestCommand<I> command;
     @Temporal(TemporalType.DATE)

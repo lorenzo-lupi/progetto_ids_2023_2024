@@ -27,7 +27,7 @@ public class TimeEventsHandler {
      */
     public static void endContest(long contestId) {
         Contest contest = municipalityRepository.getContestByID(contestId);
-        ContestContent winner = contest.getProposalRequests().getWinner();
+        ContestContent winner = contest.getProposalRegister().getWinner();
         if (winner != null) {
             Notification winnerNotification = Notification.createNotification(winner,
                     "Proclaimed the winner of the contest: " + contest.getName() + "!");

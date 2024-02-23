@@ -132,7 +132,7 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
      * Returns the proposal requests of the contest.
      * @return the proposal requests of the contest.
      */
-    public abstract ProposalRegister getProposalRequests();
+    public abstract ProposalRegister getProposalRegister();
 
     @Override
     public ContestOF getOutputFormat() {

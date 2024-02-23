@@ -125,7 +125,7 @@ public class ContestBase extends Contest {
     }
 
     @Override
-    public ProposalRegister getProposalRequests() {
+    public ProposalRegister getProposalRegister() {
         return this.proposalRegister;
     }
 

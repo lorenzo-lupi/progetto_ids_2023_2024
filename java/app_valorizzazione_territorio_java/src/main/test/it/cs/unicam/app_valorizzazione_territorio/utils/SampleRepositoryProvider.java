@@ -26,11 +26,11 @@ public class SampleRepositoryProvider {
     public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
+    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
     public static Content FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
             MANIFESTO_CORSA_SPADA, FOTO_STRADE_MACERATA, FOTO_TORRE_CIVICA, FOTO_PIZZA_REGINA, FOTO_PITTURA_1,
             FOTO_PITTURA_2;
 
-    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
     public static Request RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
 
     private static boolean municipalitiesAreSetUp = false;
@@ -104,31 +104,31 @@ public class SampleRepositoryProvider {
         ADMINISTRATOR_CAMERINO.addRole(CAMERINO, AuthorizationEnum.ADMINISTRATOR);
 
         geoLocatables.addAll(Arrays.asList(
-                //0 //UNIVERSITY_CAMERINO //Municiplaity: Camerino
+                //0 //UNIVERSITY_CAMERINO //Municipality: Camerino
                 new Attraction("Università di Camerino", "Università di Camerino",
                         new Position(43.13644468556232, 13.067156069846892),
                         municipalities.get(1), AttractionTypeEnum.BUILDING, users.get(2)),
-                //1 //VIA_MADONNA_CARCERI //Municiplaity: Camerino
+                //1 //VIA_MADONNA_CARCERI //Municipality: Camerino
                 new Attraction("Via Madonna delle Carceri", "Via Madonna delle Carceri",
                         new Position(43.140, 13.069),
                         municipalities.get(1), AttractionTypeEnum.OTHER, users.get(1)),
-                //2 //PIAZZA_LIBERTA //Municiplaity: Macerata
+                //2 //PIAZZA_LIBERTA //Municipality: Macerata
                 new Attraction("Piazza della Libertà", "Piazza della Libertà",
                         new Position(43.29812657107886, 13.451878161920886),
                         municipalities.get(0), AttractionTypeEnum.SQUARE, users.get(2)),
-                //3 //CORSA_SPADA //Municiplaity: Camerino
+                //3 //CORSA_SPADA //Municipality: Camerino
                 new Event("Corsa della Spada", "Celebrazione tradizionale della Corsa della Spada",
                         new Position(43.135812352706715, 13.068367879486194),
                         municipalities.get(1), new Date(124, 5, 17), new Date(124, 5, 24), users.get(1)),
-                //4 //SEPTEMBER_FEST //Municiplaity: Macerata //Not approved
+                //4 //SEPTEMBER_FEST //Municipality: Macerata //Not approved
                 new Event("September Fest", "Festa a tema Birra",
                         new Position(43.29812657107886, 13.451878161920886),
                         municipalities.get(0), new Date(124, 9, 1), new Date(124, 9, 30), users.get(2)),
-                //5 //PIZZERIA_ENJOY //Municiplaity: Camerino
+                //5 //PIZZERIA_ENJOY //Municipality: Camerino
                 new Activity("Pizzeria Enjoy", "Pizzeria",
                         new Position(43.143290511951314, 13.078617450882426),
                         municipalities.get(1), ActivityTypeEnum.RESTAURANT, users.get(2)),
-                //6 //BASILICA_SAN_VENANZIO //Municiplaity: Camerino
+                //6 //BASILICA_SAN_VENANZIO //Municipality: Camerino
                 new Activity("Basilica di San Venanzio", "Basilica di San Venanzio",
                         new Position(43.137753115974135, 13.073411976140818),
                         municipalities.get(1), ActivityTypeEnum.CHURCH, users.get(1))
@@ -136,44 +136,44 @@ public class SampleRepositoryProvider {
         ));
 
         geoLocatables.addAll(Arrays.asList(
-                //7 //TOUR_STUDENTE //Municiplaity: Camerino
+                //7 //TOUR_STUDENTE //Municipality: Camerino
                 new CompoundPoint("Tour dello studente", "Tour dello studente",
                         municipalities.get(1), CompoundPointTypeEnum.ITINERARY, Arrays.asList(
                         (PointOfInterest) geoLocatables.get(1),
                         (PointOfInterest) geoLocatables.get(0),
                         (PointOfInterest) geoLocatables.get(5)),
                         new ArrayList<>(), users.get(2)),
-                //8 //TRADIZIONE_SAN_VENANZIO //Municiplaity: Camerino
+                //8 //TRADIZIONE_SAN_VENANZIO //Municipality: Camerino
                 new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
                         municipalities.get(1), CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
                         (PointOfInterest) geoLocatables.get(6),
                         (PointOfInterest) geoLocatables.get(3)),
                         new ArrayList<>(), users.get(1)),
                 //9 //GAS FACILITY
-             new Attraction("Gas facility", "Gas facility Camerino",
-                    new Position(43.1450445, 13.0893363),
-                    municipalities.get(1), AttractionTypeEnum.OTHER,
-                    users.get(1))
+                 new Attraction("Gas facility", "Gas facility Camerino",
+                        new Position(43.1450445, 13.0893363),
+                        municipalities.get(1), AttractionTypeEnum.OTHER,
+                        users.get(1))
 
         ));
 
         contests.addAll(Arrays.asList(
-                //0 //CONCORSO_FOTO_2024 //Municiplaity: Macerata
+                //0 //CONCORSO_FOTO_2024 //Municipality: Macerata
                 new ContestBase("Concorso fotografico annuale", ENTERTAINER_MACERATA,
                         "Concorso fotografico generico edizione 2024", "Una foto per partecipante",
                         new Date(124, 0, 1), new Date(124, 9, 30),
                         new Date(124, 11, 31), MACERATA),
-                //1 //CONCORSO_FOTO_2025 //Municiplaity: Macerata
+                //1 //CONCORSO_FOTO_2025 //Municipality: Macerata
                 new ContestBase("Concorso fotografico annuale", ENTERTAINER_MACERATA,
                         "Concorso fotografico generico edizione 2025", "Una foto per partecipante",
                         new Date(125, 0, 1), new Date(125, 9, 30),
                         new Date(125, 11, 31), MACERATA),
-                //2 //CONCORSO_FOTO_PIZZA //Municiplaity: Camerino //GeoLocatable: Pizzeria Enjoy
+                //2 //CONCORSO_FOTO_PIZZA //Municipality: Camerino //GeoLocatable: Pizzeria Enjoy
                 new GeoLocatableContestDecorator(new ContestBase("Migliore foto di pizza Novembre", ENTERTAINER_CAMERINO,
                         "Concorso fotografico per la migliore foto di pizza", "Una foto per partecipante",
                         new Date(124, 0, 1), new Date(124, 9, 30),
                         new Date(124, 11, 31), CAMERINO), geoLocatables.get(5)),
-                //3 //CONCORSO_PITTURA //Municiplaity: Camerino
+                //3 //CONCORSO_PITTURA //Municipality: Camerino
                 new PrivateContestDecorator(new ContestBase("Concorso pittura dei paesaggi", ENTERTAINER_CAMERINO,
                         "Concorso di pittura dei paesaggi",
                         "Foto di una pittura fatta a mano di un pesaggio di Camerino",
@@ -188,28 +188,28 @@ public class SampleRepositoryProvider {
         ));
 
         contents.addAll(Arrays.asList(
-                //0 //FOTO_SAN_VENANZIO //Municiplality: Camerino //GeoLocatable: Basilica di San Venanzio //Not approved
+                //0 //FOTO_SAN_VENANZIO //Municipality: Camerino //GeoLocatable: Basilica di San Venanzio //Not approved
                 new PointOfInterestContent("Foto della basilica di San Venanzio",
                         (PointOfInterest) geoLocatables.get(6), new ArrayList<>(), users.get(0)),
-                //1 //FOTO_PIAZZA_LIBERTA_1 //Municiplality: Macerata //GeoLocatable: Piazza della Libertà
+                //1 //FOTO_PIAZZA_LIBERTA_1 //Municipality: Macerata //GeoLocatable: Piazza della Libertà
                 new PointOfInterestContent("Foto della piazza della libertà",
                         (PointOfInterest) geoLocatables.get(2), new ArrayList<>(), users.get(0)),
-                //2 //FOTO_PIAZZA_LIBERTA_2 //Municiplality: Macerata //GeoLocatable: Piazza della Libertà
+                //2 //FOTO_PIAZZA_LIBERTA_2 //Municipality: Macerata //GeoLocatable: Piazza della Libertà
                 new PointOfInterestContent("Foto della piazza della libertà di notte",
                         (PointOfInterest) geoLocatables.get(2), new ArrayList<>(), users.get(1)),
-                //3 //FOTO_PIZZA_MARGHERITA //Municiplality: Camerino //GeoLocatable: Pizzeria Enjoy
+                //3 //FOTO_PIZZA_MARGHERITA //Municipality: Camerino //GeoLocatable: Pizzeria Enjoy
                 new PointOfInterestContent("Foto delle pizze margerita",
                         (PointOfInterest) geoLocatables.get(5), new ArrayList<>(), users.get(2)),
-                //4 //MANIFESTO_CORSA_SPADA //Municiplality: Camerino //GeoLocatable: Corsa della Spada
+                //4 //MANIFESTO_CORSA_SPADA //Municipality: Camerino //GeoLocatable: Corsa della Spada
                 new PointOfInterestContent("Manifesto della corsa della spada",
                         (PointOfInterest) geoLocatables.get(3), new ArrayList<>(), users.get(3)),
-                //5 //FOTO_STRADE_MACERATA //Municiplality: Macerata //Contest: Concorso fotografico annuale 2024
+                //5 //FOTO_STRADE_MACERATA //Municipality: Macerata //Contest: Concorso fotografico annuale 2024
                 new ContestContent("Foto per le strade di Macerata",
                         contests.get(0), new ArrayList<>(), users.get(0)),
-                //6 //FOTO_TORRE_CIVICA //Municiplality: Macerata //Contest: Concorso fotografico annuale 2024
+                //6 //FOTO_TORRE_CIVICA //Municipality: Macerata //Contest: Concorso fotografico annuale 2024
                 new ContestContent("Foto della torre civica",
                         contests.get(0), new ArrayList<>(), users.get(1)),
-                //7 //FOTO_PIZZA_REGINA //Municiplality: Camerino //Contest: Migliore foto di pizza Novembre
+                //7 //FOTO_PIZZA_REGINA //Municipality: Camerino //Contest: Migliore foto di pizza Novembre
                 new ContestContent("Foto della pizza Regina Sbagliata",
                         contests.get(2), new ArrayList<>(), users.get(2)),
                 //8 //FOTO_PITTURA_1 //Municiplality: Camerino //Contest: Concorso pittura dei paesaggi
@@ -228,7 +228,7 @@ public class SampleRepositoryProvider {
 
         requests.addAll(Arrays.asList(
                 //0 //RICHIESTA_PIAZZA_LIBERTA //User: Pippo01 //GeoLocatable: Piazza della Libertà //Municipality: Macerata
-                RequestFactory.getApprovalRequest(geoLocatables.get(0)),
+                RequestFactory.getApprovalRequest(geoLocatables.get(2)),
                 //1 //RICHIESTA_FOTO_BASILICA //User: Pluto02 //Content: Foto di Basilica di San Venanzio //GeoLocatable: Basilica di San Venanzio //Municipality: Camerino
                 RequestFactory.getApprovalRequest(contents.get(0)),
                 //2 //RICHIESTA_PITTURA_CAVOUR //User: Pluto02 //Content: Pittura piazza Cavour //Contest: Concorso pittura paessaggi //Municipality: Camerino
@@ -314,17 +314,17 @@ public class SampleRepositoryProvider {
         ((PointOfInterest) CORSA_SPADA).addContent((PointOfInterestContent) MANIFESTO_CORSA_SPADA);
         MANIFESTO_CORSA_SPADA.approve();
 
-        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent) FOTO_STRADE_MACERATA);
+        CONCORSO_FOTO_2024.getProposalRegister().proposeContent((ContestContent) FOTO_STRADE_MACERATA);
         FOTO_STRADE_MACERATA.approve();
-        CONCORSO_FOTO_2024.getProposalRequests().proposeContent((ContestContent) FOTO_TORRE_CIVICA);
+        CONCORSO_FOTO_2024.getProposalRegister().proposeContent((ContestContent) FOTO_TORRE_CIVICA);
         FOTO_TORRE_CIVICA.approve();
-        CONCORSO_FOTO_PIZZA.getProposalRequests().proposeContent((ContestContent) FOTO_PIZZA_REGINA);
+        CONCORSO_FOTO_PIZZA.getProposalRegister().proposeContent((ContestContent) FOTO_PIZZA_REGINA);
         FOTO_PIZZA_REGINA.approve();
-        CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_1);
+        CONCORSO_PITTURA.getProposalRegister().proposeContent((ContestContent) FOTO_PITTURA_1);
         FOTO_PITTURA_1.approve();
-        CONCORSO_PITTURA.getProposalRequests().proposeContent((ContestContent) FOTO_PITTURA_2);
-        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) POS_REQUEST.getItem());
-        CONCORSO_PER_TEST.getProposalRequests().proposeContent((ContestContent) NEG_REQUEST.getItem());
+        CONCORSO_PITTURA.getProposalRegister().proposeContent((ContestContent) FOTO_PITTURA_2);
+        CONCORSO_PER_TEST.getProposalRegister().proposeContent((ContestContent) POS_REQUEST.getItem());
+        CONCORSO_PER_TEST.getProposalRegister().proposeContent((ContestContent) NEG_REQUEST.getItem());
 
         contests.forEach(c -> c.getMunicipality().addContest(c));
         geoLocatables.remove(GAS_FACILITY);

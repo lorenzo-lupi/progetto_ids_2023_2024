@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.persistence;
+package it.cs.unicam.app_valorizzazione_territorio;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
@@ -14,13 +14,53 @@ import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@ExtendWith(SpringExtension.class)
-public class JpaTestEnvironment {
+@Component
+public class RepositoryConstructor {
+
+    private static MunicipalityJpaRepository municipalityJpaRepository;
+    private static RoleJpaRepository roleJpaRepository;
+    private static UserJpaRepository userJpaRepository;
+    private static GeoLocatableJpaRepository geoLocatableJpaRepository;
+    private static ContestJpaRepository contestJpaRepository;
+    private static ContentJpaRepository contentJpaRepository;
+    private static RequestJpaRepository requestJpaRepository;
+    private static MessageJpaRepository messageJpaRepository;
+
+    @Autowired
+    public RepositoryConstructor(MunicipalityJpaRepository municipalityJpaRepository,
+                                 RoleJpaRepository roleJpaRepository,
+                                 UserJpaRepository userJpaRepository,
+                                 GeoLocatableJpaRepository geoLocatableJpaRepository,
+                                 ContestJpaRepository contestJpaRepository,
+                                 ContentJpaRepository contentJpaRepository,
+                                 RequestJpaRepository requestJpaRepository,
+                                 MessageJpaRepository messageJpaRepository) {
+        RepositoryConstructor.municipalityJpaRepository = municipalityJpaRepository;
+        RepositoryConstructor.roleJpaRepository = roleJpaRepository;
+        RepositoryConstructor.userJpaRepository = userJpaRepository;
+        RepositoryConstructor.geoLocatableJpaRepository = geoLocatableJpaRepository;
+        RepositoryConstructor.contestJpaRepository = contestJpaRepository;
+        RepositoryConstructor.contentJpaRepository = contentJpaRepository;
+        RepositoryConstructor.requestJpaRepository = requestJpaRepository;
+        RepositoryConstructor.messageJpaRepository = messageJpaRepository;
+    }
+
+    @PostConstruct
+    public void init() {
+        setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
+        setUpUsers(userJpaRepository);
+        setUpGeoLocatables(geoLocatableJpaRepository);
+        setUpContests(contestJpaRepository);
+        setUpContents(contentJpaRepository);
+        setUpRequests(requestJpaRepository);
+        setUpMessages(messageJpaRepository);
+    }
 
     public static boolean areMunicipalitiesSet = false;
     public static boolean areUsersSet = false;
@@ -41,7 +81,6 @@ public class JpaTestEnvironment {
             FOTO_PITTURA_2;
 
     public static Request<?> RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR;
-    public static Message MESSAGGIO_1, MESSAGGIO_2;
 
 
     public static void clearMunicipalities(MunicipalityJpaRepository repository){
@@ -58,10 +97,10 @@ public class JpaTestEnvironment {
                         new Position(43.271074, 13.499990)),
                 new ArrayList<>()));
         CAMERINO = repository.saveAndFlush(new Municipality("Camerino", "Comune di Camerino",
-                        new Position(43.13644468556232, 13.067156069846892),
-                        new CoordinatesBox(new Position(43.153712, 13.036414),
-                                new Position(43.123261, 13.095768)),
-                        new ArrayList<>()));
+                new Position(43.13644468556232, 13.067156069846892),
+                new CoordinatesBox(new Position(43.153712, 13.036414),
+                        new Position(43.123261, 13.095768)),
+                new ArrayList<>()));
 
         roles = new HashMap<>();
         roles.put(MACERATA, new EnumMap<>(AuthorizationEnum.class));
@@ -348,8 +387,7 @@ public class JpaTestEnvironment {
                 new Message("Luigi Bianchi", "luigi.bianchi@email.it",
                         "Testo del messaggio", new Date(124, 0, 21), new ArrayList<>()));
 
-        MESSAGGIO_1 = messageJpaRepository.save(messages.get(0));
-        MESSAGGIO_2 = messageJpaRepository.save(messages.get(1));
+        messageJpaRepository.saveAll(messages);
 
         areMessagesSet = true;
     }

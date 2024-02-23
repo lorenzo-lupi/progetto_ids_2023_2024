@@ -49,7 +49,7 @@ public class ContestHandler {
         ContestContent content = ContentHandler.createContent(
                 new ContestContentBuilder(contest), user, contentIF);
 
-        contest.getProposalRequests().proposeContent(content);
+        contest.getProposalRegister().proposeContent(content);
         RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(content));
         return content.getID();
     }
@@ -62,7 +62,7 @@ public class ContestHandler {
      * @return the Synthesized Format of all the proposals
      */
     public static List<VotedContentOF> viewAllProposals(long contestID) {
-        return municipalityRepository.getContestByID(contestID).getProposalRequests().getProposals().stream()
+        return municipalityRepository.getContestByID(contestID).getProposalRegister().getProposals().stream()
                 .map(VotedContent::getOutputFormat)
                 .toList();
     }
@@ -78,7 +78,7 @@ public class ContestHandler {
     @SuppressWarnings("unchecked")
     public static List<VotedContentOF> viewFilteredProposals(long contestID, List<SearchFilter> filters) {
         return (List<VotedContentOF>) SearchUltils.getFilteredItems(
-                municipalityRepository.getContestByID(contestID).getProposalRequests().getProposals(),
+                municipalityRepository.getContestByID(contestID).getProposalRegister().getProposals(),
                 filters);
     }
 
@@ -109,7 +109,7 @@ public class ContestHandler {
     public static void vote(long userID, long contestID, long contentID) {
         User user = userRepository.getItemByID(userID);
         Contest contest = municipalityRepository.getContestByID(contestID);
-        contest.getProposalRequests().addVote(getVotedContent(contest, contentID).content(), user);
+        contest.getProposalRegister().addVote(getVotedContent(contest, contentID).content(), user);
     }
 
     /**
@@ -124,7 +124,7 @@ public class ContestHandler {
     public static void removeVote(long userID, long contestID) {
         User user = userRepository.getItemByID(userID);
         Contest contest = municipalityRepository.getContestByID(contestID);
-        contest.getProposalRequests().removeVote(user);
+        contest.getProposalRegister().removeVote(user);
     }
 
 
@@ -280,7 +280,7 @@ public class ContestHandler {
     }
 
     private static VotedContent getVotedContent(Contest contest, long contentID) {
-        return contest.getProposalRequests().getProposals().stream()
+        return contest.getProposalRegister().getProposals().stream()
                 .filter(votedContent -> votedContent.getID() == contentID)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Content not found"));

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@DiscriminatorValue("GeoLocatable")
+@DiscriminatorValue("GeoLocatableDecorator")
 @NoArgsConstructor(force = true)
 public class GeoLocatableContestDecorator extends ContestDecorator{
 

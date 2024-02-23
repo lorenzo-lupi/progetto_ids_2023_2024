@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@DiscriminatorValue("Private")
+@DiscriminatorValue("PrivateDecorator")
 @NoArgsConstructor(force = true)
 public class PrivateContestDecorator extends ContestDecorator {
 

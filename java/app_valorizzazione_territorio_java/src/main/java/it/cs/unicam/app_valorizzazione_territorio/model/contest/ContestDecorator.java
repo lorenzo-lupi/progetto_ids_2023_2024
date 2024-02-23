@@ -22,6 +22,7 @@ import java.util.Map;
 public abstract class ContestDecorator extends Contest{
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "contest_id", referencedColumnName = "ID")
     private final Contest contest;
 
     public ContestDecorator(Contest contest){
@@ -71,8 +72,8 @@ public abstract class ContestDecorator extends Contest{
     }
 
     @Override
-    public ProposalRegister getProposalRequests() {
-        return this.contest.getProposalRequests();
+    public ProposalRegister getProposalRegister() {
+        return this.contest.getProposalRegister();
     }
 
     @Override
@@ -113,6 +114,7 @@ public abstract class ContestDecorator extends Contest{
     public Collection<? extends Content<Contest>> getContents() {
         return this.contest.getContents();
     }
+
 
     @Override
     public boolean equals(Object obj) {

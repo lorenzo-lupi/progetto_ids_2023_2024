@@ -1,9 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 
 
 @SpringBootApplication
