@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.model;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -18,9 +19,11 @@ import java.util.function.Predicate;
 @NoArgsConstructor(force = true)
 public class Role {
     @Id
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
     @JoinColumn(name = "municipality_id", referencedColumnName = "ID")
     private final Municipality municipality;
+
     @Id
     @Enumerated(EnumType.STRING)
     private final AuthorizationEnum authorizationEnum;
@@ -67,14 +70,17 @@ public class Role {
         return 31 * this.municipality.hashCode() + this.authorizationEnum.hashCode();
     }
 
-    protected static class RoleKey implements Serializable {
-        private final Municipality municipality;
-        private final AuthorizationEnum authorizationEnum;
+    @Getter
+     public static class RoleKey implements Serializable {
+         private Municipality municipality;
+         private AuthorizationEnum authorizationEnum;
 
         public RoleKey(Municipality municipality, AuthorizationEnum authorizationEnum) {
             this.municipality = municipality;
             this.authorizationEnum = authorizationEnum;
         }
+
+        public RoleKey() {}
     }
 
 }

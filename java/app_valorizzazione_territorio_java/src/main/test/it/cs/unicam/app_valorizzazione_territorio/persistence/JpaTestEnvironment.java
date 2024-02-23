@@ -2,6 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.persistence;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
+import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
@@ -9,7 +10,9 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RoleJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ public class JpaTestEnvironment {
     public static boolean areMunicipalitiesSet = false;
     public static boolean areUsersSet = false;
     public static Municipality MACERATA, CAMERINO;
+    public static Role MAC_CUR, MAC_CONTR, MAC_ADMIN, MAC_ANIM, CAM_CUR,CAM_CONTR, CAM_ADMIN, CAM_ANIM;
+    public static Map<Municipality, Map<AuthorizationEnum, Role>> roles = new HashMap<>();
     public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
@@ -36,21 +41,28 @@ public class JpaTestEnvironment {
         repository.deleteAll();
         areMunicipalitiesSet = false;
     }
-    public static void setUpMunicipalities(MunicipalityJpaRepository repository){
+    public static void setUpMunicipalities(MunicipalityJpaRepository repository,
+                                           RoleJpaRepository roleRepository){
         clearMunicipalities(repository);
 
-        MACERATA = repository.save(new Municipality("Macerata", "Comune di Macerata",
+        MACERATA = repository.saveAndFlush(new Municipality("Macerata", "Comune di Macerata",
                 new Position(43.29812657107886, 13.451878161920886),
                 new CoordinatesBox(new Position(43.317324, 13.409422),
                         new Position(43.271074, 13.499990)),
                 new ArrayList<>()));
                 //1 //CAMERINO
-        CAMERINO = repository.save(new Municipality("Camerino", "Comune di Camerino",
+        CAMERINO = repository.saveAndFlush(new Municipality("Camerino", "Comune di Camerino",
                         new Position(43.13644468556232, 13.067156069846892),
                         new CoordinatesBox(new Position(43.153712, 13.036414),
                                 new Position(43.123261, 13.095768)),
                         new ArrayList<>()));
-
+        roles = new HashMap<>();
+        roles.put(MACERATA, new EnumMap<>(AuthorizationEnum.class));
+        roles.put(CAMERINO, new EnumMap<>(AuthorizationEnum.class));
+        Arrays.stream(AuthorizationEnum.values()).forEach(auth -> {
+            roles.get(MACERATA).put(auth, roleRepository.save(new Role(MACERATA, auth)));
+            roles.get(CAMERINO).put(auth, roleRepository.save(new Role(CAMERINO, auth)));
+        });
         areMunicipalitiesSet = true;
     }
 
@@ -76,10 +88,10 @@ public class JpaTestEnvironment {
         ));
 
 
-     /*   users.get(3).addRole(CAMERINO, AuthorizationEnum.CURATOR);
-        users.get(4).addRole(MACERATA, AuthorizationEnum.ENTERTAINER);
-        users.get(5).addRole(CAMERINO, AuthorizationEnum.ENTERTAINER);
-        users.get(7).addRole(CAMERINO, AuthorizationEnum.ADMINISTRATOR); */
+        users.get(3).addRole(roles.get(CAMERINO).get(AuthorizationEnum.CURATOR));
+        users.get(4).addRole(roles.get(MACERATA).get(AuthorizationEnum.ENTERTAINER));
+        users.get(5).addRole(roles.get(CAMERINO).get(AuthorizationEnum.ENTERTAINER));
+        users.get(7).addRole(roles.get(CAMERINO).get(AuthorizationEnum.ADMINISTRATOR));
         TURIST_1 = repository.save(users.get(0));
         TURIST_2 = repository.save(users.get(1));
         TURIST_3 = repository.save(users.get(2));
@@ -154,5 +166,9 @@ public class JpaTestEnvironment {
                 (PointOfInterest) geoLocatables.get(0),
                 (PointOfInterest) geoLocatables.get(5)),
                 new ArrayList<>(), TURIST_2));
+    }
+
+    private void setUpRoles(RoleJpaRepository roles){
+
     }
 }

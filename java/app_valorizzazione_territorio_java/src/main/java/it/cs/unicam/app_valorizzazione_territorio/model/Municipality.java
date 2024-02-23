@@ -11,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
@@ -45,7 +46,10 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
             mappedBy = "municipality")
     private final List<GeoLocatable> geoLocatables;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "municipality")
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "municipality",
+            orphanRemoval = true,
+            cascade = CascadeType.REMOVE)
     private final List<Contest> contests;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -61,6 +65,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
      */
     public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files) {
         this(name, description, position, coordinatesBox, files, new ArrayList<>(), new ArrayList<>());
+
     }
 
     /**
