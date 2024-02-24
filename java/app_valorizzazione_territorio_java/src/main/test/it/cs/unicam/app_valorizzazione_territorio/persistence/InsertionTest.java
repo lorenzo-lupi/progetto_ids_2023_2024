@@ -2,8 +2,19 @@ package it.cs.unicam.app_valorizzazione_territorio.persistence;
 
 
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBase;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.PrivateContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Attraction;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.AttractionTypeEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
@@ -13,6 +24,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -38,7 +54,6 @@ public class InsertionTest {
 
     @BeforeAll
     void setUp() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
         JpaTestEnvironment.setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
         JpaTestEnvironment.setUpUsers(userJpaRepository);
         JpaTestEnvironment.setUpGeoLocatables(geoLocatableJpaRepository);
@@ -51,6 +66,21 @@ public class InsertionTest {
     public void testMunicipalityInsertions() {
         assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.CAMERINO)).isPresent());
         assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.MACERATA)).isPresent());
+    }
+
+    @Test
+    public void testMunicipalityInsertion() {
+        Municipality newMunicipality = new Municipality("TEST MUNICIPALITY", "TEST MUNICIPALITY",
+                new Position(43.135, 13.067),
+                new CoordinatesBox(
+                        new Position(43.135, 13.067),
+                        new Position(43.135, 13.067)
+                ),
+                new ArrayList<>());
+
+        municipalityJpaRepository.save(newMunicipality);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(newMunicipality)).isPresent());
+        assertTrue(municipalityJpaRepository.findByDescriptionContaining("TEST").findFirst().isPresent());
     }
 
     @Test
@@ -72,6 +102,15 @@ public class InsertionTest {
     }
 
     @Test
+    public void testUserInsertion() {
+        User newUser = new User("Test username", "test.email@test.it", "TestPass01");
+        userJpaRepository.save(newUser);
+
+        assertTrue(userJpaRepository.findOne(Example.of(newUser)).isPresent());
+        assertTrue(userJpaRepository.findByUsername("Test username").isPresent());
+    }
+
+    @Test
     public void testGeoLocatableInsertions(){
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.BASILICA_SAN_VENANZIO)).isPresent());
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.PIAZZA_LIBERTA)).isPresent());
@@ -82,11 +121,63 @@ public class InsertionTest {
     }
 
     @Test
+    public void testGeoLocatableInsertion() {
+        PointOfInterest newPoi = new Attraction("Test POI", "Test POI",
+                new Position(43.135, 13.067),
+                JpaTestEnvironment.CAMERINO, AttractionTypeEnum.OTHER, JpaTestEnvironment.TURIST_1);
+
+        geoLocatableJpaRepository.save(newPoi);
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(newPoi)).isPresent());
+
+        JpaTestEnvironment.CAMERINO.addGeoLocatable(newPoi);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.CAMERINO)).get()
+                .getGeoLocatables().contains(newPoi));
+    }
+
+    @Test
     public void testContestInsertions(){
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_FOTO_2024)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_FOTO_2025)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_FOTO_PIZZA)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_PITTURA)).isPresent());
+    }
+
+    @Test
+    public void testContestInsertion() {
+        Contest newContest = new ContestBase("Test Contest",
+                JpaTestEnvironment.ENTERTAINER_CAMERINO, "Test topic", "Test rules",
+                new Date(124, 1, 1), new Date(124, 1, 2), new Date(124, 1, 3),
+                JpaTestEnvironment.CAMERINO);
+
+        contestJpaRepository.save(newContest);
+        assertTrue(contestJpaRepository.findOne(Example.of(newContest)).isPresent());
+
+        JpaTestEnvironment.CAMERINO.addContest(newContest);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.CAMERINO)).get()
+                .getContests().contains(newContest));
+    }
+
+    @Test
+    public void testContestInsertion2() {
+        Contest contestBase = new ContestBase("Test Contest2",
+                JpaTestEnvironment.ENTERTAINER_CAMERINO, "Test topic", "Test rules",
+                new Date(124, 1, 1), new Date(124, 1, 2), new Date(124, 1, 3),
+                JpaTestEnvironment.CAMERINO);
+        Contest newContest = new PrivateContestDecorator(contestBase,
+                List.of(JpaTestEnvironment.TURIST_1, JpaTestEnvironment.TURIST_2));
+
+        contestJpaRepository.save(newContest);
+        assertTrue(contestJpaRepository.findOne(Example.of(newContest)).isPresent());
+        assertTrue(contestJpaRepository.findOne(Example.of(contestBase)).isPresent());
+
+        JpaTestEnvironment.CAMERINO.addContest(newContest);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.CAMERINO)).get()
+                .getContests().contains(newContest));
+
+        assertTrue(contestJpaRepository.findAllByValidTrue().contains(newContest));
+        assertFalse(contestJpaRepository.findAllByValidTrue().contains(contestBase));
+        assertTrue(contestJpaRepository.findByBaseContestIdAndValidTrue(contestBase.getID()).get() instanceof ContestDecorator);
+        assertFalse(contestJpaRepository.findByBaseContestIdAndValidTrue(newContest.getID()).isPresent());
     }
 
     @Test
@@ -102,6 +193,20 @@ public class InsertionTest {
         assertTrue(contentJpaRepository.findOne(Example.of(JpaTestEnvironment.FOTO_PIZZA_REGINA)).isPresent());
         assertTrue(contentJpaRepository.findOne(Example.of(JpaTestEnvironment.FOTO_PITTURA_1)).isPresent());
         assertTrue(contentJpaRepository.findOne(Example.of(JpaTestEnvironment.FOTO_PITTURA_2)).isPresent());
+    }
+
+    @Test
+    public void testContentInsertion() {
+        PointOfInterestContent newContent = new PointOfInterestContent("Test content",
+                (PointOfInterest) JpaTestEnvironment.PIAZZA_LIBERTA, new ArrayList<>(), JpaTestEnvironment.TURIST_1);
+
+        contentJpaRepository.save(newContent);
+        assertTrue(contentJpaRepository.findOne(Example.of(newContent)).isPresent());
+
+        ((PointOfInterest)JpaTestEnvironment.PIAZZA_LIBERTA).addContent(newContent);
+        assertTrue(geoLocatableJpaRepository.findAllPointsOfInterest().stream()
+                .filter(poi -> poi.equals(JpaTestEnvironment.PIAZZA_LIBERTA))
+                .flatMap(poi -> poi.getContents().stream()).anyMatch(content -> content.equals(newContent)));
     }
 
     @Test

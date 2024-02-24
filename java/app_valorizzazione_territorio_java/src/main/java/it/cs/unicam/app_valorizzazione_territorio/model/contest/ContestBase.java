@@ -61,10 +61,11 @@ public class ContestBase extends Contest {
         this.proposalRegister = new ProposalRegister();
     }
 
-    @Override
-    public long getBaseContestID() {
-        return super.getID();
+    @PostPersist
+    public void postPersist() {
+        this.setBaseContestId(getID());
     }
+
 
     @Override
     public String getName() {

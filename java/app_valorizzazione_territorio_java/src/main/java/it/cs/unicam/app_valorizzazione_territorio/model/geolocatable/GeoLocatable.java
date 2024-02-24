@@ -24,23 +24,20 @@ import java.util.function.Consumer;
  */
 @Entity
 @NoArgsConstructor(force = true)
-@DiscriminatorValue("GeoLocatable")
+@DiscriminatorColumn(name = "geoLocatableType")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class GeoLocatable implements Requestable, Searchable, Positionable, Deletable {
+public abstract class GeoLocatable implements Requestable, Searchable, Positionable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
+
+    @Column(name="geoLocatableType", insertable = false, updatable = false)
+    protected String geoLocatableType;
 
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
     private final User user;
-    /**
-     * -- GETTER --
-     *  Returns the name of the geo-localizable object.
-     *
-     * @return the name of the geo-localizable object
-     */
     @Getter
     private String name;
     @Getter

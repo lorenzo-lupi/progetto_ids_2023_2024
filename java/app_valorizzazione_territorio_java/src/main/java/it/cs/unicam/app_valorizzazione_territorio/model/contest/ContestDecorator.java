@@ -31,9 +31,14 @@ public abstract class ContestDecorator extends Contest{
         this.contest.setValid(false);
     }
 
+    @PostPersist
+    public void postPersist() {
+        this.setBaseContestId(contest.getBaseContestId());
+    }
+
     @Override
-    public long getBaseContestID() {
-        return this.contest.getBaseContestID();
+    public long getBaseContestId() {
+        return this.contest.getBaseContestId();
     }
 
     @Override

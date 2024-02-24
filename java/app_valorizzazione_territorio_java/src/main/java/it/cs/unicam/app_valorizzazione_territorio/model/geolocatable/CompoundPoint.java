@@ -29,7 +29,8 @@ import java.util.function.Consumer;
 public class CompoundPoint extends GeoLocatable {
 
     @Getter
-    private CompoundPointTypeEnum type;
+    @Enumerated(EnumType.STRING)
+    private CompoundPointTypeEnum compoundPointType;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -40,7 +41,7 @@ public class CompoundPoint extends GeoLocatable {
     /**
      * Constructor for a compound point.
      *
-     * @param type             the type of the compound point
+     * @param compoundPointType             the type of the compound point
      * @param description      the textual description of the compound point
      * @param pointsOfInterest the points of interest that compose the compound point
      * @throws IllegalArgumentException if type, description, geoLocatables or images are null
@@ -48,15 +49,15 @@ public class CompoundPoint extends GeoLocatable {
     public CompoundPoint(String title,
                          String description,
                          Municipality municipality,
-                         CompoundPointTypeEnum type,
+                         CompoundPointTypeEnum compoundPointType,
                          Collection<PointOfInterest> pointsOfInterest,
                          List<File> images,
                          User user) {
 
         super(title, description, municipality, images, user);
-        checkArguments(type, pointsOfInterest);
+        checkArguments(compoundPointType, pointsOfInterest);
 
-        this.type = type;
+        this.compoundPointType = compoundPointType;
         this.pointsOfInterest = pointsOfInterest;
         this.setPosition(this.calculatePosition());
     }
@@ -95,7 +96,7 @@ public class CompoundPoint extends GeoLocatable {
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parameters
                 = new HashMap<>(super.getParametersMapping());
-        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
+        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.compoundPointType);
         return parameters;
     }
 
@@ -114,7 +115,7 @@ public class CompoundPoint extends GeoLocatable {
                 this.getDescription(),
                 this.getPosition(),
                 this.getMunicipality().getOutputFormat(),
-                this.getType(),
+                this.getCompoundPointType(),
                 this.getImages().isEmpty() ? null : this.getImages().get(0),
                 this.getImages(),
                 this.getPointsOfInterest().stream().map(PointOfInterest::getOutputFormat).toList(),

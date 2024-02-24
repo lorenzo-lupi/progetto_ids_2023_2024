@@ -21,6 +21,7 @@ import java.util.function.Consumer;
  * represents an attraction, an event or an activity present on the territory. It can be included in a compound point.
  */
 @Entity
+@DiscriminatorValue("PointOfInterest")
 @NoArgsConstructor(force = true)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class PointOfInterest extends GeoLocatable implements ContentHost<PointOfInterest> {

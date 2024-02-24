@@ -11,7 +11,9 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,11 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
 
+    //ID of the decorated base contest.
+    @Getter
+    @Setter
+    private long baseContestId;
+
     //Determines if this object is the last added object in the chain of decorators.
     private boolean valid;
 
@@ -46,8 +53,6 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
         this.municipality = municipality;
         this.valid = true;
     }
-
-    public abstract long getBaseContestID();
 
     public boolean isValid() {
         return valid;

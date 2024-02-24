@@ -84,7 +84,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
     public Map<Long, Contest> getAllContestsMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getContests().stream())
-                .collect(toMap(Contest::getBaseContestID, Function.identity()));
+                .collect(toMap(Contest::getBaseContestId, Function.identity()));
     }
 
     /**
@@ -93,13 +93,13 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a map of all the content of the content hosts of the municipalities
      */
-    public Map<Long, Content> getAllContentsMap() {
-        Map<Long, Content> poiContentsMap = this.getItemStream().parallel()
+    public Map<Long, Content<?>> getAllContentsMap() {
+        Map<Long, Content<?>> poiContentsMap = this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getGeoLocatables().stream())
                 .filter(geoLocatable -> geoLocatable instanceof PointOfInterest)
                 .flatMap(pointOfInterest -> ((PointOfInterest) pointOfInterest).getContents().stream())
                 .collect(toMap(PointOfInterestContent::getID, Function.identity()));
-        Map<Long, Content> contestContentsMap = this.getItemStream().parallel()
+        Map<Long, Content<?>> contestContentsMap = this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getContests().stream())
                 .flatMap(contest -> contest.getContents().stream())
                 .collect(toMap(Content::getID, Function.identity()));
@@ -189,8 +189,8 @@ public class MunicipalityRepository extends Repository<Municipality> {
      * @return the content of the content hosts of the municipalities in the repository with the given ID
      * @throws IllegalArgumentException if the content with the given ID is not found
      */
-    public Content getContentByID(long ID) {
-        Content content = getAllContentsMap().get(ID);
+    public Content<?> getContentByID(long ID) {
+        Content<?> content = getAllContentsMap().get(ID);
         if(content == null) throw new IllegalArgumentException("Content not found");
         return content;
     }
@@ -228,7 +228,7 @@ public class MunicipalityRepository extends Repository<Municipality> {
      *
      * @return a stream of all the content of the content hosts of the municipalities in the repository
      */
-    public Stream<Content> getAllContents() {
+    public Stream<Content<?>> getAllContents() {
         return getAllContentsMap().values().stream();
     }
 
