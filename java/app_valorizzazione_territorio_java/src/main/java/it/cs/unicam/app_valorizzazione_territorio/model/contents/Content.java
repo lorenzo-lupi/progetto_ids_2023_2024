@@ -31,7 +31,7 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private final User user;
+    private User user;
 
     @Column(name="Type", insertable = false, updatable = false)
     protected String type;
@@ -142,5 +142,10 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove(){
+        this.user = null;
     }
 }

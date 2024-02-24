@@ -15,6 +15,7 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
@@ -46,7 +47,9 @@ public class JpaTestEnvironment {
 
     public static void clearMunicipalities(MunicipalityJpaRepository repository, RoleJpaRepository roleRepository){
         roleRepository.deleteAll();
+        roleRepository.flush();
         repository.deleteAll();
+        repository.flush();
         areMunicipalitiesSet = false;
     }
 
@@ -78,6 +81,7 @@ public class JpaTestEnvironment {
 
     public static void clearUsers(UserJpaRepository repository){
         repository.deleteAll();
+        repository.flush();
         areUsersSet = false;
     }
 
@@ -115,6 +119,7 @@ public class JpaTestEnvironment {
 
     public static void clearGeoLocatables(GeoLocatableJpaRepository repository){
         repository.deleteAll();
+        repository.flush();
         areGeoLocatablesSet = false;
     }
     public static void setUpGeoLocatables(GeoLocatableJpaRepository repository){
@@ -195,7 +200,8 @@ public class JpaTestEnvironment {
     }
 
     public static void clearContests(ContestJpaRepository repository){
-        repository.deleteAll();
+        repository.deleteAll(repository.findAllByValidTrue());
+        repository.flush();
         areContestsSet = false;
     }
 
@@ -216,12 +222,12 @@ public class JpaTestEnvironment {
                         "Concorso fotografico generico edizione 2025", "Una foto per partecipante",
                         new Date(125, 0, 1), new Date(125, 9, 30),
                         new Date(125, 11, 31), MACERATA),
-                //2 //CONCORSO_FOTO_PIZZA //Municiplaity: Camerino //GeoLocatable: Pizzeria Enjoy
+                //2 //CONCORSO_FOTO_PIZZA //Municipality: Camerino //GeoLocatable: Pizzeria Enjoy
                 new GeoLocatableContestDecorator(new ContestBase("Migliore foto di pizza Novembre", ENTERTAINER_CAMERINO,
                         "Concorso fotografico per la migliore foto di pizza", "Una foto per partecipante",
                         new Date(124, 0, 1), new Date(124, 9, 30),
                         new Date(124, 11, 31), CAMERINO), PIZZERIA_ENJOY),
-                //3 //CONCORSO_PITTURA //Municiplaity: Camerino
+                //3 //CONCORSO_PITTURA //Municipality: Camerino
                 new PrivateContestDecorator(new ContestBase("Concorso pittura dei paesaggi", ENTERTAINER_CAMERINO,
                         "Concorso di pittura dei paesaggi",
                         "Foto di una pittura fatta a mano di un pesaggio di Camerino",
@@ -244,6 +250,7 @@ public class JpaTestEnvironment {
 
     public static void clearContents(ContentJpaRepository repository){
         repository.deleteAll();
+        repository.flush();
         areContentsSet = false;
     }
 
@@ -313,6 +320,7 @@ public class JpaTestEnvironment {
 
     public static void clearRequests(RequestJpaRepository repository){
         repository.deleteAll();
+        repository.flush();
         areRequestsSet = false;
     }
 
@@ -340,6 +348,7 @@ public class JpaTestEnvironment {
 
     public static void clearMessages(MessageJpaRepository repository){
         repository.deleteAll();
+        repository.flush();
         areMessagesSet = false;
     }
 

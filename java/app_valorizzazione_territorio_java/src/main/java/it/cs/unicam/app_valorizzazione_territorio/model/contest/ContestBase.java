@@ -30,8 +30,9 @@ public class ContestBase extends Contest {
     @Temporal(TemporalType.DATE)
     private Date endDate;
     @OneToOne(fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    private final ProposalRegister proposalRegister;
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    private ProposalRegister proposalRegister;
 
     public ContestBase(String name,
                        User animator,
@@ -65,7 +66,6 @@ public class ContestBase extends Contest {
     public void postPersist() {
         this.setBaseContestId(getID());
     }
-
 
     @Override
     public String getName() {
@@ -183,6 +183,8 @@ public class ContestBase extends Contest {
 
     @PreRemove
     public void preRemove() {
+        super.preRemove();
+        this.proposalRegister = null;
         this.animator = null;
     }
 }

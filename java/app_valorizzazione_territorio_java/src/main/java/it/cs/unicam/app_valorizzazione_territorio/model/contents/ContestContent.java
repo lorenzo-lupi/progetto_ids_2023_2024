@@ -7,6 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,8 +20,9 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 @DiscriminatorValue("ContestContent")
 public class ContestContent extends Content<Contest> {
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
-    private final Contest contest;
+    private Contest contest;
     @Getter
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -63,5 +65,10 @@ public class ContestContent extends Content<Contest> {
             this.contest.getProposalRegister().removeProposal(this);
             MunicipalityRepository.getInstance().removeContent(this);
         };
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.contest != null) this.contest.removeContent(this);
     }
 }

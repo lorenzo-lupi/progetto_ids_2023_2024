@@ -11,6 +11,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,6 +44,7 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     //Determines if this object is the last added object in the chain of decorators.
     private boolean valid;
 
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "municipality_id")
     private Municipality municipality;
@@ -139,16 +141,9 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     public abstract ProposalRegister getProposalRegister();
 
     @Override
-    public boolean removeContent(Content<Contest> content) {
-        if (content instanceof ContestContent c)
-            return this.getProposalRegister().removeProposal(c) != null;
-        return false;
-    }
-
-    @PreRemove
-    public void preRemove() {
-        this.municipality.removeContest(this);
-        this.municipality = null;
+    public void removeContent(Content<Contest> content) {
+        if (content instanceof ContestContent c && this.getProposalRegister() != null)
+            this.getProposalRegister().removeProposal(c);
     }
 
     @Override
@@ -178,5 +173,10 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
                 Parameter.NAME, this.getName(),
                 Parameter.CONTEST_TOPIC, this.getTopic(),
                 Parameter.CONTEST_STATUS, this.getStatus());
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.municipality != null) this.municipality.removeContest(this);
     }
 }

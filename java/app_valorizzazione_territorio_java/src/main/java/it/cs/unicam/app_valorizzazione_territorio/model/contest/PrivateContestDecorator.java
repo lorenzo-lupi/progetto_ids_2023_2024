@@ -3,8 +3,10 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,7 @@ public class PrivateContestDecorator extends ContestDecorator {
         super(contest);
         if (participants == null)
             throw new IllegalArgumentException("Participants must not be null");
-        this.participants = List.copyOf(participants);
+        this.participants = new ArrayList<>(participants);
     }
 
     @Override

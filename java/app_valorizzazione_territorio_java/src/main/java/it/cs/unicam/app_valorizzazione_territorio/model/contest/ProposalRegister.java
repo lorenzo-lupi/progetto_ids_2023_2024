@@ -16,6 +16,11 @@ public class ProposalRegister {
             cascade = CascadeType.ALL)
     private final Set<ContestContent> proposals;
 
+    public void removeProposal(ContestContent content) {
+        content.setContest(null);
+        this.proposals.remove(content);
+    }
+
     public ProposalRegister() {
         proposals = new HashSet<>();
     }
@@ -108,7 +113,7 @@ public class ProposalRegister {
      * @param content the content to be removed.
      * @throws IllegalArgumentException if the content is not in the list.
      */
-    public ContestContent removeProposal(ContestContent content) {
+    public ContestContent removeContent(ContestContent content) {
         if (content == null)
             throw new IllegalArgumentException("Content must not be null");
 

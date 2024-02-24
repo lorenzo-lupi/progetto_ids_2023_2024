@@ -10,6 +10,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.List;
@@ -48,6 +49,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
     @Getter
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "municipality_id")
     private Municipality municipality;
@@ -167,13 +169,12 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     public Runnable getDeletionAction() {
         return () -> {
             this.getMunicipality().removeGeoLocatable(this);
-            this.municipality = null;
         };
     }
 
     @PreRemove
     public void preRemove() {
-        getDeletionAction().run();
+        if (this.municipality != null) this.municipality.removeGeoLocatable(this);
     }
 
     @Override

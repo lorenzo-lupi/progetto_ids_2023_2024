@@ -32,6 +32,11 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
             cascade = CascadeType.ALL)
     private final List<PointOfInterestContent> contents;
 
+    public void removeContent(PointOfInterestContent content) {
+        content.setPoi(null);
+        this.contents.remove(content);
+    }
+
 
     public static final Map<String, Class<? extends PointOfInterest>> stringToClass = Map.of(
             Attraction.class.getSimpleName(), Attraction.class,
@@ -97,21 +102,8 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     }
 
     @Override
-    public boolean removeContent(Content<PointOfInterest> content) {
-        if (content instanceof PointOfInterestContent c)
-            return this.contents.remove(c);
-        return false;
-    }
-
-    /**
-     * Removes a content from the geo-locatable object.
-     *
-     * @param content the content to remove
-     * @return true if the content has been removed, false otherwise
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public boolean removeContent(PointOfInterestContent content) {
-        return this.contents.remove(content);
+    public void removeContent(Content<PointOfInterest> content) {
+        if (content instanceof PointOfInterestContent c) removeContent(c);
     }
 
     @Override
@@ -148,5 +140,11 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     @Transient
     public Collection<PointOfInterestContent> getContents() {
         return this.contents;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.contents.forEach(content -> content.setPoi(null));
     }
 }

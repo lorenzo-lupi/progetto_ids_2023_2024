@@ -21,9 +21,9 @@ import java.util.Map;
 @NoArgsConstructor(force = true)
 public abstract class ContestDecorator extends Contest{
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "contest_id", referencedColumnName = "ID")
-    private final Contest contest;
+    private Contest contest;
 
     public ContestDecorator(Contest contest){
         super(contest.getMunicipality());
@@ -34,11 +34,6 @@ public abstract class ContestDecorator extends Contest{
     @PostPersist
     public void postPersist() {
         this.setBaseContestId(contest.getBaseContestId());
-    }
-
-    @Override
-    public long getBaseContestId() {
-        return this.contest.getBaseContestId();
     }
 
     @Override
@@ -83,6 +78,7 @@ public abstract class ContestDecorator extends Contest{
 
     @Override
     public ProposalRegister getProposalRegister() {
+        if (this.contest == null) return null;
         return this.contest.getProposalRegister();
     }
 
@@ -135,6 +131,6 @@ public abstract class ContestDecorator extends Contest{
     @PreRemove
     public void preRemove() {
         super.preRemove();
-        this.contest.preRemove();
+        this.contest = null;
     }
 }

@@ -16,7 +16,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInte
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class InsertionTest {
     @Autowired
     MessageJpaRepository messageJpaRepository;
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
         JpaTestEnvironment.setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
         JpaTestEnvironment.setUpUsers(userJpaRepository);
@@ -222,7 +221,7 @@ public class InsertionTest {
         assertTrue(messageJpaRepository.findOne(Example.of(JpaTestEnvironment.MESSAGGIO_2)).isPresent());
     }
 
-    @AfterAll
+    @AfterEach
     public void clearAll(){
         JpaTestEnvironment.clearMessages(messageJpaRepository);
         JpaTestEnvironment.clearRequests(requestJpaRepository);
@@ -232,6 +231,5 @@ public class InsertionTest {
         JpaTestEnvironment.clearUsers(userJpaRepository);
         JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
     }
-
 
 }

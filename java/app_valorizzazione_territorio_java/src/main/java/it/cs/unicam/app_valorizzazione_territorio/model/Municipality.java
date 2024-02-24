@@ -11,7 +11,6 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -49,11 +48,21 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
             cascade = CascadeType.ALL)
     private final List<GeoLocatable> geoLocatables;
 
+    public void removeGeoLocatable(GeoLocatable geoLocatable) {
+        geoLocatable.setMunicipality(null);
+        this.geoLocatables.remove(geoLocatable);
+    }
+
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "municipality",
             orphanRemoval = true,
             cascade = CascadeType.ALL)
     private final List<Contest> contests;
+
+    public void removeContest(Contest contest) {
+        contest.setMunicipality(null);
+        this.contests.remove(contest);
+    }
 
     @OneToMany(fetch = FetchType.EAGER)
     private final List<Notification> notifications;
@@ -134,16 +143,8 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
         return this.geoLocatables.add(geoLocatable);
     }
 
-    public boolean removeGeoLocatable(GeoLocatable geoLocatable) {
-        return this.geoLocatables.remove(geoLocatable);
-    }
-
     public boolean addContest(Contest contest) {
         return this.contests.add(contest);
-    }
-
-    public boolean removeContest(Contest contest) {
-        return this.contests.remove(contest);
     }
 
     public List<Notification> getNotifications() {
@@ -198,5 +199,13 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.geoLocatables != null)
+            new ArrayList<>(this.geoLocatables).forEach(this::removeGeoLocatable);
+        if (this.contests != null)
+            new ArrayList<>(this.contests).forEach(this::removeContest);
     }
 }

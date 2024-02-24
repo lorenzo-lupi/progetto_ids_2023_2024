@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @DiscriminatorValue("PointOfInterestContent")
 @NoArgsConstructor(force = true)
 public class PointOfInterestContent extends Content<PointOfInterest>{
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     private PointOfInterest poi;
     /**
@@ -38,8 +40,6 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
         this.poi = poi;
     }
 
-
-
     @Override
     public PointOfInterest getHost() {
         return this.poi;
@@ -48,11 +48,11 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
 
     @Override
     public Runnable getDeletionAction() {
-        return () -> {this.poi.removeContent(this); this.poi = null;};
+        return () -> this.poi.removeContent(this);
     }
 
     @PreRemove
     public void preRemove() {
-        getDeletionAction().run();
+        if (this.poi != null) this.poi.removeContent(this);
     }
 }
