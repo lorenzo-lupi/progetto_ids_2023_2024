@@ -13,6 +13,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
     private String name;
-
+    @Setter
     private String description;
 
     @Embedded
