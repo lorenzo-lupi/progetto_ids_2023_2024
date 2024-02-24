@@ -32,13 +32,17 @@ public class TimetableEntry {
         this.timetable = timetable;
         this.timeRange = timeRange;
     }
-    @Transient
+
+    public Timetable getTimetable() {
+        return this.timetable;
+    }
+
     public DayOfWeek getDayOfWeek() {
         return this.dayOfWeek;
     }
-    @Transient
-    public Timetable getTimetable() {
-        return this.timetable;
+
+    public TimeRange getTimeRange() {
+        return this.timeRange;
     }
     @Getter
     @Setter

@@ -4,6 +4,8 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
@@ -36,7 +38,7 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "municipality_id")
-    private final Municipality municipality;
+    private Municipality municipality;
 
     public Contest(Municipality municipality) {
         if (municipality == null)
@@ -45,10 +47,7 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
         this.valid = true;
     }
 
-    @Override
-    public long getID() {
-        return this.ID;
-    }
+    public abstract long getBaseContestID();
 
     public boolean isValid() {
         return valid;
@@ -133,6 +132,24 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
      * @return the proposal requests of the contest.
      */
     public abstract ProposalRegister getProposalRegister();
+
+    @Override
+    public boolean removeContent(Content<Contest> content) {
+        if (content instanceof ContestContent c)
+            return this.getProposalRegister().removeProposal(c) != null;
+        return false;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        this.municipality.removeContest(this);
+        this.municipality = null;
+    }
+
+    @Override
+    public long getID() {
+        return this.ID;
+    }
 
     @Override
     public ContestOF getOutputFormat() {

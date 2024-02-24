@@ -7,7 +7,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents the timetable of an {@link Activity}.
@@ -73,16 +75,20 @@ public class Timetable {
     }
 
     /**
-     * Returns a list of {@link TimeRange}s representing the opening and closing time of the timetable
+     * Returns a map of {@link TimeRange}s representing the opening and closing time of the timetable
      * for each day of the week.
-     * The list returned has a range of size 7, where each element represents a day of the week starting
+     * The map returned has a range of size 7, where each entry represents a day of the week starting
      * from Monday.
      *
-     * @return a list representing the opening and closing time of the timetable for each day of the week
+     * @return a map representing the opening and closing time of the timetable for each day of the week
      */
-    @Transient
-    public List<TimetableEntry> getRangesList() {
-        return this.timetableEntries;
+    public Map<DayOfWeek, TimeRange> getRangesMap() {
+        return timetableEntries.stream().collect(
+                Collectors.toMap(
+                        TimetableEntry::getDayOfWeek,
+                        TimetableEntry::getTimeRange
+                )
+        );
     }
 
 }

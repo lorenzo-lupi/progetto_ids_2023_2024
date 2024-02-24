@@ -111,7 +111,8 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     @DiscriminatorValue("ModifiableContent")
     @NoArgsConstructor(force = true)
     private static class ContentModificationCommand extends ModificationCommand<Content<?>> {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "content_id")
         private final Content<?> content;
         public ContentModificationCommand(Content<?> content, List<Pair<Parameter, Object>> modifications) {
             super(modifications);
@@ -129,7 +130,8 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     @Entity
     @DiscriminatorValue("ModifiableGeoLocatable")
     private static class GeoLocatableModificationCommand extends ModificationCommand<GeoLocatable> {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "geo_locatable_id")
         private final GeoLocatable geoLocatable;
         public GeoLocatableModificationCommand(GeoLocatable geoLocatable, List<Pair<Parameter, Object>> modifications) {
             super(modifications);

@@ -22,7 +22,7 @@ public class Role {
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.ALL})
     @JoinColumn(name = "municipality_id", referencedColumnName = "ID")
-    private final Municipality municipality;
+    private Municipality municipality;
 
     @Id
     @Enumerated(EnumType.STRING)
@@ -68,6 +68,11 @@ public class Role {
     @Override
     public int hashCode() {
         return 31 * this.municipality.hashCode() + this.authorizationEnum.hashCode();
+    }
+
+    @PreRemove
+    public void preRemove(){
+        this.municipality = null;
     }
 
     @Getter

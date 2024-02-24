@@ -47,7 +47,8 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
     @Entity
     @DiscriminatorValue("DeletableContent")
     private static class ContentDeletionCommand extends DeletionCommand<Content<?>> {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "content_id")
         private final Content<?> content;
         public ContentDeletionCommand(Content<?> content) {
             this.content = content;
@@ -60,7 +61,8 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
     @Entity
     @DiscriminatorValue("DeletableGeoLocatable")
     private static class GeoLocatableDeletionCommand extends DeletionCommand<GeoLocatable> {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "geoLocatable_id")
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "geo_locatable_id")
         private final GeoLocatable geoLocatable;
         public GeoLocatableDeletionCommand(GeoLocatable geoLocatable) {
             this.geoLocatable = geoLocatable;

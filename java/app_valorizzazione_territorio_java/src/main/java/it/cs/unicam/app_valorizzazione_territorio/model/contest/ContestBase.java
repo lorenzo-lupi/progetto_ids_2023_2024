@@ -20,7 +20,7 @@ public class ContestBase extends Contest {
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "app_user_id")
-    private final User animator;
+    private User animator;
     private String topic;
     private String rules;
     @Temporal(TemporalType.DATE)
@@ -29,7 +29,8 @@ public class ContestBase extends Contest {
     private Date votingStartDate;
     @Temporal(TemporalType.DATE)
     private Date endDate;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
     private final ProposalRegister proposalRegister;
 
     public ContestBase(String name,
@@ -60,6 +61,12 @@ public class ContestBase extends Contest {
         this.proposalRegister = new ProposalRegister();
     }
 
+    @Override
+    public long getBaseContestID() {
+        return super.getID();
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -70,10 +77,12 @@ public class ContestBase extends Contest {
         this.name = name;
     }
 
+    @Override
     public User getEntertainer() {
         return animator;
     }
 
+    @Override
     public String getTopic() {
         return topic;
     }
@@ -84,6 +93,7 @@ public class ContestBase extends Contest {
         this.topic = topic;
     }
 
+    @Override
     public String getRules() {
         return rules;
     }
@@ -94,6 +104,7 @@ public class ContestBase extends Contest {
         this.rules = rules;
     }
 
+    @Override
     public Date getStartDate() {
         return startDate;
     }
@@ -104,6 +115,7 @@ public class ContestBase extends Contest {
         this.startDate = startDate;
     }
 
+    @Override
     public Date getVotingStartDate() {
         return votingStartDate;
     }
@@ -114,6 +126,7 @@ public class ContestBase extends Contest {
         this.votingStartDate = votingStartDate;
     }
 
+    @Override
     public Date getEndDate() {
         return endDate;
     }
@@ -165,5 +178,10 @@ public class ContestBase extends Contest {
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove() {
+        this.animator = null;
     }
 }

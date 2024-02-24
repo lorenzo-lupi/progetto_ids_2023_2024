@@ -76,14 +76,15 @@ public class MunicipalityRepository extends Repository<Municipality> {
     }
 
     /**
-     * Returns a map of all the contests of the municipalities in the repository mapped with their IDs.
+     * Returns a map of all the contests of the municipalities in the repository mapped with their
+     * base contest IDs.
      *
      * @return a map of all the contests of the municipalities
      */
     public Map<Long, Contest> getAllContestsMap() {
         return this.getItemStream().parallel()
                 .flatMap(municipality -> municipality.getContests().stream())
-                .collect(toMap(Contest::getID, Function.identity()));
+                .collect(toMap(Contest::getBaseContestID, Function.identity()));
     }
 
     /**

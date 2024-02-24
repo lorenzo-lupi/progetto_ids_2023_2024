@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * @param <V> the type of the content host
  */
 @Entity
-@DiscriminatorValue("Content")
+@DiscriminatorColumn(name = "Type")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(force = true)
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable {
@@ -32,6 +32,9 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private final User user;
+
+    @Column(name="Type", insertable = false, updatable = false)
+    protected String type;
     @Getter
     private String description;
     @Getter

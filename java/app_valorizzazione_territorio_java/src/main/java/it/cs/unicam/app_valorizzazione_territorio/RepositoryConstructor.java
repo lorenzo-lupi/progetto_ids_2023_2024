@@ -9,6 +9,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBase;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.GeoLocatableContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.PrivateContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Event;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
@@ -18,7 +19,9 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 @Component
 public class RepositoryConstructor {
@@ -83,13 +86,15 @@ public class RepositoryConstructor {
     public static Request<?> RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR;
 
 
-    public static void clearMunicipalities(MunicipalityJpaRepository repository){
+    public static void clearMunicipalities(MunicipalityJpaRepository repository, RoleJpaRepository roleRepository){
+        roleRepository.deleteAll();
         repository.deleteAll();
         areMunicipalitiesSet = false;
     }
+
     public static void setUpMunicipalities(MunicipalityJpaRepository repository,
                                            RoleJpaRepository roleRepository){
-        clearMunicipalities(repository);
+        clearMunicipalities(repository, roleRepository);
 
         MACERATA = repository.saveAndFlush(new Municipality("Macerata", "Comune di Macerata",
                 new Position(43.29812657107886, 13.451878161920886),

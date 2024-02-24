@@ -60,7 +60,7 @@ public abstract class ApprovalCommand<T extends Approvable & Visualizable> exten
     @DiscriminatorValue("ApprovableGeoLocatable")
     @NoArgsConstructor(force = true)
     private static class GeoLocatableApprovalCommand extends ApprovalCommand<GeoLocatable> {
-        @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "geoLocatable_id")
+        @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "geo_locatable_id")
         private final GeoLocatable geoLocatable;
         public GeoLocatableApprovalCommand(GeoLocatable geoLocatable) {
             this.geoLocatable = geoLocatable;

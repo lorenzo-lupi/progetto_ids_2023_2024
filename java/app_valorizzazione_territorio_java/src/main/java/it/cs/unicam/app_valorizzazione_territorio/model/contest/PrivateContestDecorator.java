@@ -46,4 +46,10 @@ public class PrivateContestDecorator extends ContestDecorator {
         parametersMapping.put(Parameter.CONTEST_TYPE, "Private");
         return parametersMapping;
     }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.participants.clear();
+    }
 }

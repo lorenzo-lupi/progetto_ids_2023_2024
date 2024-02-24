@@ -32,6 +32,11 @@ public abstract class ContestDecorator extends Contest{
     }
 
     @Override
+    public long getBaseContestID() {
+        return this.contest.getBaseContestID();
+    }
+
+    @Override
     public String getName() {
         return this.contest.getName();
     }
@@ -95,10 +100,6 @@ public abstract class ContestDecorator extends Contest{
     public List<User> getParticipants() throws UnsupportedOperationException {
         return this.contest.getParticipants();
     }
-    @Override
-    public long getID() {
-        return this.contest.getID();
-    }
 
     @Override
     public ContestOF getOutputFormat() {
@@ -124,5 +125,11 @@ public abstract class ContestDecorator extends Contest{
     @Override
     public Municipality getMunicipality() {
         return this.contest.getMunicipality();
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.contest.preRemove();
     }
 }

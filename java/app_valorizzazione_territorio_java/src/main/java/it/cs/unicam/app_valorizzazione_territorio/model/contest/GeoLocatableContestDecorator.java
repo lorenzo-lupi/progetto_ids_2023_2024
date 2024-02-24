@@ -13,11 +13,9 @@ import java.util.Map;
 @NoArgsConstructor(force = true)
 public class GeoLocatableContestDecorator extends ContestDecorator{
 
-    @Transient
-    // TODO :
-    //  @ManyToOne(fetch = FetchType.EAGER)
-    //  @JoinColumn(name = "geoLocatable_id") //Attenzione, forse non è il nome giusto, provare con geo_locatable_id
-    private final GeoLocatable geoLocatable;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "geo_locatable_id")
+    private GeoLocatable geoLocatable;
 
     public GeoLocatableContestDecorator(Contest contest, GeoLocatable geoLocatable) {
         super(contest);
@@ -43,5 +41,11 @@ public class GeoLocatableContestDecorator extends ContestDecorator{
         parametersMapping.put(Parameter.CONTEST_TYPE, "GeoLocatable");
         parametersMapping.put(Parameter.POSITION, this.geoLocatable.getPosition());
         return parametersMapping;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.geoLocatable = null;
     }
 }

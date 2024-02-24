@@ -19,6 +19,13 @@ public interface ContentHost<V extends ContentHost<V> & Visualizable> extends Id
     Collection<? extends Content<V>> getContents();
 
     /**
+     * Removes a content from the content host.
+     * @param content the content to remove
+     * @return true if the content has been remove, false otherwise
+     */
+    boolean removeContent(Content<V> content);
+
+    /**
      * Returns the approved contents of the content host.
      * @return the approved contents of the content host
      */

@@ -33,6 +33,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
 
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
     private final User user;
     /**
      * -- GETTER --
@@ -52,7 +53,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "municipality_id")
-    private final Municipality municipality;
+    private Municipality municipality;
 
     @Getter
     @Embedded
@@ -167,8 +168,15 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
 
     @Override
     public Runnable getDeletionAction() {
-        return () -> {this.getMunicipality().removeGeoLocatable(this);
-        MunicipalityRepository.getInstance().removeGeoLocatable(this);};
+        return () -> {
+            this.getMunicipality().removeGeoLocatable(this);
+            this.municipality = null;
+        };
+    }
+
+    @PreRemove
+    public void preRemove() {
+        getDeletionAction().run();
     }
 
     @Override

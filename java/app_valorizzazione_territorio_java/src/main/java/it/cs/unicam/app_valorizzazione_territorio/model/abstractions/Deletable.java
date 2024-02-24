@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 
+import jakarta.persistence.PreRemove;
+
 /**
  * Classes implementing this interface provide a deletion action to be performed on their objects.
  */

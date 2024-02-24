@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -64,16 +63,14 @@ public class Activity extends PointOfInterest{
     }
 
     @Override
-    @Transient
-    //TODO: remove List.of
     public ActivityOF getOutputFormat() {
         return new ActivityOF(super.getOutputFormat(),
                 this.getType().toString(),
-               List.of());
+                this.timetable.getRangesMap()
+        );
     }
 
     @Override
-    @Transient
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parametersMapping = new HashMap<>(super.getParametersMapping());
         parametersMapping.put(Parameter.ACTIVITY_TYPE, getType());
@@ -81,7 +78,6 @@ public class Activity extends PointOfInterest{
     }
 
     @Override
-    @Transient
     public Map<Parameter, Consumer<Object>> getSettersMapping() {
         Map<Parameter, Consumer<Object>> settersMapping = new HashMap<>(super.getSettersMapping());
         settersMapping.put(Parameter.ACTIVITY_TYPE, toObjectSetter(this::setType, ActivityTypeEnum.class));

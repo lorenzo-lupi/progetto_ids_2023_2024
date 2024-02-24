@@ -13,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -22,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 public class InsertionTest {
     @Autowired
-    MunicipalityJpaRepository municipalityJPARepository;
+    MunicipalityJpaRepository municipalityJpaRepository;
     @Autowired
     UserJpaRepository userJpaRepository;
     @Autowired
@@ -41,7 +39,7 @@ public class InsertionTest {
     @BeforeAll
     void setUp() {
         SampleRepositoryProvider.clearAndSetUpRepositories();
-        JpaTestEnvironment.setUpMunicipalities(municipalityJPARepository, roleJpaRepository);
+        JpaTestEnvironment.setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
         JpaTestEnvironment.setUpUsers(userJpaRepository);
         JpaTestEnvironment.setUpGeoLocatables(geoLocatableJpaRepository);
         JpaTestEnvironment.setUpContests(contestJpaRepository);
@@ -51,8 +49,8 @@ public class InsertionTest {
     }
     @Test
     public void testMunicipalityInsertions() {
-        assertTrue(municipalityJPARepository.findOne(Example.of(JpaTestEnvironment.CAMERINO)).isPresent());
-        assertTrue(municipalityJPARepository.findOne(Example.of(JpaTestEnvironment.MACERATA)).isPresent());
+        assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.CAMERINO)).isPresent());
+        assertTrue(municipalityJpaRepository.findOne(Example.of(JpaTestEnvironment.MACERATA)).isPresent());
     }
 
     @Test
@@ -87,8 +85,7 @@ public class InsertionTest {
     public void testContestInsertions(){
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_FOTO_2024)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_FOTO_2025)).isPresent());
-        Example example = Example.of(JpaTestEnvironment.CONCORSO_FOTO_PIZZA);
-        assertTrue(contestJpaRepository.findOne(example).isPresent());
+        assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_FOTO_PIZZA)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(JpaTestEnvironment.CONCORSO_PITTURA)).isPresent());
     }
 
@@ -122,7 +119,13 @@ public class InsertionTest {
 
     @AfterAll
     public void clearAll(){
-       // JpaTestEnvironment.clearMunicipalities(municipalityJPARepository);
+        JpaTestEnvironment.clearMessages(messageJpaRepository);
+        JpaTestEnvironment.clearRequests(requestJpaRepository);
+        JpaTestEnvironment.clearContents(contentJpaRepository);
+        JpaTestEnvironment.clearContests(contestJpaRepository);
+        JpaTestEnvironment.clearGeoLocatables(geoLocatableJpaRepository);
+        JpaTestEnvironment.clearUsers(userJpaRepository);
+        JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
     }
 
 

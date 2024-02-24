@@ -43,13 +43,11 @@ public class User implements Searchable, Visualizable, Modifiable {
             inverseJoinColumns = @JoinColumn(name = "notification_ID", referencedColumnName = "ID"))
     private final List<Notification> notifications;
 
-    //TODO:
-    // @ManyToMany
-    // @JoinTable(
-    //  name = "users_savedcontents",
-    //  joinColumns = @JoinColumn(name = "user_ID"),
-    //  inverseJoinColumns = @JoinColumn(name = "content_ID"))
-    @Transient
+    @ManyToMany
+    @JoinTable(
+            name = "users_savedcontents",
+            joinColumns = @JoinColumn(name = "user_ID"),
+            inverseJoinColumns = @JoinColumn(name = "content_ID"))
     private final List<Content<?>> savedContents;
 
     /**

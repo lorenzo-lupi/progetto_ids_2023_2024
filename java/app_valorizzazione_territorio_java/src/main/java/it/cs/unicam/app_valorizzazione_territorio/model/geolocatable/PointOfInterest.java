@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.PointOfInterestOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
@@ -24,8 +25,10 @@ import java.util.function.Consumer;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class PointOfInterest extends GeoLocatable implements ContentHost<PointOfInterest> {
 
-    @Transient
-    //TODO change to a list of PointOfInterestContent
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "poi",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     private final List<PointOfInterestContent> contents;
 
 
@@ -92,6 +95,13 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         return this.contents.add(content);
     }
 
+    @Override
+    public boolean removeContent(Content<PointOfInterest> content) {
+        if (content instanceof PointOfInterestContent c)
+            return this.contents.remove(c);
+        return false;
+    }
+
     /**
      * Removes a content from the geo-locatable object.
      *
@@ -102,8 +112,6 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     public boolean removeContent(PointOfInterestContent content) {
         return this.contents.remove(content);
     }
-
-
 
     @Override
     @Transient

@@ -43,13 +43,15 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     private final List<File> files;
 
     @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "municipality")
+            mappedBy = "municipality",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     private final List<GeoLocatable> geoLocatables;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "municipality",
             orphanRemoval = true,
-            cascade = CascadeType.REMOVE)
+            cascade = CascadeType.ALL)
     private final List<Contest> contests;
 
     @OneToMany(fetch = FetchType.EAGER)

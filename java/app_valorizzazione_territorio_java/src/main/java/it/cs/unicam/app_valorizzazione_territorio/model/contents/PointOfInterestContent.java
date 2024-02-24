@@ -48,7 +48,11 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
 
     @Override
     public Runnable getDeletionAction() {
-        return () -> {this.poi.removeContent(this);
-            MunicipalityRepository.getInstance().removeContent(this);};
+        return () -> {this.poi.removeContent(this); this.poi = null;};
+    }
+
+    @PreRemove
+    public void preRemove() {
+        getDeletionAction().run();
     }
 }

@@ -44,13 +44,15 @@ public class JpaTestEnvironment {
     public static Message MESSAGGIO_1, MESSAGGIO_2;
 
 
-    public static void clearMunicipalities(MunicipalityJpaRepository repository){
+    public static void clearMunicipalities(MunicipalityJpaRepository repository, RoleJpaRepository roleRepository){
+        roleRepository.deleteAll();
         repository.deleteAll();
         areMunicipalitiesSet = false;
     }
+
     public static void setUpMunicipalities(MunicipalityJpaRepository repository,
                                            RoleJpaRepository roleRepository){
-        clearMunicipalities(repository);
+        clearMunicipalities(repository, roleRepository);
 
         MACERATA = repository.saveAndFlush(new Municipality("Macerata", "Comune di Macerata",
                 new Position(43.29812657107886, 13.451878161920886),

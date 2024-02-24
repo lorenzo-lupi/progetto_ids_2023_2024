@@ -42,7 +42,7 @@ public abstract class Notification {
     @Entity
     @DiscriminatorValue("Content")
     private static class ContentNotification extends Notification {
-        @Transient //TODO: @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER)
         private final Content<?> content;
         public ContentNotification(Content<?> content, String message) {
             super(message);
@@ -56,7 +56,7 @@ public abstract class Notification {
     @Entity
     @DiscriminatorValue("PointOfInterest")
     private static class PointOfInterestNotification extends Notification{
-        @Transient //TODO : @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER)
         private final PointOfInterest pointOfInterest;
         public PointOfInterestNotification(PointOfInterest pointOfInterest, String message) {
             super(message);
