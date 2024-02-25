@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
 public interface MunicipalityJpaRepository extends JpaRepository<Municipality, Long> {
     Stream<Municipality> findByDescriptionContaining(String description);
+    Optional<Municipality> getByID(long ID);
 }

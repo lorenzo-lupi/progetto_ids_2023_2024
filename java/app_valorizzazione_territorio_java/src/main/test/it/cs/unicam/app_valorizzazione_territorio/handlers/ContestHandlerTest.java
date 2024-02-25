@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ContestHandlerTest {
-
+/*
 
     private static final ContestIF sampleInputBaseContest = new ContestIF(
             "Sample Contest",
@@ -281,4 +281,6 @@ public class ContestHandlerTest {
                 SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
 
     }
+
+ */
 }

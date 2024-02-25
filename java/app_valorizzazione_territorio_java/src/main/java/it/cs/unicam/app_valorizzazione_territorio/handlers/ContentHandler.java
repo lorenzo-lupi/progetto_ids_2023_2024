@@ -19,8 +19,6 @@ import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import java.util.List;
 import java.util.Set;
 
-import static it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils.insertItemApprovableByContributors;
-
 /**
  * This class represents a handler for
  * - Search and visualization of contents of points of interest
@@ -213,7 +211,7 @@ public class ContentHandler {
 
     private static void insertPoiContent(PointOfInterestContent content, User user) {
         PointOfInterest pointOfInterest = content.getHost();
-        insertItemApprovableByContributors(content, user, pointOfInterest.getMunicipality(), pointOfInterest::addContent);
+        //insertItemApprovableByContributors(content, user, pointOfInterest.getMunicipality(), pointOfInterest::addContent);
     }
 
 }

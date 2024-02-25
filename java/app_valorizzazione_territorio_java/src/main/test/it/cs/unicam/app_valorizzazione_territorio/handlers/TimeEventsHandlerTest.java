@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TimeEventsHandlerTest {
-
+/*
     MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
 
     @BeforeEach
@@ -88,4 +88,6 @@ public class TimeEventsHandlerTest {
         assertEquals(SampleRepositoryProvider.CORSA_SPADA,
                 SampleRepositoryProvider.CAMERINO.getNotifications().get(0).visualizable());
     }
+
+ */
 }

@@ -14,35 +14,64 @@ import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
-import org.junit.jupiter.api.extension.ExtendWith;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
-@ExtendWith(SpringExtension.class)
 @Component
+@ComponentScan(basePackageClasses = {MunicipalityJpaRepository.class,
+        RoleJpaRepository.class,
+        UserJpaRepository.class,
+        GeoLocatableJpaRepository.class,
+        ContestJpaRepository.class,
+        ContentJpaRepository.class,
+        RequestJpaRepository.class,
+        NotificationJpaRepository.class,
+        MessageJpaRepository.class})
 public class SampleRepositoryProvider {
+    @Getter
+    private final MunicipalityJpaRepository municipalityJpaRepository;
+    @Getter
+    private final RoleJpaRepository roleJpaRepository;
+    @Getter
+    private final UserJpaRepository userJpaRepository;
+    @Getter
+    private final GeoLocatableJpaRepository geoLocatableJpaRepository;
+    @Getter
+    private final ContestJpaRepository contestJpaRepository;
+    @Getter
+    private final ContentJpaRepository contentJpaRepository;
+    @Getter
+    private final RequestJpaRepository requestJpaRepository;
+    @Getter
+    private final NotificationJpaRepository notificationJpaRepository;
+    @Getter
+    private final MessageJpaRepository messageJpaRepository;
 
     @Autowired
-    private MunicipalityJpaRepository municipalityJpaRepository;
-    @Autowired
-    private RoleJpaRepository roleJpaRepository;
-    @Autowired
-    private UserJpaRepository userJpaRepository;
-    @Autowired
-    private GeoLocatableJpaRepository geoLocatableJpaRepository;
-    @Autowired
-    private ContestJpaRepository contestJpaRepository;
-    @Autowired
-    private ContentJpaRepository contentJpaRepository;
-    @Autowired
-    private RequestJpaRepository requestJpaRepository;
-    @Autowired
-    private NotificationJpaRepository notificationJpaRepository;
-    @Autowired
-    private MessageJpaRepository messageJpaRepository;
+    public SampleRepositoryProvider(MunicipalityJpaRepository municipalityJpaRepository,
+                                    RoleJpaRepository roleJpaRepository,
+                                    UserJpaRepository userJpaRepository,
+                                    GeoLocatableJpaRepository geoLocatableJpaRepository,
+                                    ContestJpaRepository contestJpaRepository,
+                                    ContentJpaRepository contentJpaRepository,
+                                    RequestJpaRepository requestJpaRepository,
+                                    NotificationJpaRepository notificationJpaRepository,
+                                    MessageJpaRepository messageJpaRepository) {
+        this.municipalityJpaRepository = municipalityJpaRepository;
+        this.roleJpaRepository = roleJpaRepository;
+        this.userJpaRepository = userJpaRepository;
+        this.geoLocatableJpaRepository = geoLocatableJpaRepository;
+        this.contestJpaRepository = contestJpaRepository;
+        this.contentJpaRepository = contentJpaRepository;
+        this.requestJpaRepository = requestJpaRepository;
+        this.notificationJpaRepository = notificationJpaRepository;
+        this.messageJpaRepository = messageJpaRepository;
+    }
+
 
     public boolean areMunicipalitiesSet = false;
     public boolean areUsersSet = false;
@@ -76,7 +105,7 @@ public class SampleRepositoryProvider {
         areMunicipalitiesSet = false;
     }
 
-    public void setUpMunicipalities(){
+    public void setUpMunicipalities() {
         clearMunicipalities();
 
         MACERATA = municipalityJpaRepository.saveAndFlush(new Municipality("Macerata", "Comune di Macerata",
@@ -85,10 +114,10 @@ public class SampleRepositoryProvider {
                         new Position(43.271074, 13.499990)),
                 new ArrayList<>()));
         CAMERINO = municipalityJpaRepository.saveAndFlush(new Municipality("Camerino", "Comune di Camerino",
-                        new Position(43.13644468556232, 13.067156069846892),
-                        new CoordinatesBox(new Position(43.153712, 13.036414),
-                                new Position(43.123261, 13.095768)),
-                        new ArrayList<>()));
+                new Position(43.13644468556232, 13.067156069846892),
+                new CoordinatesBox(new Position(43.153712, 13.036414),
+                        new Position(43.123261, 13.095768)),
+                new ArrayList<>()));
         COMUNE_DEI_TEST = municipalityJpaRepository.saveAndFlush(new Municipality("ComuneDeiTest", "Comune di Macerata",
                 new Position(43.29812657107886, 13.451878161920886),
                 new CoordinatesBox(new Position(43.317324, 13.409422),
@@ -109,7 +138,7 @@ public class SampleRepositoryProvider {
         areMunicipalitiesSet = true;
     }
 
-    public void clearUsers(){
+    public void clearUsers() {
         userJpaRepository.deleteAll();
         userJpaRepository.flush();
         areUsersSet = false;
@@ -149,14 +178,15 @@ public class SampleRepositoryProvider {
         areUsersSet = true;
     }
 
-    public void clearGeoLocatables(){
+    public void clearGeoLocatables() {
         geoLocatableJpaRepository.deleteAll();
         geoLocatableJpaRepository.flush();
         areGeoLocatablesSet = false;
     }
-    public void setUpGeoLocatables(){
+
+    public void setUpGeoLocatables() {
         clearGeoLocatables();
-        if(!areUsersSet || !areMunicipalitiesSet)
+        if (!areUsersSet || !areMunicipalitiesSet)
             throw new IllegalStateException("User and Municipality repositories are not set");
 
         List<GeoLocatable> geoLocatables = new LinkedList<>();
@@ -176,7 +206,7 @@ public class SampleRepositoryProvider {
                 //3 //CORSA_SPADA //Municiplaity: Camerino
                 new Event("Corsa della Spada", "Celebrazione tradizionale della Corsa della Spada",
                         new Position(43.135812352706715, 13.068367879486194),
-                        CAMERINO, new Date(124, 5, 17), new Date(124, 5, 24),TURIST_2),
+                        CAMERINO, new Date(124, 5, 17), new Date(124, 5, 24), TURIST_2),
                 //4 //SEPTEMBER_FEST //Municiplaity: Macerata //Not approved
                 new Event("September Fest", "Festa a tema Birra",
                         new Position(43.29812657107886, 13.451878161920886),
@@ -195,14 +225,21 @@ public class SampleRepositoryProvider {
                         CAMERINO, AttractionTypeEnum.OTHER,
                         TURIST_2)
         ));
-        geoLocatables.get(0).approve(); UNIVERSITY_CAMERINO = geoLocatableJpaRepository.save(geoLocatables.get(0));
-        geoLocatables.get(1).approve(); VIA_MADONNA_CARCERI = geoLocatableJpaRepository.save(geoLocatables.get(1));
+        geoLocatables.get(0).approve();
+        UNIVERSITY_CAMERINO = geoLocatableJpaRepository.save(geoLocatables.get(0));
+        geoLocatables.get(1).approve();
+        VIA_MADONNA_CARCERI = geoLocatableJpaRepository.save(geoLocatables.get(1));
         PIAZZA_LIBERTA = geoLocatableJpaRepository.save(geoLocatables.get(2));
-        geoLocatables.get(3).approve(); CORSA_SPADA = geoLocatableJpaRepository.save(geoLocatables.get(3));
-        geoLocatables.get(4).approve(); SEPTEMBER_FEST = geoLocatableJpaRepository.save(geoLocatables.get(4));
-        geoLocatables.get(5).approve(); PIZZERIA_ENJOY = geoLocatableJpaRepository.save(geoLocatables.get(5));
-        geoLocatables.get(6).approve(); BASILICA_SAN_VENANZIO = geoLocatableJpaRepository.save(geoLocatables.get(6));
-        geoLocatables.get(7).approve(); GAS_FACILITY = geoLocatableJpaRepository.save(geoLocatables.get(7));
+        geoLocatables.get(3).approve();
+        CORSA_SPADA = geoLocatableJpaRepository.save(geoLocatables.get(3));
+        geoLocatables.get(4).approve();
+        SEPTEMBER_FEST = geoLocatableJpaRepository.save(geoLocatables.get(4));
+        geoLocatables.get(5).approve();
+        PIZZERIA_ENJOY = geoLocatableJpaRepository.save(geoLocatables.get(5));
+        geoLocatables.get(6).approve();
+        BASILICA_SAN_VENANZIO = geoLocatableJpaRepository.save(geoLocatables.get(6));
+        geoLocatables.get(7).approve();
+        GAS_FACILITY = geoLocatableJpaRepository.save(geoLocatables.get(7));
 
         CAMERINO.addGeoLocatable(UNIVERSITY_CAMERINO);
         CAMERINO.addGeoLocatable(VIA_MADONNA_CARCERI);
@@ -214,19 +251,21 @@ public class SampleRepositoryProvider {
         CAMERINO.addGeoLocatable(GAS_FACILITY);
 
         geoLocatables.addAll(Arrays.asList(new CompoundPoint("Tour dello studente", "Tour dello studente",
-                CAMERINO, CompoundPointTypeEnum.ITINERARY, Arrays.asList(
-                (PointOfInterest) VIA_MADONNA_CARCERI,
-                (PointOfInterest) UNIVERSITY_CAMERINO,
-                (PointOfInterest) PIZZERIA_ENJOY),
-                new ArrayList<>(), TURIST_2),
-        new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
-                CAMERINO, CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
-                (PointOfInterest) BASILICA_SAN_VENANZIO,
-                (PointOfInterest) CORSA_SPADA),
-                new ArrayList<>(), TURIST_2)));
+                        CAMERINO, CompoundPointTypeEnum.ITINERARY, Arrays.asList(
+                        (PointOfInterest) VIA_MADONNA_CARCERI,
+                        (PointOfInterest) UNIVERSITY_CAMERINO,
+                        (PointOfInterest) PIZZERIA_ENJOY),
+                        new ArrayList<>(), TURIST_2),
+                new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
+                        CAMERINO, CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
+                        (PointOfInterest) BASILICA_SAN_VENANZIO,
+                        (PointOfInterest) CORSA_SPADA),
+                        new ArrayList<>(), TURIST_2)));
 
-        geoLocatables.get(8).approve(); TOUR_STUDENTE = geoLocatableJpaRepository.save(geoLocatables.get(8));
-        geoLocatables.get(9).approve(); TRADIZIONE_SAN_VENANZIO = geoLocatableJpaRepository.save(geoLocatables.get(9));
+        geoLocatables.get(8).approve();
+        TOUR_STUDENTE = geoLocatableJpaRepository.save(geoLocatables.get(8));
+        geoLocatables.get(9).approve();
+        TRADIZIONE_SAN_VENANZIO = geoLocatableJpaRepository.save(geoLocatables.get(9));
 
         CAMERINO.addGeoLocatable(TOUR_STUDENTE);
         CAMERINO.addGeoLocatable(TRADIZIONE_SAN_VENANZIO);
@@ -235,15 +274,15 @@ public class SampleRepositoryProvider {
         areGeoLocatablesSet = true;
     }
 
-    public void clearContests(){
+    public void clearContests() {
         contestJpaRepository.deleteAll(contestJpaRepository.findAllByValidTrue());
         contestJpaRepository.flush();
         areContestsSet = false;
     }
 
-    public void setUpContests(){
+    public void setUpContests() {
         clearContests();
-        if(!areUsersSet || !areMunicipalitiesSet)
+        if (!areUsersSet || !areMunicipalitiesSet)
             throw new IllegalStateException("User and Municipality repositories are not set");
 
         List<Contest> contests = new ArrayList<>();
@@ -293,15 +332,15 @@ public class SampleRepositoryProvider {
         areContestsSet = true;
     }
 
-    public void clearContents(){
+    public void clearContents() {
         contentJpaRepository.deleteAll();
         contentJpaRepository.flush();
         areContentsSet = false;
     }
 
-    public void setUpContents(){
+    public void setUpContents() {
         clearContents();
-        if(!areContestsSet || !areGeoLocatablesSet)
+        if (!areContestsSet || !areGeoLocatablesSet)
             throw new IllegalStateException("Contests and GeoLocatable repositories are not set");
 
         List<Content<?>> contents = new ArrayList<>();
@@ -345,14 +384,22 @@ public class SampleRepositoryProvider {
         ));
 
         FOTO_SAN_VENANZIO = contentJpaRepository.save(contents.get(0));
-        contents.get(1).approve(); FOTO_PIAZZA_LIBERTA_1 = contentJpaRepository.save(contents.get(1));
-        contents.get(2).approve(); FOTO_PIAZZA_LIBERTA_2 = contentJpaRepository.save(contents.get(2));
-        contents.get(3).approve(); FOTO_PIZZA_MARGHERITA = contentJpaRepository.save(contents.get(3));
-        contents.get(4).approve(); MANIFESTO_CORSA_SPADA = contentJpaRepository.save(contents.get(4));
-        contents.get(5).approve(); FOTO_STRADE_MACERATA = contentJpaRepository.save(contents.get(5));
-        contents.get(6).approve(); FOTO_TORRE_CIVICA = contentJpaRepository.save(contents.get(6));
-        contents.get(7).approve(); FOTO_PIZZA_REGINA = contentJpaRepository.save(contents.get(7));
-        contents.get(8).approve(); FOTO_PITTURA_1 = contentJpaRepository.save(contents.get(8));
+        contents.get(1).approve();
+        FOTO_PIAZZA_LIBERTA_1 = contentJpaRepository.save(contents.get(1));
+        contents.get(2).approve();
+        FOTO_PIAZZA_LIBERTA_2 = contentJpaRepository.save(contents.get(2));
+        contents.get(3).approve();
+        FOTO_PIZZA_MARGHERITA = contentJpaRepository.save(contents.get(3));
+        contents.get(4).approve();
+        MANIFESTO_CORSA_SPADA = contentJpaRepository.save(contents.get(4));
+        contents.get(5).approve();
+        FOTO_STRADE_MACERATA = contentJpaRepository.save(contents.get(5));
+        contents.get(6).approve();
+        FOTO_TORRE_CIVICA = contentJpaRepository.save(contents.get(6));
+        contents.get(7).approve();
+        FOTO_PIZZA_REGINA = contentJpaRepository.save(contents.get(7));
+        contents.get(8).approve();
+        FOTO_PITTURA_1 = contentJpaRepository.save(contents.get(8));
         FOTO_PITTURA_2 = contentJpaRepository.save(contents.get(9));
         TEST_MAL_FUNZIONANTE = contents.get(10);
         TEST_FATTO_BENE = contents.get(11);
@@ -377,7 +424,7 @@ public class SampleRepositoryProvider {
         areContentsSet = true;
     }
 
-    public void clearRequests(){
+    public void clearRequests() {
         requestJpaRepository.deleteAll();
         requestJpaRepository.flush();
         areRequestsSet = false;
@@ -412,7 +459,7 @@ public class SampleRepositoryProvider {
         areRequestsSet = true;
     }
 
-    public void clearNotifications(){
+    public void clearNotifications() {
         notificationJpaRepository.deleteAll();
         notificationJpaRepository.flush();
         areNotificationsSet = false;
@@ -429,9 +476,9 @@ public class SampleRepositoryProvider {
                 Notification.createNotification(CONCORSO_PITTURA, "Sei stato invitato ad un contest."),
                 //1 //Notifica contenuto vincitore per Comune
                 Notification.createNotification(FOTO_PIZZA_REGINA,
-                        "Decretato il contenuto vincitore del contest "+CONCORSO_FOTO_PIZZA.getName()),
+                        "Decretato il contenuto vincitore del contest " + CONCORSO_FOTO_PIZZA.getName()),
                 //2 //Notifica inizio evento per Comune
-                Notification.createNotification(SEPTEMBER_FEST, "L'evento "+SEPTEMBER_FEST.getName()+" è iniziato!")
+                Notification.createNotification(SEPTEMBER_FEST, "L'evento " + SEPTEMBER_FEST.getName() + " è iniziato!")
         ));
 
         NOTIFICA_INVITO_PITTURA = notificationJpaRepository.save(notifications.get(0));
@@ -446,7 +493,7 @@ public class SampleRepositoryProvider {
         areNotificationsSet = true;
     }
 
-    public void clearMessages(){
+    public void clearMessages() {
         messageJpaRepository.deleteAll();
         messageJpaRepository.flush();
         areMessagesSet = false;

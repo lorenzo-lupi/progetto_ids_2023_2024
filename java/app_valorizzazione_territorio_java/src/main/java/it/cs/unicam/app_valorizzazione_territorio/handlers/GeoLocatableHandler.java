@@ -18,22 +18,42 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * This class represents a handler for the search, insertion
  * and visualization of the geolocatable entities
  */
+@Service
 public class GeoLocatableHandler {
     private static final MapProvider mapProvider = new MapProviderBase();
-    private static final UserRepository userRepository = UserRepository.getInstance();
-    private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+    private final UserJpaRepository userRepository;
+    private final MunicipalityJpaRepository municipalityRepository;
+    private final GeoLocatableJpaRepository geoLocatableJpaRepository;
+    private final InsertionUtils insertionUtils;
+
+    @Autowired
+    public GeoLocatableHandler(UserJpaRepository userRepository,
+                               MunicipalityJpaRepository municipalityRepository,
+                               GeoLocatableJpaRepository geoLocatableJpaRepository,
+                               InsertionUtils insertionUtils) {
+        this.userRepository = userRepository;
+        this.municipalityRepository = municipalityRepository;
+        this.geoLocatableJpaRepository = geoLocatableJpaRepository;
+        this.insertionUtils = insertionUtils;
+    }
 
     /**
      * Returns the Detailed Format of a map which contains all geoLocatable points
@@ -41,9 +61,11 @@ public class GeoLocatableHandler {
      * @param municipalityID the ID of the municipality
      * @return the Detailed Format of the map
      */
-    public static MapOF visualizeInitialMap(long municipalityID) throws IOException {
+    public MapOF visualizeInitialMap(long municipalityID) throws IOException {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
         return mapProvider
-                .getMap(municipalityRepository.getItemByID(municipalityID))
+                .getMap(municipality.get())
                 .getOutputFormat();
     }
 
@@ -54,15 +76,19 @@ public class GeoLocatableHandler {
      * @param coordinatesBox the coordinates box
      * @return the Detailed Format of the map
      */
-    public static MapOF visualizeMap(long municipalityID, CoordinatesBox coordinatesBox) throws IOException {
+    public MapOF visualizeMap(long municipalityID, CoordinatesBox coordinatesBox) throws IOException {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
         return mapProvider
-                .getMap(municipalityRepository.getItemByID(municipalityID), coordinatesBox)
+                .getMap(municipality.get(), coordinatesBox)
                 .getOutputFormat();
     }
 
-    public static MapOF visualizeFilteredMap(long municipalityID, CoordinatesBox coordinatesBox, List<SearchFilter> filters) throws IOException {
+    public MapOF visualizeFilteredMap(long municipalityID, CoordinatesBox coordinatesBox, List<SearchFilter> filters) throws IOException {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
         return mapProvider
-                .getFilteredMap(municipalityRepository.getItemByID(municipalityID), filters)
+                .getFilteredMap(municipality.get(), filters)
                 .getOutputFormat();
     }
 
@@ -74,9 +100,11 @@ public class GeoLocatableHandler {
      * @return the Detailed Format of the empty map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static MapOF getEmptyMap(long municipalityID) throws IOException {
+    public MapOF getEmptyMap(long municipalityID) throws IOException {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
         return mapProvider
-                .getEmptyMap(municipalityRepository.getItemByID(municipalityID))
+                .getEmptyMap(municipality.get())
                 .getOutputFormat();
 
     }
@@ -88,7 +116,7 @@ public class GeoLocatableHandler {
      * @return the Detailed Format of the empty map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    public static MapOF getEmptyMap(CoordinatesBox coordinatesBox) throws IOException {
+    public MapOF getEmptyMap(CoordinatesBox coordinatesBox) throws IOException {
         return mapProvider
                 .getEmptyMap(coordinatesBox)
                 .getOutputFormat();
@@ -102,27 +130,31 @@ public class GeoLocatableHandler {
      * @return the Synthesized Format of all the geoLocatables that correspond to the given criteria
      */
     @SuppressWarnings("unchecked")
-    public static List<GeoLocatableOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
+    public List<GeoLocatableOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
         return (List<GeoLocatableOF>) SearchUltils.getFilteredItems(
-                municipalityRepository.getItemByID(municipalityID).getGeoLocatables(),
+                municipality.get().getGeoLocatables(),
                 filters
         );
     }
 
     /**
      * Returns the set of all the criteria available for the search.
+     *
      * @return the set of all the criteria available for the search
      */
-    public static Set<String> getSearchCriteria() {
+    public Set<String> getSearchCriteria() {
         return SearchUltils.getSearchCriteria();
     }
 
     /**
      * This method returns the search parameters for the user entity.
+     *
      * @return the search parameters for the user entity
      */
-    public static List<String> getParameters(){
-        return  List.of(Parameter.NAME.toString(),
+    public List<String> getParameters() {
+        return List.of(Parameter.NAME.toString(),
                 Parameter.DESCRIPTION.toString(),
                 Parameter.MUNICIPALITY.toString(),
                 Parameter.POSITION.toString(),
@@ -137,8 +169,11 @@ public class GeoLocatableHandler {
      * @param geoLocatableID the ID of the geoLocatable
      * @return the Detailed Format of the geoLocatable
      */
-    public static Identifiable visualizeDetailedGeoLocatable(long geoLocatableID) {
-        return municipalityRepository.getGeoLocatableByID(geoLocatableID).getOutputFormat();
+    public Identifiable visualizeDetailedGeoLocatable(long geoLocatableID) {
+        Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findByID(geoLocatableID);
+        if (geoLocatable.isEmpty())
+            throw new IllegalArgumentException("GeoLocatable not found");
+        return geoLocatable.get().getOutputFormat();
     }
 
     /**
@@ -148,8 +183,10 @@ public class GeoLocatableHandler {
      * @param position       the position
      * @return true if the given position is in the municipality
      */
-    public static boolean isPositionInMunicipality(long municipalityID, Position position) {
-        return municipalityRepository.getItemByID(municipalityID).getCoordinatesBox().contains(position);
+    public boolean isPositionInMunicipality(long municipalityID, Position position) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
+        return municipality.get().getCoordinatesBox().contains(position);
     }
 
     /**
@@ -160,18 +197,22 @@ public class GeoLocatableHandler {
      * @throws IllegalArgumentException if the user or the municipality are not found, or if the point
      *                                  of interest is not valid
      */
-    public static long insertPointOfInterest(long userID, PointOfInterestIF pointOfInterestIF) {
-        User user = userRepository.getItemByID(userID);
+    public long insertPointOfInterest(long userID, PointOfInterestIF pointOfInterestIF) {
+        Optional<User> user = userRepository.getByID(userID);
+        if (user.isEmpty()) throw new IllegalArgumentException("User not found");
+
+        Optional<Municipality> municipality = municipalityRepository.getByID(pointOfInterestIF.municipalityID());
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
 
         PointOfInterestBuilder builder =
-                new PointOfInterestBuilder(municipalityRepository.getItemByID(pointOfInterestIF.municipalityID()),
-                        user);
+                new PointOfInterestBuilder(municipality.get(),
+                        user.get());
 
         fillPointOfInterestBuilderFields(builder, pointOfInterestIF);
 
-        GeoLocatable geoLocatable = builder.build().obtainResult();
+        GeoLocatable geoLocatable = geoLocatableJpaRepository.save(builder.build().obtainResult());
 
-        insertGeoLocatable(geoLocatable, user);
+        insertGeoLocatable(geoLocatable, user.get());
 
         return geoLocatable.getID();
     }
@@ -183,8 +224,8 @@ public class GeoLocatableHandler {
      * @param filters        the filters to apply
      * @return the Synthesized Format of all the point of interests that correspond to the given criteria
      */
-    public static List<GeoLocatableOF> getFilteredPointOfInterests(long municipalityID,
-                                                                   List<SearchFilter> filters) {
+    public List<GeoLocatableOF> getFilteredPointOfInterests(long municipalityID,
+                                                            List<SearchFilter> filters) {
         List<SearchFilter> userFilters = new LinkedList<>(filters);
         userFilters.add(new SearchFilter("THIS", "CLASS_IS_POI", ""));
         return searchFilteredGeoLocatables(municipalityID, userFilters);
@@ -205,24 +246,28 @@ public class GeoLocatableHandler {
      * @throws IllegalArgumentException if the user or the municipality are not found, or if the compound
      *                                  point is not valid
      */
-    public static long insertCompoundPoint(long municipalityID,
-                                           long userID,
-                                           CompoundPointIF compoundPointIF) {
-        User user = userRepository.getItemByID(userID);
+    public long insertCompoundPoint(long municipalityID,
+                                    long userID,
+                                    CompoundPointIF compoundPointIF) {
 
-        CompoundPoint compoundPoint = buildCompoundPoint(
-                municipalityRepository.getItemByID(municipalityID),
-                user,
+        Optional<User> user = userRepository.getByID(userID);
+        if (user.isEmpty()) throw new IllegalArgumentException("User not found");
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
+
+        CompoundPoint compoundPoint = geoLocatableJpaRepository.save(buildCompoundPoint(
+                municipality.get(),
+                user.get(),
                 compoundPointIF
-        );
-        insertGeoLocatable(compoundPoint, user);
+        ));
+        insertGeoLocatable(compoundPoint, user.get());
 
         return compoundPoint.getID();
     }
 
-    private static CompoundPoint buildCompoundPoint(Municipality municipality,
-                                                    User user,
-                                                    CompoundPointIF compoundPointIF) {
+    private CompoundPoint buildCompoundPoint(Municipality municipality,
+                                             User user,
+                                             CompoundPointIF compoundPointIF) {
         CompoundPointBuilder builder = new CompoundPointBuilder(
                 CompoundPointTypeEnum.fromString(compoundPointIF.compoundPointType()),
                 municipality,
@@ -232,15 +277,15 @@ public class GeoLocatableHandler {
                 .setDescription(compoundPointIF.description())
                 .addImage(compoundPointIF.images());
         compoundPointIF.pointsOfInterestIDs().stream()
-                .map(id -> MunicipalityRepository.getInstance().getGeoLocatableByID(id))
-                .map(PointOfInterest.class::cast)
-                .forEach(builder::addPointOfInterest);
-
+                .map(geoLocatableJpaRepository::findPointOfInterestById)
+                .forEach(p -> p.ifPresentOrElse(builder::addPointOfInterest, () -> {
+                    throw new IllegalArgumentException("Point of interest not found");
+                }));
         return builder.obtainResult();
     }
 
 
-    private static void fillPointOfInterestBuilderFields(PointOfInterestBuilder builder, PointOfInterestIF pointOfInterestIF) {
+    private void fillPointOfInterestBuilderFields(PointOfInterestBuilder builder, PointOfInterestIF pointOfInterestIF) {
         builder.setTitle(pointOfInterestIF.name())
                 .setDescription(pointOfInterestIF.description());
         pointOfInterestIF.images().forEach(builder::addImage);
@@ -257,8 +302,8 @@ public class GeoLocatableHandler {
         setPointOfInterestClassification(builder, pointOfInterestIF);
     }
 
-    private static void setPointOfInterestClassification(PointOfInterestBuilder builder,
-                                                         PointOfInterestIF pointOfInterestIF) {
+    private void setPointOfInterestClassification(PointOfInterestBuilder builder,
+                                                  PointOfInterestIF pointOfInterestIF) {
         builder.setClassification(PointOfInterest.stringToClass.get(pointOfInterestIF.classification()));
         if (pointOfInterestIF.classification().equals(Attraction.class.getSimpleName()))
             builder.setAttractionType(AttractionTypeEnum.fromString(pointOfInterestIF.type()));
@@ -271,9 +316,9 @@ public class GeoLocatableHandler {
         else throw new IllegalArgumentException("Invalid classification");
     }
 
-    private static void insertGeoLocatable(GeoLocatable geoLocatable, User user) {
+    private void insertGeoLocatable(GeoLocatable geoLocatable, User user) {
         Municipality municipality = geoLocatable.getMunicipality();
-        InsertionUtils.insertItemApprovableByContributors(geoLocatable, user, municipality, municipality::addGeoLocatable);
+        insertionUtils.insertItemApprovableByContributors(geoLocatable, user, municipality, municipality::addGeoLocatable);
     }
 
 }

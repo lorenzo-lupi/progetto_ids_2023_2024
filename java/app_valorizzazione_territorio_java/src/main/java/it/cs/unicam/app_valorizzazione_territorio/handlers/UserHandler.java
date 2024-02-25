@@ -9,14 +9,17 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.CredentialsUtils;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -24,9 +27,16 @@ import java.util.Set;
  * It provides all the methods needed to manage the user entity and
  * to generate a municipality administrator.
  */
+@Service
 public class UserHandler {
-    private static final UserRepository userRepository = UserRepository.getInstance();
-    private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+    private final UserJpaRepository userRepository;
+    private final MunicipalityJpaRepository municipalityRepository;
+
+    @Autowired
+    public UserHandler(UserJpaRepository userRepository, MunicipalityJpaRepository municipalityRepository) {
+        this.userRepository = userRepository;
+        this.municipalityRepository = municipalityRepository;
+    }
 
     /**
      * This method registers a new user in the system.
@@ -34,7 +44,7 @@ public class UserHandler {
      * @param userIF the user to register
      * @return the id of the registered user
      */
-    public static long registerUser(UserIF userIF) {
+    public long registerUser(UserIF userIF) {
         if (!CredentialsUtils.isEmailValid(userIF.email()))
             throw new IllegalArgumentException("Invalid email");
         if (!CredentialsUtils.isPasswordValid(userIF.password()))
@@ -58,18 +68,20 @@ public class UserHandler {
      * @param userEmail      the email of the user
      * @return the id of the generated municipality administrator
      */
-    public static long generateMunicipalityAdministrator(long municipalityID,
-                                                         String userEmail) {
-        Municipality municipality = municipalityRepository.getItemByID(municipalityID);
+    public long generateMunicipalityAdministrator(long municipalityID,
+                                                  String userEmail) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty())
+            throw new IllegalArgumentException("Municipality not found");
         String password = CredentialsUtils.getRandomPassword();
-        User municipalityAdmin = new User(municipality.getName() + "Admin", userEmail, password);
-        municipalityAdmin.addRole(new Role(municipality, AuthorizationEnum.ADMINISTRATOR));
+        User municipalityAdmin = new User(municipality.get().getName() + "Admin", userEmail, password);
+        municipalityAdmin.addRole(new Role(municipality.get(), AuthorizationEnum.ADMINISTRATOR));
 
         //Google Workspace account needed
         //SMTPRequestHandler.sendEmail(email, "Credenziali di accesso",
         //   "Username: " + municipalityAdmin.getUsername() + "\nPassword: " + password);
 
-        userRepository.add(municipalityAdmin);
+        userRepository.save(municipalityAdmin);
         return municipalityAdmin.getID();
     }
 
@@ -79,9 +91,10 @@ public class UserHandler {
      *
      * @return the municipalities of the system
      */
-    public static List<MunicipalityOF> getMunicipalities() {
+    public List<MunicipalityOF> getMunicipalities() {
         return municipalityRepository
-                .getItemStream()
+                .findAll()
+                .stream()
                 .map(Municipality::getOutputFormat)
                 .toList();
     }
@@ -93,9 +106,12 @@ public class UserHandler {
      *
      * @param userID the id of the user
      */
-    public static boolean isAllowedToModifyAuthorizations(long userID) {
-        return userRepository
-                .getItemByID(userID)
+    public boolean isAllowedToModifyAuthorizations(long userID) {
+        Optional<User> user = userRepository.getByID(userID);
+        if (user.isEmpty())
+            throw new IllegalArgumentException("User not found");
+        return user
+                .get()
                 .getRoles()
                 .stream()
                 .map(Role::authorizationEnum)
@@ -108,9 +124,12 @@ public class UserHandler {
      * @param userID the id of the user
      * @return the user with the given id
      */
-    public static UserOF visualizeDetailedUser(long userID) {
-        return userRepository
-                .getItemByID(userID)
+    public UserOF visualizeDetailedUser(long userID) {
+        Optional<User> user = userRepository.getByID(userID);
+        if(user.isEmpty())
+            throw new IllegalArgumentException("User not found");
+        return user
+                .get()
                 .getOutputFormat();
     }
 
@@ -121,24 +140,26 @@ public class UserHandler {
      * @return the users of the system
      */
     @SuppressWarnings("unchecked")
-    public static List<UserOF> getFilteredUsers(List<SearchFilter> filters) {
+    public List<UserOF> getFilteredUsers(List<SearchFilter> filters) {
         return (List<UserOF>) SearchUltils
-                .getFilteredItems(userRepository.getItemStream().toList(), filters);
+                .getFilteredItems(userRepository.findAll(), filters);
     }
 
     /**
      * Returns the set of all the criteria available for the search.
+     *
      * @return the set of all the criteria available for the search
      */
-    public static Set<String> getSearchCriteria() {
+    public Set<String> getSearchCriteria() {
         return SearchUltils.getSearchCriteria();
     }
 
     /**
      * This method returns the search parameters for the user entity.
+     *
      * @return the search parameters for the user entity
      */
-    public static List<String> getSearchParameters() {
+    public List<String> getSearchParameters() {
         return (new User("serachParametersObject", "email_email@email.email", "AbcDe123!!AC"))
                 .getParameters()
                 .stream()
@@ -154,14 +175,16 @@ public class UserHandler {
      * @param userID            the id of the user to modify
      * @param newAuthorizations the new authorizations
      */
-    public static void modifyUserAuthorization(long administratorID,
+    public void modifyUserAuthorization(long administratorID,
                                                long userID,
                                                List<AuthorizationEnum> newAuthorizations) {
-        User user = userRepository.getItemByID(userID);
-        User administrator = userRepository.getItemByID(administratorID);
-        Municipality municipality = getMunicipalityOfAdministrator(administrator);
+        Optional<User> user = userRepository.getByID(userID);
+        Optional<User> administrator = userRepository.getByID(administratorID);
+        if (user.isEmpty() || administrator.isEmpty())
+            throw new IllegalArgumentException("User not found");
+        Municipality municipality = getMunicipalityOfAdministrator(administrator.get());
 
-        modifyUserAuthorization(user, municipality, newAuthorizations);
+        modifyUserAuthorization(user.get(), municipality, newAuthorizations);
     }
 
 
@@ -172,18 +195,21 @@ public class UserHandler {
      * @param userID              the id of the user to modify
      * @param authorizationsEnums the new authorizations
      */
-    public static void modifyUserAuthorization(long municipalityID,
+    public void modifyUserAuthorization(long municipalityID,
                                                long administratorID,
                                                long userID,
                                                List<AuthorizationEnum> authorizationsEnums) {
-        User user = userRepository.getItemByID(userID);
-        User administrator = userRepository.getItemByID(administratorID);
-        Municipality municipality = municipalityRepository.getItemByID(municipalityID);
+        Optional<User> user = userRepository.getByID(userID);
+        Optional<User> administrator = userRepository.getByID(administratorID);
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
 
-        if (!administrator.getAuthorizations(municipality).contains(AuthorizationEnum.ADMINISTRATOR))
+        if (user.isEmpty() || administrator.isEmpty() || municipality.isEmpty())
+            throw new IllegalArgumentException("User or municipality not found");
+
+        if (!administrator.get().getAuthorizations(municipality.get()).contains(AuthorizationEnum.ADMINISTRATOR))
             throw new IllegalArgumentException("user is not administrator for the given municipality");
 
-        modifyUserAuthorization(user, municipality, authorizationsEnums);
+        modifyUserAuthorization(user.get(), municipality.get(), authorizationsEnums);
     }
 
     /**
@@ -192,9 +218,11 @@ public class UserHandler {
      * @param userID the id of the user
      * @return the municipalities administrated by the user with the given id
      */
-    public static List<MunicipalityOF> getMunicipalitiesAdministratedByUser(long userID) {
-        return userRepository
-                .getItemByID(userID)
+    public List<MunicipalityOF> getMunicipalitiesAdministratedByUser(long userID) {
+        Optional<User> user = userRepository.getByID(userID);
+        if (user.isEmpty())
+            throw new IllegalArgumentException("User not found");
+        return  user.get()
                 .getRoles()
                 .stream()
                 .filter(r -> r.authorizationEnum() == AuthorizationEnum.ADMINISTRATOR)
@@ -204,20 +232,18 @@ public class UserHandler {
     }
 
 
-
-    private static boolean userExists(String username) {
-        SearchEngine<User> searchEngine = new SearchEngine<>(userRepository.getItemStream().toList());
+    private boolean userExists(String username) {
+        SearchEngine<User> searchEngine = new SearchEngine<>(userRepository.findAll());
         searchEngine.addCriterion(Parameter.USERNAME, new SearchCriterion<>(SearchCriterion.USERNAME, username));
         return !searchEngine.search().getResults().isEmpty();
     }
 
-    private static long insertUser(UserIF userIF) {
+    private long insertUser(UserIF userIF) {
         User user = new User(userIF.username(), userIF.email(), userIF.password());
-        userRepository.add(user);
-        return user.getID();
+        return userRepository.saveAndFlush(user).getID();
     }
 
-    private static Municipality getMunicipalityOfAdministrator(User administrator) {
+    private Municipality getMunicipalityOfAdministrator(User administrator) {
         List<Municipality> municipalities = administrator.getRoles()
                 .stream()
                 .filter(role -> role.authorizationEnum() == AuthorizationEnum.ADMINISTRATOR)
@@ -230,11 +256,12 @@ public class UserHandler {
         return municipalities.get(0);
     }
 
-    private static void modifyUserAuthorization(User user,
+    private void modifyUserAuthorization(User user,
                                                 Municipality municipality,
                                                 List<AuthorizationEnum> authorizationEnums) {
         authorizationEnums.forEach(
                 authorizationEnum -> user.setNewRoles(authorizationEnums, municipality)
         );
+        userRepository.saveAndFlush(user);
     }
 }

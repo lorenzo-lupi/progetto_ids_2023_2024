@@ -4,15 +4,29 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.UserIF;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class,
+        UserHandler.class})
+@DataJpaTest
 class UserHandlerTest {
+    
+    @Autowired
+    SampleRepositoryProvider sampleRepositoryProvider;
+    @Autowired
+    UserHandler userHandler;
 
     private static final UserIF user1Pos = new UserIF(
             "username1",
@@ -35,26 +49,26 @@ class UserHandlerTest {
 
     @BeforeEach
     public void setUp() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
+        sampleRepositoryProvider.setUpAllRepositories();
         testMultipleAdministrator = new User("multipltore3", "test122@email.it", "asasdfddA1!");
         camerinoAdministrator = new User("vamerino2", "test222@gmail.it", "asasdfddA1!");
-        testMultipleAdministrator.addRole(new Role(SampleRepositoryProvider.CAMERINO, AuthorizationEnum.ADMINISTRATOR));
-        testMultipleAdministrator.addRole(new Role(SampleRepositoryProvider.MACERATA, AuthorizationEnum.ADMINISTRATOR));
-        camerinoAdministrator.addRole(new Role(SampleRepositoryProvider.CAMERINO, AuthorizationEnum.ADMINISTRATOR));
-        UserRepository.getInstance().add(testMultipleAdministrator);
-        UserRepository.getInstance().add(camerinoAdministrator);
+        testMultipleAdministrator.addRole(new Role(sampleRepositoryProvider.CAMERINO, AuthorizationEnum.ADMINISTRATOR));
+        testMultipleAdministrator.addRole(new Role(sampleRepositoryProvider.MACERATA, AuthorizationEnum.ADMINISTRATOR));
+        camerinoAdministrator.addRole(new Role(sampleRepositoryProvider.CAMERINO, AuthorizationEnum.ADMINISTRATOR));
+        sampleRepositoryProvider.getUserJpaRepository().saveAndFlush(testMultipleAdministrator);
+        sampleRepositoryProvider.getUserJpaRepository().saveAndFlush(camerinoAdministrator);
     }
 
     //region Registration
     @Test
     void testCreateUser1() {
-        assertDoesNotThrow(() -> UserHandler.registerUser(user1Pos));
+        assertDoesNotThrow(() -> userHandler.registerUser(user1Pos));
     }
 
     @Test
     void testCreateUser2() {
-        UserHandler.registerUser(user2Pos);
-        assertThrows(IllegalArgumentException.class, () -> UserHandler.registerUser(user4Neg));
+        userHandler.registerUser(user2Pos);
+        assertThrows(IllegalArgumentException.class, () -> userHandler.registerUser(user4Neg));
     }
 
     //endregion
@@ -65,55 +79,55 @@ class UserHandlerTest {
 
     @Test
     void testShouldNotModifyAuthorization1() {
-        assertTrue(SampleRepositoryProvider.TURIST_1.getRoles().isEmpty());
-        assertThrows(IllegalArgumentException.class, () -> UserHandler.modifyUserAuthorization(testMultipleAdministrator.getID(),
-                SampleRepositoryProvider.TURIST_1.getID(),
+        assertTrue(sampleRepositoryProvider.TURIST_1.getRoles().isEmpty());
+        assertThrows(IllegalArgumentException.class, () -> userHandler.modifyUserAuthorization(testMultipleAdministrator.getID(),
+                sampleRepositoryProvider.TURIST_1.getID(),
                 List.of(AuthorizationEnum.CURATOR)));
-        UserHandler.modifyUserAuthorization(camerinoAdministrator.getID(),
-                SampleRepositoryProvider.TURIST_1.getID(),
+        userHandler.modifyUserAuthorization(camerinoAdministrator.getID(),
+                sampleRepositoryProvider.TURIST_1.getID(),
                 List.of(AuthorizationEnum.CURATOR));
 
-        assertTrue(SampleRepositoryProvider.TURIST_1.getAuthorizations(SampleRepositoryProvider.CAMERINO).contains(AuthorizationEnum.CURATOR));
+        assertTrue(sampleRepositoryProvider.TURIST_1.getAuthorizations(sampleRepositoryProvider.CAMERINO).contains(AuthorizationEnum.CURATOR));
     }
 
     @Test
     void testModifyAuthorization2() {
-        assertTrue(SampleRepositoryProvider.TURIST_2.getRoles().isEmpty());
-        UserHandler.modifyUserAuthorization(SampleRepositoryProvider.MACERATA.getID(),
+        assertTrue(sampleRepositoryProvider.TURIST_2.getRoles().isEmpty());
+        userHandler.modifyUserAuthorization(sampleRepositoryProvider.MACERATA.getID(),
                 testMultipleAdministrator.getID(),
-                SampleRepositoryProvider.TURIST_2.getID(),
+                sampleRepositoryProvider.TURIST_2.getID(),
                 List.of(AuthorizationEnum.CURATOR));
-        assertTrue(SampleRepositoryProvider.TURIST_2.getAuthorizations(SampleRepositoryProvider.MACERATA).contains(AuthorizationEnum.CURATOR));
+        assertTrue(sampleRepositoryProvider.TURIST_2.getAuthorizations(sampleRepositoryProvider.MACERATA).contains(AuthorizationEnum.CURATOR));
     }
 
     @Test
     void testModifyAuthorization3() {
-        assertTrue(UserHandler.isAllowedToModifyAuthorizations(testMultipleAdministrator.getID()));
+        assertTrue(userHandler.isAllowedToModifyAuthorizations(testMultipleAdministrator.getID()));
     }
     //endregion
 
     @Test
     public void shouldGenerateMunicipalityAdmin() {
-        long id = UserHandler.generateMunicipalityAdministrator(
-                SampleRepositoryProvider.CAMERINO.getID(), "pippo01@yopmail.com");
+        long id = userHandler.generateMunicipalityAdministrator(
+                sampleRepositoryProvider.CAMERINO.getID(), "pippo01@yopmail.com");
 
-        assertEquals(11, UserRepository.getInstance().getItemStream().toList().size());
-        assertEquals("CamerinoAdmin", UserRepository.getInstance().getItemByID(id).getUsername());
+        assertEquals(11, sampleRepositoryProvider.getUserJpaRepository().findAll().size());
+        assertEquals("CamerinoAdmin", sampleRepositoryProvider.getUserJpaRepository().getByID(id).get().getUsername());
         assertEquals(AuthorizationEnum.ADMINISTRATOR,
-                UserRepository.getInstance().getItemByID(id).getRoles().get(0).authorizationEnum());
+                sampleRepositoryProvider.getUserJpaRepository().getByID(id).get().getRoles().get(0).authorizationEnum());
     }
 
     @Test
     public void shouldNotGenerateMunicipalityAdmin() {
         assertThrows(IllegalArgumentException.class, () ->
-                UserHandler.generateMunicipalityAdministrator(
-                        SampleRepositoryProvider.CAMERINO.getID(), "invalidEmail"));
+                userHandler.generateMunicipalityAdministrator(
+                        sampleRepositoryProvider.CAMERINO.getID(), "invalidEmail"));
 
-        assertEquals(10, UserRepository.getInstance().getItemStream().toList().size());
+        assertEquals(10, sampleRepositoryProvider.getUserJpaRepository().findAll().size());
     }
 
     @AfterEach
     public void tearDown() {
-        SampleRepositoryProvider.clearAllRepositories();
+        sampleRepositoryProvider.clearAllRepositories();
     }
 }

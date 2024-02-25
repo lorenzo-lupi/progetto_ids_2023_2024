@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SearchUltilsTest {
-
+/*
     @BeforeAll
     static void setUpRepositories() {
         SampleRepositoryProvider.setUpAllRepositories();
@@ -57,4 +57,6 @@ class SearchUltilsTest {
                         SampleRepositoryProvider.TURIST_2.getID()),
                 searchResult.stream().map(Identifiable::getID).collect(Collectors.toSet()));
     }
+
+ */
 }

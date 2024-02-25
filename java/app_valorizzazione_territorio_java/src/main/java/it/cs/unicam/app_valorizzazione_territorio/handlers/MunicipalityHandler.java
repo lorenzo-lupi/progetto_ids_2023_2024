@@ -8,17 +8,31 @@ import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * This class represents a handler for the municipalities.
  * It handlers the creation the visualization of municipalities.
  */
+@Getter
+@Service
 public class MunicipalityHandler {
-    private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+
+    private final MunicipalityJpaRepository municipalityRepository;
+
+    @Autowired
+    public MunicipalityHandler(MunicipalityJpaRepository municipalityRepository) {
+        this.municipalityRepository = municipalityRepository;
+    }
+
 
     /**
      * Creates a new municipality and adds it to the repository of municipalities.
@@ -26,7 +40,7 @@ public class MunicipalityHandler {
      * @param municipalityIF the municipality input format
      * @return the ID of the created municipality
      */
-    public static long createMunicipality(MunicipalityIF municipalityIF) {
+    public long createMunicipality(MunicipalityIF municipalityIF) {
         MunicipalityBuilder builder = new MunicipalityBuilder();
         builder.buildName(municipalityIF.name())
                 .buildDescription(municipalityIF.description())
@@ -35,8 +49,7 @@ public class MunicipalityHandler {
                 .buildFiles(municipalityIF.files().stream().toList())
                 .build();
 
-        municipalityRepository.add(builder.obtainResult());
-        return builder.obtainResult().getID();
+        return municipalityRepository.saveAndFlush(builder.obtainResult()).getID();
     }
 
     /**
@@ -44,8 +57,9 @@ public class MunicipalityHandler {
      *
      * @return the Synthesized Format of all the municipalities in the system
      */
-    public static List<MunicipalityOF> viewAllMunicipalities() {
-        return municipalityRepository.getItemStream()
+    public List<MunicipalityOF> viewAllMunicipalities() {
+        return municipalityRepository.findAll()
+                .stream()
                 .map(Municipality::getOutputFormat)
                 .toList();
     }
@@ -58,9 +72,13 @@ public class MunicipalityHandler {
      * @return the Synthesized Format of all the municipalities in the system corresponding to the given filters
      */
     @SuppressWarnings("unchecked")
-    public static List<MunicipalityOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
+    public List<MunicipalityOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
         return (List<MunicipalityOF>) SearchUltils
-                .getFilteredItems(municipalityRepository.getItemStream().toList(), filters);
+                .getFilteredItems(municipalityRepository
+                                .findAll()
+                                .stream()
+                                .toList(),
+                        filters);
     }
 
     /**
@@ -68,15 +86,16 @@ public class MunicipalityHandler {
      *
      * @return the set of all the criteria available for the search
      */
-    public static Set<String> getSearchCriteria() {
+    public Set<String> getSearchCriteria() {
         return SearchUltils.getSearchCriteria();
     }
 
     /**
      * This method returns the search parameters for the user entity.
+     *
      * @return the search parameters for the user entity
      */
-    public static List<String> getParameters(){
+    public List<String> getParameters() {
         return (new Municipality("test",
                 "desc",
                 new Position(5, -5),
@@ -96,7 +115,9 @@ public class MunicipalityHandler {
      * @return the Detailed Format of the Municipality having the given ID
      * @throws IllegalArgumentException if the Municipality having the given ID is not found
      **/
-    public static MunicipalityOF viewMunicipality(long municipalityID) {
-        return municipalityRepository.getItemByID(municipalityID).getOutputFormat();
+    public MunicipalityOF viewMunicipality(long municipalityID) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
+        return municipality.get().getOutputFormat();
     }
 }

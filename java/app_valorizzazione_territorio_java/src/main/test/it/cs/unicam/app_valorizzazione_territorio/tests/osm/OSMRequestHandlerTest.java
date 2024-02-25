@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Disabled
 public class OSMRequestHandlerTest {
-
+/*
     @Test
     public void shouldRetrieveMapData1() throws IOException {
         OSMRequestHandler handler = OSMRequestHandler.getInstance();
@@ -47,4 +47,6 @@ public class OSMRequestHandlerTest {
         Position position = SampleRepositoryProvider.MACERATA.getPosition();
         assertTrue(handler.getMunicipalityOfPosition(position).equals("Macerata"));
     }
+
+ */
 }

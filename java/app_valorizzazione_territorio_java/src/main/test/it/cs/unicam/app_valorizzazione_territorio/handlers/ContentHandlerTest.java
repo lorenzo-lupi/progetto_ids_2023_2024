@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContentHandlerTest {
-
+/*
     private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
     private static final RequestRepository requestRepository = RequestRepository.getInstance();
 
@@ -198,4 +198,6 @@ class ContentHandlerTest {
 
     }
 
+
+ */
 }

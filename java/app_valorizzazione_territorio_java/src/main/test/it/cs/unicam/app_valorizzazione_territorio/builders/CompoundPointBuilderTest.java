@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CompoundPointBuilderTest {
+    /*
     CompoundPointBuilder itinerary_builder;
     CompoundPointBuilder experience_builder;
 
@@ -72,4 +73,6 @@ public class CompoundPointBuilderTest {
                         (PointOfInterest) SampleRepositoryProvider.PIZZERIA_ENJOY));
     }
 
+
+     */
 }

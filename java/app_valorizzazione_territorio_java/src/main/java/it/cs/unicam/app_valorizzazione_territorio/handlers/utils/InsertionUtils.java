@@ -10,14 +10,24 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
 /**
  * This class contains utility methods for the controllers of the geo-locatable items.
  */
+@Component
 public class InsertionUtils {
-    private static final RequestRepository requestRepository = RequestRepository.getInstance();
+
+    private RequestJpaRepository requestRepository;
+
+    @Autowired
+    InsertionUtils(RequestJpaRepository requestRepository) {
+        this.requestRepository = requestRepository;
+    }
 
     /**
      * Inserts the given item in the municipality and, if the user is a contributor, approves it.
@@ -27,7 +37,7 @@ public class InsertionUtils {
      * @param storingAction the action to perform to store the item
      * @param <T> the type of the item
      */
-    public static <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
+    public <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
                                                                                                  User user,
                                                                                                  Municipality municipality,
                                                                                                  Consumer<T> storingAction) {
@@ -39,7 +49,7 @@ public class InsertionUtils {
         if (Role.isAtLeastContributorForMunicipality(municipality).test(user)) {
             item.approve();
         } else {
-            requestRepository.add(RequestFactory.getApprovalRequest(item));
+            requestRepository.save(RequestFactory.getApprovalRequest(item));
         }
     }
 

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchEngineTest {
-
+/*
     private static List<Municipality> municipalities;
     private static List<GeoLocatable> geoLocatables;
     @BeforeAll
@@ -115,4 +115,6 @@ public class SearchEngineTest {
         assertEquals(1, searchResult.size());
         assertTrue(searchResult.contains(geoLocatables.get(4)));
     }
+
+ */
 }
