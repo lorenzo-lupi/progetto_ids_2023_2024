@@ -13,7 +13,6 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.ContestRequest;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;

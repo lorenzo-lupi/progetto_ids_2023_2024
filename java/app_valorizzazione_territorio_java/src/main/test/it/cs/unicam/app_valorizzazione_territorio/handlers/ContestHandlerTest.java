@@ -9,7 +9,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestStatusEnu
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

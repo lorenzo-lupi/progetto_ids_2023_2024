@@ -5,7 +5,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

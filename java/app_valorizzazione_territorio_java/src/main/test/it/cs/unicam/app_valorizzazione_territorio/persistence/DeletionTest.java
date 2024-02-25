@@ -2,10 +2,12 @@ package it.cs.unicam.app_valorizzazione_territorio.persistence;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -14,8 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@ComponentScan
 public class DeletionTest {
-
+    @Autowired
+    SampleRepositoryProvider sampleRepositoryProvider;
     @Autowired
     MunicipalityJpaRepository municipalityJpaRepository;
     @Autowired
@@ -37,128 +41,118 @@ public class DeletionTest {
 
     @BeforeEach
     void setUp() {
-        JpaTestEnvironment.setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
-        JpaTestEnvironment.setUpUsers(userJpaRepository);
-        JpaTestEnvironment.setUpGeoLocatables(geoLocatableJpaRepository);
-        JpaTestEnvironment.setUpContests(contestJpaRepository);
-        JpaTestEnvironment.setUpContents(contentJpaRepository);
-        JpaTestEnvironment.setUpRequests(requestJpaRepository);
-        JpaTestEnvironment.setUpNotifications(notificationJpaRepository);
-        JpaTestEnvironment.setUpMessages(messageJpaRepository);
+        sampleRepositoryProvider.setUpAllRepositories();
     }
 
     @Test
     public void shouldDeleteRepositories() {
-        JpaTestEnvironment.clearMessages(messageJpaRepository);
+        sampleRepositoryProvider.clearMessages();
         assertEquals(0, messageJpaRepository.count());
 
-        JpaTestEnvironment.clearRequests(requestJpaRepository);
+        sampleRepositoryProvider.clearNotifications();
+        assertEquals(0, notificationJpaRepository.count());
+
+        sampleRepositoryProvider.clearRequests();
         assertEquals(0, requestJpaRepository.count());
 
-        JpaTestEnvironment.clearContents(contentJpaRepository);
+        sampleRepositoryProvider.clearContents();
         assertEquals(0, contentJpaRepository.count());
 
-        JpaTestEnvironment.clearContests(contestJpaRepository);
+        sampleRepositoryProvider.clearContests();
         assertEquals(0, contestJpaRepository.count());
 
-        JpaTestEnvironment.clearGeoLocatables(geoLocatableJpaRepository);
+        sampleRepositoryProvider.clearGeoLocatables();
         assertEquals(0, geoLocatableJpaRepository.count());
 
-        JpaTestEnvironment.clearUsers(userJpaRepository);
+        sampleRepositoryProvider.clearUsers();
         assertEquals(0, userJpaRepository.count());
 
-        JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
+        sampleRepositoryProvider.clearMunicipalities();
         assertEquals(0, roleJpaRepository.count());
+        assertEquals(0, municipalityJpaRepository.count());
     }
 
     @Test
     public void shouldDeleteMessage() {
-        messageJpaRepository.delete(JpaTestEnvironment.MESSAGGIO_1);
+        messageJpaRepository.delete(SampleRepositoryProvider.MESSAGGIO_1);
         messageJpaRepository.flush();
 
-        assertFalse(messageJpaRepository.findById(JpaTestEnvironment.MESSAGGIO_1.getID()).isPresent());
+        assertFalse(messageJpaRepository.findById(SampleRepositoryProvider.MESSAGGIO_1.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteRequest() {
-        GeoLocatable geoLocatable = (GeoLocatable) JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA.getCommand().getItem();
-        requestJpaRepository.delete(JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA);
+        GeoLocatable geoLocatable = (GeoLocatable) SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getCommand().getItem();
+        requestJpaRepository.delete(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA);
         requestJpaRepository.flush();
 
-        assertFalse(requestJpaRepository.findById(JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA.getID()).isPresent());
+        assertFalse(requestJpaRepository.findById(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getID()).isPresent());
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(geoLocatable)).isPresent());
     }
 
     @Test
     public void shouldDeleteContestContent() {
-        contentJpaRepository.delete(JpaTestEnvironment.FOTO_STRADE_MACERATA);
+        contentJpaRepository.delete(SampleRepositoryProvider.FOTO_STRADE_MACERATA);
         contentJpaRepository.flush();
-        assertFalse(contentJpaRepository.findById(JpaTestEnvironment.FOTO_STRADE_MACERATA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()).isPresent());
 
-        assertFalse(contestJpaRepository.findById(JpaTestEnvironment.CONCORSO_FOTO_2024.getID()).get()
+        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).get()
                 .getProposalRegister().getProposals().stream()
-                .anyMatch(c -> c.getID() == JpaTestEnvironment.FOTO_STRADE_MACERATA.getID()));
+                .anyMatch(c -> c.getID() == SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()));
     }
 
     @Test
     public void shouldDeletePointOfInterestContent() {
-        contentJpaRepository.delete(JpaTestEnvironment.FOTO_PIAZZA_LIBERTA_1);
+        contentJpaRepository.delete(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1);
         contentJpaRepository.flush();
-        assertFalse(contentJpaRepository.findById(JpaTestEnvironment.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
 
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(JpaTestEnvironment.PIAZZA_LIBERTA.getID()).get()
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIAZZA_LIBERTA.getID()).get()
                 .getContents().stream()
-                .anyMatch(c -> c.getID() == JpaTestEnvironment.FOTO_PIAZZA_LIBERTA_1.getID()));
+                .anyMatch(c -> c.getID() == SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()));
     }
 
     @Test
     public void shouldDeletePointOfInterestWithRequest() {
-        geoLocatableJpaRepository.delete(JpaTestEnvironment.PIAZZA_LIBERTA);
-        requestJpaRepository.delete(JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA);
+        geoLocatableJpaRepository.delete(SampleRepositoryProvider.PIAZZA_LIBERTA);
+        requestJpaRepository.delete(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA);
         geoLocatableJpaRepository.flush();
 
-        assertFalse(geoLocatableJpaRepository.findById(JpaTestEnvironment.PIAZZA_LIBERTA.getID()).isPresent());
-        assertFalse(contentJpaRepository.findPointOfInterestContentById(JpaTestEnvironment.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findById(SampleRepositoryProvider.PIAZZA_LIBERTA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findPointOfInterestContentById(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteCompoundPoint() {
-        geoLocatableJpaRepository.delete(JpaTestEnvironment.TOUR_STUDENTE);
+        geoLocatableJpaRepository.delete(SampleRepositoryProvider.TOUR_STUDENTE);
         geoLocatableJpaRepository.flush();
 
-        assertFalse(geoLocatableJpaRepository.findById(JpaTestEnvironment.TOUR_STUDENTE.getID()).isPresent());
-        assertTrue(contentJpaRepository.findById(JpaTestEnvironment.UNIVERSITY_CAMERINO.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findById(SampleRepositoryProvider.TOUR_STUDENTE.getID()).isPresent());
+        assertTrue(geoLocatableJpaRepository.findById(SampleRepositoryProvider.UNIVERSITY_CAMERINO.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteContest() {
-        contestJpaRepository.delete(JpaTestEnvironment.CONCORSO_FOTO_2024);
+        contestJpaRepository.delete(SampleRepositoryProvider.CONCORSO_FOTO_2024);
         contestJpaRepository.flush();
 
-        assertFalse(contestJpaRepository.findById(JpaTestEnvironment.CONCORSO_FOTO_2024.getID()).isPresent());
-        assertFalse(contentJpaRepository.findById(JpaTestEnvironment.FOTO_STRADE_MACERATA.getID()).isPresent());
+        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteContestWithDecorator() {
-        requestJpaRepository.deleteAll(requestJpaRepository.findAllByContest(JpaTestEnvironment.CONCORSO_PITTURA));
-        contestJpaRepository.delete(JpaTestEnvironment.CONCORSO_PITTURA);
+        requestJpaRepository.deleteAll(requestJpaRepository.findAllByContest(SampleRepositoryProvider.CONCORSO_PITTURA));
+        contestJpaRepository.delete(SampleRepositoryProvider.CONCORSO_PITTURA);
         contestJpaRepository.flush();
 
-        assertFalse(contestJpaRepository.findById(JpaTestEnvironment.CONCORSO_PITTURA.getID()).isPresent());
-        assertFalse(contestJpaRepository.findById(JpaTestEnvironment.CONCORSO_PITTURA.getBaseContestId()).isPresent());
-        assertFalse(contentJpaRepository.findById(JpaTestEnvironment.FOTO_PITTURA_2.getID()).isPresent());
+        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_PITTURA.getID()).isPresent());
+        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId()).isPresent());
+        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PITTURA_2.getID()).isPresent());
     }
 
     @AfterEach
     public void clearAll(){
-        JpaTestEnvironment.clearMessages(messageJpaRepository);
-        JpaTestEnvironment.clearNotifications(notificationJpaRepository);
-        JpaTestEnvironment.clearRequests(requestJpaRepository);
-        JpaTestEnvironment.clearContents(contentJpaRepository);
-        JpaTestEnvironment.clearContests(contestJpaRepository);
-        JpaTestEnvironment.clearGeoLocatables(geoLocatableJpaRepository);
-        JpaTestEnvironment.clearUsers(userJpaRepository);
-        JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
+        sampleRepositoryProvider.clearAllRepositories();
     }
 }

@@ -8,7 +8,6 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.Repository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
 

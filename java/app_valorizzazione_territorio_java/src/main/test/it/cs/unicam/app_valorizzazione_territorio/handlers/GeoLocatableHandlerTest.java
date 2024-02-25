@@ -14,7 +14,6 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepos
 import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;

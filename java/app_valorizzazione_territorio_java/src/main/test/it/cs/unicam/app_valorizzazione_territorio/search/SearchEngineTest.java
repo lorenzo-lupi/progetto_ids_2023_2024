@@ -2,7 +2,6 @@ package it.cs.unicam.app_valorizzazione_territorio.search;
 
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
