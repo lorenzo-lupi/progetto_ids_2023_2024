@@ -115,6 +115,9 @@ public class User implements Searchable, Visualizable, Modifiable {
     public void addRole(Role role) {
         this.roles.add(role);
     }
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+    }
 
     public void addRole(Municipality municipality, AuthorizationEnum authorizationEnum) {
         this.roles.add(new Role(municipality, authorizationEnum));

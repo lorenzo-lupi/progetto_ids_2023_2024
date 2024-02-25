@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.persistence;
 
-
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
@@ -33,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class InsertionTest {
+public class InsertionTests {
     @Autowired
     MunicipalityJpaRepository municipalityJpaRepository;
     @Autowired
