@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ComponentScan
-public class DeletionTest {
+public class DeletionTests {
     @Autowired
     SampleRepositoryProvider sampleRepositoryProvider;
     @Autowired
@@ -74,81 +74,81 @@ public class DeletionTest {
 
     @Test
     public void shouldDeleteMessage() {
-        messageJpaRepository.delete(SampleRepositoryProvider.MESSAGGIO_1);
+        messageJpaRepository.delete(sampleRepositoryProvider.MESSAGGIO_1);
         messageJpaRepository.flush();
 
-        assertFalse(messageJpaRepository.findById(SampleRepositoryProvider.MESSAGGIO_1.getID()).isPresent());
+        assertFalse(messageJpaRepository.findById(sampleRepositoryProvider.MESSAGGIO_1.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteRequest() {
-        GeoLocatable geoLocatable = (GeoLocatable) SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getCommand().getItem();
-        requestJpaRepository.delete(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA);
+        GeoLocatable geoLocatable = (GeoLocatable) sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getCommand().getItem();
+        requestJpaRepository.delete(sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA);
         requestJpaRepository.flush();
 
-        assertFalse(requestJpaRepository.findById(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getID()).isPresent());
+        assertFalse(requestJpaRepository.findById(sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getID()).isPresent());
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(geoLocatable)).isPresent());
     }
 
     @Test
     public void shouldDeleteContestContent() {
-        contentJpaRepository.delete(SampleRepositoryProvider.FOTO_STRADE_MACERATA);
+        contentJpaRepository.delete(sampleRepositoryProvider.FOTO_STRADE_MACERATA);
         contentJpaRepository.flush();
-        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(sampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()).isPresent());
 
-        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).get()
+        assertFalse(contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).get()
                 .getProposalRegister().getProposals().stream()
-                .anyMatch(c -> c.getID() == SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()));
+                .anyMatch(c -> c.getID() == sampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()));
     }
 
     @Test
     public void shouldDeletePointOfInterestContent() {
-        contentJpaRepository.delete(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1);
+        contentJpaRepository.delete(sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1);
         contentJpaRepository.flush();
-        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
 
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIAZZA_LIBERTA.getID()).get()
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIAZZA_LIBERTA.getID()).get()
                 .getContents().stream()
-                .anyMatch(c -> c.getID() == SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()));
+                .anyMatch(c -> c.getID() == sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()));
     }
 
     @Test
     public void shouldDeletePointOfInterestWithRequest() {
-        geoLocatableJpaRepository.delete(SampleRepositoryProvider.PIAZZA_LIBERTA);
-        requestJpaRepository.delete(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA);
+        geoLocatableJpaRepository.delete(sampleRepositoryProvider.PIAZZA_LIBERTA);
+        requestJpaRepository.delete(sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA);
         geoLocatableJpaRepository.flush();
 
-        assertFalse(geoLocatableJpaRepository.findById(SampleRepositoryProvider.PIAZZA_LIBERTA.getID()).isPresent());
-        assertFalse(contentJpaRepository.findPointOfInterestContentById(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findById(sampleRepositoryProvider.PIAZZA_LIBERTA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findPointOfInterestContentById(sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteCompoundPoint() {
-        geoLocatableJpaRepository.delete(SampleRepositoryProvider.TOUR_STUDENTE);
+        geoLocatableJpaRepository.delete(sampleRepositoryProvider.TOUR_STUDENTE);
         geoLocatableJpaRepository.flush();
 
-        assertFalse(geoLocatableJpaRepository.findById(SampleRepositoryProvider.TOUR_STUDENTE.getID()).isPresent());
-        assertTrue(geoLocatableJpaRepository.findById(SampleRepositoryProvider.UNIVERSITY_CAMERINO.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findById(sampleRepositoryProvider.TOUR_STUDENTE.getID()).isPresent());
+        assertTrue(geoLocatableJpaRepository.findById(sampleRepositoryProvider.UNIVERSITY_CAMERINO.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteContest() {
-        contestJpaRepository.delete(SampleRepositoryProvider.CONCORSO_FOTO_2024);
+        contestJpaRepository.delete(sampleRepositoryProvider.CONCORSO_FOTO_2024);
         contestJpaRepository.flush();
 
-        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).isPresent());
-        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()).isPresent());
+        assertFalse(contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(sampleRepositoryProvider.FOTO_STRADE_MACERATA.getID()).isPresent());
     }
 
     @Test
     public void shouldDeleteContestWithDecorator() {
-        requestJpaRepository.deleteAll(requestJpaRepository.findAllByContest(SampleRepositoryProvider.CONCORSO_PITTURA));
-        contestJpaRepository.delete(SampleRepositoryProvider.CONCORSO_PITTURA);
+        requestJpaRepository.deleteAll(requestJpaRepository.findAllByContest(sampleRepositoryProvider.CONCORSO_PITTURA));
+        contestJpaRepository.delete(sampleRepositoryProvider.CONCORSO_PITTURA);
         contestJpaRepository.flush();
 
-        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_PITTURA.getID()).isPresent());
-        assertFalse(contestJpaRepository.findById(SampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId()).isPresent());
-        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PITTURA_2.getID()).isPresent());
+        assertFalse(contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_PITTURA.getID()).isPresent());
+        assertFalse(contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId()).isPresent());
+        assertFalse(contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PITTURA_2.getID()).isPresent());
     }
 
     @AfterEach

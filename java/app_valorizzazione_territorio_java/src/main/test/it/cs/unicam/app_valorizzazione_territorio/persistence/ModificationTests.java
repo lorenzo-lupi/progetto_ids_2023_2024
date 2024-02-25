@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class ModificationTests {
     @Autowired
+    SampleRepositoryProvider sampleRepositoryProvider;
+    @Autowired
     MunicipalityJpaRepository municipalityJpaRepository;
     @Autowired
     UserJpaRepository userJpaRepository;
@@ -41,20 +43,14 @@ public class ModificationTests {
 
     @BeforeEach
     void setUp() {
-        JpaTestEnvironment.setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
-        JpaTestEnvironment.setUpUsers(userJpaRepository);
-        JpaTestEnvironment.setUpGeoLocatables(geoLocatableJpaRepository);
-        JpaTestEnvironment.setUpContests(contestJpaRepository);
-        JpaTestEnvironment.setUpContents(contentJpaRepository);
-        JpaTestEnvironment.setUpRequests(requestJpaRepository);
-        JpaTestEnvironment.setUpMessages(messageJpaRepository);
+        sampleRepositoryProvider.setUpAllRepositories();
     }
 
     @Test
     public void testMunicipalityModifications() {
-        JpaTestEnvironment.CAMERINO
+        sampleRepositoryProvider.CAMERINO
                 .setDescription("TEST MODIFICATO CAMERINO");
-        municipalityJpaRepository.saveAndFlush(JpaTestEnvironment.CAMERINO);
+        municipalityJpaRepository.saveAndFlush(sampleRepositoryProvider.CAMERINO);
         assertTrue(municipalityJpaRepository
                 .findByDescriptionContaining("MODIFICATO")
                 .findFirst().isPresent());
@@ -63,80 +59,74 @@ public class ModificationTests {
 
     @Test
     public void testGeoLocatableModifications() {
-        JpaTestEnvironment
+        sampleRepositoryProvider
                 .CORSA_SPADA
                 .setDescription("DESCRIZIONE_MODIFICATA");
-        geoLocatableJpaRepository.saveAndFlush(JpaTestEnvironment.CORSA_SPADA);
+        geoLocatableJpaRepository.saveAndFlush(sampleRepositoryProvider.CORSA_SPADA);
         assertEquals(municipalityJpaRepository
-                .findOne(Example.of(JpaTestEnvironment.CAMERINO))
+                .findOne(Example.of(sampleRepositoryProvider.CAMERINO))
                 .get()
                 .getGeoLocatables()
                 .stream()
                 .filter(b -> b.getDescription().equals("DESCRIZIONE_MODIFICATA"))
                 .findFirst()
-                .get().getDescription(), JpaTestEnvironment.CORSA_SPADA.getDescription());
+                .get().getDescription(), sampleRepositoryProvider.CORSA_SPADA.getDescription());
     }
 
     @Test
     public void addUserRole() {
-        assertTrue(JpaTestEnvironment
+        assertTrue(sampleRepositoryProvider
                 .TURIST_1
                 .getRoles()
                 .isEmpty());
-        JpaTestEnvironment
+        sampleRepositoryProvider
                 .TURIST_1
                 .setNewRoles(List.of(AuthorizationEnum.CURATOR, AuthorizationEnum.CONTRIBUTOR),
-                        JpaTestEnvironment.CAMERINO);
-        userJpaRepository.saveAndFlush(JpaTestEnvironment.TURIST_1);
+                        sampleRepositoryProvider.CAMERINO);
+        userJpaRepository.saveAndFlush(sampleRepositoryProvider.TURIST_1);
 
 
-        userJpaRepository.findByUsername(JpaTestEnvironment
+        userJpaRepository.findByUsername(sampleRepositoryProvider
                         .TURIST_1
                         .getUsername())
                 .ifPresentOrElse(user -> assertTrue(user.getRoles()
-                                .contains(new Role(JpaTestEnvironment.CAMERINO, AuthorizationEnum.CURATOR))),
+                                .contains(new Role(sampleRepositoryProvider.CAMERINO, AuthorizationEnum.CURATOR))),
                         () -> fail("User not found"));
     }
 
 
     @Test
     void modifyUserRoles() {
-        assertTrue(JpaTestEnvironment.CURATOR_CAMERINO
+        assertTrue(sampleRepositoryProvider.CURATOR_CAMERINO
                 .getRoles()
-                .contains(new Role(JpaTestEnvironment.CAMERINO, AuthorizationEnum.CURATOR)));
+                .contains(new Role(sampleRepositoryProvider.CAMERINO, AuthorizationEnum.CURATOR)));
 
-        JpaTestEnvironment.CURATOR_CAMERINO.removeRole(new Role(JpaTestEnvironment.CAMERINO, AuthorizationEnum.CURATOR));
-        userJpaRepository.saveAndFlush(JpaTestEnvironment.CURATOR_CAMERINO);
-        userJpaRepository.findByUsername(JpaTestEnvironment.CURATOR_CAMERINO.getUsername())
+        sampleRepositoryProvider.CURATOR_CAMERINO.removeRole(new Role(sampleRepositoryProvider.CAMERINO, AuthorizationEnum.CURATOR));
+        userJpaRepository.saveAndFlush(sampleRepositoryProvider.CURATOR_CAMERINO);
+        userJpaRepository.findByUsername(sampleRepositoryProvider.CURATOR_CAMERINO.getUsername())
                 .ifPresentOrElse(user -> assertFalse(user.getRoles()
-                                .contains(new Role(JpaTestEnvironment.CAMERINO, AuthorizationEnum.CURATOR))),
+                                .contains(new Role(sampleRepositoryProvider.CAMERINO, AuthorizationEnum.CURATOR))),
                         () -> fail("User not found"));
     }
 
     @Test
     void addAndRemoveGeoLocatableContents(){
-        PointOfInterest poi = (PointOfInterest) JpaTestEnvironment.PIZZERIA_ENJOY;
+        PointOfInterest poi = (PointOfInterest) sampleRepositoryProvider.PIZZERIA_ENJOY;
         assertEquals(1, poi.getContents().size());
         PointOfInterestContent poic = contentJpaRepository.saveAndFlush(new PointOfInterestContent("Pizza Salsiccia e Friarelli",
-                poi, List.of(), JpaTestEnvironment.TURIST_1));
+                poi, List.of(), sampleRepositoryProvider.TURIST_1));
         poic.approve();
         poi.addContent(poic);
 
-        poi.removeContent((PointOfInterestContent) JpaTestEnvironment.FOTO_PIZZA_MARGHERITA);
-        contentJpaRepository.delete(JpaTestEnvironment.FOTO_PIZZA_MARGHERITA);
+        poi.removeContent((PointOfInterestContent) sampleRepositoryProvider.FOTO_PIZZA_MARGHERITA);
+        contentJpaRepository.delete(sampleRepositoryProvider.FOTO_PIZZA_MARGHERITA);
         geoLocatableJpaRepository.saveAndFlush(poi);
-        assertFalse(contentJpaRepository.findOne(Example.of(JpaTestEnvironment.FOTO_PIZZA_MARGHERITA)).isPresent());
+        assertFalse(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PIZZA_MARGHERITA)).isPresent());
         assertTrue(contentJpaRepository.findOne(Example.of(poic)).isPresent());
     }
 
     @AfterEach
     public void clearAll(){
-        JpaTestEnvironment.clearMessages(messageJpaRepository);
-        JpaTestEnvironment.clearRequests(requestJpaRepository);
-        JpaTestEnvironment.clearContents(contentJpaRepository);
-        JpaTestEnvironment.clearContests(contestJpaRepository);
-        JpaTestEnvironment.clearGeoLocatables(geoLocatableJpaRepository);
-        JpaTestEnvironment.clearUsers(userJpaRepository);
-        JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
+        sampleRepositoryProvider.clearAllRepositories();
     }
 }

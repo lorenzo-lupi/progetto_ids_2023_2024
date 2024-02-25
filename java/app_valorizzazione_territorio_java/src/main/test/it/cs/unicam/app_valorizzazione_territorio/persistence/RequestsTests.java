@@ -29,15 +29,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ComponentScan
-public class RequestsTest {
+public class RequestsTests {
     @Autowired
     SampleRepositoryProvider sampleRepositoryProvider;
     @Autowired
-    MunicipalityJpaRepository municipalityJpaRepository;
-    @Autowired
     UserJpaRepository userJpaRepository;
-    @Autowired
-    RoleJpaRepository roleJpaRepository;
     @Autowired
     GeoLocatableJpaRepository geoLocatableJpaRepository;
     @Autowired
@@ -46,10 +42,6 @@ public class RequestsTest {
     ContentJpaRepository contentJpaRepository;
     @Autowired
     RequestJpaRepository requestJpaRepository;
-    @Autowired
-    NotificationJpaRepository notificationJpaRepository;
-    @Autowired
-    MessageJpaRepository messageJpaRepository;
 
     @BeforeEach
     void setUp() {
@@ -58,144 +50,144 @@ public class RequestsTest {
 
     @Test
     public void shouldAcceptApprovalRequest1() {
-        assertFalse(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.PIAZZA_LIBERTA)).get().isApproved());
-        requestJpaRepository.findById(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getID()).get().approve();
+        assertFalse(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.PIAZZA_LIBERTA)).get().isApproved());
+        requestJpaRepository.findById(sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA.getID()).get().approve();
         requestJpaRepository.flush();
 
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.PIAZZA_LIBERTA)).get().isApproved());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.PIAZZA_LIBERTA)).get().isApproved());
     }
 
     @Test
     public void shouldAcceptApprovalRequest2() {
-        assertFalse(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PITTURA_2)).get().isApproved());
-        requestJpaRepository.findById(SampleRepositoryProvider.RICHIESTA_PITTURA_CAVOUR.getID()).get().approve();
+        assertFalse(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PITTURA_2)).get().isApproved());
+        requestJpaRepository.findById(sampleRepositoryProvider.RICHIESTA_PITTURA_CAVOUR.getID()).get().approve();
         requestJpaRepository.flush();
 
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PITTURA_2)).get().isApproved());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PITTURA_2)).get().isApproved());
     }
 
     @Test
     public void shouldRejectApprovalRequest() {
         assertEquals(ApprovalStatusEnum.PENDING,
-                contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_SAN_VENANZIO)).get().getApprovalStatus());
-        requestJpaRepository.findById(SampleRepositoryProvider.RICHIESTA_FOTO_BASILICA.getID()).get().reject();
+                contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_SAN_VENANZIO)).get().getApprovalStatus());
+        requestJpaRepository.findById(sampleRepositoryProvider.RICHIESTA_FOTO_BASILICA.getID()).get().reject();
         requestJpaRepository.flush();
 
         assertEquals(ApprovalStatusEnum.REJECTED,
-                contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_SAN_VENANZIO)).get().getApprovalStatus());
+                contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_SAN_VENANZIO)).get().getApprovalStatus());
     }
 
     @Test
     public void shouldAcceptPoiContentDeletionRequest1() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.MANIFESTO_CORSA_SPADA));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.MANIFESTO_CORSA_SPADA));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
-        assertFalse(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.MANIFESTO_CORSA_SPADA)).isPresent());
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.CORSA_SPADA.getID()).get()
+        assertFalse(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.MANIFESTO_CORSA_SPADA)).isPresent());
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.CORSA_SPADA.getID()).get()
                 .getContents().stream()
-                .anyMatch(poi -> poi.equals(SampleRepositoryProvider.MANIFESTO_CORSA_SPADA))
+                .anyMatch(poi -> poi.equals(sampleRepositoryProvider.MANIFESTO_CORSA_SPADA))
         );
     }
 
     @Test
     public void shouldAcceptPoiContentDeletionRequest2() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.FOTO_SAN_VENANZIO));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.FOTO_SAN_VENANZIO));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
-        assertTrue(requestJpaRepository.findById(SampleRepositoryProvider.RICHIESTA_FOTO_BASILICA.getID()).isPresent());
-        assertFalse(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_SAN_VENANZIO)).isPresent());
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.BASILICA_SAN_VENANZIO.getID()).get()
+        assertTrue(requestJpaRepository.findById(sampleRepositoryProvider.RICHIESTA_FOTO_BASILICA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_SAN_VENANZIO)).isPresent());
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.BASILICA_SAN_VENANZIO.getID()).get()
                 .getContents().stream()
-                .anyMatch(poi -> poi.equals(SampleRepositoryProvider.FOTO_SAN_VENANZIO))
+                .anyMatch(poi -> poi.equals(sampleRepositoryProvider.FOTO_SAN_VENANZIO))
         );
     }
 
     @Test
     public void shouldAcceptContestContentDeletionRequest1() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.FOTO_STRADE_MACERATA));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.FOTO_STRADE_MACERATA));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
-        assertFalse(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_STRADE_MACERATA)).isPresent());
-        assertFalse(contestJpaRepository.findByBaseContestIdAndValidTrue(SampleRepositoryProvider.CONCORSO_FOTO_2024.getBaseContestId()).get()
+        assertFalse(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_STRADE_MACERATA)).isPresent());
+        assertFalse(contestJpaRepository.findByBaseContestIdAndValidTrue(sampleRepositoryProvider.CONCORSO_FOTO_2024.getBaseContestId()).get()
                 .getProposalRegister().getProposals().stream()
-                .anyMatch(c -> c.equals(SampleRepositoryProvider.FOTO_STRADE_MACERATA))
+                .anyMatch(c -> c.equals(sampleRepositoryProvider.FOTO_STRADE_MACERATA))
         );
     }
 
     @Test
     public void shouldAcceptContestContentDeletionRequest2() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.FOTO_PITTURA_2));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.FOTO_PITTURA_2));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
-        assertFalse(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PITTURA_2)).isPresent());
-        assertFalse(contestJpaRepository.findByBaseContestIdAndValidTrue(SampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId()).get()
+        assertFalse(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PITTURA_2)).isPresent());
+        assertFalse(contestJpaRepository.findByBaseContestIdAndValidTrue(sampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId()).get()
                 .getProposalRegister().getProposals().stream()
-                .anyMatch(c -> c.equals(SampleRepositoryProvider.FOTO_PITTURA_1))
+                .anyMatch(c -> c.equals(sampleRepositoryProvider.FOTO_PITTURA_1))
         );
     }
 
     @Test
     public void shouldAcceptPointOfInterestDeletionRequest1() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.CORSA_SPADA));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.CORSA_SPADA));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
         assertTrue(requestJpaRepository.findById(deletionRequest.getID()).isPresent());
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.CORSA_SPADA.getID()).isPresent());
-        assertFalse(contentJpaRepository.findPointOfInterestContentById(SampleRepositoryProvider.MANIFESTO_CORSA_SPADA.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.CORSA_SPADA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findPointOfInterestContentById(sampleRepositoryProvider.MANIFESTO_CORSA_SPADA.getID()).isPresent());
     }
 
     @Test
     public void shouldAcceptPointOfInterestDeletionRequest2() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.PIAZZA_LIBERTA));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.PIAZZA_LIBERTA));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
         assertTrue(requestJpaRepository.findById(deletionRequest.getID()).isPresent());
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIAZZA_LIBERTA.getID()).isPresent());
-        assertFalse(contentJpaRepository.findPointOfInterestContentById(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIAZZA_LIBERTA.getID()).isPresent());
+        assertFalse(contentJpaRepository.findPointOfInterestContentById(sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1.getID()).isPresent());
     }
 
     @Test
     public void shouldAcceptPointOfInterestDeletionRequest3() {
         Request<?> deletionRequest =
-                requestJpaRepository.save(RequestFactory.getDeletionRequest(SampleRepositoryProvider.PIZZERIA_ENJOY));
+                requestJpaRepository.save(RequestFactory.getDeletionRequest(sampleRepositoryProvider.PIZZERIA_ENJOY));
         requestJpaRepository.flush();
 
         deletionRequest.approve();
         requestJpaRepository.flush();
 
         assertTrue(requestJpaRepository.findById(deletionRequest.getID()).isPresent());
-        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIZZERIA_ENJOY.getID()).isPresent());
-        assertFalse(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PIZZA_MARGHERITA.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIZZERIA_ENJOY.getID()).isPresent());
+        assertFalse(contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PIZZA_MARGHERITA.getID()).isPresent());
     }
 
     @Test
     public void shouldAcceptPointOfInterestModificationRequest1() {
         Request<?> modificationRequest =
-                requestJpaRepository.save(RequestFactory.getModificationRequest(SampleRepositoryProvider.PIAZZA_LIBERTA,
+                requestJpaRepository.save(RequestFactory.getModificationRequest(sampleRepositoryProvider.PIAZZA_LIBERTA,
                         List.of(new ImmutablePair<>(Parameter.DESCRIPTION, "Piazza della Libertà modificata"))));
         requestJpaRepository.flush();
 
@@ -204,13 +196,13 @@ public class RequestsTest {
 
         assertTrue(requestJpaRepository.findById(modificationRequest.getID()).isPresent());
         assertEquals("Piazza della Libertà modificata",
-                geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIAZZA_LIBERTA.getID()).get().getDescription());
+                geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIAZZA_LIBERTA.getID()).get().getDescription());
     }
 
     @Test
     public void shouldAcceptPointOfInterestModificationRequest2() {
         Request<?> modificationRequest =
-                requestJpaRepository.save(RequestFactory.getModificationRequest(SampleRepositoryProvider.PIZZERIA_ENJOY,
+                requestJpaRepository.save(RequestFactory.getModificationRequest(sampleRepositoryProvider.PIZZERIA_ENJOY,
                         List.of(new ImmutablePair<>(Parameter.DESCRIPTION, "Pizzeria Enjoy modificata"),
                                 new ImmutablePair<>(Parameter.NAME, "Nome modificato"),
                                 new ImmutablePair<>(Parameter.POSITION, new Position(0, 0)))));
@@ -221,17 +213,17 @@ public class RequestsTest {
 
         assertTrue(requestJpaRepository.findById(modificationRequest.getID()).isPresent());
         assertEquals("Nome modificato",
-                geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get().getName());
+                geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get().getName());
         assertEquals("Pizzeria Enjoy modificata",
-                geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get().getDescription());
+                geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get().getDescription());
         assertEquals(new Position(0, 0),
-                geoLocatableJpaRepository.findPointOfInterestById(SampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get().getPosition());
+                geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get().getPosition());
     }
 
     @Test
     public void shouldAcceptContentModificationRequest1() {
         Request<?> modificationRequest =
-                requestJpaRepository.save(RequestFactory.getModificationRequest(SampleRepositoryProvider.FOTO_PITTURA_1,
+                requestJpaRepository.save(RequestFactory.getModificationRequest(sampleRepositoryProvider.FOTO_PITTURA_1,
                         List.of(new ImmutablePair<>(Parameter.DESCRIPTION, "Foto pittura 1 modificata"))));
         requestJpaRepository.flush();
 
@@ -240,14 +232,14 @@ public class RequestsTest {
 
         assertTrue(requestJpaRepository.findById(modificationRequest.getID()).isPresent());
         assertEquals("Foto pittura 1 modificata",
-                contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PITTURA_1.getID()).get().getDescription());
+                contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PITTURA_1.getID()).get().getDescription());
     }
 
     @Test
     public void shouldAcceptContentModificationRequest2() {
         File file = new File("/it/cs/unicam/app_valorizzazione_territorio/persistence/RequestsTest.java");
         Request<?> modificationRequest =
-                requestJpaRepository.save(RequestFactory.getModificationRequest(SampleRepositoryProvider.FOTO_PITTURA_2,
+                requestJpaRepository.save(RequestFactory.getModificationRequest(sampleRepositoryProvider.FOTO_PITTURA_2,
                         List.of(new ImmutablePair<>(Parameter.DESCRIPTION, "Foto pittura 2 modificata"),
                                 new ImmutablePair<>(Parameter.ADD_FILE, file))));
         requestJpaRepository.flush();
@@ -257,23 +249,23 @@ public class RequestsTest {
 
         assertTrue(requestJpaRepository.findById(modificationRequest.getID()).isPresent());
         assertEquals("Foto pittura 2 modificata",
-                contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PITTURA_2.getID()).get().getDescription());
-        assertTrue(contentJpaRepository.findById(SampleRepositoryProvider.FOTO_PITTURA_2.getID()).get().getFiles().contains(file));
+                contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PITTURA_2.getID()).get().getDescription());
+        assertTrue(contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PITTURA_2.getID()).get().getFiles().contains(file));
     }
 
     @Test
     public void shouldAcceptPromotionRequest() {
         Request<?> promotionRequest =
-                requestJpaRepository.save(RequestFactory.getPromotionRequest(SampleRepositoryProvider.TURIST_1,
-                        SampleRepositoryProvider.roles.get(SampleRepositoryProvider.CAMERINO).get(AuthorizationEnum.ADMINISTRATOR)));
+                requestJpaRepository.save(RequestFactory.getPromotionRequest(sampleRepositoryProvider.TURIST_1,
+                        sampleRepositoryProvider.roles.get(sampleRepositoryProvider.CAMERINO).get(AuthorizationEnum.ADMINISTRATOR)));
         requestJpaRepository.flush();
 
         promotionRequest.approve();
         requestJpaRepository.flush();
 
         assertTrue(requestJpaRepository.findById(promotionRequest.getID()).isPresent());
-        assertTrue(userJpaRepository.findById(SampleRepositoryProvider.TURIST_1.getID()).get()
-                .getAuthorizations(SampleRepositoryProvider.CAMERINO).stream()
+        assertTrue(userJpaRepository.findById(sampleRepositoryProvider.TURIST_1.getID()).get()
+                .getAuthorizations(sampleRepositoryProvider.CAMERINO).stream()
                 .anyMatch(authorization -> authorization.equals(AuthorizationEnum.ADMINISTRATOR)));
     }
 

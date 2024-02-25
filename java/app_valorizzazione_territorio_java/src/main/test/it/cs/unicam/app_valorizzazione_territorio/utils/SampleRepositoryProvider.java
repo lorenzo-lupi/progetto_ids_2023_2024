@@ -44,28 +44,28 @@ public class SampleRepositoryProvider {
     @Autowired
     private MessageJpaRepository messageJpaRepository;
 
-    public static boolean areMunicipalitiesSet = false;
-    public static boolean areUsersSet = false;
-    public static boolean areGeoLocatablesSet = false;
-    public static boolean areContestsSet = false;
-    public static boolean areContentsSet = false;
-    public static boolean areRequestsSet = false;
-    public static boolean areNotificationsSet = false;
-    public static boolean areMessagesSet = false;
+    public boolean areMunicipalitiesSet = false;
+    public boolean areUsersSet = false;
+    public boolean areGeoLocatablesSet = false;
+    public boolean areContestsSet = false;
+    public boolean areContentsSet = false;
+    public boolean areRequestsSet = false;
+    public boolean areNotificationsSet = false;
+    public boolean areMessagesSet = false;
 
-    public static Municipality MACERATA, CAMERINO, COMUNE_DEI_TEST;
-    public static Map<Municipality, Map<AuthorizationEnum, Role>> roles = new HashMap<>();
-    public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
-    public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
+    public Municipality MACERATA, CAMERINO, COMUNE_DEI_TEST;
+    public Map<Municipality, Map<AuthorizationEnum, Role>> roles = new HashMap<>();
+    public User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
+    public GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
             SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TOUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
-    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
-    public static Content<?> FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
+    public Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
+    public Content<?> FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
             MANIFESTO_CORSA_SPADA, FOTO_STRADE_MACERATA, FOTO_TORRE_CIVICA, FOTO_PIZZA_REGINA, FOTO_PITTURA_1,
             FOTO_PITTURA_2, TEST_MAL_FUNZIONANTE, TEST_FATTO_BENE;
 
-    public static Request<?> RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
-    public static Notification NOTIFICA_INVITO_PITTURA, NOTIFICA_VINCITORE_PIZZA, NOTIFICA_INZIO_FESTA;
-    public static Message MESSAGGIO_1, MESSAGGIO_2;
+    public Request<?> RICHIESTA_PIAZZA_LIBERTA, RICHIESTA_FOTO_BASILICA, RICHIESTA_PITTURA_CAVOUR, NEG_REQUEST, POS_REQUEST;
+    public Notification NOTIFICA_INVITO_PITTURA, NOTIFICA_VINCITORE_PIZZA, NOTIFICA_INZIO_FESTA;
+    public Message MESSAGGIO_1, MESSAGGIO_2;
 
 
     public void clearMunicipalities() {

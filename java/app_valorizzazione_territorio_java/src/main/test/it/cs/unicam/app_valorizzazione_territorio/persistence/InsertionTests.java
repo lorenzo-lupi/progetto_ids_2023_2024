@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ComponentScan
-public class InsertionTest {
+public class InsertionTests {
     @Autowired
     SampleRepositoryProvider sampleRepositoryProvider;
     @Autowired
@@ -64,8 +64,8 @@ public class InsertionTest {
     }
     @Test
     public void testMunicipalityInsertions() {
-        assertTrue(municipalityJpaRepository.findOne(Example.of(SampleRepositoryProvider.CAMERINO)).isPresent());
-        assertTrue(municipalityJpaRepository.findOne(Example.of(SampleRepositoryProvider.MACERATA)).isPresent());
+        assertTrue(municipalityJpaRepository.findOne(Example.of(sampleRepositoryProvider.CAMERINO)).isPresent());
+        assertTrue(municipalityJpaRepository.findOne(Example.of(sampleRepositoryProvider.MACERATA)).isPresent());
     }
 
     @Test
@@ -85,20 +85,20 @@ public class InsertionTest {
 
     @Test
     public void testRoleInsertion(){
-        User user = userJpaRepository.findOne(Example.of(SampleRepositoryProvider.CURATOR_CAMERINO)).get();
+        User user = userJpaRepository.findOne(Example.of(sampleRepositoryProvider.CURATOR_CAMERINO)).get();
         assertTrue(user.getRoles().stream().map(Role::authorizationEnum).anyMatch(auth -> auth.equals(AuthorizationEnum.CURATOR)));
     }
 
     @Test
     public void testUserInsertions() {
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.TURIST_1)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.TURIST_2)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.TURIST_3)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.CURATOR_CAMERINO)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.ENTERTAINER_CAMERINO)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.ENTERTAINER_MACERATA)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.ENTERTAINER_TEST)).isPresent());
-        assertTrue(userJpaRepository.findOne(Example.of(SampleRepositoryProvider.ADMINISTRATOR_CAMERINO)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.TURIST_1)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.TURIST_2)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.TURIST_3)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.CURATOR_CAMERINO)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.ENTERTAINER_CAMERINO)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.ENTERTAINER_MACERATA)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.ENTERTAINER_TEST)).isPresent());
+        assertTrue(userJpaRepository.findOne(Example.of(sampleRepositoryProvider.ADMINISTRATOR_CAMERINO)).isPresent());
     }
 
     @Test
@@ -112,66 +112,66 @@ public class InsertionTest {
 
     @Test
     public void testGeoLocatableInsertions(){
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.BASILICA_SAN_VENANZIO)).isPresent());
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.PIAZZA_LIBERTA)).isPresent());
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.PIZZERIA_ENJOY)).isPresent());
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.UNIVERSITY_CAMERINO)).isPresent());
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.VIA_MADONNA_CARCERI)).isPresent());
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(SampleRepositoryProvider.TOUR_STUDENTE)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.BASILICA_SAN_VENANZIO)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.PIAZZA_LIBERTA)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.PIZZERIA_ENJOY)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.UNIVERSITY_CAMERINO)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.VIA_MADONNA_CARCERI)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(sampleRepositoryProvider.TOUR_STUDENTE)).isPresent());
     }
 
     @Test
     public void testGeoLocatableInsertion() {
         PointOfInterest newPoi = new Attraction("Test POI", "Test POI",
                 new Position(43.135, 13.067),
-                SampleRepositoryProvider.CAMERINO, AttractionTypeEnum.OTHER, SampleRepositoryProvider.TURIST_1);
+                sampleRepositoryProvider.CAMERINO, AttractionTypeEnum.OTHER, sampleRepositoryProvider.TURIST_1);
 
         geoLocatableJpaRepository.save(newPoi);
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(newPoi)).isPresent());
 
-        SampleRepositoryProvider.CAMERINO.addGeoLocatable(newPoi);
-        assertTrue(municipalityJpaRepository.findOne(Example.of(SampleRepositoryProvider.CAMERINO)).get()
+        sampleRepositoryProvider.CAMERINO.addGeoLocatable(newPoi);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(sampleRepositoryProvider.CAMERINO)).get()
                 .getGeoLocatables().contains(newPoi));
     }
 
     @Test
     public void testContestInsertions(){
-        assertTrue(contestJpaRepository.findOne(Example.of(SampleRepositoryProvider.CONCORSO_FOTO_2024)).isPresent());
-        assertTrue(contestJpaRepository.findOne(Example.of(SampleRepositoryProvider.CONCORSO_FOTO_2025)).isPresent());
-        assertTrue(contestJpaRepository.findOne(Example.of(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA)).isPresent());
-        assertTrue(contestJpaRepository.findOne(Example.of(SampleRepositoryProvider.CONCORSO_PITTURA)).isPresent());
+        assertTrue(contestJpaRepository.findOne(Example.of(sampleRepositoryProvider.CONCORSO_FOTO_2024)).isPresent());
+        assertTrue(contestJpaRepository.findOne(Example.of(sampleRepositoryProvider.CONCORSO_FOTO_2025)).isPresent());
+        assertTrue(contestJpaRepository.findOne(Example.of(sampleRepositoryProvider.CONCORSO_FOTO_PIZZA)).isPresent());
+        assertTrue(contestJpaRepository.findOne(Example.of(sampleRepositoryProvider.CONCORSO_PITTURA)).isPresent());
     }
 
     @Test
     public void testContestInsertion() {
         Contest newContest = new ContestBase("Test Contest",
-                SampleRepositoryProvider.ENTERTAINER_CAMERINO, "Test topic", "Test rules",
+                sampleRepositoryProvider.ENTERTAINER_CAMERINO, "Test topic", "Test rules",
                 new Date(124, 1, 1), new Date(124, 1, 2), new Date(124, 1, 3),
-                SampleRepositoryProvider.CAMERINO);
+                sampleRepositoryProvider.CAMERINO);
 
         contestJpaRepository.save(newContest);
         assertTrue(contestJpaRepository.findOne(Example.of(newContest)).isPresent());
 
-        SampleRepositoryProvider.CAMERINO.addContest(newContest);
-        assertTrue(municipalityJpaRepository.findOne(Example.of(SampleRepositoryProvider.CAMERINO)).get()
+        sampleRepositoryProvider.CAMERINO.addContest(newContest);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(sampleRepositoryProvider.CAMERINO)).get()
                 .getContests().contains(newContest));
     }
 
     @Test
     public void testContestInsertion2() {
         Contest contestBase = new ContestBase("Test Contest2",
-                SampleRepositoryProvider.ENTERTAINER_CAMERINO, "Test topic", "Test rules",
+                sampleRepositoryProvider.ENTERTAINER_CAMERINO, "Test topic", "Test rules",
                 new Date(124, 1, 1), new Date(124, 1, 2), new Date(124, 1, 3),
-                SampleRepositoryProvider.CAMERINO);
+                sampleRepositoryProvider.CAMERINO);
         Contest newContest = new PrivateContestDecorator(contestBase,
-                List.of(SampleRepositoryProvider.TURIST_1, SampleRepositoryProvider.TURIST_2));
+                List.of(sampleRepositoryProvider.TURIST_1, sampleRepositoryProvider.TURIST_2));
 
         contestJpaRepository.save(newContest);
         assertTrue(contestJpaRepository.findOne(Example.of(newContest)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(contestBase)).isPresent());
 
-        SampleRepositoryProvider.CAMERINO.addContest(newContest);
-        assertTrue(municipalityJpaRepository.findOne(Example.of(SampleRepositoryProvider.CAMERINO)).get()
+        sampleRepositoryProvider.CAMERINO.addContest(newContest);
+        assertTrue(municipalityJpaRepository.findOne(Example.of(sampleRepositoryProvider.CAMERINO)).get()
                 .getContests().contains(newContest));
 
         assertTrue(contestJpaRepository.findAllByValidTrue().contains(newContest));
@@ -182,44 +182,44 @@ public class InsertionTest {
 
     @Test
     public void testContentInsertions() {
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_SAN_VENANZIO)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_2)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PIZZA_MARGHERITA)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.MANIFESTO_CORSA_SPADA)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_STRADE_MACERATA)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_STRADE_MACERATA)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_TORRE_CIVICA)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PIZZA_REGINA)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PITTURA_1)).isPresent());
-        assertTrue(contentJpaRepository.findOne(Example.of(SampleRepositoryProvider.FOTO_PITTURA_2)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_SAN_VENANZIO)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_1)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PIAZZA_LIBERTA_2)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PIZZA_MARGHERITA)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.MANIFESTO_CORSA_SPADA)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_STRADE_MACERATA)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_STRADE_MACERATA)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_TORRE_CIVICA)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PIZZA_REGINA)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PITTURA_1)).isPresent());
+        assertTrue(contentJpaRepository.findOne(Example.of(sampleRepositoryProvider.FOTO_PITTURA_2)).isPresent());
     }
 
     @Test
     public void testContentInsertion() {
         PointOfInterestContent newContent = new PointOfInterestContent("Test content",
-                (PointOfInterest) SampleRepositoryProvider.PIAZZA_LIBERTA, new ArrayList<>(), SampleRepositoryProvider.TURIST_1);
+                (PointOfInterest) sampleRepositoryProvider.PIAZZA_LIBERTA, new ArrayList<>(), sampleRepositoryProvider.TURIST_1);
 
         contentJpaRepository.save(newContent);
         assertTrue(contentJpaRepository.findOne(Example.of(newContent)).isPresent());
 
-        ((PointOfInterest) SampleRepositoryProvider.PIAZZA_LIBERTA).addContent(newContent);
+        ((PointOfInterest) sampleRepositoryProvider.PIAZZA_LIBERTA).addContent(newContent);
         assertTrue(geoLocatableJpaRepository.findAllPointsOfInterest().stream()
-                .filter(poi -> poi.equals(SampleRepositoryProvider.PIAZZA_LIBERTA))
+                .filter(poi -> poi.equals(sampleRepositoryProvider.PIAZZA_LIBERTA))
                 .flatMap(poi -> poi.getContents().stream()).anyMatch(content -> content.equals(newContent)));
     }
 
     @Test
     public void testRequestInsertions() {
-        assertTrue(requestJpaRepository.findOne(Example.of(SampleRepositoryProvider.RICHIESTA_FOTO_BASILICA)).isPresent());
-        assertTrue(requestJpaRepository.findOne(Example.of(SampleRepositoryProvider.RICHIESTA_PITTURA_CAVOUR)).isPresent());
-        assertTrue(requestJpaRepository.findOne(Example.of(SampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA)).isPresent());
+        assertTrue(requestJpaRepository.findOne(Example.of(sampleRepositoryProvider.RICHIESTA_FOTO_BASILICA)).isPresent());
+        assertTrue(requestJpaRepository.findOne(Example.of(sampleRepositoryProvider.RICHIESTA_PITTURA_CAVOUR)).isPresent());
+        assertTrue(requestJpaRepository.findOne(Example.of(sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA)).isPresent());
     }
 
     @Test
     public void testMessageInsertions() {
-        assertTrue(messageJpaRepository.findOne(Example.of(SampleRepositoryProvider.MESSAGGIO_1)).isPresent());
-        assertTrue(messageJpaRepository.findOne(Example.of(SampleRepositoryProvider.MESSAGGIO_2)).isPresent());
+        assertTrue(messageJpaRepository.findOne(Example.of(sampleRepositoryProvider.MESSAGGIO_1)).isPresent());
+        assertTrue(messageJpaRepository.findOne(Example.of(sampleRepositoryProvider.MESSAGGIO_2)).isPresent());
     }
 
     @AfterEach
