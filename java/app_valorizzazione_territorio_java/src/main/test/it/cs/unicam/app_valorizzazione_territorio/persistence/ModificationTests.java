@@ -7,9 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterest
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class ModificationTests {
     @Autowired
-    MunicipalityJpaRepository municipalityJPARepository;
+    MunicipalityJpaRepository municipalityJpaRepository;
     @Autowired
     UserJpaRepository userJpaRepository;
     @Autowired
@@ -41,10 +39,9 @@ public class ModificationTests {
     @Autowired
     MessageJpaRepository messageJpaRepository;
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
-        SampleRepositoryProvider.clearAndSetUpRepositories();
-        JpaTestEnvironment.setUpMunicipalities(municipalityJPARepository, roleJpaRepository);
+        JpaTestEnvironment.setUpMunicipalities(municipalityJpaRepository, roleJpaRepository);
         JpaTestEnvironment.setUpUsers(userJpaRepository);
         JpaTestEnvironment.setUpGeoLocatables(geoLocatableJpaRepository);
         JpaTestEnvironment.setUpContests(contestJpaRepository);
@@ -57,8 +54,8 @@ public class ModificationTests {
     public void testMunicipalityModifications() {
         JpaTestEnvironment.CAMERINO
                 .setDescription("TEST MODIFICATO CAMERINO");
-        municipalityJPARepository.saveAndFlush(JpaTestEnvironment.CAMERINO);
-        assertTrue(municipalityJPARepository
+        municipalityJpaRepository.saveAndFlush(JpaTestEnvironment.CAMERINO);
+        assertTrue(municipalityJpaRepository
                 .findByDescriptionContaining("MODIFICATO")
                 .findFirst().isPresent());
 
@@ -70,7 +67,7 @@ public class ModificationTests {
                 .CORSA_SPADA
                 .setDescription("DESCRIZIONE_MODIFICATA");
         geoLocatableJpaRepository.saveAndFlush(JpaTestEnvironment.CORSA_SPADA);
-        assertEquals(municipalityJPARepository
+        assertEquals(municipalityJpaRepository
                 .findOne(Example.of(JpaTestEnvironment.CAMERINO))
                 .get()
                 .getGeoLocatables()
@@ -130,5 +127,16 @@ public class ModificationTests {
         geoLocatableJpaRepository.saveAndFlush(poi);
         assertFalse(contentJpaRepository.findOne(Example.of(JpaTestEnvironment.FOTO_PIZZA_MARGHERITA)).isPresent());
         assertTrue(contentJpaRepository.findOne(Example.of(poic)).isPresent());
+    }
+
+    @AfterEach
+    public void clearAll(){
+        JpaTestEnvironment.clearMessages(messageJpaRepository);
+        JpaTestEnvironment.clearRequests(requestJpaRepository);
+        JpaTestEnvironment.clearContents(contentJpaRepository);
+        JpaTestEnvironment.clearContests(contestJpaRepository);
+        JpaTestEnvironment.clearGeoLocatables(geoLocatableJpaRepository);
+        JpaTestEnvironment.clearUsers(userJpaRepository);
+        JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
     }
 }
