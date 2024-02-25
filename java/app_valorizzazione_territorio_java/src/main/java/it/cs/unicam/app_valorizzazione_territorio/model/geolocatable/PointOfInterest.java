@@ -28,7 +28,6 @@ import java.util.function.Consumer;
 @NoArgsConstructor(force = true)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class PointOfInterest extends GeoLocatable implements ContentHost<PointOfInterest> {
-
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "poi",
             orphanRemoval = true,
