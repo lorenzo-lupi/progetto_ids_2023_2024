@@ -1,13 +1,15 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class ProposalRegister {
+public class ProposalRegister implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
@@ -134,6 +136,11 @@ public class ProposalRegister {
                 .stream()
                 .max(Comparator.comparingInt(content -> content.getVoters().size()))
                 .orElse(null);
+    }
+
+    @Override
+    public long getID() {
+        return ID;
     }
 
 }

@@ -17,10 +17,10 @@ import java.util.function.Predicate;
 @Entity
 @IdClass(Role.RoleKey.class)
 @NoArgsConstructor(force = true)
-public class Role {
+public class Role implements Serializable{
     @Id
     @ManyToOne(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL})
+            cascade = CascadeType.ALL)
     @JoinColumn(name = "municipality_id", referencedColumnName = "ID")
     private Municipality municipality;
 

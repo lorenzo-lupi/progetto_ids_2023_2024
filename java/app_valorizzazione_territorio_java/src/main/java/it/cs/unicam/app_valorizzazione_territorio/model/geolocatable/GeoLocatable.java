@@ -4,6 +4,8 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.GeoLocatableOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.*;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.GeoLocatableContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestCommand;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -53,11 +56,18 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "municipality_id")
     private Municipality municipality;
-
     @Getter
     @Embedded
     private Position position;
 
+    /////// FOR DELETION PURPOSES ///////
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<GeoLocatableContestDecorator> decorators;
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    List<RequestCommand<?>> commands;
+    ////////////////////////////////////
 
     /**
      * Constructor for a geo-localizable object.
@@ -86,6 +96,8 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.images = images;
         this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
+        this.decorators = new ArrayList<>();
+        this.commands = new ArrayList<>();
     }
 
 
@@ -172,11 +184,6 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         };
     }
 
-    @PreRemove
-    public void preRemove() {
-        if (this.municipality != null) this.municipality.removeGeoLocatable(this);
-    }
-
     @Override
     public Map<Parameter, Consumer<Object>> getSettersMapping() {
         return Map.of(Parameter.NAME, toObjectSetter(this::setName, String.class),
@@ -217,6 +224,13 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.municipality != null) this.municipality.removeGeoLocatable(this);
+        if (this.decorators != null) this.decorators.forEach(decorator -> decorator.setGeoLocatable(null));
+        if (this.commands != null) this.commands.forEach(RequestCommand::setItemNull);
     }
 
 }

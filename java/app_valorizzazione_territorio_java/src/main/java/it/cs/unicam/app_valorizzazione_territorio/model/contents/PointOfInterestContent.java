@@ -53,6 +53,7 @@ public class PointOfInterestContent extends Content<PointOfInterest>{
 
     @PreRemove
     public void preRemove() {
+        super.preRemove();
         if (this.poi != null) this.poi.removeContent(this);
     }
 }

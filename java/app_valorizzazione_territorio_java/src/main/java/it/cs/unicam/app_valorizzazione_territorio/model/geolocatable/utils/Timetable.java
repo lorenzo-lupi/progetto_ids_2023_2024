@@ -3,6 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Activity;
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +18,7 @@ import java.util.Map;
  * A timetable stores the opening and closing time of an activity for each day of the week.
  */
 @Entity
-public class Timetable {
+public class Timetable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;

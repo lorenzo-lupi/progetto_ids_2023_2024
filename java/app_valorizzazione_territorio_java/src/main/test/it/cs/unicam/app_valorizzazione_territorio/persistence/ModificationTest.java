@@ -33,6 +33,8 @@ public class ModificationTest {
     @Autowired
     RequestJpaRepository requestJpaRepository;
     @Autowired
+    NotificationJpaRepository notificationJpaRepository;
+    @Autowired
     MessageJpaRepository messageJpaRepository;
 
     @BeforeAll
@@ -44,6 +46,7 @@ public class ModificationTest {
         JpaTestEnvironment.setUpContests(contestJpaRepository);
         JpaTestEnvironment.setUpContents(contentJpaRepository);
         JpaTestEnvironment.setUpRequests(requestJpaRepository);
+        JpaTestEnvironment.setUpNotifications(notificationJpaRepository);
         JpaTestEnvironment.setUpMessages(messageJpaRepository);
     }
 
@@ -73,6 +76,7 @@ public class ModificationTest {
     @AfterAll
     public void clearAll(){
         JpaTestEnvironment.clearMessages(messageJpaRepository);
+        JpaTestEnvironment.clearNotifications(notificationJpaRepository);
         JpaTestEnvironment.clearRequests(requestJpaRepository);
         JpaTestEnvironment.clearContents(contentJpaRepository);
         JpaTestEnvironment.clearContests(contestJpaRepository);

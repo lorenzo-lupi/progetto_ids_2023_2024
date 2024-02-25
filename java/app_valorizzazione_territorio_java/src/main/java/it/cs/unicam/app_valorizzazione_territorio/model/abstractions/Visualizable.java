@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 
+import java.io.Serializable;
+
 /**
  * Classes implementing this interface can provide specific objects for their synthetic
  * and detailed visualization.

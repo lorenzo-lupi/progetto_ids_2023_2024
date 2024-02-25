@@ -49,6 +49,8 @@ public class InsertionTest {
     @Autowired
     RequestJpaRepository requestJpaRepository;
     @Autowired
+    NotificationJpaRepository notificationJpaRepository;
+    @Autowired
     MessageJpaRepository messageJpaRepository;
 
     @BeforeEach
@@ -59,6 +61,7 @@ public class InsertionTest {
         JpaTestEnvironment.setUpContests(contestJpaRepository);
         JpaTestEnvironment.setUpContents(contentJpaRepository);
         JpaTestEnvironment.setUpRequests(requestJpaRepository);
+        JpaTestEnvironment.setUpNotifications(notificationJpaRepository);
         JpaTestEnvironment.setUpMessages(messageJpaRepository);
     }
     @Test
@@ -116,7 +119,7 @@ public class InsertionTest {
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.PIZZERIA_ENJOY)).isPresent());
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.UNIVERSITY_CAMERINO)).isPresent());
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.VIA_MADONNA_CARCERI)).isPresent());
-        assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.TORUR_STUDENTE)).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(JpaTestEnvironment.TOUR_STUDENTE)).isPresent());
     }
 
     @Test
@@ -224,6 +227,7 @@ public class InsertionTest {
     @AfterEach
     public void clearAll(){
         JpaTestEnvironment.clearMessages(messageJpaRepository);
+        JpaTestEnvironment.clearNotifications(notificationJpaRepository);
         JpaTestEnvironment.clearRequests(requestJpaRepository);
         JpaTestEnvironment.clearContents(contentJpaRepository);
         JpaTestEnvironment.clearContests(contestJpaRepository);

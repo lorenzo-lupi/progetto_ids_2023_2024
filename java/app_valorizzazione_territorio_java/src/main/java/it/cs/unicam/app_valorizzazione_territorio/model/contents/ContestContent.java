@@ -63,12 +63,12 @@ public class ContestContent extends Content<Contest> {
     public Runnable getDeletionAction() {
         return () -> {
             this.contest.getProposalRegister().removeProposal(this);
-            MunicipalityRepository.getInstance().removeContent(this);
         };
     }
 
     @PreRemove
     public void preRemove() {
+        super.preRemove();
         if (this.contest != null) this.contest.removeContent(this);
     }
 }

@@ -6,6 +6,8 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * This class represents a geographical position, that is a
  * point on the surface of the Earth associated with geographical coordinates.
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 @JsonView(View.Synthesized.class)
 @Embeddable
 @NoArgsConstructor(force = true)
-public class Position {
+public class Position implements Serializable {
     private double latitude;
     private double longitude;
 

@@ -13,7 +13,7 @@ import java.time.DayOfWeek;
 @Setter
 @Entity
 @IdClass(TimetableEntry.EntryKey.class)
-public class TimetableEntry {
+public class TimetableEntry implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.EAGER)
     private Timetable timetable;

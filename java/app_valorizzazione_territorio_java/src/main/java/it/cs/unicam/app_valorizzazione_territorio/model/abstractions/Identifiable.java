@@ -1,9 +1,12 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 
+import java.io.Serializable;
+
 /**
  * Classes implementing this interface provide a unique identifier for their objects in the system.
  */
-public interface Identifiable {
+public interface Identifiable extends Serializable {
+
     /**
      * Returns the unique identifier of the object.
      *

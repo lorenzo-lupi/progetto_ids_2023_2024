@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 @Entity
 @NoArgsConstructor(force = true)
-public class Municipality implements Searchable, Identifiable, Visualizable, Positionable {
+public class Municipality implements Searchable, Visualizable, Positionable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
@@ -64,7 +65,9 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
         this.contests.remove(contest);
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "municipality",
+            cascade = CascadeType.ALL)
     private final List<Notification> notifications;
 
     /**
@@ -152,6 +155,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
     }
 
     public boolean addNotification(Notification notification) {
+        notification.setMunicipality(this);
         return this.notifications.add(notification);
     }
 
@@ -207,5 +211,7 @@ public class Municipality implements Searchable, Identifiable, Visualizable, Pos
             new ArrayList<>(this.geoLocatables).forEach(this::removeGeoLocatable);
         if (this.contests != null)
             new ArrayList<>(this.contests).forEach(this::removeContest);
+        if (this.notifications != null)
+            this.notifications.forEach(n -> n.setMunicipality(null));
     }
 }

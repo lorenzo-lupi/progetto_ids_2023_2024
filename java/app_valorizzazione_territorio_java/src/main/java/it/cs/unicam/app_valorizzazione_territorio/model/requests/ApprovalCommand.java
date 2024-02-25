@@ -33,12 +33,12 @@ public abstract class ApprovalCommand<T extends Approvable & Visualizable> exten
 
     @Override
     public void accept() {
-        getItem().approve();
+        if (getItem() != null) getItem().approve();
     }
 
     @Override
     public void reject() {
-        getItem().reject();
+        if (getItem() != null) getItem().reject();
     }
 
     @Entity
@@ -46,13 +46,19 @@ public abstract class ApprovalCommand<T extends Approvable & Visualizable> exten
     @NoArgsConstructor(force = true)
     private static class ContentApprovalCommand extends ApprovalCommand<Content<?>> {
         @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "content_id")
-        private final Content<?> content;
+        private Content<?> content;
         public ContentApprovalCommand(Content<?> content) {
             this.content = content;
+            this.content.getCommands().add(this);
         }
         @Transient
         public Content<?> getItem() {
             return content;
+        }
+        public void setItemNull() { this.content = null; }
+        @PreRemove
+        public void preRemove() {
+            if (this.content != null) this.content.getCommands().remove(this);
         }
     }
 
@@ -60,14 +66,23 @@ public abstract class ApprovalCommand<T extends Approvable & Visualizable> exten
     @DiscriminatorValue("ApprovableGeoLocatable")
     @NoArgsConstructor(force = true)
     private static class GeoLocatableApprovalCommand extends ApprovalCommand<GeoLocatable> {
-        @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "geo_locatable_id")
-        private final GeoLocatable geoLocatable;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "geo_locatable_id")
+        private GeoLocatable geoLocatable;
         public GeoLocatableApprovalCommand(GeoLocatable geoLocatable) {
             this.geoLocatable = geoLocatable;
+            geoLocatable.getCommands().add(this);
         }
         @Transient
         public GeoLocatable getItem() {
             return geoLocatable;
+        }
+
+        public void setItemNull() { this.geoLocatable = null; }
+
+        @PreRemove
+        public void preRemove() {
+            if (this.geoLocatable != null) this.geoLocatable.getCommands().remove(this);
         }
     }
 }

@@ -36,7 +36,9 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
 
     @Override
     public void accept() {
-        getItem().getDeletionAction().run();
+        T item = getItem();
+        this.setItemNull();
+        if (item != null) item.getDeletionAction().run();
     }
 
     @Override
@@ -49,12 +51,18 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
     private static class ContentDeletionCommand extends DeletionCommand<Content<?>> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "content_id")
-        private final Content<?> content;
+        private Content<?> content;
         public ContentDeletionCommand(Content<?> content) {
             this.content = content;
+            this.content.getCommands().add(this);
         }
         public Content<?> getItem() {
             return content;
+        }
+        public void setItemNull() { this.content = null; }
+        @PreRemove
+        public void preRemove() {
+            if (this.content != null) this.content.getCommands().remove(this);
         }
     }
 
@@ -63,12 +71,18 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
     private static class GeoLocatableDeletionCommand extends DeletionCommand<GeoLocatable> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "geo_locatable_id")
-        private final GeoLocatable geoLocatable;
+        private GeoLocatable geoLocatable;
         public GeoLocatableDeletionCommand(GeoLocatable geoLocatable) {
             this.geoLocatable = geoLocatable;
+            geoLocatable.getCommands().add(this);
         }
         public GeoLocatable getItem() {
             return geoLocatable;
+        }
+        public void setItemNull() { this.geoLocatable = null; }
+        @PreRemove
+        public void preRemove() {
+            if (this.geoLocatable != null) this.geoLocatable.getCommands().remove(this);
         }
     }
 

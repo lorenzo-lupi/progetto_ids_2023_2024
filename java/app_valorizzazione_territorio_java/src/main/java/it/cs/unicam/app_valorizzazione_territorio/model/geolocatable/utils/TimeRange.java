@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalTime;
 @JsonView(View.Synthesized.class)
 @Embeddable
 @NoArgsConstructor(force = true)
-public class TimeRange {
+public class TimeRange implements Serializable {
 
     private final LocalTime openingTime;
     private final LocalTime closingTime;

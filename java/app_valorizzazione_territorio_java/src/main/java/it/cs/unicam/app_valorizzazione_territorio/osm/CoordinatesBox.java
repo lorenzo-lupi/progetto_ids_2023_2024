@@ -3,13 +3,15 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * This class represents a geographical box, that is a rectangle on the surface of the Earth.
  * The internal representation is a pair of two geographical positions, the north-west and the south-east corners.
  */
 @Embeddable
 @NoArgsConstructor(force = true)
-public class CoordinatesBox {
+public class CoordinatesBox implements Serializable {
     public static final CoordinatesBox ITALY = new CoordinatesBox(
             new Position(47.092, 6.626),
             new Position(35.492, 18.520)

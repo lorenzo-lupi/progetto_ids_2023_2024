@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.requests;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import jakarta.persistence.*;
 
@@ -12,12 +13,14 @@ import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "request_command_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class RequestCommand<T extends Visualizable> {
+public abstract class RequestCommand<T extends Visualizable> implements Identifiable {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long ID;
 
         public abstract T getItem();
+
+        public abstract void setItemNull();
 
         /**
          * Returns the type of confirmation required to accept the request.
@@ -35,4 +38,9 @@ public abstract class RequestCommand<T extends Visualizable> {
          * Rejects the request.
          */
         public abstract void reject();
+
+        @Override
+        public long getID() {
+            return ID;
+        }
 }

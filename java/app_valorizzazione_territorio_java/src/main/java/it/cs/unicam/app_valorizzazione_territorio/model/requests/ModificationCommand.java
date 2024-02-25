@@ -79,7 +79,8 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
 
     @Override
     public void accept() {
-        modifications.forEach(p -> getItem().getSettersMapping().get(p.getParameter()).accept(p.getNewValue()));
+        if (getItem() != null)
+            modifications.forEach(p -> getItem().getSettersMapping().get(p.getParameter()).accept(p.getNewValue()));
     }
 
     @Override
@@ -113,7 +114,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     private static class ContentModificationCommand extends ModificationCommand<Content<?>> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "content_id")
-        private final Content<?> content;
+        private Content<?> content;
         public ContentModificationCommand(Content<?> content, List<Pair<Parameter, Object>> modifications) {
             super(modifications);
             this.content = content;
@@ -125,6 +126,8 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
         public Content<?> getItem() {
             return content;
         }
+
+        public void setItemNull() { this.content = null; }
     }
 
     @Entity
@@ -132,17 +135,26 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     private static class GeoLocatableModificationCommand extends ModificationCommand<GeoLocatable> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "geo_locatable_id")
-        private final GeoLocatable geoLocatable;
+        private GeoLocatable geoLocatable;
         public GeoLocatableModificationCommand(GeoLocatable geoLocatable, List<Pair<Parameter, Object>> modifications) {
             super(modifications);
             this.geoLocatable = geoLocatable;
+            geoLocatable.getCommands().add(this);
         }
         public GeoLocatableModificationCommand(GeoLocatable geoLocatable, Parameter parameter, Object value) {
             super(parameter, value);
             this.geoLocatable = geoLocatable;
+            this.geoLocatable.getCommands().add(this);
         }
         public GeoLocatable getItem() {
             return geoLocatable;
+        }
+
+        public void setItemNull() { this.geoLocatable = null; }
+
+        @PreRemove
+        public void preRemove() {
+            if (this.geoLocatable != null) this.geoLocatable.getCommands().remove(this);
         }
     }
 
@@ -151,7 +163,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     private static class UserModificationCommand extends ModificationCommand<User> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "user_id")
-        private final User user;
+        private User user;
         public UserModificationCommand(User user, List<Pair<Parameter, Object>> modifications) {
             super(modifications);
             this.user = user;
@@ -163,5 +175,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
         public User getItem() {
             return user;
         }
+
+        public void setItemNull() { this.user = null; }
     }
 }

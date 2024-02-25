@@ -58,7 +58,9 @@ public class CompoundPoint extends GeoLocatable {
         checkArguments(compoundPointType, pointsOfInterest);
 
         this.compoundPointType = compoundPointType;
-        this.pointsOfInterest = pointsOfInterest;
+        this.pointsOfInterest = compoundPointType.getCollection();
+        this.pointsOfInterest.addAll(pointsOfInterest);
+        this.pointsOfInterest.forEach(p -> p.getCompoundPoints().add(this));
         this.setPosition(this.calculatePosition());
     }
 
@@ -82,6 +84,7 @@ public class CompoundPoint extends GeoLocatable {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("pointOfInterest cannot be null");
         this.pointsOfInterest.add(pointOfInterest);
+        pointOfInterest.getCompoundPoints().add(this);
         this.setPosition(this.calculatePosition());
     }
 
@@ -89,6 +92,7 @@ public class CompoundPoint extends GeoLocatable {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("pointOfInterest cannot be null");
         this.pointsOfInterest.remove(pointOfInterest);
+        pointOfInterest.getCompoundPoints().remove(this);
         this.setPosition(this.calculatePosition());
     }
 
@@ -128,6 +132,6 @@ public class CompoundPoint extends GeoLocatable {
                 .map(PointOfInterest::getPosition)
                 .map(position -> position.divide(this.pointsOfInterest.size()))
                 .reduce(Position::sum)
-                .orElseThrow();
+                .orElse(new Position(0,0));
     }
 }

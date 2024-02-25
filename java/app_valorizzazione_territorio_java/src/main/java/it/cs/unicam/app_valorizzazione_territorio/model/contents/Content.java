@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Requestable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
@@ -7,12 +8,14 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizabl
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestCommand;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -28,6 +31,9 @@ import java.util.function.Consumer;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(force = true)
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -42,9 +48,20 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     private final List<File> files;
     @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long ID;
+
+    //////// FOR DELETION PURPOSES ////////
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "savedContents")
+    private List<User> savedContentUsers;
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<RequestCommand<?>> commands;
+
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Notification> notifications;
+    //////////////////////////////////////
+
     /**
      * Constructor for a content.
      *
@@ -60,6 +77,9 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
         this.files = files;
         this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
+        this.savedContentUsers = new ArrayList<>();
+        this.commands = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     public void setDescription(String description) {
@@ -146,6 +166,8 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
 
     @PreRemove
     public void preRemove(){
-        this.user = null;
+        this.savedContentUsers.forEach(user -> user.getSavedContents().remove(this));
+        this.commands.forEach(RequestCommand::setItemNull);
+        this.notifications.forEach(Notification::setVisualizableNull);
     }
 }

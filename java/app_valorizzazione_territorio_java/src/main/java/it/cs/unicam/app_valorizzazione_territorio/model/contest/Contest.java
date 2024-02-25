@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,11 +51,18 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     @JoinColumn(name = "municipality_id")
     private Municipality municipality;
 
+    /////// FOR DELETION PURPOSES /////////
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Notification> notifications;
+    //////////////////////////////////////
+
     public Contest(Municipality municipality) {
         if (municipality == null)
             throw new IllegalArgumentException("Municipality must not be null");
         this.municipality = municipality;
         this.valid = true;
+        this.notifications = new ArrayList<>();
     }
 
     public boolean isValid() {
@@ -178,5 +187,6 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     @PreRemove
     public void preRemove() {
         if (this.municipality != null) this.municipality.removeContest(this);
+        this.notifications.forEach(Notification::setVisualizableNull);
     }
 }

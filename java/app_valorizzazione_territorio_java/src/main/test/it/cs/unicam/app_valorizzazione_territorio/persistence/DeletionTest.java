@@ -1,10 +1,12 @@
 package it.cs.unicam.app_valorizzazione_territorio.persistence;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +31,8 @@ public class DeletionTest {
     @Autowired
     RequestJpaRepository requestJpaRepository;
     @Autowired
+    NotificationJpaRepository notificationJpaRepository;
+    @Autowired
     MessageJpaRepository messageJpaRepository;
 
     @BeforeEach
@@ -39,6 +43,7 @@ public class DeletionTest {
         JpaTestEnvironment.setUpContests(contestJpaRepository);
         JpaTestEnvironment.setUpContents(contentJpaRepository);
         JpaTestEnvironment.setUpRequests(requestJpaRepository);
+        JpaTestEnvironment.setUpNotifications(notificationJpaRepository);
         JpaTestEnvironment.setUpMessages(messageJpaRepository);
     }
 
@@ -64,6 +69,24 @@ public class DeletionTest {
 
         JpaTestEnvironment.clearMunicipalities(municipalityJpaRepository, roleJpaRepository);
         assertEquals(0, roleJpaRepository.count());
+    }
+
+    @Test
+    public void shouldDeleteMessage() {
+        messageJpaRepository.delete(JpaTestEnvironment.MESSAGGIO_1);
+        messageJpaRepository.flush();
+
+        assertFalse(messageJpaRepository.findById(JpaTestEnvironment.MESSAGGIO_1.getID()).isPresent());
+    }
+
+    @Test
+    public void shouldDeleteRequest() {
+        GeoLocatable geoLocatable = (GeoLocatable) JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA.getCommand().getItem();
+        requestJpaRepository.delete(JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA);
+        requestJpaRepository.flush();
+
+        assertFalse(requestJpaRepository.findById(JpaTestEnvironment.RICHIESTA_PIAZZA_LIBERTA.getID()).isPresent());
+        assertTrue(geoLocatableJpaRepository.findOne(Example.of(geoLocatable)).isPresent());
     }
 
     @Test
@@ -100,10 +123,10 @@ public class DeletionTest {
 
     @Test
     public void shouldDeleteCompoundPoint() {
-        geoLocatableJpaRepository.delete(JpaTestEnvironment.TORUR_STUDENTE);
+        geoLocatableJpaRepository.delete(JpaTestEnvironment.TOUR_STUDENTE);
         geoLocatableJpaRepository.flush();
 
-        assertFalse(geoLocatableJpaRepository.findById(JpaTestEnvironment.TORUR_STUDENTE.getID()).isPresent());
+        assertFalse(geoLocatableJpaRepository.findById(JpaTestEnvironment.TOUR_STUDENTE.getID()).isPresent());
         assertTrue(contentJpaRepository.findById(JpaTestEnvironment.UNIVERSITY_CAMERINO.getID()).isPresent());
     }
 
@@ -130,6 +153,7 @@ public class DeletionTest {
     @AfterEach
     public void clearAll(){
         JpaTestEnvironment.clearMessages(messageJpaRepository);
+        JpaTestEnvironment.clearNotifications(notificationJpaRepository);
         JpaTestEnvironment.clearRequests(requestJpaRepository);
         JpaTestEnvironment.clearContents(contentJpaRepository);
         JpaTestEnvironment.clearContests(contestJpaRepository);

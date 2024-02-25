@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 @NoArgsConstructor(force = true)
 public class GeoLocatableContestDecorator extends ContestDecorator{
 
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "geo_locatable_id")
     private GeoLocatable geoLocatable;
@@ -23,6 +25,7 @@ public class GeoLocatableContestDecorator extends ContestDecorator{
         if(geoLocatable == null)
             throw new IllegalArgumentException("GeoLocatable must not be null");
         this.geoLocatable = geoLocatable;
+        this.geoLocatable.getDecorators().add(this);
     }
 
     @Override
@@ -47,6 +50,6 @@ public class GeoLocatableContestDecorator extends ContestDecorator{
     @PreRemove
     public void preRemove() {
         super.preRemove();
-        this.geoLocatable = null;
+        if (this.geoLocatable != null) this.geoLocatable.getDecorators().remove(this);
     }
 }

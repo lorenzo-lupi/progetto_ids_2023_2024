@@ -43,7 +43,7 @@ public class User implements Searchable, Visualizable, Modifiable {
             inverseJoinColumns = @JoinColumn(name = "notification_ID", referencedColumnName = "ID"))
     private final List<Notification> notifications;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_savedcontents",
             joinColumns = @JoinColumn(name = "user_ID"),
@@ -125,6 +125,7 @@ public class User implements Searchable, Visualizable, Modifiable {
     }
 
     public void addNotification(Notification notification) {
+        notification.getUsers().add(this);
         this.notifications.add(notification);
     }
 
@@ -137,11 +138,13 @@ public class User implements Searchable, Visualizable, Modifiable {
     }
 
     public boolean addSavedContent(Content<?> content) {
-        return this.savedContents.add(content);
+        this.savedContents.add(content);
+        return content.getSavedContentUsers().add(this);
     }
 
     public boolean removeSavedContent(Content<?> content) {
-        return this.savedContents.remove(content);
+        this.savedContents.remove(content);
+        return content.getSavedContentUsers().remove(this);
     }
 
     /**
@@ -199,5 +202,11 @@ public class User implements Searchable, Visualizable, Modifiable {
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove() {
+        this.savedContents.forEach(content -> content.getSavedContentUsers().remove(this));
+        this.notifications.forEach(n -> n.getUsers().remove(this));
     }
 }

@@ -15,7 +15,6 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
@@ -29,14 +28,15 @@ public class JpaTestEnvironment {
     public static boolean areContestsSet = false;
     public static boolean areContentsSet = false;
     public static boolean areRequestsSet = false;
+    public static boolean areNotificationsSet = false;
     public static boolean areMessagesSet = false;
 
     public static Municipality MACERATA, CAMERINO;
     public static Map<Municipality, Map<AuthorizationEnum, Role>> roles = new HashMap<>();
     public static User TURIST_1, TURIST_2, TURIST_3, CURATOR_CAMERINO, ENTERTAINER_CAMERINO, ENTERTAINER_MACERATA, ENTERTAINER_TEST, ADMINISTRATOR_CAMERINO;
     public static GeoLocatable UNIVERSITY_CAMERINO, VIA_MADONNA_CARCERI, PIAZZA_LIBERTA, CORSA_SPADA,
-            SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TORUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
-    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA, CONCORSO_PER_TEST;
+            SEPTEMBER_FEST, PIZZERIA_ENJOY, BASILICA_SAN_VENANZIO, TOUR_STUDENTE, TRADIZIONE_SAN_VENANZIO, GAS_FACILITY;
+    public static Contest CONCORSO_FOTO_2024, CONCORSO_FOTO_2025, CONCORSO_FOTO_PIZZA, CONCORSO_PITTURA;
     public static Content<?> FOTO_SAN_VENANZIO, FOTO_PIAZZA_LIBERTA_1, FOTO_PIAZZA_LIBERTA_2, FOTO_PIZZA_MARGHERITA,
             MANIFESTO_CORSA_SPADA, FOTO_STRADE_MACERATA, FOTO_TORRE_CIVICA, FOTO_PIZZA_REGINA, FOTO_PITTURA_1,
             FOTO_PITTURA_2;
@@ -76,6 +76,7 @@ public class JpaTestEnvironment {
             roles.get(CAMERINO).put(auth, roleRepository.save(new Role(CAMERINO, auth)));
         });
 
+        repository.flush();
         areMunicipalitiesSet = true;
     }
 
@@ -114,6 +115,7 @@ public class JpaTestEnvironment {
         ENTERTAINER_TEST = repository.save(users.get(6));
         ADMINISTRATOR_CAMERINO = repository.save(users.get(7));
 
+        repository.flush();
         areUsersSet = true;
     }
 
@@ -163,13 +165,21 @@ public class JpaTestEnvironment {
                         CAMERINO, AttractionTypeEnum.OTHER,
                         TURIST_2)
         ));
+        geoLocatables.get(0).approve();
         UNIVERSITY_CAMERINO = repository.save(geoLocatables.get(0));
+        geoLocatables.get(1).approve();
         VIA_MADONNA_CARCERI = repository.save(geoLocatables.get(1));
+
         PIAZZA_LIBERTA = repository.save(geoLocatables.get(2));
+        geoLocatables.get(3).approve();
         CORSA_SPADA = repository.save(geoLocatables.get(3));
+        geoLocatables.get(4).approve();
         SEPTEMBER_FEST = repository.save(geoLocatables.get(4));
+        geoLocatables.get(5).approve();
         PIZZERIA_ENJOY = repository.save(geoLocatables.get(5));
+        geoLocatables.get(6).approve();
         BASILICA_SAN_VENANZIO = repository.save(geoLocatables.get(6));
+        geoLocatables.get(7).approve();
         GAS_FACILITY = repository.save(geoLocatables.get(7));
 
         CAMERINO.addGeoLocatable(UNIVERSITY_CAMERINO);
@@ -181,21 +191,27 @@ public class JpaTestEnvironment {
         CAMERINO.addGeoLocatable(BASILICA_SAN_VENANZIO);
         CAMERINO.addGeoLocatable(GAS_FACILITY);
 
-        TORUR_STUDENTE = repository.save(new CompoundPoint("Tour dello studente", "Tour dello studente",
+        geoLocatables.addAll(Arrays.asList(new CompoundPoint("Tour dello studente", "Tour dello studente",
                 CAMERINO, CompoundPointTypeEnum.ITINERARY, Arrays.asList(
                 (PointOfInterest) VIA_MADONNA_CARCERI,
                 (PointOfInterest) UNIVERSITY_CAMERINO,
                 (PointOfInterest) PIZZERIA_ENJOY),
-                new ArrayList<>(), TURIST_2));
-        TRADIZIONE_SAN_VENANZIO = repository.save(new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
+                new ArrayList<>(), TURIST_2),
+        new CompoundPoint("Tradizione di San Venanzio", "Tradizione di San Venanzio",
                 CAMERINO, CompoundPointTypeEnum.EXPERIENCE, Arrays.asList(
                 (PointOfInterest) BASILICA_SAN_VENANZIO,
                 (PointOfInterest) CORSA_SPADA),
-                new ArrayList<>(), TURIST_2));
+                new ArrayList<>(), TURIST_2)));
 
-        CAMERINO.addGeoLocatable(TORUR_STUDENTE);
+        geoLocatables.get(8).approve();
+        TOUR_STUDENTE = repository.save(geoLocatables.get(8));
+        geoLocatables.get(9).approve();
+        TRADIZIONE_SAN_VENANZIO = repository.save(geoLocatables.get(9));
+
+        CAMERINO.addGeoLocatable(TOUR_STUDENTE);
         CAMERINO.addGeoLocatable(TRADIZIONE_SAN_VENANZIO);
 
+        repository.flush();
         areGeoLocatablesSet = true;
     }
 
@@ -245,6 +261,7 @@ public class JpaTestEnvironment {
         CAMERINO.addContest(CONCORSO_FOTO_PIZZA);
         CAMERINO.addContest(CONCORSO_PITTURA);
 
+        repository.flush();
         areContestsSet = true;
     }
 
@@ -259,49 +276,58 @@ public class JpaTestEnvironment {
         if(!areContestsSet || !areGeoLocatablesSet)
             throw new IllegalStateException("Contests and GeoLocatable repositories are not set");
 
-        List<Content> contents = new ArrayList<>();
+        List<Content<?>> contents = new ArrayList<>();
         contents.addAll(Arrays.asList(
-                //0 //FOTO_SAN_VENANZIO //Municiplality: Camerino //GeoLocatable: Basilica di San Venanzio //Not approved
+                //0 //FOTO_SAN_VENANZIO //Municipality: Camerino //GeoLocatable: Basilica di San Venanzio //Not approved
                 new PointOfInterestContent("Foto della basilica di San Venanzio",
                         (PointOfInterest) BASILICA_SAN_VENANZIO, new ArrayList<>(), TURIST_1),
-                //1 //FOTO_PIAZZA_LIBERTA_1 //Municiplality: Macerata //GeoLocatable: Piazza della Libertà
+                //1 //FOTO_PIAZZA_LIBERTA_1 //Municipality: Macerata //GeoLocatable: Piazza della Libertà
                 new PointOfInterestContent("Foto della piazza della libertà",
                         (PointOfInterest) PIAZZA_LIBERTA, new ArrayList<>(), TURIST_1),
-                //2 //FOTO_PIAZZA_LIBERTA_2 //Municiplality: Macerata //GeoLocatable: Piazza della Libertà
+                //2 //FOTO_PIAZZA_LIBERTA_2 //Municipality: Macerata //GeoLocatable: Piazza della Libertà
                 new PointOfInterestContent("Foto della piazza della libertà di notte",
                         (PointOfInterest) PIAZZA_LIBERTA, new ArrayList<>(), TURIST_2),
-                //3 //FOTO_PIZZA_MARGHERITA //Municiplality: Camerino //GeoLocatable: Pizzeria Enjoy
+                //3 //FOTO_PIZZA_MARGHERITA //Municipality: Camerino //GeoLocatable: Pizzeria Enjoy
                 new PointOfInterestContent("Foto delle pizze margerita",
                         (PointOfInterest) PIZZERIA_ENJOY, new ArrayList<>(), TURIST_3),
-                //4 //MANIFESTO_CORSA_SPADA //Municiplality: Camerino //GeoLocatable: Corsa della Spada
+                //4 //MANIFESTO_CORSA_SPADA //Municipality: Camerino //GeoLocatable: Corsa della Spada
                 new PointOfInterestContent("Manifesto della corsa della spada",
                         (PointOfInterest) CORSA_SPADA, new ArrayList<>(), CURATOR_CAMERINO),
-                //5 //FOTO_STRADE_MACERATA //Municiplality: Macerata //Contest: Concorso fotografico annuale 2024
+                //5 //FOTO_STRADE_MACERATA //Municipality: Macerata //Contest: Concorso fotografico annuale 2024
                 new ContestContent("Foto per le strade di Macerata",
                         CONCORSO_FOTO_2024, new ArrayList<>(), TURIST_1),
-                //6 //FOTO_TORRE_CIVICA //Municiplality: Macerata //Contest: Concorso fotografico annuale 2024
+                //6 //FOTO_TORRE_CIVICA //Municipality: Macerata //Contest: Concorso fotografico annuale 2024
                 new ContestContent("Foto della torre civica",
                         CONCORSO_FOTO_2024, new ArrayList<>(), TURIST_1),
-                //7 //FOTO_PIZZA_REGINA //Municiplality: Camerino //Contest: Migliore foto di pizza Novembre
+                //7 //FOTO_PIZZA_REGINA //Municipality: Camerino //Contest: Migliore foto di pizza Novembre
                 new ContestContent("Foto della pizza Regina Sbagliata",
                         CONCORSO_FOTO_PIZZA, new ArrayList<>(), TURIST_3),
-                //8 //FOTO_PITTURA_1 //Municiplality: Camerino //Contest: Concorso pittura dei paesaggi
+                //8 //FOTO_PITTURA_1 //Municipality: Camerino //Contest: Concorso pittura dei paesaggi
                 new ContestContent("Pittura della Basilica di San Venanzio",
                         CONCORSO_PITTURA, new ArrayList<>(), TURIST_1),
-                //9 //FOTO_PITTURA_2 //Municiplality: Camerino //Contest: Concorso pittura dei paesaggi //Not approved
+                //9 //FOTO_PITTURA_2 //Municipality: Camerino //Contest: Concorso pittura dei paesaggi //Not approved
                 new ContestContent("Pittura di Piazza Cavour",
                         CONCORSO_PITTURA, new ArrayList<>(), TURIST_2))
         );
 
         FOTO_SAN_VENANZIO = repository.save(contents.get(0));
+        contents.get(1).approve();
         FOTO_PIAZZA_LIBERTA_1 = repository.save(contents.get(1));
+        contents.get(2).approve();
         FOTO_PIAZZA_LIBERTA_2 = repository.save(contents.get(2));
+        contents.get(3).approve();
         FOTO_PIZZA_MARGHERITA = repository.save(contents.get(3));
+        contents.get(4).approve();
         MANIFESTO_CORSA_SPADA = repository.save(contents.get(4));
+        contents.get(5).approve();
         FOTO_STRADE_MACERATA = repository.save(contents.get(5));
+        contents.get(6).approve();
         FOTO_TORRE_CIVICA = repository.save(contents.get(6));
+        contents.get(7).approve();
         FOTO_PIZZA_REGINA = repository.save(contents.get(7));
+        contents.get(8).approve();
         FOTO_PITTURA_1 = repository.save(contents.get(8));
+
         FOTO_PITTURA_2 = repository.save(contents.get(9));
 
         ((PointOfInterest) BASILICA_SAN_VENANZIO).addContent((PointOfInterestContent) FOTO_SAN_VENANZIO);
@@ -315,6 +341,10 @@ public class JpaTestEnvironment {
         CONCORSO_PITTURA.getProposalRegister().proposeContent((ContestContent) FOTO_PITTURA_1);
         CONCORSO_PITTURA.getProposalRegister().proposeContent((ContestContent) FOTO_PITTURA_2);
 
+        TURIST_1.addSavedContent(MANIFESTO_CORSA_SPADA);
+        TURIST_2.addSavedContent(MANIFESTO_CORSA_SPADA);
+
+        repository.flush();
         areContentsSet = true;
     }
 
@@ -343,7 +373,42 @@ public class JpaTestEnvironment {
         RICHIESTA_FOTO_BASILICA = repository.save(requests.get(1));
         RICHIESTA_PITTURA_CAVOUR = repository.save(requests.get(2));
 
+        repository.flush();
         areRequestsSet = true;
+    }
+
+    public static void clearNotifications(NotificationJpaRepository repository){
+        repository.deleteAll();
+        repository.flush();
+        areNotificationsSet = false;
+    }
+
+    public static void setUpNotifications(NotificationJpaRepository repository) {
+        clearNotifications(repository);
+        if (!areUsersSet || !areMunicipalitiesSet || !areContestsSet || !areGeoLocatablesSet)
+            throw new IllegalStateException("Users, Municipalities, Contests and GeoLocatable repositories are not set");
+
+        List<Notification> notifications = new ArrayList<>();
+        notifications.addAll(Arrays.asList(
+                //0 //Notifica invito concorso pittura per Utenti
+                Notification.createNotification(CONCORSO_PITTURA, "Sei stato invitato ad un contest."),
+                //1 //Notifica contenuto vincitore per Comune
+                Notification.createNotification(FOTO_PIZZA_REGINA,
+                        "Decretato il contenuto vincitore del contest "+CONCORSO_FOTO_PIZZA.getName()),
+                //2 //Notifica inizio evento per Comune
+                Notification.createNotification(SEPTEMBER_FEST, "L'evento "+SEPTEMBER_FEST.getName()+" è iniziato!")
+        ));
+
+        repository.save(notifications.get(0));
+        repository.save(notifications.get(1));
+        repository.save(notifications.get(2));
+
+        CONCORSO_PITTURA.getParticipants().forEach(user -> user.addNotification(notifications.get(0)));
+        CAMERINO.addNotification(notifications.get(1));
+        MACERATA.addNotification(notifications.get(2));
+
+        repository.flush();
+        areNotificationsSet = true;
     }
 
     public static void clearMessages(MessageJpaRepository repository){
@@ -352,16 +417,17 @@ public class JpaTestEnvironment {
         areMessagesSet = false;
     }
 
-    public static void setUpMessages(MessageJpaRepository messageJpaRepository) {
+    public static void setUpMessages(MessageJpaRepository repository) {
         List<Message> messages = Arrays.asList(
                 new Message("Mario Rossi", "mario.rossi@email.com",
                         "Testo del messaggio", new Date(124, 0, 1), new ArrayList<>()),
                 new Message("Luigi Bianchi", "luigi.bianchi@email.it",
                         "Testo del messaggio", new Date(124, 0, 21), new ArrayList<>()));
 
-        MESSAGGIO_1 = messageJpaRepository.save(messages.get(0));
-        MESSAGGIO_2 = messageJpaRepository.save(messages.get(1));
+        MESSAGGIO_1 = repository.save(messages.get(0));
+        MESSAGGIO_2 = repository.save(messages.get(1));
 
+        repository.flush();
         areMessagesSet = true;
     }
 }
