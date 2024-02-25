@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class DeletionTest {
+public class DeletionTests {
 
     @Autowired
     MunicipalityJpaRepository municipalityJpaRepository;

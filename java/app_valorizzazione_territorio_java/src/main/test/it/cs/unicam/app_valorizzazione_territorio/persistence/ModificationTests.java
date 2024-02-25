@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class ModificationTest {
+public class ModificationTests {
     @Autowired
     MunicipalityJpaRepository municipalityJPARepository;
     @Autowired
