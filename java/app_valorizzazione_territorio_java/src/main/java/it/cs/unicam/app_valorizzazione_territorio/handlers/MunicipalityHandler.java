@@ -65,19 +65,6 @@ public class MunicipalityHandler {
     }
 
     /**
-     * Returns the Detailed Format of a Municipality having the given ID.
-     *
-     * @param municipalityID the ID of the Municipality to visualize
-     * @return the Detailed Format of the Municipality having the given ID
-     * @throws IllegalArgumentException if the Municipality having the given ID is not found
-     **/
-    public MunicipalityOF viewMunicipality(long municipalityID) {
-        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
-        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
-        return municipality.get().getOutputFormat();
-    }
-
-    /**
      * Returns the Synthesized Format of all the municipalities registered in the system.
      *
      * @return the Synthesized Format of all the municipalities in the system
@@ -126,5 +113,18 @@ public class MunicipalityHandler {
                                 .stream()
                                 .toList(),
                         filters);
+    }
+
+    /**
+     * Returns the Detailed Format of a Municipality having the given ID.
+     *
+     * @param municipalityID the ID of the Municipality to visualize
+     * @return the Detailed Format of the Municipality having the given ID
+     * @throws IllegalArgumentException if the Municipality having the given ID is not found
+     **/
+    public MunicipalityOF viewMunicipality(long municipalityID) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
+        return municipality.get().getOutputFormat();
     }
 }
