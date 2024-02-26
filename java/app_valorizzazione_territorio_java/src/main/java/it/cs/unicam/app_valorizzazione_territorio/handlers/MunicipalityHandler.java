@@ -3,14 +3,18 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RoleJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,10 +28,13 @@ import java.util.Set;
 public class MunicipalityHandler {
 
     private final MunicipalityJpaRepository municipalityRepository;
+    private final RoleJpaRepository roleRepository;
 
     @Autowired
-    public MunicipalityHandler(MunicipalityJpaRepository municipalityRepository) {
+    public MunicipalityHandler(MunicipalityJpaRepository municipalityRepository,
+                               RoleJpaRepository roleRepository) {
         this.municipalityRepository = municipalityRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -44,8 +51,11 @@ public class MunicipalityHandler {
                 .buildCoordinatesBox(municipalityIF.coordinatesBox())
                 .buildFiles(municipalityIF.files().stream().toList())
                 .build();
-
-        return municipalityRepository.saveAndFlush(builder.obtainResult()).getID();
+        Municipality municipality = municipalityRepository.saveAndFlush(builder.obtainResult());
+        Arrays.stream(AuthorizationEnum.values())
+                .forEach(auth ->
+                        roleRepository.save(new Role(municipality, auth)));
+        return municipality.getID();
     }
 
     /**
