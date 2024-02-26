@@ -3,9 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.*;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
@@ -14,7 +13,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.VotedContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -103,7 +101,7 @@ public class ContestHandler {
      */
     @SuppressWarnings("unchecked")
     public  List<VotedContentOF> viewFilteredProposals(long contestID, List<SearchFilter> filters) {
-        return (List<VotedContentOF>) SearchUltils.getFilteredItems(
+        return (List<VotedContentOF>) SearchUtils.getFilteredItems(
                 getContestByID(contestID).getProposalRegister().getProposals(),
                 filters);
     }
@@ -202,7 +200,7 @@ public class ContestHandler {
      */
     @SuppressWarnings("unchecked")
     public  List<UserOF> viewFilteredUsers(List<SearchFilter> filters) {
-        return (List<UserOF>) SearchUltils.getFilteredItems(
+        return (List<UserOF>) SearchUtils.getFilteredItems(
                 userRepository.findAll(),
                 filters);
     }
@@ -216,7 +214,7 @@ public class ContestHandler {
      */
     @SuppressWarnings("unchecked")
     public  List<GeoLocatableOF> viewFilteredGeoLocatables(List<SearchFilter> filters) {
-        return (List<GeoLocatableOF>) SearchUltils.getFilteredItems(
+        return (List<GeoLocatableOF>) SearchUtils.getFilteredItems(
                 geoLocatableRepository.findAll(),
                 filters);
     }
@@ -253,7 +251,7 @@ public class ContestHandler {
         User user =getUserByID(userID);
         List<SearchFilter> filtersWithUser = new ArrayList<>(filters);
         filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), "CONTEST_PERMITS_USER", user));
-        return (List<ContestOF>) SearchUltils.getFilteredItems(
+        return (List<ContestOF>) SearchUtils.getFilteredItems(
                 contestRepository.findByMunicipalityAndValidTrue(getMunicipalityByID(municipalityID)),
                 filtersWithUser);
     }
@@ -264,7 +262,7 @@ public class ContestHandler {
      * @return the set of all the criteria available for the search
      */
     public  Set<String> getSearchCriteria(){
-        return SearchUltils.getSearchCriteria();
+        return SearchUtils.getSearchCriteria();
     }
 
     /**

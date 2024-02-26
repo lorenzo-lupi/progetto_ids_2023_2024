@@ -15,9 +15,10 @@ import java.util.List;
  * @param coordinatesBox
  * @param files
  */
-public record MunicipalityIF(String name,
-                            String description,
-                            Position position,
-                            CoordinatesBox coordinatesBox,
-                            List<File> files) {
+public record MunicipalityIF(
+        String name,
+        String description,
+        Position position,
+        CoordinatesBox coordinatesBox,
+        List<String> files) {
 }

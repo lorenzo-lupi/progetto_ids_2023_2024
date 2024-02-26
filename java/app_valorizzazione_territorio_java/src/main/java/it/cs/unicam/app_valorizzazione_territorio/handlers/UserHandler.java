@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.UserIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.UserOF;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
@@ -141,7 +141,7 @@ public class UserHandler {
      */
     @SuppressWarnings("unchecked")
     public List<UserOF> getFilteredUsers(List<SearchFilter> filters) {
-        return (List<UserOF>) SearchUltils
+        return (List<UserOF>) SearchUtils
                 .getFilteredItems(userRepository.findAll(), filters);
     }
 
@@ -151,7 +151,7 @@ public class UserHandler {
      * @return the set of all the criteria available for the search
      */
     public Set<String> getSearchCriteria() {
-        return SearchUltils.getSearchCriteria();
+        return SearchUtils.getSearchCriteria();
     }
 
     /**
