@@ -1,6 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterestBuilder;
@@ -16,8 +16,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
 import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
@@ -137,7 +135,7 @@ public class GeoLocatableHandler {
     public List<GeoLocatableOF> searchFilteredGeoLocatables(long municipalityID, List<SearchFilter> filters) {
         Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
         if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
-        return (List<GeoLocatableOF>) SearchUltils.getFilteredItems(
+        return (List<GeoLocatableOF>) SearchUtils.getFilteredItems(
                 municipality.get().getGeoLocatables(),
                 filters
         );
@@ -149,7 +147,7 @@ public class GeoLocatableHandler {
      * @return the set of all the criteria available for the search
      */
     public Set<String> getSearchCriteria() {
-        return SearchUltils.getSearchCriteria();
+        return SearchUtils.getSearchCriteria();
     }
 
     /**

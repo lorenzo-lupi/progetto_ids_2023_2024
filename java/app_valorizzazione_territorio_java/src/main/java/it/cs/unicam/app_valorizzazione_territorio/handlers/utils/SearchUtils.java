@@ -7,22 +7,13 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class SearchUltils<S extends Searchable & Visualizable> {
-    protected final SearchEngine<S> searchEngine;
-
-    /**
-     * Creates a new search handler that searches in the given collection of searchable items.
-     *
-     * @param collection the collection of searchable items
-     */
-    public SearchUltils(Collection<S> collection) {
-        this.searchEngine = new SearchEngine<>(collection);
-    }
+@Component
+public class SearchUtils {
 
     /**
      * Performs a search on the given list of searchable items using the given filters.
@@ -39,7 +30,7 @@ public class SearchUltils<S extends Searchable & Visualizable> {
         SearchEngine<S> searchEngine = new SearchEngine<>(list);
         filters.forEach(filter -> searchEngine.addCriterion(
                 Parameter.stringToParameter.get(filter.parameter()),
-                SearchCriterion.stringToBiPredicate.get(filter.predicate()),
+                SearchCriterion.stringToBiPredicate.get(filter.criterion()),
                 filter.value()));
 
         return searchEngine.search().getResults().stream()

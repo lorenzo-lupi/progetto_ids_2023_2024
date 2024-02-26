@@ -1,18 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
-import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
-import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SearchUltilsTest {
@@ -28,7 +15,7 @@ class SearchUltilsTest {
     }
     @Test
     void shouldGetFilteredItemsWithNoFilters() {
-        List<? extends Identifiable> searchResult = SearchUltils.getFilteredItems(
+        List<? extends Identifiable> searchResult = SearchUtils.getFilteredItems(
                 SampleRepositoryProvider.users, List.of());
 
         assertEquals(8, searchResult.size());
@@ -36,7 +23,7 @@ class SearchUltilsTest {
 
     @Test
     void shouldGetFilteredItemsWithOneFilter() {
-        List<? extends Identifiable> searchResult = SearchUltils.getFilteredItems(
+        List<? extends Identifiable> searchResult = SearchUtils.getFilteredItems(
                 SampleRepositoryProvider.contents, List.of(
                         new SearchFilter(Parameter.APPROVAL_STATUS.toString(),
                                 "EQUALS", ApprovalStatusEnum.PENDING)));
@@ -47,7 +34,7 @@ class SearchUltilsTest {
 
     @Test
     void shouldGetFilteredItemsWithMoreFilters() {
-        List<? extends Identifiable> searchResult = SearchUltils.getFilteredItems(
+        List<? extends Identifiable> searchResult = SearchUtils.getFilteredItems(
                 SampleRepositoryProvider.users, List.of(
                         new SearchFilter(Parameter.USERNAME.toString(), "STARTS_WITH", "P"),
                         new SearchFilter(Parameter.EMAIL.toString(), "CONTAINS", "gmail")));

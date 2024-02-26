@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.OF;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
@@ -29,6 +30,7 @@ public record MessageOF(
         @JsonView(View.Detailed.class)      List<File> attachments
 )
         implements Identifiable {
+    @JsonIgnore
     @Override
     public long getID() {
         return ID;

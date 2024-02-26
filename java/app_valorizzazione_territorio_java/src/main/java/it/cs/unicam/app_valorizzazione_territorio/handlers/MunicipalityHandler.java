@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
@@ -12,8 +12,10 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RoleJpaReposi
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,8 @@ import java.util.Set;
 @Service
 public class MunicipalityHandler {
 
+    @Value("${fileResources.path}")
+    private String filePath;
     private final MunicipalityJpaRepository municipalityRepository;
     private final RoleJpaRepository roleRepository;
 
@@ -49,13 +53,28 @@ public class MunicipalityHandler {
                 .buildDescription(municipalityIF.description())
                 .buildPosition(municipalityIF.position())
                 .buildCoordinatesBox(municipalityIF.coordinatesBox())
-                .buildFiles(municipalityIF.files().stream().toList())
+                .buildFiles(municipalityIF.files().stream()
+                        .map(file -> new File(filePath + file))
+                        .toList())
                 .build();
         Municipality municipality = municipalityRepository.saveAndFlush(builder.obtainResult());
         Arrays.stream(AuthorizationEnum.values())
                 .forEach(auth ->
                         roleRepository.save(new Role(municipality, auth)));
         return municipality.getID();
+    }
+
+    /**
+     * Returns the Detailed Format of a Municipality having the given ID.
+     *
+     * @param municipalityID the ID of the Municipality to visualize
+     * @return the Detailed Format of the Municipality having the given ID
+     * @throws IllegalArgumentException if the Municipality having the given ID is not found
+     **/
+    public MunicipalityOF viewMunicipality(long municipalityID) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
+        return municipality.get().getOutputFormat();
     }
 
     /**
@@ -76,7 +95,7 @@ public class MunicipalityHandler {
      * @return the set of all the criteria available for the search
      */
     public Set<String> getSearchCriteria() {
-        return SearchUltils.getSearchCriteria();
+        return SearchUtils.getSearchCriteria();
     }
 
     /**
@@ -84,7 +103,7 @@ public class MunicipalityHandler {
      *
      * @return the search parameters for the user entity
      */
-    public List<String> getParameters() {
+    public List<String> getSearchParameters() {
         return new Municipality()
                 .getParameters()
                 .stream()
@@ -101,24 +120,11 @@ public class MunicipalityHandler {
      */
     @SuppressWarnings("unchecked")
     public List<MunicipalityOF> viewFilteredMunicipalities(List<SearchFilter> filters) {
-        return (List<MunicipalityOF>) SearchUltils
+        return (List<MunicipalityOF>) SearchUtils
                 .getFilteredItems(municipalityRepository
                                 .findAll()
                                 .stream()
                                 .toList(),
                         filters);
-    }
-
-    /**
-     * Returns the Detailed Format of a Municipality having the given ID.
-     *
-     * @param municipalityID the ID of the Municipality to visualize
-     * @return the Detailed Format of the Municipality having the given ID
-     * @throws IllegalArgumentException if the Municipality having the given ID is not found
-     **/
-    public MunicipalityOF viewMunicipality(long municipalityID) {
-        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
-        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
-        return municipality.get().getOutputFormat();
     }
 }
