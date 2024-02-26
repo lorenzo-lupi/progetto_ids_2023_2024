@@ -67,10 +67,10 @@ public class SearchEngine<T extends Searchable & Visualizable> {
     }
 
     /**
-     * Computes and returns the current predicate of the search engine, obtained as the conjunction
+     * Computes and returns the current criterion of the search engine, obtained as the conjunction
      * of all the criteria added to the search engine.
      *
-     * @return the current predicate of the search engine
+     * @return the current criterion of the search engine
      */
     public Predicate<T> getCurrentPredicate() {
         Predicate<T> predicate = item -> true;

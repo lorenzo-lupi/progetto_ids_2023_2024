@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.OF;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
@@ -24,6 +25,7 @@ public record MunicipalityRequestOF(
         @JsonView(View.Detailed.class)      Identifiable item
 )
         implements Identifiable {
+    @JsonIgnore
     @Override
     public long getID() {
         return this.ID();

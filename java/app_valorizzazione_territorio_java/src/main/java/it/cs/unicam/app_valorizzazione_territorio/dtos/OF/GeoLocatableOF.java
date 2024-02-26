@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.OF;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
@@ -80,11 +81,12 @@ public class GeoLocatableOF implements Identifiable, Positionable {
         return this.ID;
     }
 
+    @JsonIgnore
     @Override
     public long getID() {
         return this.ID();
     }
-
+    @JsonIgnore
     @Override
     public Position getPosition() {
         return this.position();

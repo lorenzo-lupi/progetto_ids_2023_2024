@@ -2,7 +2,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
-import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContentBuilder;
@@ -91,7 +91,7 @@ public class ContentHandler {
      */
     @SuppressWarnings("unchecked")
     public List<ContentOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
-        return (List<ContentOF>) SearchUltils
+        return (List<ContentOF>) SearchUtils
                 .getFilteredItems(getPointOfInterestContents(pointOfInterestID).toList(),
                         filters);
     }
@@ -103,7 +103,7 @@ public class ContentHandler {
      * @return the set of all the criteria available for the search
      */
     public Set<String> getSearchCriteria() {
-        return SearchUltils.getSearchCriteria();
+        return SearchUtils.getSearchCriteria();
     }
 
     /**

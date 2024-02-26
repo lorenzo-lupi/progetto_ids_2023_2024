@@ -81,7 +81,7 @@ public class MapProviderBase extends MapProvider{
         SearchEngine<GeoLocatable> geoLocatableSearchEngine = new SearchEngine<> (municipality.getGeoLocatables().stream().filter(GeoLocatable::isApproved).toList());
 
         filters.forEach(filter -> geoLocatableSearchEngine.addCriterion(Parameter.valueOf(filter.parameter()),
-                SearchCriterion.stringToBiPredicate.get(filter.predicate()), filter.value()));
+                SearchCriterion.stringToBiPredicate.get(filter.criterion()), filter.value()));
 
         return fact(geoLocatableSearchEngine.search().getResults(), box);
     }
