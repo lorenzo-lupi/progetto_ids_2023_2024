@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +39,7 @@ public class CoordinatesBox implements Serializable {
      * @param northWest the north-west corner of the geographical box
      * @param southEast the south-east corner of the geographical box
      */
-    public CoordinatesBox(Position northWest, Position southEast) {
+    public CoordinatesBox(@JsonProperty Position northWest, @JsonProperty Position southEast) {
         if (northWest == null || southEast == null)
             throw new IllegalArgumentException("North-west and south-east corners must not be null");
         if (northWest.getLatitude() < southEast.getLatitude() || northWest.getLongitude() > southEast.getLongitude())
@@ -50,30 +52,37 @@ public class CoordinatesBox implements Serializable {
         return northWest;
     }
 
+    @JsonIgnore
     public Position getNorthEast() {
         return new Position(northWest.getLatitude(), southEast.getLongitude());
     }
+
 
     public Position getSouthEast() {
         return southEast;
     }
 
+    @JsonIgnore
     public Position getSouthWest() {
         return new Position(southEast.getLatitude(), northWest.getLongitude());
     }
 
+    @JsonIgnore
     public double getNorth() {
         return northWest.getLatitude();
     }
 
+    @JsonIgnore
     public double getSouth() {
         return southEast.getLatitude();
     }
 
+    @JsonIgnore
     public double getWest() {
         return northWest.getLongitude();
     }
 
+    @JsonIgnore
     public double getEast() {
         return southEast.getLongitude();
     }

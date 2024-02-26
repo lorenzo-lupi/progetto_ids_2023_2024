@@ -9,20 +9,20 @@ import java.util.Date;
 /**
  * This class represents a Contest Request Data Output Format object.
  *
+ * @param ID
  * @param user
  * @param contestName
  * @param contest
  * @param date
  * @param content
- * @param ID
  */
 public record ContestRequestOF(
+        @JsonView(View.Synthesized.class)   long ID,
         @JsonView(View.Synthesized.class)   UserOF user,
         @JsonView(View.Synthesized.class)   String contestName,
-        @JsonView(View.Detailed.class)      ContestOF contest,
         @JsonView(View.Synthesized.class)   Date date,
-        @JsonView(View.Detailed.class)      ContentOF content,
-        @JsonView(View.Synthesized.class)   long ID
+        @JsonView(View.Detailed.class)      ContestOF contest,
+        @JsonView(View.Detailed.class)      ContentOF content
 )
         implements Identifiable {
     @Override

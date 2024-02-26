@@ -32,5 +32,11 @@ public interface ContentHost<V extends ContentHost<V> & Visualizable> extends Id
         return getContents().stream().filter(Content::isApproved).toList();
      }
 
+    /**
+     * Returns the name of the content host.
+     * @return the name of the content host
+     */
+    String getName();
+
 
 }

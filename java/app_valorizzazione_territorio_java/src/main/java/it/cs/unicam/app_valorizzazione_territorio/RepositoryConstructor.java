@@ -17,8 +17,10 @@ import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -56,6 +58,8 @@ public class RepositoryConstructor {
         setUpMessages(messageJpaRepository);
     }
 
+    @Value("${fileResources.path}")
+    private String filePath;
     public boolean areMunicipalitiesSet = false;
     public boolean areUsersSet = false;
     public boolean areGeoLocatablesSet = false;
@@ -95,12 +99,12 @@ public class RepositoryConstructor {
                 new Position(43.29812657107886, 13.451878161920886),
                 new CoordinatesBox(new Position(43.317324, 13.409422),
                         new Position(43.271074, 13.499990)),
-                new ArrayList<>()));
+                new ArrayList<>(List.of(new File(filePath + "macerata.jpg")))));
         CAMERINO = repository.saveAndFlush(new Municipality("Camerino", "Comune di Camerino",
                 new Position(43.13644468556232, 13.067156069846892),
                 new CoordinatesBox(new Position(43.153712, 13.036414),
                         new Position(43.123261, 13.095768)),
-                new ArrayList<>()));
+                new ArrayList<>(List.of(new File(filePath + "camerino.jpg")))));
 
         roles = new HashMap<>();
         roles.put(MACERATA, new EnumMap<>(AuthorizationEnum.class));

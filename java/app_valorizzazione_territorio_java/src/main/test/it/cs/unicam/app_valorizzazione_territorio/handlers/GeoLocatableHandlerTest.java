@@ -10,8 +10,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatabl
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.utils.PositionParser;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
@@ -32,8 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class,
-        GeoLocatableHandler.class})
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class, GeoLocatableHandler.class, })
 @DataJpaTest
 public class GeoLocatableHandlerTest {
     @Autowired
@@ -136,9 +133,6 @@ public class GeoLocatableHandlerTest {
                 .findAll()
                 .stream()
                 .anyMatch(request -> request.getItem().getID() == id));
-
-
-
     }
 
     @Test
@@ -166,7 +160,7 @@ public class GeoLocatableHandlerTest {
                 .stream()
                 .anyMatch(request -> request.getItem().getID() == id));
 
-        assertNotNull(MunicipalityRepository.getInstance().getGeoLocatableByID(id));
+        assertTrue(sampleRepositoryProvider.getGeoLocatableJpaRepository().findByID(id).isPresent());
     }
 
     @Test

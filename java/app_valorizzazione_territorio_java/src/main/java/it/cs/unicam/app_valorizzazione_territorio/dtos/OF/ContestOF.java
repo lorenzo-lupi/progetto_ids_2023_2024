@@ -9,6 +9,7 @@ import java.util.Date;
 /**
  * This class represents a Contest Detailed Output Format object.
  *
+ * @param ID
  * @param name
  * @param animator
  * @param topic
@@ -18,20 +19,19 @@ import java.util.Date;
  * @param startDate
  * @param votingStartDate
  * @param endDate
- * @param ID
  */
 public record ContestOF(
+        @JsonView(View.Synthesized.class)   long ID,
         @JsonView(View.Synthesized.class)   String name,
+        @JsonView(View.Synthesized.class)   String contestStatus,
         @JsonView(View.Detailed.class)      UserOF animator,
         @JsonView(View.Detailed.class)      String topic,
         @JsonView(View.Detailed.class)      String rules,
         @JsonView(View.Detailed.class)      boolean isPrivate,
-        @JsonView(View.Detailed.class)      Identifiable host,
-        @JsonView(View.Synthesized.class)   String contestStatus,
+        @JsonView(View.Detailed.class)      GeoLocatableOF geoLocation,
         @JsonView(View.Detailed.class)      Date startDate,
         @JsonView(View.Detailed.class)      Date votingStartDate,
-        @JsonView(View.Detailed.class)      Date endDate,
-        @JsonView(View.Synthesized.class)   long ID
+        @JsonView(View.Detailed.class)      Date endDate
 )
         implements Identifiable {
     @Override

@@ -151,12 +151,14 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
 
     @Override
     public ContentOF getOutputFormat() {
-        return new ContentOF(this.getDescription(),
-                this.getHost().getOutputFormat(),
+        return new ContentOF(
+                this.getID(),
                 this.getFiles().isEmpty() ? null : this.getFiles().get(0),
+                this.getDescription(),
+                this.getHost().getName(),
                 this.getFiles(),
-                this.getApprovalStatus(),
-                this.getID());
+                this.getApprovalStatus()
+        );
     }
 
     @Override

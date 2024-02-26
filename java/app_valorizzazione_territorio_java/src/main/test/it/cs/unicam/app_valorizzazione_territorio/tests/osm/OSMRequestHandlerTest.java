@@ -3,16 +3,37 @@ package it.cs.unicam.app_valorizzazione_territorio.tests.osm;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.osm.OSMRequestHandler;
-import org.junit.jupiter.api.Disabled;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled
+@ExtendWith(SpringExtension.class)
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class})
+@DataJpaTest
 public class OSMRequestHandlerTest {
-/*
+    @Autowired
+    SampleRepositoryProvider sampleRepositoryProvider;
+
+    @BeforeEach
+    public void setUp() {
+        sampleRepositoryProvider.setUpMunicipalities();
+    }
+
+    @AfterEach
+    public void clear() {
+        sampleRepositoryProvider.clearMunicipalities();
+    }
+    
     @Test
     public void shouldRetrieveMapData1() throws IOException {
         OSMRequestHandler handler = OSMRequestHandler.getInstance();
@@ -37,16 +58,14 @@ public class OSMRequestHandlerTest {
     @Test
     public void shouldRetrievePositionData1() throws IOException {
         OSMRequestHandler handler = OSMRequestHandler.getInstance();
-        Position position = SampleRepositoryProvider.CAMERINO.getPosition();
+        Position position = sampleRepositoryProvider.CAMERINO.getPosition();
         assertTrue(handler.getMunicipalityOfPosition(position).equals("Camerino"));
     }
 
     @Test
     public void shouldRetrievePositionData2() throws IOException {
         OSMRequestHandler handler = OSMRequestHandler.getInstance();
-        Position position = SampleRepositoryProvider.MACERATA.getPosition();
+        Position position = sampleRepositoryProvider.MACERATA.getPosition();
         assertTrue(handler.getMunicipalityOfPosition(position).equals("Macerata"));
     }
-
- */
 }

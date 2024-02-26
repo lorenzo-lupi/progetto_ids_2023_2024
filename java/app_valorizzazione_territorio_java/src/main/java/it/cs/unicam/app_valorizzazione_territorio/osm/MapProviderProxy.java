@@ -3,23 +3,35 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
+@Primary
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class MapProviderProxy implements MapProvider{
 
-    MapProvider mapProvider;
+    private MapProvider mapProvider;
 
-    private static final java.util.Map<Municipality, Map<?>> emptyMapsCache = new HashMap<>();
+    private final java.util.Map<Municipality, Map<?>> emptyMapsCache = new HashMap<>();
 
-    private static final java.util.Map<Municipality, Map<GeoLocatable>> mapsCache = new HashMap<>();
+    private final java.util.Map<Municipality, Map<GeoLocatable>> mapsCache = new HashMap<>();
 
-    private static Map<Municipality> municipalitiesMap = null;
+    private Map<Municipality> municipalitiesMap = null;
 
-    public MapProviderProxy(MapProvider mapProvider) {
+    @Autowired
+    public MapProviderProxy(@Qualifier("mapProviderBase") MapProvider mapProvider) {
         this.mapProvider = mapProvider;
     }
 
@@ -80,7 +92,7 @@ public class MapProviderProxy implements MapProvider{
     }
 
     @Override
-    public Municipality getMunicipalityByPosition(Position position) throws IOException {
+    public Optional<Municipality> getMunicipalityByPosition(Position position) throws IOException {
         return mapProvider.getMunicipalityByPosition(position);
     }
 }

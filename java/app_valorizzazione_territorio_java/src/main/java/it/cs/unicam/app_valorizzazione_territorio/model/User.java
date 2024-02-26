@@ -199,7 +199,12 @@ public class User implements Searchable, Visualizable, Modifiable {
 
     @Override
     public UserOF getOutputFormat() {
-        return new UserOF(this.getUsername(), this.getEmail(), this.getRoles(), this.getID());
+        return new UserOF(
+                this.getID(),
+                this.getUsername(),
+                this.getEmail(),
+                this.getRoles()
+        );
     }
 
     @Override

@@ -162,17 +162,19 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
 
     @Override
     public ContestOF getOutputFormat() {
-        return new ContestOF(this.getName(),
+        return new ContestOF(
+                this.getID(),
+                this.getName(),
+                this.getStatus().toString(),
                 this.getEntertainer().getOutputFormat(),
                 this.getTopic(),
                 this.getRules(),
                 this.isPrivate(),
-                (this.hasGeoLocation() ? this.getGeoLocation() : null),
-                this.getStatus().toString(),
+                (this.hasGeoLocation() ? this.getGeoLocation().getOutputFormat() : null),
                 this.getStartDate(),
                 this.getVotingStartDate(),
-                this.getEndDate(),
-                this.getID());
+                this.getEndDate()
+        );
     }
 
     @Override

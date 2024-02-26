@@ -26,8 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
-@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class,
-        MunicipalityHandler.class})
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class, MunicipalityHandler.class})
 @DataJpaTest
 class MunicipalityHandlerTest {
 
@@ -37,14 +36,14 @@ class MunicipalityHandlerTest {
     MunicipalityHandler municipalityHandler;
 
 
-    MunicipalityIF municipalitySample1 = new MunicipalityIF("Matelica",
+    private final MunicipalityIF municipalitySample1 = new MunicipalityIF("Matelica",
             "Decrizione di Matelica",
             new Position(43.251227, 13.009103),
             new CoordinatesBox(new Position(43.277326, 12.973482),
                     new Position(43.239917, 13.047051)),
             new ArrayList<>());
 
-    MunicipalityIF municipalitySample2 = new MunicipalityIF("Tolentino",
+    private final MunicipalityIF municipalitySample2 = new MunicipalityIF("Tolentino",
             "Descrizione di Tolentino", null, null, null);
 
     @BeforeEach

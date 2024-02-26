@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 @Repository
 public interface MunicipalityJpaRepository extends JpaRepository<Municipality, Long> {
+
+    Optional<Municipality> findByName(String name);
     Stream<Municipality> findByDescriptionContaining(String description);
     Optional<Municipality> getByID(long ID);
 }

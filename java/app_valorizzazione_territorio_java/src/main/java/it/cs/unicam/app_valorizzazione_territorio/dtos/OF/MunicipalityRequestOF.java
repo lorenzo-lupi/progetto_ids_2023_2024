@@ -16,12 +16,12 @@ import java.util.Date;
  * @param ID
  */
 public record MunicipalityRequestOF(
+        @JsonView(View.Synthesized.class)   long ID,
         @JsonView(View.Synthesized.class)   UserOF user,
+        @JsonView(View.Synthesized.class)   Date date,
         @JsonView(View.Synthesized.class)   String municipalityName,
         @JsonView(View.Detailed.class)      MunicipalityOF municipality,
-        @JsonView(View.Synthesized.class)   Date date,
-        @JsonView(View.Detailed.class)      Identifiable item,
-        @JsonView(View.Synthesized.class)   long ID
+        @JsonView(View.Detailed.class)      Identifiable item
 )
         implements Identifiable {
     @Override

@@ -1,6 +1,5 @@
 package it.cs.unicam.app_valorizzazione_territorio.model;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +88,7 @@ public class Municipality implements Searchable, Visualizable, Positionable {
      * @param description description of the municipality
      * @param position geographical coordinates of the municipality
      * @param files representative multimedia content of the municipality
-     * @param geoLocatables geo-localizable points of the municipality
+     * @param geoLocatables geo-locatable points of the municipality
      * @throws IllegalArgumentException if position, coordinatesBox, files or geoLocatables are null
      */
     public Municipality (String name, String description, Position position, CoordinatesBox coordinatesBox, List<File> files, List<GeoLocatable> geoLocatables, List<Contest> contests) {
@@ -192,12 +190,13 @@ public class Municipality implements Searchable, Visualizable, Positionable {
     @Override
     public MunicipalityOF getOutputFormat() {
         return new MunicipalityOF(
+                this.getID(),
                 this.getName(),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
                 this.getDescription(),
                 this.getPosition(),
-                this.getFiles().isEmpty() ? null : this.getFiles().get(0),
-                this.getFiles(),
-                this.getID());
+                this.getFiles().stream().map(File::getName).toList()
+        );
     }
 
     @Override

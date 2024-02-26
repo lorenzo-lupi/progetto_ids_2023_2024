@@ -5,18 +5,29 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizabl
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
+@Component
 public class MapProviderBase implements MapProvider{
 
-    public MapProviderBase() {
+    private MunicipalityJpaRepository municipalityJpaRepository;
+    private OSMRequestHandler osmRequestHandler;
+
+    @Autowired
+    public MapProviderBase(MunicipalityJpaRepository municipalityJpaRepository, OSMRequestHandler osmRequestHandler) {
+        this.municipalityJpaRepository = municipalityJpaRepository;
+        this.osmRequestHandler = osmRequestHandler;
     }
 
     @Override
@@ -76,12 +87,9 @@ public class MapProviderBase implements MapProvider{
     }
 
     @Override
-    public Municipality getMunicipalityByPosition(Position position) throws IOException {
-        String municipalityName = OSMRequestHandler.getInstance().getMunicipalityOfPosition(position);
-        return MunicipalityRepository.getInstance().getItemStream()
-                .filter(m -> m.getName().equals(municipalityName))
-                .findFirst()
-                .orElse(null);
+    public Optional<Municipality> getMunicipalityByPosition(Position position) throws IOException {
+        String municipalityName = osmRequestHandler.getMunicipalityOfPosition(position);
+        return municipalityJpaRepository.findByName(municipalityName);
     }
 
     private static <P extends Positionable & Visualizable> Map<P> fact(List<P> geoLocatables, CoordinatesBox box) throws IOException {

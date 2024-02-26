@@ -14,26 +14,26 @@ import java.util.List;
  */
 public class GeoLocatableOF implements Identifiable, Positionable {
     @JsonView(View.Synthesized.class)
+    private final long ID;
+    @JsonView(View.Synthesized.class)
     private final String name;
     @JsonView(View.Synthesized.class)
     private final String geoLocatableType;
     @JsonView(View.Synthesized.class)
     private final File representativeImage;
     @JsonView(View.Detailed.class)
-    private final MunicipalityOF municipality;
+    private final String municipalityName;
     @JsonView(View.Detailed.class)
     private final Position position;
     @JsonView(View.Detailed.class)
     private final String description;
     @JsonView(View.Detailed.class)
     private final List<File> images;
-    @JsonView(View.Synthesized.class)
-    private final long ID;
 
     public GeoLocatableOF(String name,
                           String geoLocatableType,
                           File representativeImage,
-                          MunicipalityOF municipality,
+                          String municipalityName,
                           Position position,
                           String description,
                           List<File> images,
@@ -41,7 +41,7 @@ public class GeoLocatableOF implements Identifiable, Positionable {
         this.name = name;
         this.description = description;
         this.geoLocatableType = geoLocatableType;
-        this.municipality = municipality;
+        this.municipalityName = municipalityName;
         this.position = position;
         this.representativeImage = representativeImage;
         this.images = images;
@@ -60,8 +60,8 @@ public class GeoLocatableOF implements Identifiable, Positionable {
         return this.geoLocatableType;
     }
 
-    public MunicipalityOF municipality() {
-        return this.municipality;
+    public String municipalityName() {
+        return this.municipalityName;
     }
 
     public Position position() {

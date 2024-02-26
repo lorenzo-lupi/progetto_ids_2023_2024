@@ -19,13 +19,13 @@ public class PointOfInterestOF extends GeoLocatableOF {
     public PointOfInterestOF(String name,
                              String description,
                              Position position,
-                             MunicipalityOF municipality,
+                             String municipalityName,
                              String classification,
                              File representativeImage,
                              List<File> images,
                              List<ContentOF> contents,
                              long ID) {
-        super(name, "PointOfInterest", representativeImage, municipality,
+        super(name, "PointOfInterest", representativeImage, municipalityName,
                 position, description, images, ID);
         this.classification = classification;
         this.contents = contents;

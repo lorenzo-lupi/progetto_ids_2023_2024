@@ -11,19 +11,20 @@ import java.util.List;
 /**
  * This class represents a Content Output Format object.
  *
+ * @param ID
+ * @param representativeFile
  * @param description
- * @param host
+ * @param hostName
  * @param files
  * @param approvalStatus
- * @param ID
  */
 public record ContentOF(
-        @JsonView(View.Detailed.class)      String description,
-        @JsonView(View.Detailed.class)      Identifiable host,
+        @JsonView(View.Synthesized.class)   long ID,
         @JsonView(View.Synthesized.class)   File representativeFile,
+        @JsonView(View.Detailed.class)      String description,
+        @JsonView(View.Detailed.class)      String hostName,
         @JsonView(View.Detailed.class)      List<File> files,
-        @JsonView(View.Detailed.class)      ApprovalStatusEnum approvalStatus,
-        @JsonView(View.Synthesized.class)   long ID
+        @JsonView(View.Detailed.class)      ApprovalStatusEnum approvalStatus
 )
         implements Identifiable {
     @Override

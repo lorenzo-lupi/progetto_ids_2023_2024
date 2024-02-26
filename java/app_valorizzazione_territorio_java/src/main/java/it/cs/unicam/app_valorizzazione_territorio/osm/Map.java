@@ -43,13 +43,15 @@ public class Map<P extends Positionable & Visualizable> implements Visualizable 
 
     @Override
     public long getID() {
-        return 0;
+        return 0L;
     }
 
     @Override
     public MapOF getOutputFormat() {
         return new MapOF(osmData,
-                positionablePoints.stream().map(Visualizable::getOutputFormat).toList(),
-                getID());
+                positionablePoints.stream()
+                        .map(Visualizable::getOutputFormat)
+                        .toList()
+        );
     }
 }

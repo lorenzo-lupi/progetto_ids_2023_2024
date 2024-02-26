@@ -97,13 +97,13 @@ public class Message implements Visualizable {
     @Override
     public MessageOF getOutputFormat() {
         return new MessageOF(
+                this.getID(),
                 this.getSenderName(),
+                this.getDate(),
+                this.isRead(),
                 this.getSenderEmail(),
                 this.getText(),
-                this.getDate(),
-                this.getAttachments(),
-                this.isRead(),
-                this.getID()
+                this.getAttachments()
         );
     }
 }

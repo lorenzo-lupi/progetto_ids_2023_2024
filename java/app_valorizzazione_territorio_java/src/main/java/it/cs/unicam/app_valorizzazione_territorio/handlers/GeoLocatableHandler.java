@@ -10,12 +10,9 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MapOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
-import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
@@ -24,35 +21,36 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaReposi
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class represents a handler for the search, insertion
  * and visualization of the geolocatable entities
  */
 @Service
+@ComponentScan(basePackageClasses = {MapProvider.class})
 public class GeoLocatableHandler {
-    private static final MapProvider mapProvider = new MapProviderBase();
     private final UserJpaRepository userRepository;
     private final MunicipalityJpaRepository municipalityRepository;
     private final GeoLocatableJpaRepository geoLocatableJpaRepository;
     private final InsertionUtils insertionUtils;
+    private final MapProvider mapProvider;
 
     @Autowired
     public GeoLocatableHandler(UserJpaRepository userRepository,
                                MunicipalityJpaRepository municipalityRepository,
                                GeoLocatableJpaRepository geoLocatableJpaRepository,
-                               InsertionUtils insertionUtils) {
+                               InsertionUtils insertionUtils,
+                               MapProvider mapProvider) {
         this.userRepository = userRepository;
         this.municipalityRepository = municipalityRepository;
         this.geoLocatableJpaRepository = geoLocatableJpaRepository;
         this.insertionUtils = insertionUtils;
+        this.mapProvider = mapProvider;
     }
 
     /**
@@ -123,6 +121,34 @@ public class GeoLocatableHandler {
     }
 
     /**
+     * Returns the set of all the criteria available for the search.
+     *
+     * @return the set of all the criteria available for the search
+     */
+    public Set<String> getSearchCriteria() {
+        return SearchUltils.getSearchCriteria();
+    }
+
+    /**
+     * This method returns the search parameters for the user entity.
+     * The provided parameters comprehend search parameters of attractions,
+     * events, activities and compound points.
+     *
+     * @return the search parameters for the user entity
+     */
+    public List<String> getParameters() {
+        Set<Parameter> parameterSet =  new HashSet<>();
+        parameterSet.addAll(new Activity().getParameters());
+        parameterSet.addAll(new Event().getParameters());
+        parameterSet.addAll(new Activity().getParameters());
+        parameterSet.addAll(new CompoundPoint().getParameters());
+
+        return parameterSet.stream()
+                .map(Parameter::toString)
+                .toList();
+    }
+
+    /**
      * Returns the Synthesized Format of all the geoLocatables that correspond to the given criteria
      *
      * @param municipalityID the ID of the municipality
@@ -137,30 +163,6 @@ public class GeoLocatableHandler {
                 municipality.get().getGeoLocatables(),
                 filters
         );
-    }
-
-    /**
-     * Returns the set of all the criteria available for the search.
-     *
-     * @return the set of all the criteria available for the search
-     */
-    public Set<String> getSearchCriteria() {
-        return SearchUltils.getSearchCriteria();
-    }
-
-    /**
-     * This method returns the search parameters for the user entity.
-     *
-     * @return the search parameters for the user entity
-     */
-    public List<String> getParameters() {
-        return List.of(Parameter.NAME.toString(),
-                Parameter.DESCRIPTION.toString(),
-                Parameter.MUNICIPALITY.toString(),
-                Parameter.POSITION.toString(),
-                Parameter.APPROVAL_STATUS.toString(),
-                Parameter.USERNAME.toString(),
-                Parameter.THIS.toString());
     }
 
     /**
@@ -204,17 +206,18 @@ public class GeoLocatableHandler {
         Optional<Municipality> municipality = municipalityRepository.getByID(pointOfInterestIF.municipalityID());
         if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
 
-        PointOfInterestBuilder builder =
-                new PointOfInterestBuilder(municipality.get(),
-                        user.get());
-
+        PointOfInterestBuilder builder = new PointOfInterestBuilder(municipality.get(), user.get());
         fillPointOfInterestBuilderFields(builder, pointOfInterestIF);
 
         GeoLocatable geoLocatable = geoLocatableJpaRepository.save(builder.build().obtainResult());
-
         insertGeoLocatable(geoLocatable, user.get());
 
         return geoLocatable.getID();
+    }
+
+    //TODO
+    public static List<String> obtainPointOfInterestSearchParameters() {
+        return null;
     }
 
     /**
@@ -230,12 +233,6 @@ public class GeoLocatableHandler {
         userFilters.add(new SearchFilter("THIS", "CLASS_IS_POI", ""));
         return searchFilteredGeoLocatables(municipalityID, userFilters);
     }
-
-    //TODO
-    public static List<String> obtainPointOfInterestSearchParameters() {
-        return null;
-    }
-
 
     /**
      * Inserts the given compound point in the municipality corresponding to the given ID.
@@ -291,7 +288,8 @@ public class GeoLocatableHandler {
         pointOfInterestIF.images().forEach(builder::addImage);
 
         try {
-            if (!builder.getMunicipality().equals(mapProvider.getMunicipalityByPosition(pointOfInterestIF.position())))
+            Optional<Municipality> municipality = mapProvider.getMunicipalityByPosition(pointOfInterestIF.position());
+            if (municipality.isEmpty() || !builder.getMunicipality().equals(municipality.get()))
                 throw new IllegalArgumentException("The position is not in the municipality");
         } catch (IOException e) {
             throw new IllegalArgumentException("Error while checking the position");

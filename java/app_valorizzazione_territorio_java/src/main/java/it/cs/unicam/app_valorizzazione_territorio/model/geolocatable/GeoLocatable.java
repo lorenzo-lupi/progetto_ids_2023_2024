@@ -214,7 +214,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
                 this.getName(),
                 this.getClass().getSimpleName(),
                 this.getImages().isEmpty() ? null : this.getImages().get(0),
-                this.getMunicipality().getOutputFormat(),
+                this.getMunicipality().getName(),
                 this.getPosition(),
                 this.getDescription(),
                 this.getImages(),

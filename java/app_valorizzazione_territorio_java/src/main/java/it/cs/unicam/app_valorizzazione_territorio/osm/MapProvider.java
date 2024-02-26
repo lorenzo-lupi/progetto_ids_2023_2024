@@ -3,9 +3,11 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class provides methods to retrieve maps composed by data from the OSM API and geo-localzable from
@@ -96,11 +98,12 @@ public interface MapProvider {
     /**
      * Returns the municipality where the given position resides.
      * The returned municipality is the municipality registered in the system that contains the given position.
-     * If no municipality contains the given position, a null value is returned.
+     * If no municipality contains the given position, an empty optional object is returned.
      *
      * @param position the position
-     * @return the municipality or null if no municipality contains the given position
+     * @return the municipality where the given position resides,
+     * or an empty optional object if no municipality contains the given position
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Municipality getMunicipalityByPosition(Position position) throws IOException;
+    Optional<Municipality> getMunicipalityByPosition(Position position) throws IOException;
 }

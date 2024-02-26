@@ -1,5 +1,9 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,10 +14,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * This class is used to retrieve OSM data from the OSM API.
  */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class OSMRequestHandler {
 
     public static final String OSM_API_URL = "https://api.openstreetmap.org/api/0.6/map";
@@ -23,7 +28,7 @@ public class OSMRequestHandler {
     Map<String, String> parameters;
     private static OSMRequestHandler instance;
 
-    private OSMRequestHandler() throws MalformedURLException {
+    public OSMRequestHandler() throws MalformedURLException {
         this.urlOsmApi = new URL(OSM_API_URL);
         this.urlNominatimApi = new URL(OSM_NOMINATIM_API_URL);
         this.parameters = new HashMap<>();

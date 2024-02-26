@@ -23,7 +23,7 @@ public final class ActivityOF extends PointOfInterestOF {
         super(pointOfInterestOF.name(),
                 pointOfInterestOF.description(),
                 pointOfInterestOF.position(),
-                pointOfInterestOF.municipality(),
+                pointOfInterestOF.municipalityName(),
                 pointOfInterestOF.classification(),
                 pointOfInterestOF.representativeImage(),
                 pointOfInterestOF.images(),

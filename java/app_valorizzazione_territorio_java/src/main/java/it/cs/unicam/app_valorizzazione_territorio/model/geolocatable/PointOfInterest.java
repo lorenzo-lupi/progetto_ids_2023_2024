@@ -137,7 +137,7 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
         return new PointOfInterestOF(super.getName(),
                 super.getDescription(),
                 this.getPosition(),
-                super.getMunicipality().getOutputFormat(),
+                super.getMunicipality().getName(),
                 this.getClass().getSimpleName(),
                 super.getImages().isEmpty() ? null : super.getImages().get(0),
                 super.getImages(),

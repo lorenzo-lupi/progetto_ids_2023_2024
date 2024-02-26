@@ -10,16 +10,16 @@ import java.util.List;
 /**
  * This class represents a User Data Output Format object.
  *
+ * @param ID
  * @param username
  * @param email
  * @param roles
- * @param ID
  */
 public record UserOF(
+        @JsonView(View.Synthesized.class)  long ID,
         @JsonView(View.Synthesized.class)  String username,
         @JsonView(View.Detailed.class)     String email,
-        @JsonView(View.Detailed.class)     List<Role> roles,
-        @JsonView(View.Synthesized.class)  long ID
+        @JsonView(View.Detailed.class)     List<Role> roles
 )
         implements Identifiable {
     @Override

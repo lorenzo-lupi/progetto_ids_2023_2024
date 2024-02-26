@@ -118,7 +118,7 @@ public class CompoundPoint extends GeoLocatable {
                 this.getName(),
                 this.getDescription(),
                 this.getPosition(),
-                this.getMunicipality().getOutputFormat(),
+                this.getMunicipality().getName(),
                 this.getCompoundPointType(),
                 this.getImages().isEmpty() ? null : this.getImages().get(0),
                 this.getImages(),

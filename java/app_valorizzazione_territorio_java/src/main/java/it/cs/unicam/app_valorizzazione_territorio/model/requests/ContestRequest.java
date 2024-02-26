@@ -56,11 +56,12 @@ public class ContestRequest extends Request<ContestContent> {
     @Override
     public ContestRequestOF getOutputFormat() {
         return new ContestRequestOF(
+                this.getID(),
                 this.getSender().getOutputFormat(),
                 this.getContest().getName(),
-                this.getContest().getOutputFormat(),
                 this.getDate(),
-                this.getItem().getOutputFormat(),
-                this.getID());
+                this.getContest().getOutputFormat(),
+                this.getItem().getOutputFormat()
+        );
     }
 }

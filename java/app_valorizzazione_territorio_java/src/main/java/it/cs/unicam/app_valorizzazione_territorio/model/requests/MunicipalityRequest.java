@@ -72,11 +72,12 @@ public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
     @Override
     public MunicipalityRequestOF getOutputFormat() {
         return new MunicipalityRequestOF(
+                this.getID(),
                 this.getSender().getOutputFormat(),
+                this.getDate(),
                 this.getMunicipality().getName(),
                 this.getMunicipality().getOutputFormat(),
-                this.getDate(),
-                this.getItem().getOutputFormat(),
-                this.getID());
+                this.getItem().getOutputFormat()
+        );
     }
 }

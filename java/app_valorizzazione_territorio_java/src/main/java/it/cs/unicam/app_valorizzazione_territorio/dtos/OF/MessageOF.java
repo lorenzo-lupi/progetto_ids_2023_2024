@@ -11,22 +11,22 @@ import java.util.List;
 /**
  * This class represents a Message Output Format object.
  *
+ * @param ID
  * @param senderName
+ * @param date
+ * @param read
  * @param senderEmail
  * @param text
- * @param date
  * @param attachments
- * @param read
- * @param ID
  */
 public record MessageOF(
+        @JsonView(View.Synthesized.class)   long ID,
         @JsonView(View.Synthesized.class)   String senderName,
+        @JsonView(View.Synthesized.class)   Date date,
+        @JsonView(View.Synthesized.class)   boolean read,
         @JsonView(View.Detailed.class)      String senderEmail,
         @JsonView(View.Detailed.class)      String text,
-        @JsonView(View.Synthesized.class)   Date date,
-        @JsonView(View.Detailed.class)      List<File> attachments,
-        @JsonView(View.Synthesized.class)   boolean read,
-        @JsonView(View.Synthesized.class)   long ID
+        @JsonView(View.Detailed.class)      List<File> attachments
 )
         implements Identifiable {
     @Override
