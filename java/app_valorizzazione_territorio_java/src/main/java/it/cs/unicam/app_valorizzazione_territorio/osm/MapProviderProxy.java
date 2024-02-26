@@ -20,7 +20,7 @@ import java.util.Optional;
 @Primary
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class MapProviderProxy implements MapProvider{
+public class MapProviderProxy extends MapProvider{
 
     private MapProvider mapProvider;
 

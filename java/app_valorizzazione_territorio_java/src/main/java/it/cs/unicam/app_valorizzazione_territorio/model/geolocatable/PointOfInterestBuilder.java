@@ -27,6 +27,7 @@ public class PointOfInterestBuilder extends GeoLocatableBuilder<PointOfInterest>
     public PointOfInterestBuilder setPosition(Position position) {
         if(position == null)
             throw new IllegalArgumentException("Position must not be null");
+
         if(!this.getMunicipality().getCoordinatesBox().contains(position))
             throw new IllegalCoordinatesException("Position must be inside the municipality");
 

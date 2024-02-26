@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContentBuilder;
@@ -9,25 +10,50 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.ContentIF;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.ContentJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * This class represents a handler for
  * - Search and visualization of contents of points of interest
  * - Insertion of contents in points of interest
  */
+@Service
 public class ContentHandler {
 
-    private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
-    private static final UserRepository userRepository = UserRepository.getInstance();
+    private final InsertionUtils inesrtionUtils;
+    private final MunicipalityJpaRepository municipalityRepository;
+    private final GeoLocatableJpaRepository geoLocatableRepository;
+    private final UserJpaRepository userRepository;
+    private final ContentJpaRepository contentRepository;
+
+    @Autowired
+    public ContentHandler(MunicipalityJpaRepository municipalityRepository,
+                          GeoLocatableJpaRepository geoLocatableJpaRepository,
+                          UserJpaRepository userRepository,
+                          ContentJpaRepository contentJpaRepository,
+                          InsertionUtils insertionUtils) {
+        this.municipalityRepository = municipalityRepository;
+        this.geoLocatableRepository = geoLocatableJpaRepository;
+        this.userRepository = userRepository;
+        this.contentRepository = contentJpaRepository;
+        this.inesrtionUtils = insertionUtils;
+    }
+
 
     /**
      * Returns the Synthesized Format of all the approved contents of the point of interest
@@ -36,10 +62,9 @@ public class ContentHandler {
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
      */
-    public static List<ContentOF> viewApprovedContents(long pointOfInterestID) {
-        return municipalityRepository.getPointOfInterestByID(pointOfInterestID)
-                .getApprovedContents()
-                .stream()
+    public List<ContentOF> viewApprovedContents(long pointOfInterestID) {
+        return getPointOfInterestContents(pointOfInterestID)
+                .filter(Content::isApproved)
                 .map(Content::getOutputFormat)
                 .toList();
     }
@@ -50,10 +75,8 @@ public class ContentHandler {
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
      */
-    public static List<ContentOF> viewAllContents(long pointOfInterestID) {
-        return municipalityRepository.getPointOfInterestByID(pointOfInterestID)
-                .getContents()
-                .stream()
+    public List<ContentOF> viewAllContents(long pointOfInterestID) {
+        return getPointOfInterestContents(pointOfInterestID)
                 .map(Content::getOutputFormat)
                 .toList();
     }
@@ -67,24 +90,28 @@ public class ContentHandler {
      * @return the Synthesized Format of all the contest in the point of interest corresponding to the given filters
      */
     @SuppressWarnings("unchecked")
-    public static List<ContentOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
-        return (List<ContentOF>) SearchUltils.getFilteredItems(MunicipalityRepository.getInstance().getAllContents().toList(), filters);
+    public List<ContentOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
+        return (List<ContentOF>) SearchUltils
+                .getFilteredItems(getPointOfInterestContents(pointOfInterestID).toList(),
+                        filters);
     }
 
 
     /**
      * Returns the set of all the criteria available for the search.
+     *
      * @return the set of all the criteria available for the search
      */
-    public static Set<String> getSearchCriteria() {
+    public Set<String> getSearchCriteria() {
         return SearchUltils.getSearchCriteria();
     }
 
     /**
      * This method returns the search parameters for the user entity.
+     *
      * @return the search parameters for the user entity
      */
-    public static List<String> getParameters(){
+    public List<String> getParameters() {
         return List.of(Parameter.DESCRIPTION.toString(),
                 Parameter.APPROVAL_STATUS.toString());
     }
@@ -93,14 +120,14 @@ public class ContentHandler {
      * Returns the Detailed Format of a Content corresponding to the given ID in the point of interest
      * corresponding to the given ID.
      *
-     * @param pointOfInterestID the ID of the point of interest
-     * @param contentID         the ID of the Content to visualize
+     * @param contentID the ID of the Content to visualize
      * @return the Detailed Format of the Content having the given ID
      * @throws IllegalArgumentException if the Content having the given ID is not found
      */
-    public static ContentOF viewContent(long pointOfInterestID, long contentID) {
-        return getContent(municipalityRepository.getPointOfInterestByID(pointOfInterestID), contentID)
-                .getOutputFormat();
+    public ContentOF viewContent(long contentID) {
+        if (!(getContentByID(contentID) instanceof PointOfInterestContent poiContent))
+            throw new IllegalArgumentException("The given ID does not correspond to a point of interest content");
+        return poiContent.getOutputFormat();
     }
 
     /**
@@ -110,15 +137,8 @@ public class ContentHandler {
      * @param contentID the ID of the Content to visualize
      * @return the Detailed Format of the Content having the given ID
      */
-    public static ContentOF viewContentFromRepository(long contentID) {
-        return municipalityRepository.getContentByID(contentID).getOutputFormat();
-    }
-
-    private static Content<PointOfInterest> getContent(PointOfInterest pointOfInterest, long contentID) {
-        return pointOfInterest.getContents().stream()
-                .filter(content -> content.getID() == contentID)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Content not found"));
+    public ContentOF viewContentFromRepository(long contentID) {
+        return getContentByID(contentID).getOutputFormat();
     }
 
     /**
@@ -131,12 +151,12 @@ public class ContentHandler {
      * @param contentIF the contentIF from which the content will be created
      * @return the ID of the created and inserted content
      */
-    public static long insertContent(long userID, long poiID, ContentIF contentIF) {
-        User user = userRepository.getItemByID(userID);
-        PointOfInterest pointOfInterest = municipalityRepository.getPointOfInterestByID(poiID);
+    public long insertContent(long userID, long poiID, ContentIF contentIF) {
+        User user = getUserByID(userID);
+        PointOfInterest pointOfInterest = getPointOfInterestByID(poiID);
 
-        PointOfInterestContent content = createContent(
-                new PointOfInterestContentBuilder(pointOfInterest), user, contentIF);
+        PointOfInterestContent content = contentRepository.save(createContent(
+                new PointOfInterestContentBuilder(pointOfInterest), user, contentIF));
 
         insertPoiContent(content, user);
         return content.getID();
@@ -153,8 +173,9 @@ public class ContentHandler {
      * @return the created content
      * @throws IllegalArgumentException if the builder or the contentIF are null
      */
-    static <V extends ContentHost<V> & Visualizable, K extends Content<V>>
-    K createContent(ContentBuilder<V, K> builder, User user, ContentIF contentIF) {
+    public static <V extends ContentHost<V> & Visualizable, K extends Content<V>> K createContent(ContentBuilder<V, K> builder,
+                                                                                    User user,
+                                                                                    ContentIF contentIF) {
         if (builder == null)
             throw new IllegalArgumentException("Builder cannot be null");
         if (contentIF == null)
@@ -174,10 +195,14 @@ public class ContentHandler {
      * @return true if the content is saved, false otherwise
      */
     @SuppressWarnings("UnusedReturnValue") // This method is used for its side effects
-    public static boolean saveContent(long userID, long contentID) {
-        User user = userRepository.getItemByID(userID);
-        Content<?> content = municipalityRepository.getContentByID(contentID);
-        return user.addSavedContent(content);
+    public boolean saveContent(long userID, long contentID) {
+        User user = getUserByID(userID);
+        Content<?> content = getContentByID(contentID);
+        if (user.addSavedContent(content)) {
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -189,10 +214,14 @@ public class ContentHandler {
      * @return true if the content is removed, false otherwise
      */
     @SuppressWarnings("UnusedReturnValue") // This method is used for its side effects
-    public static boolean removeSavedContent(long userID, long contentID) {
-        User user = userRepository.getItemByID(userID);
-        Content<?> content = municipalityRepository.getContentByID(contentID);
-        return user.removeSavedContent(content);
+    public boolean removeSavedContent(long userID, long contentID) {
+        User user = getUserByID(userID);
+        Content<?> content = getContentByID(contentID);
+        if (user.removeSavedContent(content)) {
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -201,17 +230,54 @@ public class ContentHandler {
      * @param userID the ID of the user
      * @return the Synthesized Format of all the saved contents of the user
      */
-    public static List<ContentOF> viewSavedContents(long userID) {
-        return userRepository.getItemByID(userID)
-                .getSavedContents()
+    public List<ContentOF> viewSavedContents(long userID) {
+        User user = getUserByID(userID);
+        return user.getSavedContents()
                 .stream()
                 .map(Content::getOutputFormat)
                 .toList();
     }
 
-    private static void insertPoiContent(PointOfInterestContent content, User user) {
+    private void insertPoiContent(PointOfInterestContent content, User user) {
         PointOfInterest pointOfInterest = content.getHost();
-        //insertItemApprovableByContributors(content, user, pointOfInterest.getMunicipality(), pointOfInterest::addContent);
+        inesrtionUtils.insertItemApprovableByContributors(content,
+                user,
+                pointOfInterest.getMunicipality(),
+                pointOfInterest::addContent);
     }
 
+    private Stream<PointOfInterestContent> getPointOfInterestContents(long pointOfInterestID) {
+        Optional<GeoLocatable> pointOfInterest = geoLocatableRepository.findByID(pointOfInterestID);
+        if (pointOfInterest.isEmpty())
+            throw new IllegalArgumentException("Point of interest not found");
+        if (!(pointOfInterest.get() instanceof PointOfInterest poi))
+            throw new IllegalArgumentException("The given ID does not correspond to a point of interest");
+
+        return poi
+                .getContents()
+                .stream();
+    }
+
+    private Content<?> getContentByID(long contentID) {
+        Optional<Content<?>> content = contentRepository.findById(contentID);
+        if (content.isEmpty())
+            throw new IllegalArgumentException("Content not found");
+        return content.get();
+    }
+
+    private PointOfInterest getPointOfInterestByID(long pointOfInterestID) {
+        Optional<GeoLocatable> pointOfInterest = geoLocatableRepository.findByID(pointOfInterestID);
+        if (pointOfInterest.isEmpty())
+            throw new IllegalArgumentException("Point of interest not found");
+        if (!(pointOfInterest.get() instanceof PointOfInterest poi))
+            throw new IllegalArgumentException("The given ID does not correspond to a point of interest");
+        return poi;
+    }
+
+    private User getUserByID(long userID) {
+        Optional<User> user = userRepository.getByID(userID);
+        if (user.isEmpty())
+            throw new IllegalArgumentException("User not found");
+        return user.get();
+    }
 }

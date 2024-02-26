@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories.jpa;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ import java.util.Optional;
 public interface ContestJpaRepository extends JpaRepository<Contest, Long>{
 
     List<Contest> findAllByValidTrue();
-
+    List<Contest> findByMunicipalityAndValidTrue(Municipality municipality);
     Optional<Contest> findByBaseContestIdAndValidTrue(long id);
 
 }

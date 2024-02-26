@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class MapProviderBase implements MapProvider{
+public class MapProviderBase extends MapProvider{
 
     private MunicipalityJpaRepository municipalityJpaRepository;
     private OSMRequestHandler osmRequestHandler;

@@ -7,31 +7,55 @@ import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUltils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContentBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.VotedContent;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.UserRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * This class is used to handle the contests.
  * It provides methods to manage contests.
  */
+@Service
 public class ContestHandler {
-    private static final UserRepository userRepository = UserRepository.getInstance();
-    private static final MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+    private final UserJpaRepository userRepository;
+    private final MunicipalityJpaRepository municipalityRepository;
+    private final ContentJpaRepository contentRepository;
+    private final ContestJpaRepository contestRepository;
+    private final GeoLocatableJpaRepository geoLocatableRepository;
+    private final RequestJpaRepository requestRepository;
 
-    public static final String INVITATION_MESSAGE = "You have been invited to participate in a contest";
+    public final String INVITATION_MESSAGE = "You have been invited to participate in a contest";
+
+    @Autowired
+    public ContestHandler(UserJpaRepository userRepository,
+                          MunicipalityJpaRepository municipalityRepository,
+                          ContentJpaRepository contentRepository,
+                          ContestJpaRepository contestRepository,
+                            GeoLocatableJpaRepository geoLocatableRepository,
+                          RequestJpaRepository requestRepository) {
+        this.userRepository = userRepository;
+        this.municipalityRepository = municipalityRepository;
+        this.contentRepository = contentRepository;
+        this.contestRepository = contestRepository;
+        this.geoLocatableRepository = geoLocatableRepository;
+        this.requestRepository = requestRepository;
+    }
 
     /**
      * Inserts the content obtained from the given contentIF in the contest with the given ID.
@@ -42,15 +66,16 @@ public class ContestHandler {
      * @param contentIF the contentIF from which the content will be created
      * @return the ID of the created and inserted content
      */
-    public static long insertContent(long userID, long contestID, ContentIF contentIF) {
-        User user = userRepository.getItemByID(userID);
-        Contest contest = municipalityRepository.getContestByID(contestID);
+    public  long insertContent(long userID, long contestID, ContentIF contentIF) {
+        User user = getUserByID(userID);
+        Contest contest = getContestByID(contestID);
 
-        ContestContent content = ContentHandler.createContent(
-                new ContestContentBuilder(contest), user, contentIF);
+        ContestContent content = contentRepository.saveAndFlush(ContentHandler.createContent(
+                new ContestContentBuilder(contest), user, contentIF));
 
         contest.getProposalRegister().proposeContent(content);
-        RequestRepository.getInstance().add(RequestFactory.getApprovalRequest(content));
+        contestRepository.saveAndFlush(contest);
+        requestRepository.save(RequestFactory.getApprovalRequest(content));
         return content.getID();
     }
 
@@ -61,8 +86,9 @@ public class ContestHandler {
      * @param contestID the ID of the contest
      * @return the Synthesized Format of all the proposals
      */
-    public static List<VotedContentOF> viewAllProposals(long contestID) {
-        return municipalityRepository.getContestByID(contestID).getProposalRegister().getProposals().stream()
+    public  List<VotedContentOF> viewAllProposals(long contestID) {
+        return getContestByID(contestID)
+                .getProposalRegister().getProposals().stream()
                 .map(VotedContent::getOutputFormat)
                 .toList();
     }
@@ -76,9 +102,9 @@ public class ContestHandler {
      * @return the Synthesized Format of all the suitable proposals
      */
     @SuppressWarnings("unchecked")
-    public static List<VotedContentOF> viewFilteredProposals(long contestID, List<SearchFilter> filters) {
+    public  List<VotedContentOF> viewFilteredProposals(long contestID, List<SearchFilter> filters) {
         return (List<VotedContentOF>) SearchUltils.getFilteredItems(
-                municipalityRepository.getContestByID(contestID).getProposalRegister().getProposals(),
+                getContestByID(contestID).getProposalRegister().getProposals(),
                 filters);
     }
 
@@ -93,8 +119,9 @@ public class ContestHandler {
      * @return the detailed format of the proposal
      * @throws IllegalArgumentException if the content is not found in the contest
      */
-    public static VotedContentOF viewProposal(long contestID, long contentID) {
-        return getVotedContent(municipalityRepository.getContestByID(contestID), contentID).getOutputFormat();
+    public  VotedContentOF viewProposal(long contestID, long contentID) {
+        return getVotedContent(getContestByID(contestID),
+                contentID).getOutputFormat();
     }
 
     /**
@@ -106,9 +133,9 @@ public class ContestHandler {
      * @throws IllegalArgumentException if the user or the contest is not found or if the content
      *                                  is not found in the contest or if the user has already voted in the contest
      */
-    public static void vote(long userID, long contestID, long contentID) {
-        User user = userRepository.getItemByID(userID);
-        Contest contest = municipalityRepository.getContestByID(contestID);
+    public  void vote(long userID, long contestID, long contentID) {
+        User user = getUserByID(userID);
+        Contest contest = getContestByID(contestID);
         contest.getProposalRegister().addVote(getVotedContent(contest, contentID).content(), user);
     }
 
@@ -121,9 +148,9 @@ public class ContestHandler {
      * @throws IllegalArgumentException if the user or the contest is not found or if the user
      *                                  has not voted for any content in the contest
      */
-    public static void removeVote(long userID, long contestID) {
-        User user = userRepository.getItemByID(userID);
-        Contest contest = municipalityRepository.getContestByID(contestID);
+    public  void removeVote(long userID, long contestID) {
+        User user = getUserByID(userID);
+        Contest contest = getContestByID(contestID);
         contest.getProposalRegister().removeVote(user);
     }
 
@@ -137,9 +164,9 @@ public class ContestHandler {
      * @throws IllegalArgumentException if the animator of the contest is not authorized to insert contests
      *                                  in the municipality, or if the animator is null, or if the contest is null or if the contest is invalid
      */
-    public static long insertContest(long userID, long municipalityID, ContestIF contestIF) {
-        ContestBuilder builder = new ContestBuilder(userRepository.getItemByID(userID),
-                municipalityRepository.getItemByID(municipalityID));
+    public  long insertContest(long userID, long municipalityID, ContestIF contestIF) {
+        ContestBuilder builder = new ContestBuilder(getUserByID(userID),
+                getMunicipalityByID(municipalityID));
 
         builder.setName(contestIF.name())
                 .setTopic(contestIF.topic())
@@ -151,17 +178,19 @@ public class ContestHandler {
         if (contestIF.isPrivate()) {
             builder.setPrivate();
             contestIF.userIDs().stream()
-                    .map(userRepository::getItemByID)
+                    .map(this::getUserByID)
                     .forEach(builder::addParticipant);
         }
         if (contestIF.geoLocatableID() != null)
-            builder.setGeoLocation(municipalityRepository.getGeoLocatableByID(contestIF.geoLocatableID()));
+            builder.setGeoLocation(getGeoLocatableByID(contestIF.geoLocatableID()));
 
         builder.build();
-
-        municipalityRepository.getItemByID(municipalityID).addContest(builder.getResult());
+        Contest contest = contestRepository.saveAndFlush(builder.getResult());
+        Municipality municipality = getMunicipalityByID(municipalityID);
+        municipality.addContest(contest);
+        municipalityRepository.saveAndFlush(municipality);
         if (contestIF.isPrivate()) sendNotifications(builder.getResult());
-        return builder.getResult().getID();
+        return contest.getID();
     }
 
     /**
@@ -172,9 +201,9 @@ public class ContestHandler {
      * @return the list of users corresponding to the given filters
      */
     @SuppressWarnings("unchecked")
-    public static List<UserOF> viewFilteredUsers(List<SearchFilter> filters) {
+    public  List<UserOF> viewFilteredUsers(List<SearchFilter> filters) {
         return (List<UserOF>) SearchUltils.getFilteredItems(
-                userRepository.getItemStream().toList(),
+                userRepository.findAll(),
                 filters);
     }
 
@@ -186,9 +215,9 @@ public class ContestHandler {
      * @return the list of geo-locatable corresponding to the given filters
      */
     @SuppressWarnings("unchecked")
-    public static List<GeoLocatableOF> viewFilteredGeoLocatables(List<SearchFilter> filters) {
+    public  List<GeoLocatableOF> viewFilteredGeoLocatables(List<SearchFilter> filters) {
         return (List<GeoLocatableOF>) SearchUltils.getFilteredItems(
-                municipalityRepository.getAllGeoLocatables().toList(),
+                geoLocatableRepository.findAll(),
                 filters);
     }
 
@@ -200,9 +229,10 @@ public class ContestHandler {
      * @param municipalityID the ID of the municipality
      * @return the Synthesized Format of all the suitable contests
      */
-    public static List<ContestOF> viewAllContests(long userID, long municipalityID) {
-        User user = UserRepository.getInstance().getItemByID(userID);
-        return MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests().stream()
+    public  List<ContestOF> viewAllContests(long userID, long municipalityID) {
+        User user = getUserByID(userID);
+        return  contestRepository.findByMunicipalityAndValidTrue(getMunicipalityByID(municipalityID))
+                .stream()
                 .filter(contest -> contest.permitsUser(user))
                 .map(Contest::getOutputFormat)
                 .toList();
@@ -219,12 +249,12 @@ public class ContestHandler {
      * @return the Synthesized Format of all the suitable contests
      */
     @SuppressWarnings("unchecked")
-    public static List<ContestOF> viewFilteredContests(long userID, long municipalityID, List<SearchFilter> filters) {
-        User user = UserRepository.getInstance().getItemByID(userID);
+    public  List<ContestOF> viewFilteredContests(long userID, long municipalityID, List<SearchFilter> filters) {
+        User user =getUserByID(userID);
         List<SearchFilter> filtersWithUser = new ArrayList<>(filters);
         filtersWithUser.add(new SearchFilter(Parameter.THIS.toString(), "CONTEST_PERMITS_USER", user));
         return (List<ContestOF>) SearchUltils.getFilteredItems(
-                MunicipalityRepository.getInstance().getItemByID(municipalityID).getContests(),
+                contestRepository.findByMunicipalityAndValidTrue(getMunicipalityByID(municipalityID)),
                 filtersWithUser);
     }
 
@@ -233,7 +263,7 @@ public class ContestHandler {
      * Returns the set of all the criteria available for the search.
      * @return the set of all the criteria available for the search
      */
-    public static Set<String> getSearchCriteria(){
+    public  Set<String> getSearchCriteria(){
         return SearchUltils.getSearchCriteria();
     }
 
@@ -241,7 +271,7 @@ public class ContestHandler {
      * This method returns the search parameters for the user entity.
      * @return the search parameters for the user entity
      */
-    public static List<String> getParameters(){
+    public  List<String> getParameters(){
         return List.of(Parameter.NAME.toString(),
                 Parameter.CONTEST_TOPIC.toString(),
                 Parameter.CONTEST_STATUS.toString());
@@ -251,13 +281,12 @@ public class ContestHandler {
      * Returns the Detailed Format of a Contest corresponding to the given ID in the municipality corresponding
      * to the given ID.
      *
-     * @param municipalityID the ID of the municipality
      * @param contestID      the ID of the Contest to visualize
      * @return the Detailed Format of the Contest having the given ID
      * @throws IllegalArgumentException if the Contest having the given ID is not found in the municipality
      */
-    public static ContestOF viewContest(long municipalityID, long contestID) {
-        return getContest(MunicipalityRepository.getInstance().getItemByID(municipalityID), contestID).getOutputFormat();
+    public  ContestOF viewContest(long contestID) {
+        return getContestByID(contestID).getOutputFormat();
     }
 
 
@@ -269,29 +298,65 @@ public class ContestHandler {
      * @return the Detailed Format of the Contest having the given ID
      * @throws IllegalArgumentException if the Contest having the given ID is not found in the system
      **/
-    public static ContestOF viewContestFromRepository(long contestID) {
-        return MunicipalityRepository.getInstance().getContestByID(contestID).getOutputFormat();
+    public  ContestOF viewContestFromRepository(long contestID) {
+        return getContestByID(contestID).getOutputFormat();
     }
 
-
-    private static void sendNotifications(Contest contest) {
-        Notification contestNotification = Notification.createNotification(contest, ContestHandler.INVITATION_MESSAGE);
-        contest.getParticipants().forEach(user -> user.addNotification(contestNotification));
+    //TODO notifications
+    private  void sendNotifications(Contest contest) {
+        //Notification contestNotification = Notification.createNotification(contest, ContestHandler.INVITATION_MESSAGE);
+        //contest.getParticipants().forEach(user -> user.addNotification(contestNotification));
     }
 
-    private static VotedContent getVotedContent(Contest contest, long contentID) {
+    private  VotedContent getVotedContent(Contest contest, long contentID) {
         return contest.getProposalRegister().getProposals().stream()
                 .filter(votedContent -> votedContent.getID() == contentID)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Content not found"));
     }
 
-    private static Contest getContest(Municipality municipality, long contestID) {
+    private  Contest getContest(Municipality municipality, long contestID) {
         if (municipality == null)
             throw new IllegalArgumentException("Municipality can't be null");
         return municipality.getContests().stream()
                 .filter(contest -> contest.getID() == contestID)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Contest not found"));
+    }
+
+
+    private Content<?> getContentByID(long contentID) {
+        Optional<Content<?>> content = contentRepository.findById(contentID);
+        if (content.isEmpty())
+            throw new IllegalArgumentException("Content not found");
+        return content.get();
+    }
+
+    private User getUserByID(long userID) {
+        Optional<User> user = userRepository.getByID(userID);
+        if (user.isEmpty())
+            throw new IllegalArgumentException("User not found");
+        return user.get();
+    }
+
+    private Contest getContestByID(long contestID) {
+        Optional<Contest> contest = contestRepository.findById(contestID);
+        if (contest.isEmpty())
+            throw new IllegalArgumentException("Contest not found");
+        return contest.get();
+    }
+
+    private Municipality getMunicipalityByID(long municipalityID) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty())
+            throw new IllegalArgumentException("Municipality not found");
+        return municipality.get();
+    }
+
+    private GeoLocatable getGeoLocatableByID(long geoLocatableID) {
+        Optional<GeoLocatable> geoLocatable = geoLocatableRepository.findByID(geoLocatableID);
+        if (geoLocatable.isEmpty())
+            throw new IllegalArgumentException("GeoLocatable not found");
+        return geoLocatable.get();
     }
 }
