@@ -5,23 +5,33 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MessageOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Message;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MessageJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class represents a handler for the messages in the system that provides methods
  * to insert and view messages.
  */
+@Service
 public class MessageHandler {
 
-    private static final MessageRepository messageRepository = MessageRepository.getInstance();
 
+    private final MessageJpaRepository messageRepository;
+
+    @Autowired
+    public MessageHandler(MessageJpaRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
     /**
      * Inserts a new message in the system for a municipality request.
      * @param messageIF the message to insert
      * @return the id of the inserted message
      */
-    public static long insertMunicipalityRequestMessage(MessageIF messageIF) {
+    public long insertMunicipalityRequestMessage(MessageIF messageIF) {
         MessageBuilder builder = new MessageBuilder();
         builder.buildSenderName(messageIF.senderName())
                 .buildSenderEmail(messageIF.senderEmail())
@@ -29,17 +39,17 @@ public class MessageHandler {
                 .buildAttachments(messageIF.attachments().stream().toList())
                 .build();
 
-        messageRepository.add(builder.getResult());
-        return builder.getResult().getID();
+        return messageRepository.save(builder.getResult()).getID();
     }
 
     /**
      * Returns a list of all the messages in the system in a synthesized format.
      * @return a list of all the messages in the system
      */
-    public static List<MessageOF> viewMessages() {
+    public List<MessageOF> viewMessages() {
         return messageRepository
-                .getItemStream()
+                .findAll()
+                .stream()
                 .map(Message::getOutputFormat)
                 .toList();
     }
@@ -52,9 +62,12 @@ public class MessageHandler {
      * @return the message in a detailed format
      * @throws IllegalArgumentException if the message with the given id does not exist
      */
-    public static MessageOF viewMessage(long id) {
-        Message message = messageRepository.getItemByID(id);
-        message.setRead(true);
-        return message.getOutputFormat();
+    public MessageOF viewMessage(long id) {
+        Optional<Message> message = messageRepository.findByID(id);
+        if (message.isEmpty()) throw new IllegalArgumentException("Message not found");
+
+        message.get().setRead(true);
+        messageRepository.saveAndFlush(message.get());
+        return message.get().getOutputFormat();
     }
 }
