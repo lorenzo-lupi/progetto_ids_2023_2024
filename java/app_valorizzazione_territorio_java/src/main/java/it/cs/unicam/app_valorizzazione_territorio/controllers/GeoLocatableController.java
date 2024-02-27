@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 public class GeoLocatableController {
 
 

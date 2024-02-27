@@ -14,7 +14,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.VotedContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
@@ -141,7 +140,11 @@ public class ContestHandler {
     public void vote(long userID, long contestID, long contentID) {
         User user = getUserByID(userID);
         Contest contest = getContestByID(contestID);
-        contest.getProposalRegister().addVote(getVotedContent(contest, contentID).content(), user);
+        ContestContent content = getContestContentByID(contentID);
+        contest.getProposalRegister().addVote(content, user);
+        contestRepository.saveAndFlush(contest);
+        contentRepository.saveAndFlush(content);
+
     }
 
     /**
@@ -157,8 +160,9 @@ public class ContestHandler {
         User user = getUserByID(userID);
         Contest contest = getContestByID(contestID);
         contest.getProposalRegister().removeVote(user);
+        contestRepository.saveAndFlush(contest);
+        contentRepository.saveAllAndFlush(contest.getContents());
     }
-
 
     /**
      * Inserts a contest in the municipality corresponding to the given ID.
@@ -333,7 +337,11 @@ public class ContestHandler {
                 .orElseThrow(() -> new IllegalArgumentException("Contest not found"));
     }
 
-
+    private ContestContent getContestContentByID(long contentID){
+        if(getContentByID(contentID) instanceof ContestContent c)
+            return c;
+        throw new IllegalArgumentException("Content not found");
+    }
     private Content<?> getContentByID(long contentID) {
         Optional<Content<?>> content = contentRepository.findById(contentID);
         if (content.isEmpty())
