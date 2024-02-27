@@ -2,21 +2,8 @@ package it.cs.unicam.app_valorizzazione_territorio;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.UserIF;
-import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointTypeEnum;
-import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
 public class POIComuneDelFuturoApplication {
