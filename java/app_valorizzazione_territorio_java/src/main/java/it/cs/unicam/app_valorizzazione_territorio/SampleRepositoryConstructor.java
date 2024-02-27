@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.List;
 
 @Component
-public class RepositoryConstructor {
+public class SampleRepositoryConstructor {
 
     @Autowired
     private MunicipalityJpaRepository municipalityJpaRepository;

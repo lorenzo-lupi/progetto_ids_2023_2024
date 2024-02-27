@@ -229,6 +229,7 @@ public class SampleRepositoryProvider {
         UNIVERSITY_CAMERINO = geoLocatableJpaRepository.save(geoLocatables.get(0));
         geoLocatables.get(1).approve();
         VIA_MADONNA_CARCERI = geoLocatableJpaRepository.save(geoLocatables.get(1));
+
         PIAZZA_LIBERTA = geoLocatableJpaRepository.save(geoLocatables.get(2));
         geoLocatables.get(3).approve();
         CORSA_SPADA = geoLocatableJpaRepository.save(geoLocatables.get(3));

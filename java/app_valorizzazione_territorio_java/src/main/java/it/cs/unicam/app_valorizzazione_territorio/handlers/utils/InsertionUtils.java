@@ -2,13 +2,9 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +34,9 @@ public class InsertionUtils {
      * @param <T> the type of the item
      */
     public <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
-                                                                                                 User user,
-                                                                                                 Municipality municipality,
-                                                                                                 Consumer<T> storingAction) {
+                                                                                         User user,
+                                                                                         Municipality municipality,
+                                                                                         Consumer<T> storingAction) {
 
         if (item == null || user == null || municipality == null || storingAction == null)
             throw new IllegalArgumentException("Item, user and municipality must not be null");

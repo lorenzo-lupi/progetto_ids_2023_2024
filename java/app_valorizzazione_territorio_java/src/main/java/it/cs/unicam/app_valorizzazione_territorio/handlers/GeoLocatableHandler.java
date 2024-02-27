@@ -22,9 +22,11 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaReposi
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,11 +35,13 @@ import java.util.Set;
 
 /**
  * This class represents a handler for the search, insertion
- * and visualization of the geolocatable entities
+ * and visualization of the geo-locatable entities
  */
 @Service
 @ComponentScan(basePackageClasses = {MapProviderBase.class})
 public class GeoLocatableHandler {
+    @Value("${fileResources.path}")
+    private String filePath;
     private final MapProvider mapProvider;
     private final UserJpaRepository userRepository;
     private final MunicipalityJpaRepository municipalityRepository;
@@ -155,7 +159,7 @@ public class GeoLocatableHandler {
      *
      * @return the search parameters for the user entity
      */
-    public List<String> getParameters() {
+    public List<String> getSearchParameters() {
         return List.of(Parameter.NAME.toString(),
                 Parameter.DESCRIPTION.toString(),
                 Parameter.MUNICIPALITY.toString(),
@@ -277,7 +281,8 @@ public class GeoLocatableHandler {
 
         builder.setTitle(compoundPointIF.title())
                 .setDescription(compoundPointIF.description())
-                .addImage(compoundPointIF.images());
+                .addImage(compoundPointIF.files().stream()
+                        .map(fileName -> new File(filePath + fileName)).toList());
         compoundPointIF.pointsOfInterestIDs().stream()
                 .map(geoLocatableJpaRepository::findPointOfInterestById)
                 .forEach(p -> p.ifPresentOrElse(builder::addPointOfInterest, () -> {
@@ -289,8 +294,10 @@ public class GeoLocatableHandler {
 
     private void fillPointOfInterestBuilderFields(PointOfInterestBuilder builder, PointOfInterestIF pointOfInterestIF) {
         builder.setTitle(pointOfInterestIF.name())
-                .setDescription(pointOfInterestIF.description());
-        pointOfInterestIF.images().forEach(builder::addImage);
+                .setDescription(pointOfInterestIF.description())
+                .addImage(pointOfInterestIF.images().stream()
+                        .map(fileName -> new File(filePath + fileName))
+                        .toList());
 
         try {
             Optional<Municipality> municipality = mapProvider.getMunicipalityByPosition(pointOfInterestIF.position());

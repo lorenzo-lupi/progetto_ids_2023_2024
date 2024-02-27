@@ -35,9 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataJpaTest
 public class GeoLocatableHandlerTest {
     @Autowired
-    SampleRepositoryProvider sampleRepositoryProvider;
+    private SampleRepositoryProvider sampleRepositoryProvider;
     @Autowired
-    GeoLocatableHandler geoLocatableHandler;
+    private GeoLocatableHandler geoLocatableHandler;
     private PointOfInterestIF poiIFSample1;
     private PointOfInterestIF poiIFSample2;
     private PointOfInterestIF poiIFSample3;

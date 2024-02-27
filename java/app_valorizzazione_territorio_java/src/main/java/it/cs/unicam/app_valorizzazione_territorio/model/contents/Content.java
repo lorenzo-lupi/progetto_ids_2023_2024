@@ -153,10 +153,10 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     public ContentOF getOutputFormat() {
         return new ContentOF(
                 this.getID(),
-                this.getFiles().isEmpty() ? null : this.getFiles().get(0),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
                 this.getDescription(),
                 this.getHost().getName(),
-                this.getFiles(),
+                this.getFiles().stream().map(File::getName).toList(),
                 this.getApprovalStatus()
         );
     }

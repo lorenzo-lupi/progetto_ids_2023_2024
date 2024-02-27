@@ -34,8 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
 @ComponentScan(basePackageClasses = {SampleRepositoryProvider.class})
+@DataJpaTest
 public class InsertionTests {
     @Autowired
     SampleRepositoryProvider sampleRepositoryProvider;

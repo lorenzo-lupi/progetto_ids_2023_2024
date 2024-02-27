@@ -120,8 +120,8 @@ public class CompoundPoint extends GeoLocatable {
                 this.getPosition(),
                 this.getMunicipality().getName(),
                 this.getCompoundPointType(),
-                this.getImages().isEmpty() ? null : this.getImages().get(0),
-                this.getImages(),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
+                this.getFiles().stream().map(File::getName).toList(),
                 this.getPointsOfInterest().stream().map(PointOfInterest::getOutputFormat).toList(),
                 this.getID()
         );

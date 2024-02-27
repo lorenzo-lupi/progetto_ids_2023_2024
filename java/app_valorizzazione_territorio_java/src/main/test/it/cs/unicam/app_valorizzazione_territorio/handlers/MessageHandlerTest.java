@@ -1,32 +1,41 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MessageJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@ExtendWith(SpringExtension.class)
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class, MessageHandler.class})
+@DataJpaTest
 public class MessageHandlerTest {
-/*
+
     @Autowired
-    SampleRepositoryProvider sampleRepositoryProvider;
-    private static final MessageRepository messageRepository = MessageRepository.getInstance();
+    private SampleRepositoryProvider sampleRepositoryProvider;
+    @Autowired
+    private MessageJpaRepository messageJpaRepository;
+    @Autowired
+    private MessageHandler messageHandler;
 
     @BeforeEach
     public void setUp() {
-        sampleRepositoryProvider.setUpAllRepositories();
+        sampleRepositoryProvider.setUpMessages();
     }
 
     @AfterEach
     public void clear() {
-        sampleRepositoryProvider.clearAllRepositories();
+        sampleRepositoryProvider.clearMessages();
     }
 
     private static final MessageIF sampleMessage1 = new MessageIF("Name Surname",
@@ -45,49 +54,46 @@ public class MessageHandlerTest {
 
     @Test
     public void shouldInsertMunicipalityRequestMessage() {
-        long id = MessageHandler.insertMunicipalityRequestMessage(sampleMessage1);
+        long id = messageHandler.insertMunicipalityRequestMessage(sampleMessage1);
 
-        assertEquals(3, messageRepository.getItemStream().toList().size());
-        assertEquals("Name Surname", MessageRepository.getInstance().getItemByID(id).getSenderName());
+        assertEquals(3, messageJpaRepository.count());
+        assertEquals("Name Surname", messageJpaRepository.findByID(id).get().getSenderName());
     }
 
     @Test
     public void shouldNotInsertMunicipalityRequestMessage() {
         assertThrows(IllegalArgumentException.class, () ->
-                MessageHandler.insertMunicipalityRequestMessage(sampleMessage2));
+                messageHandler.insertMunicipalityRequestMessage(sampleMessage2));
 
-        assertEquals(2, messageRepository.getItemStream().toList().size());
+        assertEquals(2, messageJpaRepository.count());
     }
 
     @Test
     public void shouldNotInsertMunicipalityRequestMessage2() {
         assertThrows(IllegalArgumentException.class, () ->
-                MessageHandler.insertMunicipalityRequestMessage(sampleMessage3));
+                messageHandler.insertMunicipalityRequestMessage(sampleMessage3));
 
-        assertEquals(2, messageRepository.getItemStream().toList().size());
+        assertEquals(2, messageJpaRepository.count());
     }
 
     @Test
     public void shouldViewMessages() {
-        assertEquals(2, MessageHandler.viewMessages().size());
-        assertTrue(MessageHandler.viewMessages().stream()
+        assertEquals(2, messageHandler.viewMessages().size());
+        assertTrue(messageHandler.viewMessages().stream()
                 .anyMatch(messageSOF -> messageSOF.senderName().equals("Mario Rossi")));
     }
 
     @Test
     public void shouldViewMessage() {
-        long id = SampleRepositoryProvider.messages.get(0).getID();
-        assertEquals("Mario Rossi", MessageHandler.viewMessage(id).senderName());
+        long id = sampleRepositoryProvider.MESSAGGIO_1.getID();
+        assertEquals("Mario Rossi", messageHandler.viewMessage(id).senderName());
     }
 
     @Test
     public void shouldBeReadMessage() {
-        long id = SampleRepositoryProvider.messages.get(1).getID();
-        assertFalse(messageRepository.getItemByID(id).isRead());
-        MessageHandler.viewMessage(id);
-        assertTrue(messageRepository.getItemByID(id).isRead());
+        long id = sampleRepositoryProvider.MESSAGGIO_2.getID();
+        assertFalse(messageJpaRepository.findByID(id).get().isRead());
+        messageHandler.viewMessage(id);
+        assertTrue(messageJpaRepository.findByID(id).get().isRead());
     }
-
-
- */
 }

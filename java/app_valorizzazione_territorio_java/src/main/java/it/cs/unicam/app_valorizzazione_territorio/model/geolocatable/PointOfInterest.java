@@ -13,7 +13,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.jmx.export.notification.NotificationPublisherAware;
 
 import java.io.File;
 import java.util.*;
@@ -139,8 +138,8 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
                 this.getPosition(),
                 super.getMunicipality().getName(),
                 this.getClass().getSimpleName(),
-                super.getImages().isEmpty() ? null : super.getImages().get(0),
-                super.getImages(),
+                super.getFiles().isEmpty() ? null : super.getFiles().get(0).getName(),
+                super.getFiles().stream().map(File::getName).toList(),
                 this.contents.stream().map(PointOfInterestContent::getOutputFormat).toList(),
                 super.getID());
     }

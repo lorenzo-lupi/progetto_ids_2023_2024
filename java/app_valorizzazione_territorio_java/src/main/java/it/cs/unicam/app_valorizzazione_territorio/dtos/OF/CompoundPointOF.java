@@ -22,12 +22,12 @@ public final class CompoundPointOF extends GeoLocatableOF {
                            Position position,
                            String municipalityName,
                            CompoundPointTypeEnum compoundPointType,
-                           File representativeImage,
-                           List<File> images,
+                           String representativeFile,
+                           List<String> files,
                            List<PointOfInterestOF> pointsOfInterest,
                            long ID) {
-        super(name, "CompoundPoint", representativeImage, municipalityName,
-                position, description, images, ID);
+        super(name, "CompoundPoint", representativeFile, municipalityName,
+                position, description, files, ID);
         this.compoundPointType = compoundPointType;
         this.pointsOfInterest = pointsOfInterest;
     }

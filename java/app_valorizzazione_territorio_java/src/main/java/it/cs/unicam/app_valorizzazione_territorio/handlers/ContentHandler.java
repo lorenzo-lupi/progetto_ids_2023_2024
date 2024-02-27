@@ -20,8 +20,10 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaReposi
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,7 +37,9 @@ import java.util.stream.Stream;
 @Service
 public class ContentHandler {
 
-    private final InsertionUtils inesrtionUtils;
+    @Value("${fileResources.path}")
+    private static String filePath;
+    private final InsertionUtils insertionUtils;
     private final MunicipalityJpaRepository municipalityRepository;
     private final GeoLocatableJpaRepository geoLocatableRepository;
     private final UserJpaRepository userRepository;
@@ -51,7 +55,7 @@ public class ContentHandler {
         this.geoLocatableRepository = geoLocatableJpaRepository;
         this.userRepository = userRepository;
         this.contentRepository = contentJpaRepository;
-        this.inesrtionUtils = insertionUtils;
+        this.insertionUtils = insertionUtils;
     }
 
 
@@ -182,7 +186,8 @@ public class ContentHandler {
             throw new IllegalArgumentException("ContentIF cannot be null");
 
         builder.buildUser(user).buildDescription(contentIF.description());
-        contentIF.files().forEach(builder::buildFile);
+        contentIF.files().stream().map(fileName -> new File(filePath + fileName))
+                .forEach(builder::buildFile);
         return builder.build().getResult();
     }
 
@@ -240,7 +245,7 @@ public class ContentHandler {
 
     private void insertPoiContent(PointOfInterestContent content, User user) {
         PointOfInterest pointOfInterest = content.getHost();
-        inesrtionUtils.insertItemApprovableByContributors(content,
+        insertionUtils.insertItemApprovableByContributors(content,
                 user,
                 pointOfInterest.getMunicipality(),
                 pointOfInterest::addContent);

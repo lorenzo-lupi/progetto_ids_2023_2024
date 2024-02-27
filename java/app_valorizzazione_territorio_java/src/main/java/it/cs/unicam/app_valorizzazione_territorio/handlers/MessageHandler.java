@@ -4,7 +4,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.MessageBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MessageOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Message;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MessageJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +17,13 @@ import java.util.Optional;
  */
 @Service
 public class MessageHandler {
-
-
-    private final MessageJpaRepository messageRepository;
+    private final MessageJpaRepository messageJpaRepository;
 
     @Autowired
-    public MessageHandler(MessageJpaRepository messageRepository) {
-        this.messageRepository = messageRepository;
+    public MessageHandler(MessageJpaRepository messageJpaRepository) {
+        this.messageJpaRepository = messageJpaRepository;
     }
+
     /**
      * Inserts a new message in the system for a municipality request.
      * @param messageIF the message to insert
@@ -39,7 +37,7 @@ public class MessageHandler {
                 .buildAttachments(messageIF.attachments().stream().toList())
                 .build();
 
-        return messageRepository.save(builder.getResult()).getID();
+        return messageJpaRepository.save(builder.getResult()).getID();
     }
 
     /**
@@ -47,7 +45,7 @@ public class MessageHandler {
      * @return a list of all the messages in the system
      */
     public List<MessageOF> viewMessages() {
-        return messageRepository
+        return messageJpaRepository
                 .findAll()
                 .stream()
                 .map(Message::getOutputFormat)
@@ -63,11 +61,11 @@ public class MessageHandler {
      * @throws IllegalArgumentException if the message with the given id does not exist
      */
     public MessageOF viewMessage(long id) {
-        Optional<Message> message = messageRepository.findByID(id);
+        Optional<Message> message = messageJpaRepository.findByID(id);
         if (message.isEmpty()) throw new IllegalArgumentException("Message not found");
 
         message.get().setRead(true);
-        messageRepository.saveAndFlush(message.get());
+        messageJpaRepository.saveAndFlush(message.get());
         return message.get().getOutputFormat();
     }
 }

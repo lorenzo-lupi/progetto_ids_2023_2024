@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class})
 @DataJpaTest
-@ComponentScan
 public class DeletionTests {
     @Autowired
     SampleRepositoryProvider sampleRepositoryProvider;

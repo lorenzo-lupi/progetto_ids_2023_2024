@@ -25,8 +25,8 @@ public final class ActivityOF extends PointOfInterestOF {
                 pointOfInterestOF.position(),
                 pointOfInterestOF.municipalityName(),
                 pointOfInterestOF.classification(),
-                pointOfInterestOF.representativeImage(),
-                pointOfInterestOF.images(),
+                pointOfInterestOF.representativeFile(),
+                pointOfInterestOF.files(),
                 pointOfInterestOF.contents(),
                 pointOfInterestOF.ID());
         this.type = type;

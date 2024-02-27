@@ -7,7 +7,7 @@ public record CompoundPointIF(String title,
                               String description,
                               String compoundPointType,
                               List<Long> pointsOfInterestIDs,
-                              List<File> images) {
+                              List<String> files) {
 
 
 }

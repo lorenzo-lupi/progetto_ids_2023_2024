@@ -7,7 +7,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.GeoLocatableContestDecorator;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestCommand;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -48,7 +47,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     private String description;
     @Getter
     @ElementCollection
-    private final List<File> images;
+    private final List<File> files;
     @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
     @Getter
@@ -75,17 +74,17 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
      * @param name the name of the geo-localizable object
      * @param description the textual description of the geo-localizable object
      * @param municipality the municipality of the geo-localizable object
-     * @param images the representative multimedia content of the geo-localizable object
+     * @param files the representative multimedia content of the geo-localizable object
      * @throws IllegalArgumentException if coordinates, description or images are null
      */
     public GeoLocatable(String name,
                         String description,
                         Municipality municipality,
-                        List<File> images,
+                        List<File> files,
                         User user){
         if(name == null || description == null)
             throw new IllegalArgumentException("title and description cannot be null");
-        if(municipality == null || images == null)
+        if(municipality == null || files == null)
             throw new IllegalArgumentException("Municipality and images must not be null");
         if (user == null)
             throw new IllegalArgumentException("user cannot be null");
@@ -93,7 +92,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.name = name;
         this.description = description;
         this.municipality = municipality;
-        this.images = images;
+        this.files = files;
         this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
         this.decorators = new ArrayList<>();
@@ -133,15 +132,15 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     /**
      * Adds a representative multimedia content to the geo-localizable object.
      *
-     * @param image the representative multimedia content to add
+     * @param file the representative multimedia content to add
      * @return true if the representative multimedia content has been added, false otherwise
      * @throws IllegalArgumentException if image is null
      */
     @SuppressWarnings("UnusedReturnValue")
-    public boolean addImage(File image) {
-        if (image == null)
+    public boolean addImage(File file) {
+        if (file == null)
             throw new IllegalArgumentException("image cannot be null");
-        return this.images.add(image);
+        return this.files.add(file);
     }
 
 
@@ -149,12 +148,12 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     /**
      * Removes a representative multimedia content from the geo-localizable object.
      *
-     * @param image the representative multimedia content to remove
+     * @param file the representative multimedia content to remove
      * @return true if the representative multimedia content has been removed, false otherwise
      */
     @SuppressWarnings("UnusedReturnValue")
-    public boolean removeImage(File image) {
-        return this.images.remove(image);
+    public boolean removeFile(File file) {
+        return this.files.remove(file);
     }
 
     @Override
@@ -189,7 +188,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         return Map.of(Parameter.NAME, toObjectSetter(this::setName, String.class),
                 Parameter.DESCRIPTION, toObjectSetter(this::setDescription, String.class),
                 Parameter.ADD_FILE, toObjectSetter(this::addImage, File.class),
-                Parameter.REMOVE_FILE, toObjectSetter(this::removeImage, File.class));
+                Parameter.REMOVE_FILE, toObjectSetter(this::removeFile, File.class));
     }
 
     @Override
@@ -213,11 +212,11 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         return new GeoLocatableOF(
                 this.getName(),
                 this.getClass().getSimpleName(),
-                this.getImages().isEmpty() ? null : this.getImages().get(0),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
                 this.getMunicipality().getName(),
                 this.getPosition(),
                 this.getDescription(),
-                this.getImages(),
+                this.getFiles().stream().map(File::getName).toList(),
                 this.getID());
     }
 

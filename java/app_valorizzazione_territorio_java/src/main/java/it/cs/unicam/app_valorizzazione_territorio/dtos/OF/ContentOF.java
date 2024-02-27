@@ -21,10 +21,10 @@ import java.util.List;
  */
 public record ContentOF(
         @JsonView(View.Synthesized.class)   long ID,
-        @JsonView(View.Synthesized.class)   File representativeFile,
+        @JsonView(View.Synthesized.class)   String representativeFile,
         @JsonView(View.Detailed.class)      String description,
         @JsonView(View.Detailed.class)      String hostName,
-        @JsonView(View.Detailed.class)      List<File> files,
+        @JsonView(View.Detailed.class)      List<String> files,
         @JsonView(View.Detailed.class)      ApprovalStatusEnum approvalStatus
 )
         implements Identifiable {

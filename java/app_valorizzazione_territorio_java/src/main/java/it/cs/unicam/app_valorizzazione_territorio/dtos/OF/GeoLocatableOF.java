@@ -21,7 +21,7 @@ public class GeoLocatableOF implements Identifiable, Positionable {
     @JsonView(View.Synthesized.class)
     private final String geoLocatableType;
     @JsonView(View.Synthesized.class)
-    private final File representativeImage;
+    private final String representativeFile;
     @JsonView(View.Detailed.class)
     private final String municipalityName;
     @JsonView(View.Detailed.class)
@@ -29,23 +29,23 @@ public class GeoLocatableOF implements Identifiable, Positionable {
     @JsonView(View.Detailed.class)
     private final String description;
     @JsonView(View.Detailed.class)
-    private final List<File> images;
+    private final List<String> files;
 
     public GeoLocatableOF(String name,
                           String geoLocatableType,
-                          File representativeImage,
+                          String representativeFile,
                           String municipalityName,
                           Position position,
                           String description,
-                          List<File> images,
+                          List<String> files,
                           long ID) {
         this.name = name;
         this.description = description;
         this.geoLocatableType = geoLocatableType;
         this.municipalityName = municipalityName;
         this.position = position;
-        this.representativeImage = representativeImage;
-        this.images = images;
+        this.representativeFile = representativeFile;
+        this.files = files;
         this.ID = ID;
     }
 
@@ -69,12 +69,12 @@ public class GeoLocatableOF implements Identifiable, Positionable {
         return this.position;
     }
 
-    public File representativeImage() {
-        return this.representativeImage;
+    public String representativeFile() {
+        return this.representativeFile;
     }
 
-    public List<File> images() {
-        return this.images;
+    public List<String> files() {
+        return this.files;
     }
 
     public long ID() {

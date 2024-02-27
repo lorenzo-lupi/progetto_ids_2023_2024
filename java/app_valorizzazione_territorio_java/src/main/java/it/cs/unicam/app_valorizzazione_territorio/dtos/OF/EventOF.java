@@ -19,8 +19,8 @@ public final class EventOF extends PointOfInterestOF {
                 pointOfInterestOF.position(),
                 pointOfInterestOF.municipalityName(),
                 pointOfInterestOF.classification(),
-                pointOfInterestOF.representativeImage(),
-                pointOfInterestOF.images(),
+                pointOfInterestOF.representativeFile(),
+                pointOfInterestOF.files(),
                 pointOfInterestOF.contents(),
                 pointOfInterestOF.ID());
         this.startDate = startDate;
