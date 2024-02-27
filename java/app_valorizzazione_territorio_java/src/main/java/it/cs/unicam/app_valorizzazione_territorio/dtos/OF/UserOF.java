@@ -20,7 +20,7 @@ public record UserOF(
         @JsonView(View.Synthesized.class)  long ID,
         @JsonView(View.Synthesized.class)  String username,
         @JsonView(View.Detailed.class)     String email,
-        @JsonView(View.Detailed.class)     List<Role> roles
+        @JsonView(View.Detailed.class)     List<String> roles
 )
         implements Identifiable {
     @JsonIgnore

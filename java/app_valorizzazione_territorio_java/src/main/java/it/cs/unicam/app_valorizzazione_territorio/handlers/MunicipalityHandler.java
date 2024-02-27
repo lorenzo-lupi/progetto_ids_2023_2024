@@ -76,6 +76,7 @@ public class MunicipalityHandler {
                 .toList();
     }
 
+
     /**
      * Returns the set of all the criteria available for the search.
      *

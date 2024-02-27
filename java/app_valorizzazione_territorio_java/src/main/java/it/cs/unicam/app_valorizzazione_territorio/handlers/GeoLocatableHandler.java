@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.CompoundPointOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.PointOfInterestOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPointBuilder;
@@ -10,12 +12,9 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MapOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.InsertionUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.*;
-import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProvider;
-import it.cs.unicam.app_valorizzazione_territorio.osm.MapProviderBase;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
@@ -46,6 +45,8 @@ public class GeoLocatableHandler {
     private final UserJpaRepository userRepository;
     private final MunicipalityJpaRepository municipalityRepository;
     private final GeoLocatableJpaRepository geoLocatableJpaRepository;
+    @Autowired
+    private final OSMRequestHandler osmRequestHandler;
     private final InsertionUtils insertionUtils;
 
     @Autowired
@@ -53,12 +54,14 @@ public class GeoLocatableHandler {
                                MunicipalityJpaRepository municipalityRepository,
                                GeoLocatableJpaRepository geoLocatableJpaRepository,
                                InsertionUtils insertionUtils,
-                               MapProvider mapProvider) {
+                               MapProvider mapProvider,
+                               OSMRequestHandler osmRequestHandler) {
         this.userRepository = userRepository;
         this.municipalityRepository = municipalityRepository;
         this.geoLocatableJpaRepository = geoLocatableJpaRepository;
         this.insertionUtils = insertionUtils;
         this.mapProvider = mapProvider;
+        this.osmRequestHandler = osmRequestHandler;
     }
 
     /**
@@ -170,16 +173,33 @@ public class GeoLocatableHandler {
     }
 
     /**
-     * Returns the Detailed Format of a geoLocatable
+     * Returns the Detailed Format of a point of interest
      *
      * @param geoLocatableID the ID of the geoLocatable
      * @return the Detailed Format of the geoLocatable
      */
-    public Identifiable visualizeDetailedGeoLocatable(long geoLocatableID) {
+    public PointOfInterestOF visualizeDetailedPointOfInterest(long geoLocatableID) {
         Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findByID(geoLocatableID);
         if (geoLocatable.isEmpty())
             throw new IllegalArgumentException("GeoLocatable not found");
-        return geoLocatable.get().getOutputFormat();
+        if(!(geoLocatable.get() instanceof PointOfInterest))
+            throw new IllegalArgumentException("GeoLocatable is not a point of interest");
+        return (PointOfInterestOF)geoLocatable.get().getOutputFormat();
+    }
+
+    /**
+     * Returns the Detailed Format of a compound point
+     *
+     * @param geoLocatableID the ID of the geoLocatable
+     * @return the Detailed Format of the geoLocatable
+     */
+    public CompoundPointOF visualizeDetailedCompoundPoint(long geoLocatableID) {
+        Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findByID(geoLocatableID);
+        if (geoLocatable.isEmpty())
+            throw new IllegalArgumentException("GeoLocatable not found");
+        if(!(geoLocatable.get() instanceof CompoundPoint))
+            throw new IllegalArgumentException("GeoLocatable is not a compound point");
+        return (CompoundPointOF) geoLocatable.get().getOutputFormat();
     }
 
     /**
@@ -189,10 +209,10 @@ public class GeoLocatableHandler {
      * @param position       the position
      * @return true if the given position is in the municipality
      */
-    public boolean isPositionInMunicipality(long municipalityID, Position position) {
+    public boolean isPositionInMunicipality(long municipalityID, Position position) throws IOException {
         Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
         if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
-        return municipality.get().getCoordinatesBox().contains(position);
+        return osmRequestHandler.getMunicipalityOfPosition(position).contains(municipality.get().getName());//municipality.get().getCoordinatesBox().contains(position);
     }
 
     /**

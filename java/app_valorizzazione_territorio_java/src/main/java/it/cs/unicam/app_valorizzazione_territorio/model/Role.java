@@ -88,4 +88,8 @@ public class Role implements Serializable{
         public RoleKey() {}
     }
 
+    @Override
+    public String toString() {
+        return "municipality: " + this.municipality.getName() + ", authorization: " + this.authorizationEnum.toString();
+    }
 }
