@@ -3,9 +3,12 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MunicipalityIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
+import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.MunicipalityBuilder;
+import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RoleJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,10 +32,13 @@ public class MunicipalityHandler {
     @Value("${fileResources.path}")
     private String filePath;
     private final MunicipalityJpaRepository municipalityRepository;
+    private final RoleJpaRepository roleRepository;
 
     @Autowired
-    public MunicipalityHandler(MunicipalityJpaRepository municipalityRepository) {
+    public MunicipalityHandler(MunicipalityJpaRepository municipalityRepository,
+                               RoleJpaRepository roleRepository) {
         this.municipalityRepository = municipalityRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -50,21 +57,11 @@ public class MunicipalityHandler {
                         .map(file -> new File(filePath + file))
                         .toList())
                 .build();
-
-        return municipalityRepository.saveAndFlush(builder.obtainResult()).getID();
-    }
-
-    /**
-     * Returns the Detailed Format of a Municipality having the given ID.
-     *
-     * @param municipalityID the ID of the Municipality to visualize
-     * @return the Detailed Format of the Municipality having the given ID
-     * @throws IllegalArgumentException if the Municipality having the given ID is not found
-     **/
-    public MunicipalityOF viewMunicipality(long municipalityID) {
-        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
-        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
-        return municipality.get().getOutputFormat();
+        Municipality municipality = municipalityRepository.saveAndFlush(builder.obtainResult());
+        Arrays.stream(AuthorizationEnum.values())
+                .forEach(auth ->
+                        roleRepository.save(new Role(municipality, auth)));
+        return municipality.getID();
     }
 
     /**
@@ -116,5 +113,18 @@ public class MunicipalityHandler {
                                 .stream()
                                 .toList(),
                         filters);
+    }
+
+    /**
+     * Returns the Detailed Format of a Municipality having the given ID.
+     *
+     * @param municipalityID the ID of the Municipality to visualize
+     * @return the Detailed Format of the Municipality having the given ID
+     * @throws IllegalArgumentException if the Municipality having the given ID is not found
+     **/
+    public MunicipalityOF viewMunicipality(long municipalityID) {
+        Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
+        if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
+        return municipality.get().getOutputFormat();
     }
 }
