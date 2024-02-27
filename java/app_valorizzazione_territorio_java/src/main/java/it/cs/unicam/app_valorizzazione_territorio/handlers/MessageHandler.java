@@ -6,8 +6,10 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MessageOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Message;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MessageJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,8 @@ import java.util.Optional;
  */
 @Service
 public class MessageHandler {
+    @Value("${fileResources.path}")
+    private static String filePath;
     private final MessageJpaRepository messageJpaRepository;
 
     @Autowired
@@ -34,7 +38,9 @@ public class MessageHandler {
         builder.buildSenderName(messageIF.senderName())
                 .buildSenderEmail(messageIF.senderEmail())
                 .buildText(messageIF.text())
-                .buildAttachments(messageIF.attachments().stream().toList())
+                .buildAttachments(messageIF.attachments().stream()
+                        .map(fileName -> new File(filePath + fileName))
+                        .toList())
                 .build();
 
         return messageJpaRepository.save(builder.getResult()).getID();

@@ -6,7 +6,6 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.VotedContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestStatusEnum;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
@@ -186,8 +185,7 @@ public class ContestHandlerTest {
 
     @Test
     void shouldNotViewContestFromRepository() {
-        assertThrows(IllegalArgumentException.class, () -> contestHandler.viewContestFromRepository(
-                MunicipalityRepository.getInstance().getNextContestID()));
+        assertThrows(IllegalArgumentException.class, () -> contestHandler.viewContestFromRepository(0L));
     }
     @Test
     void shouldInsertBaseContest() {

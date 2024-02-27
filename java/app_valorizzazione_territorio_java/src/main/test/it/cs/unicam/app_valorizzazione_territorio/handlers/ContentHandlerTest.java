@@ -18,6 +18,7 @@ import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
         ContentHandler.class, ContestHandler.class})
 @DataJpaTest
 class ContentHandlerTest {
+    @Value("${fileResources.path}")
+    private String filePath;
     @Autowired
     ContentHandler contentHandler;
     @Autowired
@@ -61,7 +64,7 @@ class ContentHandlerTest {
     void viewAllContents(PointOfInterest geoLocatable){
         assertEquals(contentHandler.viewApprovedContents(geoLocatable.getID())
                 .stream()
-                .map(c  -> contentHandler.viewContentFromRepository(c.getID()))
+                .map(c  -> contentHandler.viewContent(c.getID()))
                 .map(ContentOF::getID)
                 .map(id -> contentRepository.findById(id).get())
                 .toList(),
@@ -82,7 +85,7 @@ class ContentHandlerTest {
     void shouldCreateContestContent() {
         ContestContent content = contentHandler.createContent(
                 new ContestContentBuilder(sampleRepositoryProvider.CONCORSO_FOTO_2024),
-                sampleRepositoryProvider.TURIST_1, sampleContent);
+                sampleRepositoryProvider.TURIST_1, sampleContent, filePath);
 
         assertEquals(content.getDescription(), sampleContent.description());
         assertEquals(0, content.getFiles().size());
@@ -94,7 +97,7 @@ class ContentHandlerTest {
         PointOfInterestContent content = contentHandler.createContent(
                 new PointOfInterestContentBuilder(
                         (PointOfInterest) sampleRepositoryProvider.CORSA_SPADA),
-                        sampleRepositoryProvider.TURIST_1, sampleContent);
+                        sampleRepositoryProvider.TURIST_1, sampleContent, filePath);
 
         assertEquals(content.getDescription(), sampleContent.description());
         assertEquals(0, content.getFiles().size());

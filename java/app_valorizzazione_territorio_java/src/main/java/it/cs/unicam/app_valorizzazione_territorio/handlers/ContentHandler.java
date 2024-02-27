@@ -36,9 +36,8 @@ import java.util.stream.Stream;
  */
 @Service
 public class ContentHandler {
-
     @Value("${fileResources.path}")
-    private static String filePath;
+    private String filePath;
     private final InsertionUtils insertionUtils;
     private final MunicipalityJpaRepository municipalityRepository;
     private final GeoLocatableJpaRepository geoLocatableRepository;
@@ -60,8 +59,7 @@ public class ContentHandler {
 
 
     /**
-     * Returns the Synthesized Format of all the approved contents of the point of interest
-     * corresponding to the given ID.
+     * Returns all the approved contents of the point of interest corresponding to the given ID.
      *
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
@@ -74,7 +72,7 @@ public class ContentHandler {
     }
 
     /**
-     * Returns the Synthesized Format of all the contents of the point of interest corresponding to the given ID
+     * Returns all the contents of the point of interest corresponding to the given ID
      *
      * @param pointOfInterestID the ID of the point of interest
      * @return the Synthesized Format of all the contents of the point of interest
@@ -84,22 +82,6 @@ public class ContentHandler {
                 .map(Content::getOutputFormat)
                 .toList();
     }
-
-    /**
-     * Returns the Synthesized Format of all the contents of the point of interest corresponding to the given ID
-     * that satisfy the given filters, all applied in logical and.
-     *
-     * @param pointOfInterestID the ID of the point of interest
-     * @param filters           the filters to apply
-     * @return the Synthesized Format of all the contest in the point of interest corresponding to the given filters
-     */
-    @SuppressWarnings("unchecked")
-    public List<ContentOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
-        return (List<ContentOF>) SearchUtils
-                .getFilteredItems(getPointOfInterestContents(pointOfInterestID).toList(),
-                        filters);
-    }
-
 
     /**
      * Returns the set of all the criteria available for the search.
@@ -115,33 +97,38 @@ public class ContentHandler {
      *
      * @return the search parameters for the user entity
      */
-    public List<String> getParameters() {
-        return List.of(Parameter.DESCRIPTION.toString(),
-                Parameter.APPROVAL_STATUS.toString());
+    public Set<String> getSearchParameters() {
+        return Set.of(
+                Parameter.DESCRIPTION.toString(),
+                Parameter.APPROVAL_STATUS.toString()
+        );
     }
 
     /**
-     * Returns the Detailed Format of a Content corresponding to the given ID in the point of interest
-     * corresponding to the given ID.
+     * Returns all the contents of the point of interest corresponding to the given ID
+     * that satisfy the given filters, all applied in logical and.
+     *
+     * @param pointOfInterestID the ID of the point of interest
+     * @param filters           the filters to apply
+     * @return all the contents in the point of interest corresponding to the given filters
+     * @throws IllegalArgumentException if the point of interest is not found
+     */
+    @SuppressWarnings("unchecked")
+    public List<ContentOF> viewFilteredContents(long pointOfInterestID, List<SearchFilter> filters) {
+        return (List<ContentOF>) SearchUtils
+                .getFilteredItems(getPointOfInterestContents(pointOfInterestID).toList(),
+                        filters);
+    }
+
+    /**
+     * Returns the Detailed Format of a Content  in the system corresponding to the given ID.
+     * The content can belong to any point of interest or contest.
      *
      * @param contentID the ID of the Content to visualize
      * @return the Detailed Format of the Content having the given ID
      * @throws IllegalArgumentException if the Content having the given ID is not found
      */
     public ContentOF viewContent(long contentID) {
-        if (!(getContentByID(contentID) instanceof PointOfInterestContent poiContent))
-            throw new IllegalArgumentException("The given ID does not correspond to a point of interest content");
-        return poiContent.getOutputFormat();
-    }
-
-    /**
-     * Returns the Detailed Format of a Content  in the system corresponding to the given ID.
-     * The content can belong to any point of interest.
-     *
-     * @param contentID the ID of the Content to visualize
-     * @return the Detailed Format of the Content having the given ID
-     */
-    public ContentOF viewContentFromRepository(long contentID) {
         return getContentByID(contentID).getOutputFormat();
     }
 
@@ -160,9 +147,10 @@ public class ContentHandler {
         PointOfInterest pointOfInterest = getPointOfInterestByID(poiID);
 
         PointOfInterestContent content = contentRepository.save(createContent(
-                new PointOfInterestContentBuilder(pointOfInterest), user, contentIF));
+                new PointOfInterestContentBuilder(pointOfInterest), user, contentIF, filePath));
 
         insertPoiContent(content, user);
+        contentRepository.save(content);
         return content.getID();
     }
 
@@ -170,6 +158,7 @@ public class ContentHandler {
      * Creates a content from the specified contentIF.
      *
      * @param builder   the builder for the content to be created
+     * @param filePath  the path to the file resources
      * @param user      the user who is creating the content
      * @param contentIF the contentIF from which the content will be created
      * @param <V>       the type of the content host
@@ -178,15 +167,17 @@ public class ContentHandler {
      * @throws IllegalArgumentException if the builder or the contentIF are null
      */
     public static <V extends ContentHost<V> & Visualizable, K extends Content<V>> K createContent(ContentBuilder<V, K> builder,
-                                                                                    User user,
-                                                                                    ContentIF contentIF) {
+                                                                                                  User user,
+                                                                                                  ContentIF contentIF,
+                                                                                                  String filePath) {
         if (builder == null)
             throw new IllegalArgumentException("Builder cannot be null");
         if (contentIF == null)
             throw new IllegalArgumentException("ContentIF cannot be null");
 
         builder.buildUser(user).buildDescription(contentIF.description());
-        contentIF.files().stream().map(fileName -> new File(filePath + fileName))
+        contentIF.files().stream()
+                .map(fileName -> new File(filePath + fileName))
                 .forEach(builder::buildFile);
         return builder.build().getResult();
     }
@@ -230,7 +221,7 @@ public class ContentHandler {
     }
 
     /**
-     * Returns the Synthesized Format of all the saved contents of the user with the given ID.
+     * Returns all the saved contents of the user with the given ID.
      *
      * @param userID the ID of the user
      * @return the Synthesized Format of all the saved contents of the user

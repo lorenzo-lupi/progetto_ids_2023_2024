@@ -5,7 +5,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalSta
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 

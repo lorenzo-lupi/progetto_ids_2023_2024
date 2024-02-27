@@ -5,6 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizabl
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,9 @@ public class InsertionUtils {
         if (Role.isAtLeastContributorForMunicipality(municipality).test(user)) {
             item.approve();
         } else {
-            requestRepository.save(RequestFactory.getApprovalRequest(item));
+            Request<?> request = RequestFactory.getApprovalRequest(item);
+            request.setSender(user);
+            requestRepository.save(request);
         }
     }
 

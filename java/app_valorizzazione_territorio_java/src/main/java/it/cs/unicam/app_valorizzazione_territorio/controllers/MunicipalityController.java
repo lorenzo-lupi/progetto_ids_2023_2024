@@ -21,7 +21,7 @@ public class MunicipalityController {
     @Autowired
     MunicipalityHandler municipalityHandler;
 
-    @PutMapping("create")
+    @PutMapping("insert")
     public ResponseEntity<String> createMunicipality(@RequestBody MunicipalityIF municipalityIF) {
         try {
             long id = municipalityHandler.createMunicipality(municipalityIF);
@@ -37,7 +37,7 @@ public class MunicipalityController {
     }
 
     @JsonView(View.Synthesized.class)
-    @GetMapping("viewAll")
+    @GetMapping("view/all")
     public ResponseEntity<List<MunicipalityOF>> viewAllMunicipalities() {
         return new ResponseEntity<>(municipalityHandler.viewAllMunicipalities(), HttpStatus.OK);
     }

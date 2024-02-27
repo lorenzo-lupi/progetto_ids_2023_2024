@@ -407,6 +407,9 @@ public class SampleRepositoryConstructor {
                 RequestFactory.getApprovalRequest(FOTO_PITTURA_2)
         ));
 
+        requests.get(0).setSender(TURIST_1);
+        requests.get(1).setSender(TURIST_2);
+        requests.get(2).setSender(TURIST_2);
         RICHIESTA_PIAZZA_LIBERTA = repository.save(requests.get(0));
         RICHIESTA_FOTO_BASILICA = repository.save(requests.get(1));
         RICHIESTA_PITTURA_CAVOUR = repository.save(requests.get(2));

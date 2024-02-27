@@ -2,8 +2,6 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.model.contest.ProposalRegister;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -20,6 +20,7 @@ import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.Set;
  */
 @Service
 public class ContestHandler {
+    @Value("${fileResources.path}")
+    private String filePath;
     private final UserJpaRepository userRepository;
     private final MunicipalityJpaRepository municipalityRepository;
     private final ContentJpaRepository contentRepository;
@@ -74,7 +77,7 @@ public class ContestHandler {
         Contest contest = getContestByID(contestID);
 
         ContestContent content = contentRepository.saveAndFlush(ContentHandler.createContent(
-                new ContestContentBuilder(contest), user, contentIF));
+                new ContestContentBuilder(contest), user, contentIF, filePath));
 
         contest.getProposalRegister().proposeContent(content);
         contestRepository.saveAndFlush(contest);

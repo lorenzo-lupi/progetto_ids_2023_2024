@@ -3,7 +3,6 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

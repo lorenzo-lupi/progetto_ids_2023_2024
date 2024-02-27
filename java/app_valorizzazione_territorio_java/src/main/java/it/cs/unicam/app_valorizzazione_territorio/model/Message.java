@@ -103,7 +103,7 @@ public class Message implements Visualizable {
                 this.isRead(),
                 this.getSenderEmail(),
                 this.getText(),
-                this.getAttachments()
+                this.getAttachments().stream().map(File::getName).toList()
         );
     }
 }

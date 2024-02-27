@@ -14,5 +14,5 @@ import java.util.List;
 public record MessageIF(String senderName,
                         String senderEmail,
                         String text,
-                        List<File> attachments) {
+                        List<String> attachments) {
 }

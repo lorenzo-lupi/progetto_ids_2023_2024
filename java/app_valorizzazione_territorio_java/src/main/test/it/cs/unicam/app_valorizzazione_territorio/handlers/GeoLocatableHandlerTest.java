@@ -30,8 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class,
-        GeoLocatableHandler.class})
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class, GeoLocatableHandler.class})
 @DataJpaTest
 public class GeoLocatableHandlerTest {
     @Autowired
@@ -123,7 +122,6 @@ public class GeoLocatableHandlerTest {
     }
 
     @Test
-    //TODO queries are not working
     void shouldInsertPointOfInterest() {
 
         long id = geoLocatableHandler.insertPointOfInterest(

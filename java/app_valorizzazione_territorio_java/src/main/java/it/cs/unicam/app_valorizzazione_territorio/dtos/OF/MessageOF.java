@@ -27,7 +27,7 @@ public record MessageOF(
         @JsonView(View.Synthesized.class)   boolean read,
         @JsonView(View.Detailed.class)      String senderEmail,
         @JsonView(View.Detailed.class)      String text,
-        @JsonView(View.Detailed.class)      List<File> attachments
+        @JsonView(View.Detailed.class)      List<String> attachments
 )
         implements Identifiable {
     @JsonIgnore

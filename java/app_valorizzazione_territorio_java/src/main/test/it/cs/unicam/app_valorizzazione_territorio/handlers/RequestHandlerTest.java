@@ -3,8 +3,8 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
@@ -33,6 +33,8 @@ class RequestHandlerTest {
     RequestHandler requestHandler;
     @Autowired
     private RequestJpaRepository requestJpaRepository;
+    @Autowired
+    private MunicipalityJpaRepository municipalityJpaRepository;
 
     @BeforeEach
     void setUp() {
@@ -102,7 +104,7 @@ class RequestHandlerTest {
         );
         assertTrue(requestJpaRepository.existsById(reportId));
         requestJpaRepository.findById(reportId).get().approve();
-        assertFalse(MunicipalityRepository.getInstance().containsGeoLocatable(sampleRepositoryProvider.GAS_FACILITY.getID()));
+        assertFalse(municipalityJpaRepository.existsById(sampleRepositoryProvider.GAS_FACILITY.getID()));
     }
 
     @Test

@@ -4,7 +4,6 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionabl
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
@@ -55,7 +54,7 @@ public class MapProviderBase extends MapProvider{
 
     @Override
     public Map<Municipality> getMunicipalitiesMap() throws IOException {
-        return fact(MunicipalityRepository.getInstance().getItemStream().toList(), CoordinatesBox.ITALY);
+        return createMap(municipalityJpaRepository.findAll(), CoordinatesBox.ITALY);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class MapProviderBase extends MapProvider{
         filters.forEach(filter -> geoLocatableSearchEngine.addCriterion(Parameter.valueOf(filter.parameter()),
                 SearchCriterion.stringToBiPredicate.get(filter.criterion()), filter.value()));
 
-        return fact(geoLocatableSearchEngine.search().getResults(), box);
+        return createMap(geoLocatableSearchEngine.search().getResults(), box);
     }
 
     @Override
@@ -92,7 +91,8 @@ public class MapProviderBase extends MapProvider{
         return municipalityJpaRepository.findByName(municipalityName);
     }
 
-    private static <P extends Positionable & Visualizable> Map<P> fact(List<P> geoLocatables, CoordinatesBox box) throws IOException {
+    private static <P extends Positionable & Visualizable> Map<P> createMap(List<P> geoLocatables,
+                                                                            CoordinatesBox box) throws IOException {
         return new MapBuilder<P>()
                 .buildOsmData(box)
                 .buildPointsList(geoLocatables)

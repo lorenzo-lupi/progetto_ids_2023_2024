@@ -94,7 +94,7 @@ public class GeoLocatableHandler {
         Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
         if (municipality.isEmpty()) throw new IllegalArgumentException("Municipality not found");
         return mapProvider
-                .getFilteredMap(municipality.get(), filters)
+                .getFilteredMap(municipality.get(), coordinatesBox, filters)
                 .getOutputFormat();
     }
 
