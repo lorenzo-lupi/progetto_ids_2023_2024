@@ -379,9 +379,14 @@ public class SampleRepositoryConstructor {
         CONCORSO_PITTURA.getProposalRegister().proposeContent((ContestContent) FOTO_PITTURA_1);
         CONCORSO_PITTURA.getProposalRegister().proposeContent((ContestContent) FOTO_PITTURA_2);
 
+        CONCORSO_FOTO_2024 = contestJpaRepository.saveAndFlush(CONCORSO_FOTO_2024);
+        CONCORSO_FOTO_PIZZA = contestJpaRepository.saveAndFlush(CONCORSO_FOTO_PIZZA);
+        CONCORSO_PITTURA = contestJpaRepository.saveAndFlush(CONCORSO_PITTURA);
+
         TURIST_1.addSavedContent(MANIFESTO_CORSA_SPADA);
         TURIST_2.addSavedContent(MANIFESTO_CORSA_SPADA);
-
+        TURIST_1 = userJpaRepository.saveAndFlush(TURIST_1);
+        TURIST_2 = userJpaRepository.saveAndFlush(TURIST_2);
         repository.flush();
         areContentsSet = true;
     }

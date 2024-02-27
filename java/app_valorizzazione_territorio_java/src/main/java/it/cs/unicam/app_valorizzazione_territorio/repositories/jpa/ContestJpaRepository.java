@@ -14,6 +14,7 @@ public interface ContestJpaRepository extends JpaRepository<Contest, Long>{
 
     List<Contest> findAllByValidTrue();
     List<Contest> findByMunicipalityAndValidTrue(Municipality municipality);
+    List<Contest> findByMunicipality(Municipality municipality);
     Optional<Contest> findByBaseContestIdAndValidTrue(long id);
 
 }

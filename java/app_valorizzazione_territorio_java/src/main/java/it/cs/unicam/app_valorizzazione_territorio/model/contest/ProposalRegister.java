@@ -73,6 +73,7 @@ public class ProposalRegister implements Identifiable {
             throw new IllegalArgumentException("User already voted");
 
         content.addVoter(user);
+
     }
 
     /**

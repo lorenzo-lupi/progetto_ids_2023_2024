@@ -72,6 +72,7 @@ public class GeoLocatableController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @JsonView(View.Detailed.class)
     @GetMapping("view/{geoLocatableID}")
     public ResponseEntity<Object> viewGeoLocatable(@PathVariable long geoLocatableID) {
@@ -81,6 +82,25 @@ public class GeoLocatableController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @JsonView(View.Detailed.class)
+    @GetMapping("view/compoundPoint/{geoLocatableID}")
+    public ResponseEntity<GeoLocatableOF> visualizeDetailedCompoundPoint(@PathVariable long geoLocatableID) {
+        try {
+            return new ResponseEntity<>(geoLocatableHandler.visualizeDetailedCompoundPoint(geoLocatableID), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @JsonView(View.Detailed.class)
+    @GetMapping("view/poi/{geoLocatableID}")
+    public ResponseEntity<GeoLocatableOF> visualizeDetailedPointOfInterest(@PathVariable long geoLocatableID) {
+        try {
+            return new ResponseEntity<>(geoLocatableHandler.visualizeDetailedPointOfInterest(geoLocatableID), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -97,7 +117,7 @@ public class GeoLocatableController {
         }
     }
 
-    @PostMapping("/insertPoi/{userID}")
+    @PutMapping("/insert/poi/{userID}")
     public ResponseEntity<Object> insertPointOfInterest(@PathVariable long userID,
                                                         @RequestBody PointOfInterestIF pointOfInterestIF) {
         try {
@@ -110,14 +130,14 @@ public class GeoLocatableController {
         }
     }
 
-    @GetMapping("/parametersPoi")
+    @GetMapping("/parameters/poi")
     public ResponseEntity<List<String>> obtainPointOfInterestSearchParameters() {
         List<String> parameters = GeoLocatableHandler.obtainPointOfInterestSearchParameters();
         return new ResponseEntity<>(parameters, HttpStatus.OK);
     }
 
     @JsonView(View.Synthesized.class)
-    @PostMapping("/searchPoi/{municipalityID}")
+    @PostMapping("/search/poi/{municipalityID}")
     public ResponseEntity<Object> getFilteredPointOfInterests(@PathVariable long municipalityID,
                                                               @RequestBody List<SearchFilter> filters) {
         try {
@@ -130,7 +150,7 @@ public class GeoLocatableController {
         }
     }
 
-    @PostMapping("/insertCompoundPoint/{municipalityID}/{userID}")
+    @PutMapping("/insert/compoundPoint/{municipalityID}/{userID}")
     public ResponseEntity<Object> insertCompoundPoint(@RequestParam long municipalityID,
                                                       @RequestParam long userID,
                                                       @RequestBody CompoundPointIF compoundPointIF) {
