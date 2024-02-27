@@ -13,6 +13,9 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.PrivateContestDe
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Attraction;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.AttractionTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.ContestRequest;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
@@ -105,6 +108,7 @@ public class InsertionTests {
     public void testUserInsertion() {
         User newUser = new User("Test username", "test.email@test.it", "TestPass01");
         userJpaRepository.save(newUser);
+        userJpaRepository.flush();
 
         assertTrue(userJpaRepository.findOne(Example.of(newUser)).isPresent());
         assertTrue(userJpaRepository.findByUsername("Test username").isPresent());
@@ -127,6 +131,7 @@ public class InsertionTests {
                 sampleRepositoryProvider.CAMERINO, AttractionTypeEnum.OTHER, sampleRepositoryProvider.TURIST_1);
 
         geoLocatableJpaRepository.save(newPoi);
+        geoLocatableJpaRepository.flush();
         assertTrue(geoLocatableJpaRepository.findOne(Example.of(newPoi)).isPresent());
 
         sampleRepositoryProvider.CAMERINO.addGeoLocatable(newPoi);
@@ -150,6 +155,7 @@ public class InsertionTests {
                 sampleRepositoryProvider.CAMERINO);
 
         contestJpaRepository.save(newContest);
+        contestJpaRepository.flush();
         assertTrue(contestJpaRepository.findOne(Example.of(newContest)).isPresent());
 
         sampleRepositoryProvider.CAMERINO.addContest(newContest);
@@ -167,6 +173,7 @@ public class InsertionTests {
                 List.of(sampleRepositoryProvider.TURIST_1, sampleRepositoryProvider.TURIST_2));
 
         contestJpaRepository.save(newContest);
+        contestJpaRepository.flush();
         assertTrue(contestJpaRepository.findOne(Example.of(newContest)).isPresent());
         assertTrue(contestJpaRepository.findOne(Example.of(contestBase)).isPresent());
 
@@ -201,6 +208,7 @@ public class InsertionTests {
                 (PointOfInterest) sampleRepositoryProvider.PIAZZA_LIBERTA, new ArrayList<>(), sampleRepositoryProvider.TURIST_1);
 
         contentJpaRepository.save(newContent);
+        contentJpaRepository.flush();
         assertTrue(contentJpaRepository.findOne(Example.of(newContent)).isPresent());
 
         ((PointOfInterest) sampleRepositoryProvider.PIAZZA_LIBERTA).addContent(newContent);
@@ -214,6 +222,21 @@ public class InsertionTests {
         assertTrue(requestJpaRepository.findOne(Example.of(sampleRepositoryProvider.RICHIESTA_FOTO_BASILICA)).isPresent());
         assertTrue(requestJpaRepository.findOne(Example.of(sampleRepositoryProvider.RICHIESTA_PITTURA_CAVOUR)).isPresent());
         assertTrue(requestJpaRepository.findOne(Example.of(sampleRepositoryProvider.RICHIESTA_PIAZZA_LIBERTA)).isPresent());
+    }
+
+    @Test
+    public void testRequestInsertion() {
+        Request<?> newRequest = RequestFactory.getApprovalRequest(sampleRepositoryProvider.FOTO_PITTURA_1);
+
+        requestJpaRepository.save(newRequest);
+        requestJpaRepository.flush();
+        assertTrue(requestJpaRepository.findOne(Example.of(newRequest)).isPresent());
+    }
+
+    @Test
+    public void testNotificationInsertions() {
+        assertTrue(notificationJpaRepository.findOne(Example.of(sampleRepositoryProvider.NOTIFICA_INVITO_PITTURA)).isPresent());
+        assertTrue(notificationJpaRepository.findOne(Example.of(sampleRepositoryProvider.NOTIFICA_INZIO_FESTA)).isPresent());
     }
 
     @Test

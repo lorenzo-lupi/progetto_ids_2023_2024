@@ -13,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface GeoLocatableJpaRepository extends JpaRepository<GeoLocatable, Long> {
 
-    Optional<GeoLocatable> findByID(long ID);
     @Query("select c from GeoLocatable c where c.geoLocatableType IN ('Attraction', 'Activity', 'Event')")
     List<PointOfInterest> findAllPointsOfInterest();
 

@@ -161,7 +161,7 @@ public class GeoLocatableHandlerTest {
                 .stream()
                 .anyMatch(request -> request.getItem().getID() == id));
 
-        assertTrue(sampleRepositoryProvider.getGeoLocatableJpaRepository().findByID(id).isPresent());
+        assertTrue(sampleRepositoryProvider.getGeoLocatableJpaRepository().findById(id).isPresent());
     }
 
     @Test
@@ -192,7 +192,7 @@ public class GeoLocatableHandlerTest {
                 sampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 cpointInsertableSample);
 
-        assertTrue(sampleRepositoryProvider.getGeoLocatableJpaRepository().findByID(id).get().isApproved());
+        assertTrue(sampleRepositoryProvider.getGeoLocatableJpaRepository().findById(id).get().isApproved());
     }
 
     @Test
@@ -218,7 +218,7 @@ public class GeoLocatableHandlerTest {
         assertTrue(vals
                 .stream()
                 .map(GeoLocatableOF::getID)
-                .map(id -> sampleRepositoryProvider.getGeoLocatableJpaRepository().findByID(id).get())
+                .map(id -> sampleRepositoryProvider.getGeoLocatableJpaRepository().findById(id).get())
                 .allMatch(poi -> poi instanceof PointOfInterest));
     }
 

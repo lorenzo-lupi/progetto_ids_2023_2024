@@ -252,7 +252,7 @@ public class ContentHandler {
     }
 
     private Stream<PointOfInterestContent> getPointOfInterestContents(long pointOfInterestID) {
-        Optional<GeoLocatable> pointOfInterest = geoLocatableRepository.findByID(pointOfInterestID);
+        Optional<GeoLocatable> pointOfInterest = geoLocatableRepository.findById(pointOfInterestID);
         if (pointOfInterest.isEmpty())
             throw new IllegalArgumentException("Point of interest not found");
         if (!(pointOfInterest.get() instanceof PointOfInterest poi))
@@ -271,7 +271,7 @@ public class ContentHandler {
     }
 
     private PointOfInterest getPointOfInterestByID(long pointOfInterestID) {
-        Optional<GeoLocatable> pointOfInterest = geoLocatableRepository.findByID(pointOfInterestID);
+        Optional<GeoLocatable> pointOfInterest = geoLocatableRepository.findById(pointOfInterestID);
         if (pointOfInterest.isEmpty())
             throw new IllegalArgumentException("Point of interest not found");
         if (!(pointOfInterest.get() instanceof PointOfInterest poi))

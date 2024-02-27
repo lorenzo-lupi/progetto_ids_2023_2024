@@ -176,7 +176,7 @@ public class GeoLocatableHandler {
      * @return the Detailed Format of the geoLocatable
      */
     public Identifiable visualizeDetailedGeoLocatable(long geoLocatableID) {
-        Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findByID(geoLocatableID);
+        Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findById(geoLocatableID);
         if (geoLocatable.isEmpty())
             throw new IllegalArgumentException("GeoLocatable not found");
         return geoLocatable.get().getOutputFormat();

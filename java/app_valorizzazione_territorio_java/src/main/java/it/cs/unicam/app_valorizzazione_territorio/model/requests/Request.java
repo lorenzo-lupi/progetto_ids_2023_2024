@@ -20,12 +20,14 @@ import java.util.Date;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "request_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "requestType", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor(force = true)
 public abstract class Request<I extends Visualizable> implements Approvable, Identifiable, Visualizable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
+    @Column(name="requestType", insertable = false, updatable = false)
+    protected String requestType;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User sender;

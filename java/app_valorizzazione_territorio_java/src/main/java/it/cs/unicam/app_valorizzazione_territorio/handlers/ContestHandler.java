@@ -360,7 +360,7 @@ public class ContestHandler {
     }
 
     private GeoLocatable getGeoLocatableByID(long geoLocatableID) {
-        Optional<GeoLocatable> geoLocatable = geoLocatableRepository.findByID(geoLocatableID);
+        Optional<GeoLocatable> geoLocatable = geoLocatableRepository.findById(geoLocatableID);
         if (geoLocatable.isEmpty())
             throw new IllegalArgumentException("GeoLocatable not found");
         return geoLocatable.get();

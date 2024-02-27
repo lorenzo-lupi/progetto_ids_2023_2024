@@ -33,10 +33,8 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
-
     @Column(name="geoLocatableType", insertable = false, updatable = false)
     protected String geoLocatableType;
-
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
