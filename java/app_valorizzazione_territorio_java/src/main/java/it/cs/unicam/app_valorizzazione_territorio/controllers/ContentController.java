@@ -20,7 +20,7 @@ public class ContentController {
     ContentHandler contentHandler;
 
     @JsonView(View.Synthesized.class)
-    @GetMapping("viewFromPoi/{poiId}")
+    @GetMapping("viewInPoi/{poiId}")
     public ResponseEntity<Object> viewApprovedContents(@PathVariable("poiId") long poiId) {
         try {
             return new ResponseEntity<>(contentHandler.viewApprovedContents(poiId), HttpStatus.OK);
@@ -32,7 +32,7 @@ public class ContentController {
     }
 
     @JsonView(View.Synthesized.class)
-    @GetMapping("viewFromPoi/{poiId}/all")
+    @GetMapping("viewInPoi/{poiId}/all")
     public ResponseEntity<Object> viewAllContents(@PathVariable("poiId") long poiId) {
         try {
             return new ResponseEntity<>(contentHandler.viewAllContents(poiId), HttpStatus.OK);
@@ -44,17 +44,17 @@ public class ContentController {
     }
 
     @GetMapping("criteria")
-    public ResponseEntity<Set<String>> getSearchCriteria() {
+    public ResponseEntity<Set<String>> getContentSearchCriteria() {
         return new ResponseEntity<>(contentHandler.getSearchCriteria(), HttpStatus.OK);
     }
 
     @GetMapping("parameters")
-    public ResponseEntity<Set<String>> getSearchParameters() {
+    public ResponseEntity<Set<String>> getContentSearchParameters() {
         return new ResponseEntity<>(contentHandler.getSearchParameters(), HttpStatus.OK);
     }
 
     @JsonView(View.Synthesized.class)
-    @PostMapping("searchFromPoi/{poiId}")
+    @PostMapping("searchInPoi/{poiId}")
     public ResponseEntity<Object> viewFilteredContents(@PathVariable("poiId") long poiId,
                                                        @RequestBody List<SearchFilter> filters) {
         try {

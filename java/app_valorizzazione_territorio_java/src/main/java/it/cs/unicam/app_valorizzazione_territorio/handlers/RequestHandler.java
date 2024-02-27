@@ -1,8 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
-import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestRequestOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityRequestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
@@ -10,9 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.*;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.Repository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import org.apache.commons.lang3.tuple.Pair;
@@ -84,6 +80,8 @@ public class RequestHandler {
      *
      * @param userID the ID of the user
      * @return the Synthesized Format of all the suitable contest requests
+     * @throws IllegalArgumentException if the user with the given ID is not found
+     * @throws UnsupportedOperationException if the user cannot access the contest requests
      */
     public List<ContestRequestOF> viewContestRequests(long userID) {
         Optional<User> optionalUser = userJpaRepository.findById(userID);
@@ -162,6 +160,8 @@ public class RequestHandler {
 
         if (isApproved) optionalRequest.get().approve();
         else optionalRequest.get().reject();
+
+        requestJpaRepository.save(optionalRequest.get());
     }
 
     /**
@@ -308,7 +308,7 @@ public class RequestHandler {
      *
      * @param userID the id of the user
      * @param geolocatableID the id of the GeoLocatable object
-     * @param pairs the pairs of parameters and values to modify
+     * @param settings the pairs of parameters and values to modify
      * @param message the message of the request
      * @return the id of the generated request if any, 0 otherwise
      * @throws IllegalArgumentException if the user with the given ID is not found or if the GeoLocatable object
@@ -316,7 +316,7 @@ public class RequestHandler {
      */
     public long modifyGeoLocatable(long userID,
                                    long geolocatableID,
-                                   List<Pair<Parameter, Object>> pairs,
+                                   List<ModificationSetting> settings,
                                    String message) {
         Optional<GeoLocatable> optionalGeoLocatable = geoLocatableJpaRepository.findById(geolocatableID);
         if (optionalGeoLocatable.isEmpty())
@@ -325,6 +325,10 @@ public class RequestHandler {
         Optional<User> optionalUser = userJpaRepository.findById(userID);
         if (optionalUser.isEmpty())
             throw new IllegalArgumentException("User not found");
+
+        List<Pair<Parameter, Object>> pairs  = settings.stream()
+                .map(setting -> Pair.of(Parameter.valueOf(setting.parameter()), setting.value()))
+                .toList();
 
         return modifyGeoLocatable(optionalUser.get(), optionalGeoLocatable.get(), pairs, message);
     }
@@ -344,7 +348,7 @@ public class RequestHandler {
     }
 
     private void modifyGeoLocatableValues(GeoLocatable geoLocatable,
-                                                 List<Pair<Parameter, Object>> pairs) {
+                                          List<Pair<Parameter, Object>> pairs) {
         pairs.forEach(pair -> {
                     if (!geoLocatable.getSettersMapping().containsKey(pair.getLeft()))
                         throw new IllegalArgumentException("Invalid parameter");

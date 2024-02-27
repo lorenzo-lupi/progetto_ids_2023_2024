@@ -55,7 +55,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
      */
     public ModificationCommand(List<Pair<Parameter, Object>> modifications) {
         this.modifications = modifications.stream()
-                .map(p -> new Modification(p.getKey(), p.getValue()))
+                .map(p -> new Modification(p.getKey(), (Serializable) p.getValue()))
                 .toList();
     }
 
@@ -66,7 +66,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
      */
     public ModificationCommand(Parameter parameter, Object value) {
         this.modifications = new LinkedList<>();
-        this.modifications.add(new Modification(parameter, value));
+        this.modifications.add(new Modification(parameter, (Serializable) value));
     }
 
     public ConfirmationType getConfirmationType() {
@@ -95,8 +95,8 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
         private final Parameter parameter;
         @Lob
         @Column(columnDefinition="BLOB")
-        private final Object newValue;
-        public Modification(Parameter parameter, Object newValue) {
+        private final Serializable newValue;
+        public Modification(Parameter parameter, Serializable newValue) {
             this.parameter = parameter;
             this.newValue = newValue;
         }
@@ -112,7 +112,7 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
     @DiscriminatorValue("ModifiableContent")
     @NoArgsConstructor(force = true)
     private static class ContentModificationCommand extends ModificationCommand<Content<?>> {
-        @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
         @JoinColumn(name = "content_id")
         private Content<?> content;
         public ContentModificationCommand(Content<?> content, List<Pair<Parameter, Object>> modifications) {
@@ -132,8 +132,9 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
 
     @Entity
     @DiscriminatorValue("ModifiableGeoLocatable")
+    @NoArgsConstructor(force = true)
     private static class GeoLocatableModificationCommand extends ModificationCommand<GeoLocatable> {
-        @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
         @JoinColumn(name = "geo_locatable_id")
         private GeoLocatable geoLocatable;
         public GeoLocatableModificationCommand(GeoLocatable geoLocatable, List<Pair<Parameter, Object>> modifications) {
@@ -160,8 +161,9 @@ public abstract class ModificationCommand<T extends Visualizable & Modifiable> e
 
     @Entity
     @DiscriminatorValue("ModifiableUser")
+    @NoArgsConstructor(force = true)
     private static class UserModificationCommand extends ModificationCommand<User> {
-        @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
         @JoinColumn(name = "user_id")
         private User user;
         public UserModificationCommand(User user, List<Pair<Parameter, Object>> modifications) {

@@ -3,12 +3,13 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.ModificationCommand;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.ModificationSetting;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,8 +141,8 @@ class RequestHandlerTest {
     void requestToModifyGeoLocatable() {
         long id = requestHandler.modifyGeoLocatable(sampleRepositoryProvider.TURIST_1.getID(),
                 sampleRepositoryProvider.PIAZZA_LIBERTA.getID(),
-                List.of(Pair.of(Parameter.NAME, "Modificato"),
-                        Pair.of(Parameter.DESCRIPTION, "Descrizione modificata")),
+                List.of(new ModificationSetting(Parameter.NAME.toString(), "Modificato"),
+                        new ModificationSetting(Parameter.DESCRIPTION.toString(), "Descrizione modificata")),
                 "Modifica richiesta");
 
         assertNotEquals(0L, id);
@@ -159,8 +160,8 @@ class RequestHandlerTest {
     void modifyGeoLocatable() {
         long id = requestHandler.modifyGeoLocatable(sampleRepositoryProvider.CURATOR_CAMERINO.getID(),
                 sampleRepositoryProvider.GAS_FACILITY.getID(),
-                List.of(Pair.of(Parameter.NAME, "Modificato2"),
-                        Pair.of(Parameter.DESCRIPTION, "Descrizione modificata2")),
+                List.of(new ModificationSetting(Parameter.NAME.toString(), "Modificato2"),
+                        new ModificationSetting(Parameter.DESCRIPTION.toString(), "Descrizione modificata2")),
                 "Modifica richiesta");
 
         assertEquals(0L, id);

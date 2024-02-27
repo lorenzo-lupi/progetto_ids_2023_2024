@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("geoLocatable")
 public class GeoLocatableController {
 
 
@@ -31,123 +31,116 @@ public class GeoLocatableController {
     }
 
     @JsonView(View.Detailed.class)
-    @PostMapping("/visualizeFilteredMap/{municipalityID}/{upperLeftPosition}/{lowerRightPosition}")
-    public ResponseEntity<MapOF> visualizeFilteredMap(@PathVariable long municipalityID,
-                                                      @PathVariable String upperLeftPosition,
-                                                      @PathVariable String lowerRightPosition,
-                                                      @RequestBody List<SearchFilter> filters) {
+    @PostMapping("/viewFilteredMap")
+    public ResponseEntity<Object> viewFilteredMap(@RequestParam long municipalityID,
+                                                 @RequestParam String upperLeftPosition,
+                                                 @RequestParam String lowerRightPosition,
+                                                 @RequestBody List<SearchFilter> filters) {
         try {
             CoordinatesBox coordinatesBox = new CoordinatesBox(PositionParser.parse(upperLeftPosition),
                     PositionParser.parse(lowerRightPosition));
             MapOF map = geoLocatableHandler.visualizeFilteredMap(municipalityID, coordinatesBox, filters);
             return new ResponseEntity<>(map, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @JsonView(View.Synthesized.class)
-    @PostMapping("viewFilteredGeoLocatables/{municipalityID}")
-    public ResponseEntity<List<GeoLocatableOF>> searchFilteredGeoLocatables(@PathVariable long municipalityID,
-                                                                            @RequestBody List<SearchFilter> filters) {
-        try {
-            List<GeoLocatableOF> geoLocatableOFs = geoLocatableHandler
-                    .searchFilteredGeoLocatables(municipalityID, filters);
-            return new ResponseEntity<>(geoLocatableOFs, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @JsonView(View.Detailed.class)
-    @GetMapping("visualizedDetailedCompoundPoint/{geoLocatableID}")
-    public ResponseEntity<GeoLocatableOF> visualizeDetailedCompoundPoint(@PathVariable long geoLocatableID) {
-        try {
-            return new ResponseEntity<>(geoLocatableHandler.visualizeDetailedCompoundPoint(geoLocatableID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @JsonView(View.Detailed.class)
-    @GetMapping("visualizeDetailedPointOfInterest/{geoLocatableID}")
-    public ResponseEntity<GeoLocatableOF> visualizeDetailedPointOfInterest(@PathVariable long geoLocatableID) {
-        try {
-            return new ResponseEntity<>(geoLocatableHandler.visualizeDetailedPointOfInterest(geoLocatableID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("isPositionInMunicipality/{municipalityID}/{position}")
-    public ResponseEntity<String> isPositionInMunicipality(@PathVariable long municipalityID,
-                                                            @PathVariable String position) {
-        try {
-            return new ResponseEntity<>("Response value:" + geoLocatableHandler.isPositionInMunicipality(municipalityID,
-                    PositionParser.parse(position)), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("criteria")
+    public ResponseEntity<Set<String>> getGeoLocatableSearchCriteria() {
+        return new ResponseEntity<>(geoLocatableHandler.getSearchCriteria(), HttpStatus.OK);
+    }
 
+    @GetMapping("parameters")
+    public ResponseEntity<List<String>> getGeoLocatableParameters() {
+        return new ResponseEntity<>(geoLocatableHandler.getSearchParameters(), HttpStatus.OK);
+    }
 
-    @GetMapping("getSearchCriteria")
-    public ResponseEntity<Set<String>> getSearchCriteria() {
+    @JsonView(View.Synthesized.class)
+    @PostMapping("searchGeoLocatables")
+    public ResponseEntity<Object> searchFilteredGeoLocatables(@RequestParam long municipalityID,
+                                                              @RequestBody List<SearchFilter> filters) {
         try {
-            return new ResponseEntity<>(geoLocatableHandler.getSearchCriteria(), HttpStatus.OK);
+            List<GeoLocatableOF> geoLocatableOFs = geoLocatableHandler
+                    .searchFilteredGeoLocatables(municipalityID, filters);
+            return new ResponseEntity<>(geoLocatableOFs, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @JsonView(View.Detailed.class)
+    @GetMapping("view/{geoLocatableID}")
+    public ResponseEntity<Object> viewGeoLocatable(@PathVariable long geoLocatableID) {
+        try {
+            return new ResponseEntity<>(geoLocatableHandler.visualizeDetailedGeoLocatable(geoLocatableID), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("getParameters")
-    public ResponseEntity<List<String>> getParameters() {
+    @PostMapping("isPositionInMunicipality")
+    public ResponseEntity<String> isPositionInMunicipality(@RequestParam long municipalityID,
+                                                           @RequestParam String position) {
         try {
-            return new ResponseEntity<>(geoLocatableHandler.getSearchParameters(), HttpStatus.OK);
+            return new ResponseEntity<>("Response value: " + geoLocatableHandler.isPositionInMunicipality(municipalityID,
+                    PositionParser.parse(position)), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/insertPointOfInterest/{userID}")
-    public ResponseEntity<Long> insertPointOfInterest(@PathVariable long userID,
-                                                      @RequestBody PointOfInterestIF pointOfInterestIF) {
+    @PostMapping("/insertPoi/{userID}")
+    public ResponseEntity<Object> insertPointOfInterest(@PathVariable long userID,
+                                                        @RequestBody PointOfInterestIF pointOfInterestIF) {
         try {
             long id = geoLocatableHandler.insertPointOfInterest(userID, pointOfInterestIF);
             return new ResponseEntity<>(id, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @JsonView(View.Synthesized.class)
-    @PostMapping("/getFilteredPointOfInterests/{municipalityID}")
-    public ResponseEntity<List<GeoLocatableOF>> getFilteredPointOfInterests(@PathVariable long municipalityID,
-                                                                            @RequestBody List<SearchFilter> filters) {
-        try {
-            List<GeoLocatableOF> geoLocatableOFs = geoLocatableHandler.getFilteredPointOfInterests(municipalityID, filters);
-            return new ResponseEntity<>(geoLocatableOFs, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/obtainPointOfInterestSearchParameters")
+    @GetMapping("/parametersPoi")
     public ResponseEntity<List<String>> obtainPointOfInterestSearchParameters() {
+        List<String> parameters = GeoLocatableHandler.obtainPointOfInterestSearchParameters();
+        return new ResponseEntity<>(parameters, HttpStatus.OK);
+    }
+
+    @JsonView(View.Synthesized.class)
+    @PostMapping("/searchPoi/{municipalityID}")
+    public ResponseEntity<Object> getFilteredPointOfInterests(@PathVariable long municipalityID,
+                                                              @RequestBody List<SearchFilter> filters) {
         try {
-            List<String> parameters = GeoLocatableHandler.obtainPointOfInterestSearchParameters();
-            return new ResponseEntity<>(parameters, HttpStatus.OK);
+            List<GeoLocatableOF> geoLocatableOFs = geoLocatableHandler.getFilteredPointOfInterests(municipalityID, filters);
+            return new ResponseEntity<>(geoLocatableOFs, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/insertCompoundPoint/{municipalityID}/{userID}")
-    public ResponseEntity<Long> insertCompoundPoint(@PathVariable long municipalityID,
-                                                    @PathVariable long userID,
-                                                    @RequestBody CompoundPointIF compoundPointIF) {
+    public ResponseEntity<Object> insertCompoundPoint(@RequestParam long municipalityID,
+                                                      @RequestParam long userID,
+                                                      @RequestBody CompoundPointIF compoundPointIF) {
         try {
             long id = geoLocatableHandler.insertCompoundPoint(municipalityID, userID, compoundPointIF);
             return new ResponseEntity<>(id, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

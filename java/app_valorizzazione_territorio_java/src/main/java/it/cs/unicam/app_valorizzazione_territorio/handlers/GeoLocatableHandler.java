@@ -172,33 +172,17 @@ public class GeoLocatableHandler {
     }
 
     /**
-     * Returns the Detailed Format of a point of interest
+     * Returns the geo-locatable with the given ID, if any.
      *
      * @param geoLocatableID the ID of the geoLocatable
-     * @return the Detailed Format of the geoLocatable
+     * @return the geo-locatable
      */
-    public PointOfInterestOF visualizeDetailedPointOfInterest(long geoLocatableID) {
+    public GeoLocatableOF visualizeDetailedGeoLocatable(long geoLocatableID) {
         Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findById(geoLocatableID);
         if (geoLocatable.isEmpty())
             throw new IllegalArgumentException("GeoLocatable not found");
-        if(!(geoLocatable.get() instanceof PointOfInterest))
-            throw new IllegalArgumentException("GeoLocatable is not a point of interest");
-        return (PointOfInterestOF)geoLocatable.get().getOutputFormat();
-    }
 
-    /**
-     * Returns the Detailed Format of a compound point
-     *
-     * @param geoLocatableID the ID of the geoLocatable
-     * @return the Detailed Format of the geoLocatable
-     */
-    public CompoundPointOF visualizeDetailedCompoundPoint(long geoLocatableID) {
-        Optional<GeoLocatable> geoLocatable = geoLocatableJpaRepository.findById(geoLocatableID);
-        if (geoLocatable.isEmpty())
-            throw new IllegalArgumentException("GeoLocatable not found");
-        if(!(geoLocatable.get() instanceof CompoundPoint))
-            throw new IllegalArgumentException("GeoLocatable is not a compound point");
-        return (CompoundPointOF) geoLocatable.get().getOutputFormat();
+        return geoLocatable.get().getOutputFormat();
     }
 
     /**

@@ -176,8 +176,8 @@ public class UserHandler {
      * @param newAuthorizations the new authorizations
      */
     public void modifyUserAuthorization(long administratorID,
-                                               long userID,
-                                               List<AuthorizationEnum> newAuthorizations) {
+                                        long userID,
+                                        List<AuthorizationEnum> newAuthorizations) {
         Optional<User> user = userRepository.getByID(userID);
         Optional<User> administrator = userRepository.getByID(administratorID);
         if (user.isEmpty() || administrator.isEmpty())
@@ -196,9 +196,9 @@ public class UserHandler {
      * @param authorizationsEnums the new authorizations
      */
     public void modifyUserAuthorization(long municipalityID,
-                                               long administratorID,
-                                               long userID,
-                                               List<AuthorizationEnum> authorizationsEnums) {
+                                        long administratorID,
+                                        long userID,
+                                        List<AuthorizationEnum> authorizationsEnums) {
         Optional<User> user = userRepository.getByID(userID);
         Optional<User> administrator = userRepository.getByID(administratorID);
         Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);

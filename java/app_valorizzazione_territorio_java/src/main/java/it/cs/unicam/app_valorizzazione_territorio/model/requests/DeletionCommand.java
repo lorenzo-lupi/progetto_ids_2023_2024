@@ -6,6 +6,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 /**
  * Objects implementing this class encapsulate the actions to be performed on a deletable item in order
@@ -16,6 +17,7 @@ import jakarta.persistence.*;
 @DiscriminatorValue("Deletion")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "deletable_item", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
 public abstract class DeletionCommand<T extends Visualizable & Deletable> extends RequestCommand<T> {
 
     @SuppressWarnings("unchecked")
@@ -48,6 +50,7 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
 
     @Entity
     @DiscriminatorValue("DeletableContent")
+    @NoArgsConstructor(force = true)
     private static class ContentDeletionCommand extends DeletionCommand<Content<?>> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "content_id")
@@ -68,6 +71,7 @@ public abstract class DeletionCommand<T extends Visualizable & Deletable> extend
 
     @Entity
     @DiscriminatorValue("DeletableGeoLocatable")
+    @NoArgsConstructor(force = true)
     private static class GeoLocatableDeletionCommand extends DeletionCommand<GeoLocatable> {
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "geo_locatable_id")
