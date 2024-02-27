@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.model.utils;
+package it.cs.unicam.app_valorizzazione_territorio.osm.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.PositionParserException;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
@@ -20,7 +20,8 @@ public class PositionParser {
         if(string == null)
             throw new IllegalArgumentException("String must not be null");
 
-        String[] values = parsePositionWrapper(string.trim()).split(",");
+        String[] values = parsePositionWrapper(string.replaceAll("(\\s)+", ""))
+                .split(",");
         if(values.length != 2)
             throw new PositionParserException("wrong format");
         return new Position(parseLatitude(values[0].trim()), parseLongitude(values[1].trim()));

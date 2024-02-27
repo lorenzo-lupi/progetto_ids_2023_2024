@@ -203,7 +203,7 @@ public class User implements Searchable, Visualizable, Modifiable {
                 this.getID(),
                 this.getUsername(),
                 this.getEmail(),
-                this.getRoles()
+                this.getRoles().stream().map(Object::toString).toList()
         );
     }
 
