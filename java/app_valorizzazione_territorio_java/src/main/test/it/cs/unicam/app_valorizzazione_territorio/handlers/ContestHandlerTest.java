@@ -23,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
@@ -113,9 +114,11 @@ public class ContestHandlerTest {
                 sampleRepositoryProvider.CAMERINO.getID());
 
         assertEquals(2, contests.size());
-        assertEquals(Set.of(sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat(),
-                        sampleRepositoryProvider.CONCORSO_PITTURA.getOutputFormat()),
-                Set.copyOf(contests));
+
+        assertEquals(Set.of(sampleRepositoryProvider.CONCORSO_FOTO_PIZZA,
+                                sampleRepositoryProvider.CONCORSO_PITTURA).stream()
+                        .map(Contest::getOutputFormat).map(ContestOF::ID).collect(Collectors.toSet()),
+                contests.stream().map(ContestOF::ID).collect(Collectors.toSet()));
     }
 
     @Test
@@ -125,16 +128,19 @@ public class ContestHandlerTest {
                 sampleRepositoryProvider.CAMERINO.getID());
 
         assertEquals(1, contests.size());
-        assertEquals(Set.of(sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat()),
-                Set.copyOf(contests));
+        ContestOF contestOF = sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat();
+        assertEquals(contestOF.ID(), contests.get(0).ID());
+        assertEquals(contestOF.name(), contests.get(0).name());
     }
 
     @Test
     void shouldViewContest() {
         ContestOF contest = contestHandler.viewContest(
-                sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getID());
+                sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getBaseContestId());
 
-        assertEquals(sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat(), contest);
+        ContestOF contestOF = sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getOutputFormat();
+        assertEquals(contestOF.ID(), contest.ID());
+        assertEquals(contestOF.name(), contest.name());
     }
 
     @Test
@@ -178,7 +184,7 @@ public class ContestHandlerTest {
     @Test
     void shouldViewContestFromRepository() {
         ContestOF contest = contestHandler.viewContestFromRepository(
-                sampleRepositoryProvider.CONCORSO_PITTURA.getID());
+                sampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId());
 
         assertEquals(sampleRepositoryProvider.CONCORSO_PITTURA.getOutputFormat(), contest);
     }

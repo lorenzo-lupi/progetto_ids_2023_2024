@@ -3,6 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.UserIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityOF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.UserOF;
+import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SMTPRequestHandler;
 import it.cs.unicam.app_valorizzazione_territorio.handlers.utils.SearchUtils;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
@@ -15,9 +16,11 @@ import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,11 +34,15 @@ import java.util.Set;
 public class UserHandler {
     private final UserJpaRepository userRepository;
     private final MunicipalityJpaRepository municipalityRepository;
+    private final SMTPRequestHandler smtpRequestHandler;
 
     @Autowired
-    public UserHandler(UserJpaRepository userRepository, MunicipalityJpaRepository municipalityRepository) {
+    public UserHandler(UserJpaRepository userRepository,
+                       MunicipalityJpaRepository municipalityRepository,
+                       SMTPRequestHandler smtpRequestHandler) {
         this.userRepository = userRepository;
         this.municipalityRepository = municipalityRepository;
+        this.smtpRequestHandler = smtpRequestHandler;
     }
 
     /**
@@ -68,8 +75,7 @@ public class UserHandler {
      * @param userEmail      the email of the user
      * @return the id of the generated municipality administrator
      */
-    public long generateMunicipalityAdministrator(long municipalityID,
-                                                  String userEmail) {
+    public long generateMunicipalityAdministrator(long municipalityID, String userEmail) {
         Optional<Municipality> municipality = municipalityRepository.getByID(municipalityID);
         if (municipality.isEmpty())
             throw new IllegalArgumentException("Municipality not found");
@@ -78,8 +84,8 @@ public class UserHandler {
         municipalityAdmin.addRole(new Role(municipality.get(), AuthorizationEnum.ADMINISTRATOR));
 
         //Google Workspace account needed
-        //SMTPRequestHandler.sendEmail(email, "Credenziali di accesso",
-        //   "Username: " + municipalityAdmin.getUsername() + "\nPassword: " + password);
+        smtpRequestHandler.sendEmail(userEmail, "Credenziali di accesso",
+        "Username: " + municipalityAdmin.getUsername() + "\nPassword: " + password);
 
         userRepository.save(municipalityAdmin);
         return municipalityAdmin.getID();

@@ -21,7 +21,6 @@ import java.util.Set;
 public class UserController {
 
     private final UserHandler userHandler;
-
     @Autowired
     public UserController(UserHandler userHandler) {
         this.userHandler = userHandler;
