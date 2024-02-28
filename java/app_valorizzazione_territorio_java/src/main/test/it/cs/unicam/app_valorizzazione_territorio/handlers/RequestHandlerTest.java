@@ -3,7 +3,6 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
-import it.cs.unicam.app_valorizzazione_territorio.model.requests.ModificationCommand;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.ModificationSetting;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;

@@ -12,15 +12,15 @@ import java.util.List;
  * {@link Positionable} objects that are also {@link Identifiable}.
  */
 public class Map<P extends Positionable & Visualizable> implements Visualizable {
-    private final String osmData;
+    private final Object osmData;
     private final List<P> positionablePoints;
 
-    public Map(String osmData, List<P> positionablePoints) {
-        this.positionablePoints = positionablePoints;
+    public Map(Object osmData, List<P> positionablePoints) {
         this.osmData = osmData;
+        this.positionablePoints = positionablePoints;
     }
 
-    public String getOsmData() {
+    public Object getOsmData() {
         return osmData;
     }
 

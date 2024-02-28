@@ -186,6 +186,34 @@ public class GeoLocatableHandler {
     }
 
     /**
+     * Returns the point of interest with the given ID, if any.
+     *
+     * @param pointOfInterestID the ID of the point of interest
+     * @return the point of interest
+     */
+    public PointOfInterestOF visualizeDetailedPointOfInterest(long pointOfInterestID) {
+        Optional<PointOfInterest> pointOfInterest = geoLocatableJpaRepository.findPointOfInterestById(pointOfInterestID);
+        if (pointOfInterest.isEmpty())
+            throw new IllegalArgumentException("Point of interest not found");
+
+        return pointOfInterest.get().getOutputFormat();
+    }
+
+    /**
+     * Returns the compound point with the given ID, if any.
+     *
+     * @param compoundPointID the ID of the compound point
+     * @return the compound point
+     */
+    public CompoundPointOF visualizeDetailedCompoundPoint(long compoundPointID) {
+        Optional<CompoundPoint> compoundPoint = geoLocatableJpaRepository.findCompoundPointById(compoundPointID);
+        if (compoundPoint.isEmpty())
+            throw new IllegalArgumentException("Compound point not found");
+
+        return compoundPoint.get().getOutputFormat();
+    }
+
+    /**
      * Returns true if the given position is in the municipality corresponding to the given ID
      *
      * @param municipalityID the ID of the municipality

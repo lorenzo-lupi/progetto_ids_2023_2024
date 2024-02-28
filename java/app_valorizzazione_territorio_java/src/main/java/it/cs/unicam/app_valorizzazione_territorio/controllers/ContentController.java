@@ -17,7 +17,7 @@ import java.util.Set;
 @RequestMapping("content")
 public class ContentController {
     @Autowired
-    ContentHandler contentHandler;
+    private ContentHandler contentHandler;
 
     @JsonView(View.Synthesized.class)
     @GetMapping("viewInPoi/{poiId}")

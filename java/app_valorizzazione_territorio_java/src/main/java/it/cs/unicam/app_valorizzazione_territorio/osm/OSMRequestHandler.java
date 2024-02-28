@@ -25,24 +25,12 @@ public class OSMRequestHandler {
     public static final String OSM_NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/reverse";
     private final URL urlOsmApi;
     private final URL urlNominatimApi;
-    Map<String, String> parameters;
-    private static OSMRequestHandler instance;
+    private final Map<String, String> parameters;
 
     public OSMRequestHandler() throws MalformedURLException {
         this.urlOsmApi = new URL(OSM_API_URL);
         this.urlNominatimApi = new URL(OSM_NOMINATIM_API_URL);
         this.parameters = new HashMap<>();
-    }
-
-    /**
-     * Returns the singleton instance of the class.
-     *
-     * @return the singleton instance of the class
-     * @throws MalformedURLException if the internal OSM API URL is malformed
-     */
-    public static OSMRequestHandler getInstance() throws MalformedURLException {
-        if (instance == null) instance = new OSMRequestHandler();
-        return instance;
     }
 
     /**
@@ -58,7 +46,7 @@ public class OSMRequestHandler {
     }
 
     /**
-     * Retrieves OSM data from the given box, represented by the values of minimum and maximum
+     * Retrieves OSM data in XML format from the given box, represented by the values of minimum and maximum
      * latitude and longitude.
      * The OSM data contains all the geographical objects included in the given box.
      *
@@ -71,13 +59,12 @@ public class OSMRequestHandler {
      */
     public String retrieveOSMData(double left, double bottom, double right, double top) throws IOException {
         parameters.clear();
+        parameters.put("format", "xml");
         parameters.put("bbox", left + "," + bottom + "," + right + "," + top);
 
         HttpURLConnection connection = (HttpURLConnection) getGETRequestURLFromParameters(urlOsmApi).openConnection();
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
-
-        connection.setRequestProperty("Content-Type", "application/json");
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) return getResponse(connection);
         else throw new IOException("HTTP error code: " + connection.getResponseCode());

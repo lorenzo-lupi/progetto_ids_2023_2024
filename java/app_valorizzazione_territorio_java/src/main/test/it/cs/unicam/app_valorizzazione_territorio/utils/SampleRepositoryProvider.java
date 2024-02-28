@@ -478,10 +478,10 @@ public class SampleRepositoryProvider {
         notifications.addAll(Arrays.asList(
                 //0 //Notifica invito concorso pittura per Utenti
                 Notification.createNotification(CONCORSO_PITTURA, "Sei stato invitato ad un contest."),
-                //1 //Notifica contenuto vincitore per Comune
+                //1 //Notifica contenuto vincitore per Comune CAMERINO
                 Notification.createNotification(FOTO_PIZZA_REGINA,
                         "Decretato il contenuto vincitore del contest " + CONCORSO_FOTO_PIZZA.getName()),
-                //2 //Notifica inizio evento per Comune
+                //2 //Notifica inizio evento per Comune MACERATA
                 Notification.createNotification(SEPTEMBER_FEST, "L'evento " + SEPTEMBER_FEST.getName() + " è iniziato!")
         ));
 

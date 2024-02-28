@@ -31,11 +31,41 @@ public class GeoLocatableController {
     }
 
     @JsonView(View.Detailed.class)
-    @PostMapping("/viewFilteredMap")
+    @GetMapping("/viewMap/initial/{municipalityID}")
+    public ResponseEntity<Object> viewInitialMap(@PathVariable long municipalityID) {
+        try {
+            MapOF map = geoLocatableHandler.visualizeInitialMap(municipalityID);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @JsonView(View.Detailed.class)
+    @PostMapping("/viewMap")
+    public ResponseEntity<Object> viewMap(@RequestParam long municipalityID,
+                                          @RequestParam String upperLeftPosition,
+                                          @RequestParam String lowerRightPosition) {
+        try {
+            MapOF map = geoLocatableHandler.visualizeMap(municipalityID,
+                    new CoordinatesBox(PositionParser.parse(upperLeftPosition), PositionParser.parse(lowerRightPosition)));
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @JsonView(View.Detailed.class)
+    @PostMapping("/viewMap/filtered")
     public ResponseEntity<Object> viewFilteredMap(@RequestParam long municipalityID,
-                                                 @RequestParam String upperLeftPosition,
-                                                 @RequestParam String lowerRightPosition,
-                                                 @RequestBody List<SearchFilter> filters) {
+                                                  @RequestParam String upperLeftPosition,
+                                                  @RequestParam String lowerRightPosition,
+                                                  @RequestBody List<SearchFilter> filters) {
         try {
             CoordinatesBox coordinatesBox = new CoordinatesBox(PositionParser.parse(upperLeftPosition),
                     PositionParser.parse(lowerRightPosition));
@@ -47,6 +77,20 @@ public class GeoLocatableController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @JsonView(View.Detailed.class)
+    @GetMapping("/viewMap/empty/{municipalityID}")
+    public ResponseEntity<Object> viewEmptyMap(@PathVariable long municipalityID) {
+        try {
+            MapOF map = geoLocatableHandler.getEmptyMap(municipalityID);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("criteria")
     public ResponseEntity<Set<String>> getGeoLocatableSearchCriteria() {

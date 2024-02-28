@@ -4,70 +4,111 @@ import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.ContentJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.ContestJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.NotificationJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class, TimeEventsHandler.class})
+@DataJpaTest
 public class TimeEventsHandlerTest {
-/*
-    MunicipalityRepository municipalityRepository = MunicipalityRepository.getInstance();
+
+    @Autowired
+    SampleRepositoryProvider sampleRepositoryProvider;
+    @Autowired
+    private TimeEventsHandler TimeEventsHandler;
+    @Autowired
+    private ContestJpaRepository contestJpaRepository;
+    @Autowired
+    private GeoLocatableJpaRepository geoLocatableJpaRepository;
+    @Autowired
+    private NotificationJpaRepository notificationJpaRepository;
+    @Autowired
+    private ContentJpaRepository contentJpaRepository;
 
     @BeforeEach
     public void setUp() {
-        SampleRepositoryProvider.setUpAllRepositories();
+        sampleRepositoryProvider.setUpAllRepositories();
     }
 
     @AfterEach
     public void clear() {
-        SampleRepositoryProvider.clearAllRepositories();
+        sampleRepositoryProvider.clearAllRepositories();
     }
 
     @Test
     public void shouldEndContest() {
         ContestContent winningContent = (ContestContent)
-                municipalityRepository.getContentByID(SampleRepositoryProvider.FOTO_TORRE_CIVICA.getID());
-        Contest contest = municipalityRepository.getContestByID(SampleRepositoryProvider.CONCORSO_FOTO_2024.getID());
-        winningContent.addVoter(SampleRepositoryProvider.TURIST_1);
-        winningContent.addVoter(SampleRepositoryProvider.TURIST_2);
-        ((ContestContent)SampleRepositoryProvider.FOTO_TORRE_CIVICA).addVoter(SampleRepositoryProvider.TURIST_3);
+                contentJpaRepository.findById(sampleRepositoryProvider.FOTO_TORRE_CIVICA.getID()).get();
+        Contest contest = contestJpaRepository.findByBaseContestIdAndValidTrue(
+                sampleRepositoryProvider.CONCORSO_FOTO_2024.getBaseContestId()).get();
+        winningContent.addVoter(sampleRepositoryProvider.TURIST_1);
+        winningContent.addVoter(sampleRepositoryProvider.TURIST_2);
+        ((ContestContent)sampleRepositoryProvider.FOTO_TORRE_CIVICA).addVoter(sampleRepositoryProvider.TURIST_3);
+        contentJpaRepository.flush();
+        contestJpaRepository.flush();
 
         TimeEventsHandler.endContest(contest.getID());
-        assertEquals(1, contest.getMunicipality().getNotifications().size());
-        assertEquals(winningContent, contest.getMunicipality().getNotifications().get(0).visualizable());
+        contestJpaRepository.flush();
+
+        contest = contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_FOTO_2024.getID()).get();
+        winningContent = (ContestContent) contentJpaRepository.findById(sampleRepositoryProvider.FOTO_TORRE_CIVICA.getID()).get();
+        assertEquals(2, contest.getMunicipality().getNotifications().size());
+        assertEquals(winningContent, contest.getMunicipality().getNotifications().get(1).visualizable());
     }
 
     @Test
     public void shouldEndPrivateContest() {
         ContestContent winningContent = (ContestContent)
-                municipalityRepository.getContentByID(SampleRepositoryProvider.FOTO_PITTURA_1.getID());
-        Contest contest = municipalityRepository.getContestByID(SampleRepositoryProvider.CONCORSO_PITTURA.getID());
-        winningContent.addVoter(SampleRepositoryProvider.TURIST_1);
-        winningContent.addVoter(SampleRepositoryProvider.TURIST_2);
+                contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PITTURA_1.getID()).get();
+        Contest contest = contestJpaRepository.findByBaseContestIdAndValidTrue(
+                sampleRepositoryProvider.CONCORSO_PITTURA.getBaseContestId()).get();
+        winningContent.addVoter(sampleRepositoryProvider.TURIST_1);
+        winningContent.addVoter(sampleRepositoryProvider.TURIST_2);
+        contentJpaRepository.flush();
+        contestJpaRepository.flush();
 
-        TimeEventsHandler.endContest(contest.getID());
-        assertEquals(1, contest.getMunicipality().getNotifications().size());
-        assertEquals(winningContent, contest.getMunicipality().getNotifications().get(0).visualizable());
+        TimeEventsHandler.endContest(contest.getBaseContestId());
+        contestJpaRepository.flush();
+
+        contest = contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_PITTURA.getID()).get();
+        winningContent = (ContestContent) contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PITTURA_1.getID()).get();
+        assertEquals(2, contest.getMunicipality().getNotifications().size());
+        assertEquals(winningContent, contest.getMunicipality().getNotifications().get(1).visualizable());
        for (User user : contest.getParticipants()) {
-            assertTrue(user.getNotifications().contains(contest.getMunicipality().getNotifications().get(0)));
+            assertTrue(user.getNotifications().contains(contest.getMunicipality().getNotifications().get(1)));
         }
     }
-
 
     @Test
     public void shouldEndContestWithGeoLocation() {
         ContestContent winningContent = (ContestContent)
-                municipalityRepository.getContentByID(SampleRepositoryProvider.FOTO_PIZZA_REGINA.getID());
-        Contest contest = municipalityRepository.getContestByID(SampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getID());
+                contentJpaRepository.findById(sampleRepositoryProvider.FOTO_PIZZA_REGINA.getID()).get();
+        Contest contest = contestJpaRepository.findById(sampleRepositoryProvider.CONCORSO_FOTO_PIZZA.getID()).get();
 
-        TimeEventsHandler.endContest(contest.getID());
-        assertEquals(1, contest.getMunicipality().getNotifications().size());
-        assertEquals(winningContent, contest.getMunicipality().getNotifications().get(0).visualizable());
+        TimeEventsHandler.endContest(contest.getBaseContestId());
+        contestJpaRepository.flush();
+
+        assertEquals(2, contest.getMunicipality().getNotifications().size());
+        assertEquals(winningContent, contest.getMunicipality().getNotifications().get(1).visualizable());
 
         PointOfInterest pizzeriaEnjoy =
-                MunicipalityRepository.getInstance().getPointOfInterestByID(SampleRepositoryProvider.PIZZERIA_ENJOY.getID());
+                geoLocatableJpaRepository.findPointOfInterestById(sampleRepositoryProvider.PIZZERIA_ENJOY.getID()).get();
         assertEquals(2, pizzeriaEnjoy.getContents().size());
         assertTrue(pizzeriaEnjoy.getContents()
                 .stream()
@@ -81,12 +122,12 @@ public class TimeEventsHandlerTest {
 
     @Test
     public void shouldStartEvent() {
-        TimeEventsHandler.startEvent(SampleRepositoryProvider.CORSA_SPADA.getID());
+        TimeEventsHandler.startEvent(sampleRepositoryProvider.CORSA_SPADA.getID());
+        geoLocatableJpaRepository.flush();
 
-        assertEquals(1, SampleRepositoryProvider.CORSA_SPADA.getMunicipality().getNotifications().size());
-        assertEquals(SampleRepositoryProvider.CORSA_SPADA,
-                SampleRepositoryProvider.CAMERINO.getNotifications().get(0).visualizable());
+        assertEquals(2, sampleRepositoryProvider.CORSA_SPADA.getMunicipality().getNotifications().size());
+        assertEquals(sampleRepositoryProvider.CORSA_SPADA,
+                sampleRepositoryProvider.CAMERINO.getNotifications().get(1).visualizable());
     }
-
- */
+    
 }

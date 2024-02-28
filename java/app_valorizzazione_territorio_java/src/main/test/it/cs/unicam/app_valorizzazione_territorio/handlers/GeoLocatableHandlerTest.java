@@ -226,12 +226,10 @@ public class GeoLocatableHandlerTest {
                 sampleRepositoryProvider.CAMERINO.getID(),
                 sampleRepositoryProvider.TURIST_1.getID(),
                 cpointNonInsertableSample2));
-
-
     }
 
     @Test
-    void handleMap() {
+    void handleMap1() throws IOException {
         try {
             assertEquals(geoLocatableHandler
                             .visualizeMap(sampleRepositoryProvider.CAMERINO.getID(), sampleRepositoryProvider
@@ -258,7 +256,7 @@ public class GeoLocatableHandlerTest {
     }
 
     @Test
-    void handleMap1() {
+    void handleMap2() {
         try {
             assertEquals(1, geoLocatableHandler
                     .visualizeFilteredMap(sampleRepositoryProvider.CAMERINO.getID(),
@@ -272,7 +270,7 @@ public class GeoLocatableHandlerTest {
     }
 
     @Test
-    void handleMap2() {
+    void handleMap3() {
         try {
             List<Long> ids = geoLocatableHandler
                     .visualizeFilteredMap(sampleRepositoryProvider.CAMERINO.getID(),
@@ -292,7 +290,7 @@ public class GeoLocatableHandlerTest {
     }
 
     @Test
-    void handleMap3() {
+    void handleMap4() {
         try {
             assertEquals(0, geoLocatableHandler.visualizeFilteredMap(sampleRepositoryProvider.CAMERINO.getID(),
                             sampleRepositoryProvider.CAMERINO.getCoordinatesBox(),

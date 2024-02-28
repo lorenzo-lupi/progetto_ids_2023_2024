@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.repositories.jpa;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.CompoundPoint;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Event;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,7 @@ public interface GeoLocatableJpaRepository extends JpaRepository<GeoLocatable, L
     @Query("select c from GeoLocatable c where c.geoLocatableType = 'CompoundPoint'" +
             "AND c.ID = ?1")
     Optional<CompoundPoint> findCompoundPointById(long id);
+
+    @Query("select c from GeoLocatable c where c.geoLocatableType = 'Event' AND c.ID = ?1")
+    Optional<Event> findEventById(long id);
 }

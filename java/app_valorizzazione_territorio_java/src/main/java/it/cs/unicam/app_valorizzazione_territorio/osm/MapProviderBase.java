@@ -20,11 +20,12 @@ import java.util.Optional;
 @Component
 public class MapProviderBase extends MapProvider{
 
-    private MunicipalityJpaRepository municipalityJpaRepository;
-    private OSMRequestHandler osmRequestHandler;
+    private final MunicipalityJpaRepository municipalityJpaRepository;
+    private final OSMRequestHandler osmRequestHandler;
 
     @Autowired
-    public MapProviderBase(MunicipalityJpaRepository municipalityJpaRepository, OSMRequestHandler osmRequestHandler) {
+    public MapProviderBase(MunicipalityJpaRepository municipalityJpaRepository,
+                           OSMRequestHandler osmRequestHandler) {
         this.municipalityJpaRepository = municipalityJpaRepository;
         this.osmRequestHandler = osmRequestHandler;
     }
@@ -36,7 +37,7 @@ public class MapProviderBase extends MapProvider{
 
     @Override
     public Map<?> getEmptyMap(CoordinatesBox box) throws IOException {
-        return new MapBuilder<>()
+        return new MapBuilder<>(osmRequestHandler)
                 .buildOsmData(box)
                 .build()
                 .getResult();
@@ -91,9 +92,9 @@ public class MapProviderBase extends MapProvider{
         return municipalityJpaRepository.findByName(municipalityName);
     }
 
-    private static <P extends Positionable & Visualizable> Map<P> createMap(List<P> geoLocatables,
+    private <P extends Positionable & Visualizable> Map<P> createMap(List<P> geoLocatables,
                                                                             CoordinatesBox box) throws IOException {
-        return new MapBuilder<P>()
+        return new MapBuilder<P>(osmRequestHandler)
                 .buildOsmData(box)
                 .buildPointsList(geoLocatables)
                 .build()

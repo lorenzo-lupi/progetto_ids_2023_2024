@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("message")
 public class MessageController {
 
     private final MessageHandler messageHandler;
@@ -21,7 +21,7 @@ public class MessageController {
         this.messageHandler = messageHandler;
     }
 
-    @PostMapping("/insertMunicipalityRequestMessage")
+    @PutMapping("insert")
     public ResponseEntity<Long> insertMunicipalityRequestMessage(@RequestBody MessageIF messageIF) {
         try {
             long id = messageHandler.insertMunicipalityRequestMessage(messageIF);
@@ -31,7 +31,7 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/viewMessages")
+    @GetMapping("view")
     public ResponseEntity<List<MessageOF>> viewMessages() {
         try {
             List<MessageOF> messages = messageHandler.viewMessages();
@@ -41,7 +41,7 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/viewMessage/{id}")
+    @GetMapping("view/{id}")
     public ResponseEntity<MessageOF> viewMessage(@PathVariable long id) {
         try {
             MessageOF message = messageHandler.viewMessage(id);
