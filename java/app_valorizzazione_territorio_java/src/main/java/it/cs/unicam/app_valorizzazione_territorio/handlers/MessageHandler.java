@@ -4,7 +4,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.MessageBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MessageOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Message;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MessageJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.CompoundPointIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.PointOfInterestIF;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.GeoLocatableOF;
@@ -21,8 +22,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("geoLocatable")
 public class GeoLocatableController {
-
-
     private final GeoLocatableHandler geoLocatableHandler;
 
     @Autowired

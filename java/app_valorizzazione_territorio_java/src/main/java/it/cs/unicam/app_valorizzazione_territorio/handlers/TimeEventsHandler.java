@@ -5,10 +5,10 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contents.*;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Event;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.ContestJpaRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.GeoLocatableJpaRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.NotificationJpaRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.UserJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.ContestJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.GeoLocatableJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.NotificationJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MessageJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

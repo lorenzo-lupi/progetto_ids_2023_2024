@@ -5,7 +5,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.*;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

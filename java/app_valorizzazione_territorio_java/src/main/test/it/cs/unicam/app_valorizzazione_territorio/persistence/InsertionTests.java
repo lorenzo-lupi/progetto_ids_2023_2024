@@ -13,12 +13,11 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.PrivateContestDe
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Attraction;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.AttractionTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.requests.ContestRequest;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.*;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

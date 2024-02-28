@@ -7,7 +7,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

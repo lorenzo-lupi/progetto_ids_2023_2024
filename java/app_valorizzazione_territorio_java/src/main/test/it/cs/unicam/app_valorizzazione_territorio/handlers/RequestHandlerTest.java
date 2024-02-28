@@ -5,8 +5,8 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInte
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.ModificationSetting;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.MunicipalityJpaRepository;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.RequestJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityJpaRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;

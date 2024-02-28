@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.persistence;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.*;
 import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

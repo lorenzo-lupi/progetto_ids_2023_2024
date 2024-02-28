@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalTime;
@@ -18,9 +17,9 @@ import java.time.LocalTime;
 @NoArgsConstructor(force = true)
 public class TimeRange implements Serializable {
 
-    @JsonFormat(pattern = "hh:mm:ss")
+    @JsonFormat(pattern = "HH:mm:ss")
     private final LocalTime openingTime;
-    @JsonFormat(pattern = "hh:mm:ss")
+    @JsonFormat(pattern = "HH:mm:ss")
     private final LocalTime closingTime;
 
     /**

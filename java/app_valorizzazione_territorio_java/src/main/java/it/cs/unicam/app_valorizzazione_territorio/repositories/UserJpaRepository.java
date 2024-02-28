@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.repositories.jpa;
+package it.cs.unicam.app_valorizzazione_territorio.repositories;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

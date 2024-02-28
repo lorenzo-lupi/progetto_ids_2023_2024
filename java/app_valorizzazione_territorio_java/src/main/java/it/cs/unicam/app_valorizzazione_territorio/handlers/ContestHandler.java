@@ -15,7 +15,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContestBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.VotedContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.jpa.*;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.*;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
