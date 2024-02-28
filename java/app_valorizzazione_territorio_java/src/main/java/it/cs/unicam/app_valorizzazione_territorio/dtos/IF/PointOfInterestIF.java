@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.IF;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.TimeRange;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 

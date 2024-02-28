@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.OF;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
@@ -14,6 +15,7 @@ public class PointOfInterestOF extends GeoLocatableOF {
     @JsonView(View.Synthesized.class)
     private final String classification;
     @JsonView(View.Detailed.class)
+    @JsonFilter(value = "Synthesized")
     private final List<ContentOF> contents;
 
     public PointOfInterestOF(String name,

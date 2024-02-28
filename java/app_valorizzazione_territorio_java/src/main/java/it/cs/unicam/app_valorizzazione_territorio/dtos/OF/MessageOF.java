@@ -21,13 +21,20 @@ import java.util.List;
  * @param attachments
  */
 public record MessageOF(
-        @JsonView(View.Synthesized.class)   long ID,
-        @JsonView(View.Synthesized.class)   String senderName,
-        @JsonView(View.Synthesized.class)   Date date,
-        @JsonView(View.Synthesized.class)   boolean read,
-        @JsonView(View.Detailed.class)      String senderEmail,
-        @JsonView(View.Detailed.class)      String text,
-        @JsonView(View.Detailed.class)      List<String> attachments
+        @JsonView(View.Synthesized.class)
+        long ID,
+        @JsonView(View.Synthesized.class)
+        String senderName,
+        @JsonView(View.Synthesized.class)
+        Date date,
+        @JsonView(View.Synthesized.class)
+        boolean read,
+        @JsonView(View.Detailed.class)
+        String senderEmail,
+        @JsonView(View.Detailed.class)
+        String text,
+        @JsonView(View.Detailed.class)
+        List<String> attachments
 )
         implements Identifiable {
     @JsonIgnore

@@ -59,7 +59,6 @@ public class OSMRequestHandler {
      */
     public String retrieveOSMData(double left, double bottom, double right, double top) throws IOException {
         parameters.clear();
-        parameters.put("format", "xml");
         parameters.put("bbox", left + "," + bottom + "," + right + "," + top);
 
         HttpURLConnection connection = (HttpURLConnection) getGETRequestURLFromParameters(urlOsmApi).openConnection();

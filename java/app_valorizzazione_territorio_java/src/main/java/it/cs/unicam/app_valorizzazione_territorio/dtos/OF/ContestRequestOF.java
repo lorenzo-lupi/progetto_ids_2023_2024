@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.OF;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
@@ -22,8 +23,12 @@ public record ContestRequestOF(
         @JsonView(View.Synthesized.class)   UserOF user,
         @JsonView(View.Synthesized.class)   String contestName,
         @JsonView(View.Synthesized.class)   Date date,
-        @JsonView(View.Detailed.class)      ContestOF contest,
-        @JsonView(View.Detailed.class)      ContentOF content
+        @JsonView(View.Detailed.class)
+        @JsonFilter(value = "Synthesized")
+        ContestOF contest,
+        @JsonView(View.Detailed.class)
+        @JsonFilter(value = "Synthesized")
+        ContentOF content
 )
         implements Identifiable {
     @JsonIgnore

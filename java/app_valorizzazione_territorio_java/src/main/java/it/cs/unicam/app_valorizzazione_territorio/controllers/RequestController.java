@@ -8,6 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.ActivityTyp
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.AttractionTypeEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.ModificationSetting;
 import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.utils.PositionParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -200,7 +201,7 @@ public class RequestController {
         switch (setting.parameter()) {
             case "POSITION":
                 if (setting.value() instanceof String s)
-                    return new ModificationSetting(setting.parameter(), Position.parse(s));
+                    return new ModificationSetting(setting.parameter(), PositionParser.parse(s));
             case "ADD_FILE", "REMOVE_FILE":
                 if (setting.value() instanceof String s)
                     return new ModificationSetting(setting.parameter(), new File(filePath+s));

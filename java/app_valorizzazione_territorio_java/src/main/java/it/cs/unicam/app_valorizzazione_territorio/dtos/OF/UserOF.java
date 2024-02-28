@@ -17,10 +17,14 @@ import java.util.List;
  * @param roles
  */
 public record UserOF(
-        @JsonView(View.Synthesized.class)  long ID,
-        @JsonView(View.Synthesized.class)  String username,
-        @JsonView(View.Detailed.class)     String email,
-        @JsonView(View.Detailed.class)     List<String> roles
+        @JsonView(View.Synthesized.class)
+        long ID,
+        @JsonView(View.Synthesized.class)
+        String username,
+        @JsonView(View.Detailed.class)
+        String email,
+        @JsonView(View.Detailed.class)
+        List<String> roles
 )
         implements Identifiable {
     @JsonIgnore

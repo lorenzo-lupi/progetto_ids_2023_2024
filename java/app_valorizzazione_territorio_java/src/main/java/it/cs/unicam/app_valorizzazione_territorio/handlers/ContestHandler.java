@@ -85,7 +85,7 @@ public class ContestHandler {
     }
 
     /**
-     * Returns the Synthesized Format of all the contents proposed for the contest corresponding to the given ID
+     * Returns all the contents proposed for the contest corresponding to the given ID
      * combined with their number of votes .
      *
      * @param contestID the ID of the contest
@@ -99,7 +99,7 @@ public class ContestHandler {
     }
 
     /**
-     * Returns the Synthesized Format of all the contents proposed for the contest corresponding to the given ID
+     * Returns all the contents proposed for the contest corresponding to the given ID
      * combined with their number of votes that satisfy the given filters, all applied in logical and.
      *
      * @param contestID the ID of the contest
@@ -115,7 +115,7 @@ public class ContestHandler {
 
 
     /**
-     * Returns the detailed format of the content corresponding to the given ID proposed for the
+     * Returns he content corresponding to the given ID proposed for the
      * contest corresponding to the given ID combined with its number of votes.
      *
      * @param contestID the ID of the contest
@@ -231,7 +231,7 @@ public class ContestHandler {
     }
 
     /**
-     * Returns the Synthesized Format of all the contests that permits the user with the
+     * Returns all the contests that permits the user with the
      * given ID among all registered contests in the municipality with the given ID.
      *
      * @param userID         the ID of the user
@@ -357,7 +357,7 @@ public class ContestHandler {
     }
 
     private Contest getContestByID(long contestID) {
-        Optional<Contest> contest = contestRepository.findById(contestID);
+        Optional<Contest> contest = contestRepository.findByBaseContestIdAndValidTrue(contestID);
         if (contest.isEmpty())
             throw new IllegalArgumentException("Contest not found");
         return contest.get();

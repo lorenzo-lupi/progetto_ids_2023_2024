@@ -21,12 +21,18 @@ import java.util.List;
  * @param files
  */
 public record MunicipalityOF(
-        @JsonView(View.Synthesized.class)  long ID,
-        @JsonView(View.Synthesized.class)  String name,
-        @JsonView(View.Synthesized.class)  String representativeFile,
-        @JsonView(View.Detailed.class)     String description,
-        @JsonView(View.Detailed.class)     Position position,
-        @JsonView(View.Detailed.class)     List<String> files
+        @JsonView(View.Synthesized.class)
+        long ID,
+        @JsonView(View.Synthesized.class)
+        String name,
+        @JsonView(View.Synthesized.class)
+        String representativeFile,
+        @JsonView(View.Detailed.class)
+        String description,
+        @JsonView(View.Detailed.class)
+        Position position,
+        @JsonView(View.Detailed.class)
+        List<String> files
 )
         implements Identifiable, Positionable {
     @JsonIgnore

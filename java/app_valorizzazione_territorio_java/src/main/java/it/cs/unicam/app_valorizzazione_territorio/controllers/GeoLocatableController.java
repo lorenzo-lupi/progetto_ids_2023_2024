@@ -166,7 +166,7 @@ public class GeoLocatableController {
                                                         @RequestBody PointOfInterestIF pointOfInterestIF) {
         try {
             long id = geoLocatableHandler.insertPointOfInterest(userID, pointOfInterestIF);
-            return new ResponseEntity<>(id, HttpStatus.OK);
+            return new ResponseEntity<>("Point of interest created with ID: "+id, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -200,7 +200,7 @@ public class GeoLocatableController {
                                                       @RequestBody CompoundPointIF compoundPointIF) {
         try {
             long id = geoLocatableHandler.insertCompoundPoint(municipalityID, userID, compoundPointIF);
-            return new ResponseEntity<>(id, HttpStatus.OK);
+            return new ResponseEntity<>("Compound point created with ID: "+id, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

@@ -103,11 +103,6 @@ public abstract class ContestDecorator extends Contest{
     }
 
     @Override
-    public ContestOF getOutputFormat() {
-        return this.contest.getOutputFormat();
-    }
-
-    @Override
     public Map<Parameter, Object> getParametersMapping() {
         return this.contest.getParametersMapping();
     }

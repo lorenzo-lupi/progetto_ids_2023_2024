@@ -163,7 +163,7 @@ public abstract class Contest implements Searchable, Visualizable, ContentHost<C
     @Override
     public ContestOF getOutputFormat() {
         return new ContestOF(
-                this.getID(),
+                this.getBaseContestId(),
                 this.getName(),
                 this.getStatus().toString(),
                 this.getEntertainer().getOutputFormat(),

@@ -88,8 +88,6 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
                                             List<PointOfInterestContent> contents,
                                             User user) {
         super(name, description, municipality, images, user);
-        if(!municipality.getCoordinatesBox().contains(coordinates))
-            throw new IllegalCoordinatesException("Position must be inside the municipality");
         this.setPosition(coordinates);
         this.contents = contents;
         this.compoundPoints = new ArrayList<>();

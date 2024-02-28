@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.dtos.OF;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
@@ -17,12 +18,20 @@ import java.util.Date;
  * @param ID
  */
 public record MunicipalityRequestOF(
-        @JsonView(View.Synthesized.class)   long ID,
-        @JsonView(View.Synthesized.class)   UserOF user,
-        @JsonView(View.Synthesized.class)   Date date,
-        @JsonView(View.Synthesized.class)   String municipalityName,
-        @JsonView(View.Detailed.class)      MunicipalityOF municipality,
-        @JsonView(View.Detailed.class)      Identifiable item
+        @JsonView(View.Synthesized.class)
+        long ID,
+        @JsonView(View.Synthesized.class)
+        UserOF user,
+        @JsonView(View.Synthesized.class)
+        Date date,
+        @JsonView(View.Synthesized.class)
+        String municipalityName,
+        @JsonView(View.Detailed.class)
+        @JsonFilter(value = "Synthesized")
+        MunicipalityOF municipality,
+        @JsonView(View.Detailed.class)
+        @JsonFilter(value = "Synthesized")
+        Identifiable item
 )
         implements Identifiable {
     @JsonIgnore

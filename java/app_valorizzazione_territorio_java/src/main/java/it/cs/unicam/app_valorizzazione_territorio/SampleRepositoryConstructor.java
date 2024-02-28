@@ -97,13 +97,13 @@ public class SampleRepositoryConstructor {
 
         MACERATA = repository.saveAndFlush(new Municipality("Macerata", "Comune di Macerata",
                 new Position(43.29812657107886, 13.451878161920886),
-                new CoordinatesBox(new Position(43.317324, 13.409422),
-                        new Position(43.271074, 13.499990)),
+                new CoordinatesBox(new Position(43.30478969254261, 13.432026802402667),
+                        new Position(43.28779360617144, 13.460948191944066)),
                 new ArrayList<>(List.of(new File(filePath + "macerata.jpg")))));
         CAMERINO = repository.saveAndFlush(new Municipality("Camerino", "Comune di Camerino",
                 new Position(43.13644468556232, 13.067156069846892),
-                new CoordinatesBox(new Position(43.153712, 13.036414),
-                        new Position(43.123261, 13.095768)),
+                new CoordinatesBox(new Position(43.15010035530158, 13.046649578389205),
+                        new Position(43.127602193375836, 13.088241332626072)),
                 new ArrayList<>(List.of(new File(filePath + "camerino.jpg")))));
 
         roles = new HashMap<>();

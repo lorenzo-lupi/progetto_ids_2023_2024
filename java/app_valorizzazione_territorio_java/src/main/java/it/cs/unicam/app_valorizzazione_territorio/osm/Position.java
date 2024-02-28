@@ -87,17 +87,4 @@ public class Position implements Serializable {
                 this.longitude / scalar);
     }
 
-    /**
-     * Parses a string to a position.
-     * The string must be in the format "latitude,longitude".
-     *
-     * @param position the string to parse
-     * @return the position
-     */
-    public static Position parse(String position){
-        String[] parts = position.split(",");
-        return new Position(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
-    }
-
-
 }
