@@ -5,24 +5,34 @@ import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatabl
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class ContestBase implements Contest {
+@Entity
+@DiscriminatorValue("Base")
+@NoArgsConstructor(force = true)
+public class ContestBase extends Contest {
 
     private String name;
-    private final User animator;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "app_user_id")
+    private User animator;
     private String topic;
     private String rules;
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+    @Temporal(TemporalType.DATE)
     private Date votingStartDate;
+    @Temporal(TemporalType.DATE)
     private Date endDate;
+    @OneToOne(fetch = FetchType.EAGER,
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private ProposalRegister proposalRegister;
-    private Municipality municipality;
-    private final long ID = MunicipalityRepository.getInstance().getNextContestID();
 
     public ContestBase(String name,
                        User animator,
@@ -33,7 +43,9 @@ public class ContestBase implements Contest {
                        Date endDate,
                        Municipality municipality) {
 
-        if (name == null || animator == null || topic == null || startDate == null || votingStartDate == null || endDate == null || rules == null || municipality == null)
+        super(municipality);
+
+        if (name == null || animator == null || topic == null || startDate == null || votingStartDate == null || endDate == null || rules == null )
             throw new IllegalArgumentException("All parameters must not be null");
         if (!checkDates(startDate, votingStartDate, endDate))
             throw new IllegalArgumentException("Dates must be in the correct order");
@@ -48,9 +60,14 @@ public class ContestBase implements Contest {
         this.votingStartDate = votingStartDate;
         this.endDate = endDate;
         this.proposalRegister = new ProposalRegister();
-        this.municipality = municipality;
     }
 
+    @PostPersist
+    public void postPersist() {
+        this.setBaseContestId(getID());
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -61,10 +78,12 @@ public class ContestBase implements Contest {
         this.name = name;
     }
 
+    @Override
     public User getEntertainer() {
         return animator;
     }
 
+    @Override
     public String getTopic() {
         return topic;
     }
@@ -75,6 +94,7 @@ public class ContestBase implements Contest {
         this.topic = topic;
     }
 
+    @Override
     public String getRules() {
         return rules;
     }
@@ -85,6 +105,7 @@ public class ContestBase implements Contest {
         this.rules = rules;
     }
 
+    @Override
     public Date getStartDate() {
         return startDate;
     }
@@ -95,6 +116,7 @@ public class ContestBase implements Contest {
         this.startDate = startDate;
     }
 
+    @Override
     public Date getVotingStartDate() {
         return votingStartDate;
     }
@@ -105,6 +127,7 @@ public class ContestBase implements Contest {
         this.votingStartDate = votingStartDate;
     }
 
+    @Override
     public Date getEndDate() {
         return endDate;
     }
@@ -116,17 +139,12 @@ public class ContestBase implements Contest {
     }
 
     @Override
-    public ProposalRegister getProposalRequests() {
+    public ProposalRegister getProposalRegister() {
         return this.proposalRegister;
     }
 
     private boolean checkDates(Date startDate, Date votingStartDate, Date endDate) {
         return (startDate.before(votingStartDate) && votingStartDate.before(endDate));
-    }
-
-    @Override
-    public Municipality getMunicipality() {
-        return this.municipality;
     }
 
     @Override
@@ -150,11 +168,6 @@ public class ContestBase implements Contest {
     }
 
     @Override
-    public long getID() {
-        return this.ID;
-    }
-
-    @Override
     public Collection<ContestContent> getContents() {
         return this.proposalRegister
                 .getProposals()
@@ -166,5 +179,12 @@ public class ContestBase implements Contest {
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.proposalRegister = null;
+        this.animator = null;
     }
 }

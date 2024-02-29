@@ -1,15 +1,21 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.requests;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestRequestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestRequestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@Entity
+@DiscriminatorValue("Contest")
+@NoArgsConstructor(force = true)
 public class ContestRequest extends Request<ContestContent> {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contest_id")
     private final Contest contest;
 
     /**
@@ -48,13 +54,14 @@ public class ContestRequest extends Request<ContestContent> {
     }
 
     @Override
-    public ContestRequestSOF getSynthesizedFormat() {
-        return new ContestRequestSOF(this.getSender().getUsername(), this.getContest().getName(), this.getDate(), this.getID());
-    }
-
-    @Override
-    public ContestRequestDOF getDetailedFormat() {
-        return new ContestRequestDOF(this.getSender().getSynthesizedFormat(), this.getContest().getSynthesizedFormat(),
-                this.getDate(), this.getItem().getDetailedFormat(), this.getID());
+    public ContestRequestOF getOutputFormat() {
+        return new ContestRequestOF(
+                this.getID(),
+                this.getSender().getOutputFormat(),
+                this.getContest().getName(),
+                this.getDate(),
+                this.getContest().getOutputFormat(),
+                this.getItem().getOutputFormat()
+        );
     }
 }

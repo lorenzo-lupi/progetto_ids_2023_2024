@@ -1,7 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 
 
-import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 

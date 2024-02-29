@@ -1,11 +1,13 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.CompoundPointDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.CompoundPointOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.*;
@@ -21,13 +23,25 @@ import java.util.function.Consumer;
  * connected to each other. An ITINERARY is a compound point composed by multiple points of interest objects
  * that are connected to each other.
  */
+@Entity
+@DiscriminatorValue("CompoundPoint")
+@NoArgsConstructor(force = true)
 public class CompoundPoint extends GeoLocatable {
-    private final CompoundPointTypeEnum type;
+
+    @Getter
+    @Enumerated(EnumType.STRING)
+    private CompoundPointTypeEnum compoundPointType;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "compound_point_points_of_interest",
+            joinColumns = @JoinColumn(name = "compound_point_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "point_of_interest_ID", referencedColumnName = "ID"))
     private final Collection<PointOfInterest> pointsOfInterest;
     /**
      * Constructor for a compound point.
      *
-     * @param type             the type of the compound point
+     * @param compoundPointType             the type of the compound point
      * @param description      the textual description of the compound point
      * @param pointsOfInterest the points of interest that compose the compound point
      * @throws IllegalArgumentException if type, description, geoLocatables or images are null
@@ -35,18 +49,21 @@ public class CompoundPoint extends GeoLocatable {
     public CompoundPoint(String title,
                          String description,
                          Municipality municipality,
-                         CompoundPointTypeEnum type,
+                         CompoundPointTypeEnum compoundPointType,
                          Collection<PointOfInterest> pointsOfInterest,
                          List<File> images,
                          User user) {
 
         super(title, description, municipality, images, user);
-        checkArguments(type, pointsOfInterest);
+        checkArguments(compoundPointType, pointsOfInterest);
 
-        this.type = type;
-        this.pointsOfInterest = pointsOfInterest;
-
+        this.compoundPointType = compoundPointType;
+        this.pointsOfInterest = compoundPointType.getCollection();
+        this.pointsOfInterest.addAll(pointsOfInterest);
+        this.pointsOfInterest.forEach(p -> p.getCompoundPoints().add(this));
+        this.setPosition(this.calculatePosition());
     }
+
 
     private void checkArguments(CompoundPointTypeEnum type,
                                 Collection<PointOfInterest> pointOfInterests) {
@@ -59,11 +76,7 @@ public class CompoundPoint extends GeoLocatable {
             throw new IllegalArgumentException("pointOfInterests must contain at least 2 elements");
     }
 
-    public CompoundPointTypeEnum getType() {
-        return type;
-    }
-
-    public List<PointOfInterest> getGeoLocalizablesList() {
+    public List<PointOfInterest> getPointsOfInterest() {
         return pointsOfInterest.stream().toList();
     }
 
@@ -71,28 +84,23 @@ public class CompoundPoint extends GeoLocatable {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("pointOfInterest cannot be null");
         this.pointsOfInterest.add(pointOfInterest);
+        pointOfInterest.getCompoundPoints().add(this);
+        this.setPosition(this.calculatePosition());
     }
 
     public void removePointOfInterest(PointOfInterest pointOfInterest) {
         if (pointOfInterest == null)
             throw new IllegalArgumentException("pointOfInterest cannot be null");
         this.pointsOfInterest.remove(pointOfInterest);
-    }
-
-    @Override
-    public Position getPosition() {
-        return this.pointsOfInterest.stream()
-                .map(PointOfInterest::getPosition)
-                .map(position -> position.divide(this.pointsOfInterest.size()))
-                .reduce(Position::sum)
-                .orElseThrow();
+        pointOfInterest.getCompoundPoints().remove(this);
+        this.setPosition(this.calculatePosition());
     }
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
         Map<Parameter, Object> parameters
                 = new HashMap<>(super.getParametersMapping());
-        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.type);
+        parameters.put(Parameter.COMPOUND_POINT_TYPE, this.compoundPointType);
         return parameters;
     }
 
@@ -105,18 +113,25 @@ public class CompoundPoint extends GeoLocatable {
     }
 
     @Override
-    public CompoundPointDOF getDetailedFormat() {
-        return new CompoundPointDOF(this.getID(),
+    public CompoundPointOF getOutputFormat() {
+        return new CompoundPointOF(
                 this.getName(),
                 this.getDescription(),
-                this.type,
-                this.getGeoLocatableSOFList()
-                );
+                this.getPosition(),
+                this.getMunicipality().getName(),
+                this.getCompoundPointType(),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
+                this.getFiles().stream().map(File::getName).toList(),
+                this.getPointsOfInterest().stream().map(PointOfInterest::getOutputFormat).toList(),
+                this.getID()
+        );
     }
 
-    private List<GeoLocatableSOF> getGeoLocatableSOFList() {
-        List<GeoLocatableSOF> geoLocatableSOF = new LinkedList<>();
-        this.pointsOfInterest.forEach(pointOfInterest -> geoLocatableSOF.add(pointOfInterest.getSynthesizedFormat()));
-        return geoLocatableSOF;
+    private Position calculatePosition() {
+        return this.pointsOfInterest.stream()
+                .map(PointOfInterest::getPosition)
+                .map(position -> position.divide(this.pointsOfInterest.size()))
+                .reduce(Position::sum)
+                .orElse(new Position(0,0));
     }
 }

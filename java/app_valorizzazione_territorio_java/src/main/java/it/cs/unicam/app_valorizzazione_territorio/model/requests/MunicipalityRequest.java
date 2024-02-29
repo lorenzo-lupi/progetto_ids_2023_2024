@@ -1,16 +1,27 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.requests;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MunicipalityRequestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MunicipalityRequestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.AuthorizationEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * This class represents a request made to a municipality.
+ *
+ * @param <I> the type of the item of the request.
+ */
+@Entity
+@DiscriminatorValue("Municipality")
+@NoArgsConstructor(force = true)
 public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "municipality_id")
     private final Municipality municipality;
 
     /**
@@ -59,15 +70,14 @@ public class MunicipalityRequest<I extends Visualizable> extends Request<I> {
     }
 
     @Override
-    public MunicipalityRequestSOF getSynthesizedFormat() {
-        return new MunicipalityRequestSOF(this.getSender().getUsername(),
-                this.getMunicipality().getName(), this.getDate(), this.getID());
-    }
-
-    @Override
-    public MunicipalityRequestDOF getDetailedFormat() {
-        return new MunicipalityRequestDOF(this.getSender().getSynthesizedFormat(),
-                this.getMunicipality().getSynthesizedFormat(), this.getDate(),
-                this.getItem().getSynthesizedFormat(), this.getID());
+    public MunicipalityRequestOF getOutputFormat() {
+        return new MunicipalityRequestOF(
+                this.getID(),
+                this.getSender().getOutputFormat(),
+                this.getDate(),
+                this.getMunicipality().getName(),
+                this.getMunicipality().getOutputFormat(),
+                this.getItem().getOutputFormat()
+        );
     }
 }

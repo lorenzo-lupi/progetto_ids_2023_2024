@@ -1,13 +1,18 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.PointOfInterestDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.PointOfInterestOF;
 import it.cs.unicam.app_valorizzazione_territorio.exceptions.IllegalCoordinatesException;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.util.*;
@@ -17,9 +22,25 @@ import java.util.function.Consumer;
  * This class represents a GeoLocatable precisely attributable and traceable in the associated position that
  * represents an attraction, an event or an activity present on the territory. It can be included in a compound point.
  */
+@Entity
+@DiscriminatorValue("PointOfInterest")
+@NoArgsConstructor(force = true)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class PointOfInterest extends GeoLocatable implements ContentHost<PointOfInterest> {
-    private Position position;
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "poi",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     private final List<PointOfInterestContent> contents;
+
+    ///// FOR DELETION PURPOSES /////////
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "pointsOfInterest")
+    private List<CompoundPoint> compoundPoints;
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Notification> notifications;
+    ////////////////////////////////////
 
     public static final Map<String, Class<? extends PointOfInterest>> stringToClass = Map.of(
             Attraction.class.getSimpleName(), Attraction.class,
@@ -67,10 +88,10 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
                                             List<PointOfInterestContent> contents,
                                             User user) {
         super(name, description, municipality, images, user);
-        if(!municipality.getCoordinatesBox().contains(coordinates))
-            throw new IllegalCoordinatesException("Position must be inside the municipality");
-        this.position = coordinates;
+        this.setPosition(coordinates);
         this.contents = contents;
+        this.compoundPoints = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     /**
@@ -79,26 +100,19 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
      * @param content the contents associated to the geo-locatable object
      * @return true if the contents associated to the geo-locatable object has been added, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addContent(PointOfInterestContent content) {
         return this.contents.add(content);
     }
 
-    /**
-     * Removes a content from the geo-locatable object.
-     *
-     * @param content the content to remove
-     * @return true if the content has been removed, false otherwise
-     */
-    public boolean removeContent(PointOfInterestContent content) {
-        return this.contents.remove(content);
+    @Override
+    public void removeContent(Content<PointOfInterest> content) {
+        if (content instanceof PointOfInterestContent c) removeContent(c);
     }
 
-    public Position getPosition() {
-        return this.position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
+    public void removeContent(PointOfInterestContent content) {
+        content.setPoi(null);
+        this.contents.remove(content);
     }
 
     @Override
@@ -116,19 +130,28 @@ public abstract class PointOfInterest extends GeoLocatable implements ContentHos
     }
 
     @Override
-    public PointOfInterestDOF getDetailedFormat() {
-        return new PointOfInterestDOF(super.getName(),
+    public PointOfInterestOF getOutputFormat() {
+        return new PointOfInterestOF(super.getName(),
                 super.getDescription(),
-                this.getPosition().toString(),
-                super.getMunicipality().getSynthesizedFormat(),
+                this.getPosition(),
+                super.getMunicipality().getName(),
                 this.getClass().getSimpleName(),
-                super.getImages(),
-                this.contents.stream().map(PointOfInterestContent::getSynthesizedFormat).toList(),
+                super.getFiles().isEmpty() ? null : super.getFiles().get(0).getName(),
+                super.getFiles().stream().map(File::getName).toList(),
+                this.contents.stream().map(PointOfInterestContent::getOutputFormat).toList(),
                 super.getID());
     }
 
     @Override
     public Collection<PointOfInterestContent> getContents() {
         return this.contents;
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.contents.forEach(content -> content.setPoi(null));
+        new ArrayList<>(compoundPoints).forEach(compoundPoint -> compoundPoint.removePointOfInterest(this));
+        this.notifications.forEach(Notification::setVisualizableNull);
     }
 }

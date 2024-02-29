@@ -2,17 +2,19 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class provides methods to retrieve maps composed by data from the OSM API and geo-localzable from
  * the given municipalities.
  */
-public interface MapProvider {
+@Component
+public abstract class MapProvider {
 
     /**
      * Returns an empty map associated with the given municipality.
@@ -23,7 +25,7 @@ public interface MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<?> getEmptyMap(Municipality municipality) throws IOException;
+    public abstract Map<?> getEmptyMap(Municipality municipality) throws IOException;
 
     /**
      * Returns an empty map delimited by the given box.
@@ -33,7 +35,7 @@ public interface MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<?> getEmptyMap(CoordinatesBox box) throws IOException;
+    public abstract Map<?> getEmptyMap(CoordinatesBox box) throws IOException;
 
     /**
      * Returns a map associated with the given municipality.
@@ -44,7 +46,7 @@ public interface MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<GeoLocatable> getMap(Municipality municipality) throws IOException;
+    public abstract Map<GeoLocatable> getMap(Municipality municipality) throws IOException;
 
     /**
      * Returns a map associated with the given municipality.
@@ -56,7 +58,7 @@ public interface MapProvider {
      * @return the map
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<GeoLocatable> getMap(Municipality municipality, CoordinatesBox box) throws IOException;
+    public abstract Map<GeoLocatable> getMap(Municipality municipality, CoordinatesBox box) throws IOException;
 
 
 
@@ -67,7 +69,7 @@ public interface MapProvider {
      * @return a map of the Italian territory
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<Municipality> getMunicipalitiesMap() throws IOException;
+    public abstract Map<Municipality> getMunicipalitiesMap() throws IOException;
 
 
     /**
@@ -77,7 +79,7 @@ public interface MapProvider {
      * @return a map of the municipality containing all the filtered geo-locatable points
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<GeoLocatable> getFilteredMap(Municipality municipality, List<SearchFilter> filters) throws IOException;
+    public abstract Map<GeoLocatable> getFilteredMap(Municipality municipality, List<SearchFilter> filters) throws IOException;
 
     /**
      * Returns a map of a municipality containing all the filtered geo-locatable points.
@@ -90,18 +92,19 @@ public interface MapProvider {
      * @return a map of the municipality containing all the filtered geo-locatable points
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Map<GeoLocatable> getFilteredMap(Municipality municipality,
+    public abstract Map<GeoLocatable> getFilteredMap(Municipality municipality,
                                      CoordinatesBox box,
                                      List<SearchFilter> filters) throws IOException;
 
     /**
      * Returns the municipality where the given position resides.
      * The returned municipality is the municipality registered in the system that contains the given position.
-     * If no municipality contains the given position, a null value is returned.
+     * If no municipality contains the given position, an empty optional object is returned.
      *
      * @param position the position
-     * @return the municipality or null if no municipality contains the given position
+     * @return the municipality where the given position resides,
+     * or an empty optional object if no municipality contains the given position
      * @throws IOException if an I/O error occurs during the OSM data retrieval
      */
-    Municipality getMunicipalityByPosition(Position position) throws IOException;
+    public abstract Optional<Municipality> getMunicipalityByPosition(Position position) throws IOException;
 }

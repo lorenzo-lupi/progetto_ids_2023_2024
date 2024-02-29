@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,34 +14,23 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * This class is used to retrieve OSM data from the OSM API.
  */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class OSMRequestHandler {
 
     public static final String OSM_API_URL = "https://api.openstreetmap.org/api/0.6/map";
     public static final String OSM_NOMINATIM_API_URL = "https://nominatim.openstreetmap.org/reverse";
     private final URL urlOsmApi;
     private final URL urlNominatimApi;
-    Map<String, String> parameters;
-    private static OSMRequestHandler instance;
+    private final Map<String, String> parameters;
 
-    private OSMRequestHandler() throws MalformedURLException {
+    public OSMRequestHandler() throws MalformedURLException {
         this.urlOsmApi = new URL(OSM_API_URL);
         this.urlNominatimApi = new URL(OSM_NOMINATIM_API_URL);
         this.parameters = new HashMap<>();
-    }
-
-    /**
-     * Returns the singleton instance of the class.
-     *
-     * @return the singleton instance of the class
-     * @throws MalformedURLException if the internal OSM API URL is malformed
-     */
-    public static OSMRequestHandler getInstance() throws MalformedURLException {
-        if (instance == null) instance = new OSMRequestHandler();
-        return instance;
     }
 
     /**
@@ -55,7 +46,7 @@ public class OSMRequestHandler {
     }
 
     /**
-     * Retrieves OSM data from the given box, represented by the values of minimum and maximum
+     * Retrieves OSM data in XML format from the given box, represented by the values of minimum and maximum
      * latitude and longitude.
      * The OSM data contains all the geographical objects included in the given box.
      *
@@ -73,8 +64,6 @@ public class OSMRequestHandler {
         HttpURLConnection connection = (HttpURLConnection) getGETRequestURLFromParameters(urlOsmApi).openConnection();
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
-
-        connection.setRequestProperty("Content-Type", "application/json");
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) return getResponse(connection);
         else throw new IOException("HTTP error code: " + connection.getResponseCode());

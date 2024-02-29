@@ -4,20 +4,30 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionabl
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityJpaRepository;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchCriterion;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchEngine;
 import it.cs.unicam.app_valorizzazione_territorio.search.SearchFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
-public class MapProviderBase implements MapProvider{
+@Component
+public class MapProviderBase extends MapProvider{
 
-    public MapProviderBase() {
+    private final MunicipalityJpaRepository municipalityJpaRepository;
+    private final OSMRequestHandler osmRequestHandler;
+
+    @Autowired
+    public MapProviderBase(MunicipalityJpaRepository municipalityJpaRepository,
+                           OSMRequestHandler osmRequestHandler) {
+        this.municipalityJpaRepository = municipalityJpaRepository;
+        this.osmRequestHandler = osmRequestHandler;
     }
 
     @Override
@@ -27,7 +37,7 @@ public class MapProviderBase implements MapProvider{
 
     @Override
     public Map<?> getEmptyMap(CoordinatesBox box) throws IOException {
-        return new MapBuilder<>()
+        return new MapBuilder<>(osmRequestHandler)
                 .buildOsmData(box)
                 .build()
                 .getResult();
@@ -45,7 +55,7 @@ public class MapProviderBase implements MapProvider{
 
     @Override
     public Map<Municipality> getMunicipalitiesMap() throws IOException {
-        return fact(MunicipalityRepository.getInstance().getItemStream().toList(), CoordinatesBox.ITALY);
+        return createMap(municipalityJpaRepository.findAll(), CoordinatesBox.ITALY);
     }
 
     @Override
@@ -71,22 +81,20 @@ public class MapProviderBase implements MapProvider{
         SearchEngine<GeoLocatable> geoLocatableSearchEngine = new SearchEngine<> (municipality.getGeoLocatables().stream().filter(GeoLocatable::isApproved).toList());
 
         filters.forEach(filter -> geoLocatableSearchEngine.addCriterion(Parameter.valueOf(filter.parameter()),
-                SearchCriterion.stringToBiPredicate.get(filter.predicate()), filter.value()));
+                SearchCriterion.stringToBiPredicate.get(filter.criterion()), filter.value()));
 
-        return fact(geoLocatableSearchEngine.search().getResults(), box);
+        return createMap(geoLocatableSearchEngine.search().getResults(), box);
     }
 
     @Override
-    public Municipality getMunicipalityByPosition(Position position) throws IOException {
-        String municipalityName = OSMRequestHandler.getInstance().getMunicipalityOfPosition(position);
-        return MunicipalityRepository.getInstance().getItemStream()
-                .filter(m -> m.getName().equals(municipalityName))
-                .findFirst()
-                .orElse(null);
+    public Optional<Municipality> getMunicipalityByPosition(Position position) throws IOException {
+        String municipalityName = osmRequestHandler.getMunicipalityOfPosition(position);
+        return municipalityJpaRepository.findByName(municipalityName);
     }
 
-    private static <P extends Positionable & Visualizable> Map<P> fact(List<P> geoLocatables, CoordinatesBox box) throws IOException {
-        return new MapBuilder<P>()
+    private <P extends Positionable & Visualizable> Map<P> createMap(List<P> geoLocatables,
+                                                                            CoordinatesBox box) throws IOException {
+        return new MapBuilder<P>(osmRequestHandler)
                 .buildOsmData(box)
                 .buildPointsList(geoLocatables)
                 .build()

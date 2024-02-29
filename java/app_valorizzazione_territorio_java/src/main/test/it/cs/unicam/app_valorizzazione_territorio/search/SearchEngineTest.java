@@ -1,28 +1,44 @@
 package it.cs.unicam.app_valorizzazione_territorio.search;
 
 import it.cs.unicam.app_valorizzazione_territorio.osm.CoordinatesBox;
-import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.*;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
-import org.junit.jupiter.api.BeforeAll;
+import it.cs.unicam.app_valorizzazione_territorio.utils.SampleRepositoryProvider;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SpringExtension.class)
+@ComponentScan(basePackageClasses = {SampleRepositoryProvider.class})
+@DataJpaTest
 public class SearchEngineTest {
 
-    private static List<Municipality> municipalities;
-    private static List<GeoLocatable> geoLocatables;
-    @BeforeAll
-    public static void setUp() {
-        SampleRepositoryProvider.setUpMunicipalitiesRepository();
-        municipalities = MunicipalityRepository.getInstance().getItemStream().toList();
-        geoLocatables = MunicipalityRepository.getInstance().getAllGeoLocatables().toList();
+    @Autowired
+    private SampleRepositoryProvider sampleRepositoryProvider;
+    private List<Municipality> municipalities;
+    private List<GeoLocatable> geoLocatables;
+    @BeforeEach
+    public void setUp() {
+        sampleRepositoryProvider.setUpAllRepositories();
+        municipalities = sampleRepositoryProvider.getMunicipalityJpaRepository().findAll();
+        geoLocatables = sampleRepositoryProvider.getGeoLocatableJpaRepository().findAll();
+    }
+
+    @AfterEach
+    public void clear() {
+        sampleRepositoryProvider.clearAllRepositories();
     }
 
     @Test
@@ -95,8 +111,12 @@ public class SearchEngineTest {
         searchEngine.addCriterion(Parameter.MUNICIPALITY, SearchCriterion.EQUALS, municipalities.get(1));
         List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(8, searchResult.size());
-        assertTrue(searchResult.containsAll(List.of(geoLocatables.get(0), geoLocatables.get(1),
-                geoLocatables.get(3), geoLocatables.get(5), geoLocatables.get(6))));
+        assertTrue(searchResult.containsAll(List.of(
+                sampleRepositoryProvider.UNIVERSITY_CAMERINO,
+                sampleRepositoryProvider.VIA_MADONNA_CARCERI,
+                sampleRepositoryProvider.CORSA_SPADA,
+                sampleRepositoryProvider.PIZZERIA_ENJOY,
+                sampleRepositoryProvider.BASILICA_SAN_VENANZIO)));
     }
 
     @Test
@@ -113,6 +133,7 @@ public class SearchEngineTest {
         searchEngine.addCriterion(Parameter.APPROVAL_STATUS, SearchCriterion.EQUALS, ApprovalStatusEnum.PENDING);;
         List<GeoLocatable> searchResult = searchEngine.search().getResults();
         assertEquals(1, searchResult.size());
-        assertTrue(searchResult.contains(geoLocatables.get(4)));
+        System.out.println(searchResult.get(0).getName());
+        assertTrue(searchResult.contains(sampleRepositoryProvider.PIAZZA_LIBERTA));
     }
 }

@@ -6,8 +6,8 @@ import java.util.List;
 public record CompoundPointIF(String title,
                               String description,
                               String compoundPointType,
-                              List<Long> pointsOfInterests,
-                              List<File> images) {
+                              List<Long> pointsOfInterestIDs,
+                              List<String> files) {
 
 
 }

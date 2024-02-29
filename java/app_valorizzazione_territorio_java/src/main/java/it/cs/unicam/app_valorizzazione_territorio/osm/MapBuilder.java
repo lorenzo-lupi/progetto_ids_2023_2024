@@ -1,22 +1,30 @@
 package it.cs.unicam.app_valorizzazione_territorio.osm;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Builder for a map.
  */
 public class MapBuilder<P extends Positionable & Visualizable> {
+
+    private final OSMRequestHandler osmRequestHandler;
+    private final XmlMapper xmlMapper;
     private String osmData;
     private List<P> pointsList;
     private Map<P> map;
 
-    public MapBuilder() {
+    public MapBuilder(OSMRequestHandler osmRequestHandler) {
+        this.osmRequestHandler = osmRequestHandler;
+        this.xmlMapper = new XmlMapper();
         this.osmData = "";
-        this.pointsList = List.of();
+        this.pointsList = new ArrayList<>();
     }
 
     /**
@@ -37,7 +45,7 @@ public class MapBuilder<P extends Positionable & Visualizable> {
      * @throws IOException if an I/O error occurs
      */
     public MapBuilder<P> buildOsmData(CoordinatesBox coordinatesBox) throws IOException {
-        this.osmData = OSMRequestHandler.getInstance().retrieveOSMData(coordinatesBox);
+        this.osmData = osmRequestHandler.retrieveOSMData(coordinatesBox);
         return this;
     }
 
@@ -72,8 +80,10 @@ public class MapBuilder<P extends Positionable & Visualizable> {
         return this.pointsList.remove(point);
     }
 
-    public MapBuilder<P> build(){
-        this.map =  new Map<P>(this.osmData, this.pointsList.stream().toList());
+    public MapBuilder<P> build() throws JsonProcessingException {
+        this.map =  new Map<P>(
+                xmlMapper.readValue(this.osmData, Object.class),
+                this.pointsList.stream().toList());
         return this;
     }
 
@@ -93,7 +103,7 @@ public class MapBuilder<P extends Positionable & Visualizable> {
      */
     public MapBuilder<P> reset() {
         this.osmData = "";
-        this.pointsList = List.of();
+        this.pointsList = new ArrayList<>();
         return this;
     }
 }

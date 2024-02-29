@@ -2,46 +2,59 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.MessageBuilder;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.IF.MessageIF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MessageSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MessageOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Message;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageRepository;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.MessageJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class represents a handler for the messages in the system that provides methods
  * to insert and view messages.
  */
+@Service
 public class MessageHandler {
+    @Value("${fileResources.path}")
+    private static String filePath;
+    private final MessageJpaRepository messageJpaRepository;
 
-    private static final MessageRepository messageRepository = MessageRepository.getInstance();
+    @Autowired
+    public MessageHandler(MessageJpaRepository messageJpaRepository) {
+        this.messageJpaRepository = messageJpaRepository;
+    }
 
     /**
      * Inserts a new message in the system for a municipality request.
      * @param messageIF the message to insert
      * @return the id of the inserted message
      */
-    public static long insertMunicipalityRequestMessage(MessageIF messageIF) {
+    public long insertMunicipalityRequestMessage(MessageIF messageIF) {
         MessageBuilder builder = new MessageBuilder();
         builder.buildSenderName(messageIF.senderName())
                 .buildSenderEmail(messageIF.senderEmail())
                 .buildText(messageIF.text())
-                .buildAttachments(messageIF.attachments().stream().toList())
+                .buildAttachments(messageIF.attachments().stream()
+                        .map(fileName -> new File(filePath + fileName))
+                        .toList())
                 .build();
 
-        messageRepository.add(builder.getResult());
-        return builder.getResult().getID();
+        return messageJpaRepository.save(builder.getResult()).getID();
     }
 
     /**
      * Returns a list of all the messages in the system in a synthesized format.
      * @return a list of all the messages in the system
      */
-    public static List<MessageSOF> viewMessages() {
-        return messageRepository
-                .getItemStream()
-                .map(Message::getSynthesizedFormat)
+    public List<MessageOF> viewMessages() {
+        return messageJpaRepository
+                .findAll()
+                .stream()
+                .map(Message::getOutputFormat)
                 .toList();
     }
 
@@ -53,9 +66,12 @@ public class MessageHandler {
      * @return the message in a detailed format
      * @throws IllegalArgumentException if the message with the given id does not exist
      */
-    public static MessageDOF viewMessage(long id) {
-        Message message = messageRepository.getItemByID(id);
-        message.setRead(true);
-        return message.getDetailedFormat();
+    public MessageOF viewMessage(long id) {
+        Optional<Message> message = messageJpaRepository.findByID(id);
+        if (message.isEmpty()) throw new IllegalArgumentException("Message not found");
+
+        message.get().setRead(true);
+        messageJpaRepository.saveAndFlush(message.get());
+        return message.get().getOutputFormat();
     }
 }

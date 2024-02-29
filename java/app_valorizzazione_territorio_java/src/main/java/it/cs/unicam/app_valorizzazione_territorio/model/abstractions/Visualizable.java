@@ -1,5 +1,7 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 
+import java.io.Serializable;
+
 /**
  * Classes implementing this interface can provide specific objects for their synthetic
  * and detailed visualization.
@@ -9,17 +11,10 @@ package it.cs.unicam.app_valorizzazione_territorio.model.abstractions;
 public interface Visualizable extends Identifiable {
 
     /**
-     * Returns the synthetic representation of the object.
+     * Returns the output representation of the object.
      *
-     * @return the synthetic representation of the object
+     * @return the output representation of the object
      */
-    Identifiable getSynthesizedFormat();
-
-    /**
-     * Returns the detailed representation of the object.
-     *
-     * @return the detailed representation of the object
-     */
-    Identifiable getDetailedFormat();
+    Identifiable getOutputFormat();
 
 }

@@ -37,6 +37,7 @@ public interface Modifiable {
         return (o) -> {
             if (clazz.isInstance(o)) {
                 setter.accept((clazz.cast(o)));
-            }};
+            }
+        };
     }
 }

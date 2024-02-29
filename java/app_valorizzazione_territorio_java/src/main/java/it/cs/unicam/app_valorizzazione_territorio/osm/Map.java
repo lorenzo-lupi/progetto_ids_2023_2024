@@ -3,7 +3,7 @@ package it.cs.unicam.app_valorizzazione_territorio.osm;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Positionable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.MapDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.MapOF;
 
 import java.util.List;
 
@@ -12,15 +12,15 @@ import java.util.List;
  * {@link Positionable} objects that are also {@link Identifiable}.
  */
 public class Map<P extends Positionable & Visualizable> implements Visualizable {
-    private final String osmData;
+    private final Object osmData;
     private final List<P> positionablePoints;
 
-    public Map(String osmData, List<P> positionablePoints) {
-        this.positionablePoints = positionablePoints;
+    public Map(Object osmData, List<P> positionablePoints) {
         this.osmData = osmData;
+        this.positionablePoints = positionablePoints;
     }
 
-    public String getOsmData() {
+    public Object getOsmData() {
         return osmData;
     }
 
@@ -43,18 +43,15 @@ public class Map<P extends Positionable & Visualizable> implements Visualizable 
 
     @Override
     public long getID() {
-        return 0;
+        return 0L;
     }
 
     @Override
-    public MapDOF getSynthesizedFormat() {
-        return this.getDetailedFormat();
-    }
-
-    @Override
-    public MapDOF getDetailedFormat() {
-        return new MapDOF(osmData,
-                positionablePoints.stream().map(Visualizable::getSynthesizedFormat).toList(),
-                getID());
+    public MapOF getOutputFormat() {
+        return new MapOF(osmData,
+                positionablePoints.stream()
+                        .map(Visualizable::getOutputFormat)
+                        .toList()
+        );
     }
 }

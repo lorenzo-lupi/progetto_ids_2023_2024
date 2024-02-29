@@ -1,15 +1,23 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
-import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
+import it.cs.unicam.app_valorizzazione_territorio.model.contents.ContestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,16 +28,62 @@ import java.util.Map;
  * A contest can have a geolocation or not.
  * A contest can have participants or not.
  */
-public interface Contest extends Identifiable, Searchable, Visualizable, ContentHost<Contest> {
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "contest_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
+public abstract class Contest implements Searchable, Visualizable, ContentHost<Contest> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+
+    //ID of the decorated base contest.
+    @Getter
+    @Setter
+    private long baseContestId;
+
+    //Determines if this object is the last added object in the chain of decorators.
+    private boolean valid;
+
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "municipality_id")
+    private Municipality municipality;
+
+    /////// FOR DELETION PURPOSES /////////
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Notification> notifications;
+    //////////////////////////////////////
+
+    public Contest(Municipality municipality) {
+        if (municipality == null)
+            throw new IllegalArgumentException("Municipality must not be null");
+        this.municipality = municipality;
+        this.valid = true;
+        this.notifications = new ArrayList<>();
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public boolean setValid(boolean valid) {
+        this.valid = valid;
+        return valid;
+    }
 
     /**
      * Returns true if the contest is private, false otherwise.
      *
      * @return true if the contest is private, false otherwise.
      */
-    Municipality getMunicipality();
+    public abstract boolean isPrivate();
 
-    boolean isPrivate();
+    public Municipality getMunicipality() {
+        return this.municipality;
+    }
 
     /**
      * Returns the list of participants of the contest.
@@ -37,7 +91,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * @return the list of participants of the contest.
      * @throws UnsupportedOperationException if the contest is not private.
      */
-    List<User> getParticipants() throws UnsupportedOperationException;
+    public abstract List<User> getParticipants() throws UnsupportedOperationException;
 
     /**
      * Checks if the given user is permitted to participate in the contest.
@@ -47,7 +101,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * @param user the user to check
      * @return true if the given user is permitted to participate in the contest, false otherwise.
      */
-    default boolean permitsUser(User user) {
+    public boolean permitsUser(User user) {
         return !this.isPrivate() || this.getParticipants().contains(user);
     }
 
@@ -56,7 +110,7 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      *
      * @return true if the contest has a geolocation, false otherwise.
      */
-    boolean hasGeoLocation();
+    public abstract boolean hasGeoLocation();
 
     /**
      * Returns the geolocation of the contest.
@@ -64,21 +118,21 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * @return the geolocation of the contest.
      * @throws UnsupportedOperationException if the contest has no geolocation.
      */
-    GeoLocatable getGeoLocation() throws UnsupportedOperationException;
+    public abstract GeoLocatable getGeoLocation() throws UnsupportedOperationException;
 
-    String getName();
+    public abstract String getName();
 
     /**
      * Returns the animator of the contest.
      * @return the animator of the contest.
      */
-    User getEntertainer();
-    String getTopic();
-    String getRules();
-    Date getStartDate();
-    Date getVotingStartDate();
-    Date getEndDate();
-    default ContestStatusEnum getStatus() {
+    public abstract User getEntertainer();
+    public abstract String getTopic();
+    public abstract String getRules();
+    public abstract Date getStartDate();
+    public abstract Date getVotingStartDate();
+    public abstract Date getEndDate();
+    public ContestStatusEnum getStatus() {
         if ((new Date()).before(getStartDate()))
             return ContestStatusEnum.PLANNED;
         else if ((new Date()).before(getVotingStartDate()))
@@ -93,35 +147,48 @@ public interface Contest extends Identifiable, Searchable, Visualizable, Content
      * Returns the proposal requests of the contest.
      * @return the proposal requests of the contest.
      */
-    ProposalRegister getProposalRequests();
+    public abstract ProposalRegister getProposalRegister();
 
-    default ContestSOF getSynthesizedFormat() {
-        return new ContestSOF(this.getName(),
-                this.getStatus().toString(),
-                this.getID());
+    @Override
+    public void removeContent(Content<Contest> content) {
+        if (content instanceof ContestContent c && this.getProposalRegister() != null)
+            this.getProposalRegister().removeProposal(c);
     }
 
     @Override
-    default ContestDOF getDetailedFormat() {
-        return new ContestDOF(this.getName(),
-                this.getEntertainer().getSynthesizedFormat(),
+    public long getID() {
+        return this.ID;
+    }
+
+    @Override
+    public ContestOF getOutputFormat() {
+        return new ContestOF(
+                this.getBaseContestId(),
+                this.getName(),
+                this.getStatus().toString(),
+                this.getEntertainer().getOutputFormat(),
                 this.getTopic(),
                 this.getRules(),
                 this.isPrivate(),
-                (this.hasGeoLocation() ? this.getGeoLocation() : null),
-                this.getStatus().toString(),
+                (this.hasGeoLocation() ? this.getGeoLocation().getOutputFormat() : null),
                 this.getStartDate(),
                 this.getVotingStartDate(),
-                this.getEndDate(),
-                this.getID());
+                this.getEndDate()
+        );
     }
 
     @Override
-    default Map<Parameter, Object> getParametersMapping() {
+    public Map<Parameter, Object> getParametersMapping() {
         return Map.of(
                 Parameter.THIS, this,
                 Parameter.NAME, this.getName(),
                 Parameter.CONTEST_TOPIC, this.getTopic(),
                 Parameter.CONTEST_STATUS, this.getStatus());
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.municipality != null) this.municipality.removeContest(this);
+        this.notifications.forEach(Notification::setVisualizableNull);
     }
 }

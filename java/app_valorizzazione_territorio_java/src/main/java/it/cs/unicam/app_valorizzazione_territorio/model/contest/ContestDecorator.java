@@ -1,23 +1,39 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contest;
 
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContestOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.contents.Content;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContestSOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ContestDecorator implements Contest{
+@Entity
+@DiscriminatorValue("Decorator")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "decorator_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
+public abstract class ContestDecorator extends Contest{
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "contest_id", referencedColumnName = "ID")
     private Contest contest;
 
     public ContestDecorator(Contest contest){
+        super(contest.getMunicipality());
         this.contest = contest;
+        this.contest.setValid(false);
+    }
+
+    @PostPersist
+    public void postPersist() {
+        this.setBaseContestId(contest.getBaseContestId());
     }
 
     @Override
@@ -61,8 +77,9 @@ public abstract class ContestDecorator implements Contest{
     }
 
     @Override
-    public ProposalRegister getProposalRequests() {
-        return this.contest.getProposalRequests();
+    public ProposalRegister getProposalRegister() {
+        if (this.contest == null) return null;
+        return this.contest.getProposalRegister();
     }
 
     @Override
@@ -84,20 +101,6 @@ public abstract class ContestDecorator implements Contest{
     public List<User> getParticipants() throws UnsupportedOperationException {
         return this.contest.getParticipants();
     }
-    @Override
-    public long getID() {
-        return this.contest.getID();
-    }
-
-    @Override
-    public ContestSOF getSynthesizedFormat() {
-        return this.contest.getSynthesizedFormat();
-    }
-
-    @Override
-    public ContestDOF getDetailedFormat() {
-        return this.contest.getDetailedFormat();
-    }
 
     @Override
     public Map<Parameter, Object> getParametersMapping() {
@@ -109,6 +112,7 @@ public abstract class ContestDecorator implements Contest{
         return this.contest.getContents();
     }
 
+
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
@@ -117,5 +121,11 @@ public abstract class ContestDecorator implements Contest{
     @Override
     public Municipality getMunicipality() {
         return this.contest.getMunicipality();
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        this.contest = null;
     }
 }

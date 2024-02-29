@@ -10,5 +10,5 @@ import java.util.List;
  * @param files
  */
 public record ContentIF(String description,
-                        List<File> files) {
+                        List<String> files) {
 }

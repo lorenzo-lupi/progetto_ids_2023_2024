@@ -1,6 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.requests;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
+import jakarta.persistence.*;
 
 /**
  * Classes implementing this interface provide a set of actions to be performed on their objects
@@ -8,17 +10,17 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizabl
  *
  * @param <T> the type of the item affected by the request command.
  */
-public abstract class RequestCommand<T extends Visualizable> {
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "request_command_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class RequestCommand<T extends Visualizable> implements Identifiable {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private long ID;
 
-        private final T item;
+        public abstract T getItem();
 
-        public RequestCommand(T item) {
-            this.item = item;
-        }
-
-        public T getItem() {
-            return item;
-        }
+        public abstract void setItemNull();
 
         /**
          * Returns the type of confirmation required to accept the request.
@@ -36,4 +38,9 @@ public abstract class RequestCommand<T extends Visualizable> {
          * Rejects the request.
          */
         public abstract void reject();
+
+        @Override
+        public long getID() {
+            return ID;
+        }
 }

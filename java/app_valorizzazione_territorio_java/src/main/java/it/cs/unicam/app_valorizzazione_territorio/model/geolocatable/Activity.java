@@ -1,10 +1,15 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ActivityDOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ActivityOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
-import it.cs.unicam.app_valorizzazione_territorio.model.Position;
+import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils.Timetable;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,19 +20,25 @@ import java.util.function.Consumer;
  * At a given moment, an activity can be in one of the states between "Open" and "Closed" depending on the
  * associated weekly timetable.
  */
+@Entity
+@DiscriminatorValue("Activity")
+@NoArgsConstructor(force = true)
 public class Activity extends PointOfInterest{
 
-    private ActivityTypeEnum type;
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private ActivityTypeEnum activityType;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Getter
     private final Timetable timetable;
-
     public Activity(String title,
                     String description,
                     Position position,
                     Municipality municipality,
-                    ActivityTypeEnum type,
+                    ActivityTypeEnum activityType,
                     User user) {
         super(title, description, position, municipality, user);
-        this.type = type;
+        this.activityType = activityType;
         this.timetable = new Timetable();
     }
 
@@ -35,31 +46,28 @@ public class Activity extends PointOfInterest{
                     String description,
                     Position position,
                     Municipality municipality,
-                    ActivityTypeEnum type,
+                    ActivityTypeEnum activityType,
                     Timetable timetable,
                     User user) {
         super(title, description, position, municipality, user);
-        this.type = type;
+        this.activityType = activityType;
         this.timetable = timetable;
     }
 
     public ActivityTypeEnum getType() {
-        return type;
+        return activityType;
     }
 
-    public void setType(ActivityTypeEnum type) {
-        this.type = type;
-    }
-
-    public Timetable getTimetable() {
-        return timetable;
+    public void setType(ActivityTypeEnum activityType) {
+        this.activityType  = activityType;
     }
 
     @Override
-    public ActivityDOF getDetailedFormat() {
-        return new ActivityDOF(super.getDetailedFormat(),
+    public ActivityOF getOutputFormat() {
+        return new ActivityOF(super.getOutputFormat(),
                 this.getType().toString(),
-                this.getTimetable().getRangesList());
+                this.timetable.getRangesMap()
+        );
     }
 
     @Override

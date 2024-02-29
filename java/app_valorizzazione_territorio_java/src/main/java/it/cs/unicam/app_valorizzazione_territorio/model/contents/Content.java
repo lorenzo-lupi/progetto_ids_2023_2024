@@ -1,17 +1,21 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 
+import it.cs.unicam.app_valorizzazione_territorio.model.Notification;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalStatusEnum;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Requestable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Searchable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.contest.ContentHost;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentDOF;
-import it.cs.unicam.app_valorizzazione_territorio.dtos.ContentSOF;
+import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ContentHost;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.ContentOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestCommand;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -22,13 +26,41 @@ import java.util.function.Consumer;
  *
  * @param <V> the type of the content host
  */
+@Entity
+@DiscriminatorColumn(name = "Type")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@NoArgsConstructor(force = true)
 public abstract class Content<V extends ContentHost<V> & Visualizable>  implements Requestable, Searchable {
-    private final User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name="Type", insertable = false, updatable = false)
+    protected String type;
+    @Getter
     private String description;
+    @Getter
+    @ElementCollection
     private final List<File> files;
+    @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
 
-    private final long ID = MunicipalityRepository.getInstance().getNextContentID();
+    //////// FOR DELETION PURPOSES ////////
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "savedContents")
+    private List<User> savedContentUsers;
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<RequestCommand<?>> commands;
+
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Notification> notifications;
+    //////////////////////////////////////
 
     /**
      * Constructor for a content.
@@ -45,10 +77,9 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
         this.files = files;
         this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
-    }
-
-    public String getDescription() {
-        return description;
+        this.savedContentUsers = new ArrayList<>();
+        this.commands = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     public void setDescription(String description) {
@@ -58,23 +89,16 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     }
 
     /**
-     * Returns the multimedia files of the content.
-     * @return the multimedia files of the content
-     */
-    public List<File> getFiles() {
-        return files;
-    }
-
-    /**
      * Adds a file to the content.
      *
      * @param file the file to added
-     * @return
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addFile(File file) {
         return this.files.add(file);
     }
 
+    @Transient
     public abstract V getHost();
     /**
      * Removes a file from the content.
@@ -82,16 +106,9 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
      * @param file the file to removed
      * @return true if the file was removed, false otherwise
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean removeFile(File file) {
         return this.files.remove(file);
-    }
-
-    /**
-     * Returns the user who created the content.
-     * @return the user who created the content
-     */
-    public User getUser() {
-        return this.user;
     }
 
     @Override
@@ -133,23 +150,26 @@ public abstract class Content<V extends ContentHost<V> & Visualizable>  implemen
     }
 
     @Override
-    public ContentSOF getSynthesizedFormat() {
-        return new ContentSOF(
-                this.getFiles().isEmpty() ? null : this.getFiles().get(0),
-                this.ID);
-    }
-
-    @Override
-    public ContentDOF getDetailedFormat() {
-        return new ContentDOF(this.getDescription(),
-                this.getHost().getSynthesizedFormat(),
-                this.getFiles(),
-                this.getApprovalStatus(),
-                this.getID());
+    public ContentOF getOutputFormat() {
+        return new ContentOF(
+                this.getID(),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
+                this.getDescription(),
+                this.getHost().getName(),
+                this.getFiles().stream().map(File::getName).toList(),
+                this.getApprovalStatus()
+        );
     }
 
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove(){
+        this.savedContentUsers.forEach(user -> user.getSavedContents().remove(this));
+        this.commands.forEach(RequestCommand::setItemNull);
+        this.notifications.forEach(Notification::setVisualizableNull);
     }
 }

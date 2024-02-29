@@ -2,7 +2,10 @@ package it.cs.unicam.app_valorizzazione_territorio.model.contents;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.contest.Contest;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,8 +14,19 @@ import java.util.List;
 /**
  * This class represents a contest content. A ContestContent is hosted in a Contest
  */
+@Entity
+@NoArgsConstructor(force = true)
+@DiscriminatorValue("ContestContent")
 public class ContestContent extends Content<Contest> {
-    private final Contest contest;
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Contest contest;
+    @Getter
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "contest_content_voters",
+            joinColumns = @JoinColumn(name = "contest_content_id", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id", referencedColumnName = "ID"))
     private final List<User> voters;
     /**
      * Constructor for a content.
@@ -29,14 +43,11 @@ public class ContestContent extends Content<Contest> {
         this.voters = new ArrayList<>();
     }
 
-    public List<User> getVoters() {
-        return this.voters;
-    }
-
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addVoter(User user) {
         return this.voters.add(user);
     }
-
+    @SuppressWarnings("UnusedReturnValue")
     public boolean removeVoter(User user) {
         return this.voters.remove(user);
     }
@@ -49,8 +60,13 @@ public class ContestContent extends Content<Contest> {
     @Override
     public Runnable getDeletionAction() {
         return () -> {
-            this.contest.getProposalRequests().removeProposal(this);
-            MunicipalityRepository.getInstance().removeContent(this);
+            this.contest.getProposalRegister().removeProposal(this);
         };
+    }
+
+    @PreRemove
+    public void preRemove() {
+        super.preRemove();
+        if (this.contest != null) this.contest.removeContent(this);
     }
 }

@@ -1,13 +1,20 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable;
 
-import it.cs.unicam.app_valorizzazione_territorio.dtos.GeoLocatableSOF;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.OF.GeoLocatableOF;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.*;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.MunicipalityRepository;
+import it.cs.unicam.app_valorizzazione_territorio.model.contest.GeoLocatableContestDecorator;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestCommand;
+import it.cs.unicam.app_valorizzazione_territorio.osm.Position;
 import it.cs.unicam.app_valorizzazione_territorio.search.Parameter;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -18,15 +25,46 @@ import java.util.function.Consumer;
  * It includes fundamental details such as a name, a textual description and a representative
  * multimedia content.
  */
-public abstract class GeoLocatable implements Requestable, Searchable, Positionable, Deletable {
+@Entity
+@NoArgsConstructor(force = true)
+@DiscriminatorColumn(name = "geoLocatableType")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class GeoLocatable implements Requestable, Searchable, Positionable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+    @Column(name="geoLocatableType", insertable = false, updatable = false)
+    protected String geoLocatableType;
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
     private final User user;
+    @Getter
     private String name;
+    @Getter
     private String description;
-    private final Municipality municipality;
-    private final List<File> images;
+    @Getter
+    @ElementCollection
+    private final List<File> files;
+    @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum approvalStatus;
-    private final long ID = MunicipalityRepository.getInstance().getNextGeoLocalizableID();
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "municipality_id")
+    private Municipality municipality;
+    @Getter
+    @Embedded
+    private Position position;
 
+    /////// FOR DELETION PURPOSES ///////
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<GeoLocatableContestDecorator> decorators;
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER)
+    List<RequestCommand<?>> commands;
+    ////////////////////////////////////
 
     /**
      * Constructor for a geo-localizable object.
@@ -34,17 +72,17 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
      * @param name the name of the geo-localizable object
      * @param description the textual description of the geo-localizable object
      * @param municipality the municipality of the geo-localizable object
-     * @param images the representative multimedia content of the geo-localizable object
+     * @param files the representative multimedia content of the geo-localizable object
      * @throws IllegalArgumentException if coordinates, description or images are null
      */
     public GeoLocatable(String name,
                         String description,
                         Municipality municipality,
-                        List<File> images,
+                        List<File> files,
                         User user){
         if(name == null || description == null)
             throw new IllegalArgumentException("title and description cannot be null");
-        if(municipality == null || images == null)
+        if(municipality == null || files == null)
             throw new IllegalArgumentException("Municipality and images must not be null");
         if (user == null)
             throw new IllegalArgumentException("user cannot be null");
@@ -52,21 +90,16 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.name = name;
         this.description = description;
         this.municipality = municipality;
-        this.images = images;
+        this.files = files;
         this.user = user;
         this.approvalStatus = ApprovalStatusEnum.PENDING;
+        this.decorators = new ArrayList<>();
+        this.commands = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public Municipality getMunicipality() {
-        return municipality;
-    }
-
-    public List<File> getImages() {
-        return images;
+    protected void setPosition(Position position){
+        this.position = position;
     }
 
     /**
@@ -81,13 +114,6 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.name = name;
     }
 
-    /**
-     * Returns the description of the geo-localizable object.
-     * @return the description of the geo-localizable object
-     */
-    public String getDescription() {
-        return this.description;
-    }
 
     /**
      * Sets the description of the geo-localizable object.
@@ -101,21 +127,18 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     /**
      * Adds a representative multimedia content to the geo-localizable object.
      *
-     * @param image the representative multimedia content to add
+     * @param file the representative multimedia content to add
      * @return true if the representative multimedia content has been added, false otherwise
      * @throws IllegalArgumentException if image is null
      */
-    public boolean addImage(File image) {
-        if (image == null)
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean addImage(File file) {
+        if (file == null)
             throw new IllegalArgumentException("image cannot be null");
-        return this.images.add(image);
+        return this.files.add(file);
     }
 
 
@@ -123,11 +146,12 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     /**
      * Removes a representative multimedia content from the geo-localizable object.
      *
-     * @param image the representative multimedia content to remove
+     * @param file the representative multimedia content to remove
      * @return true if the representative multimedia content has been removed, false otherwise
      */
-    public boolean removeImage(File image) {
-        return this.images.remove(image);
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean removeFile(File file) {
+        return this.files.remove(file);
     }
 
     @Override
@@ -152,8 +176,9 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
 
     @Override
     public Runnable getDeletionAction() {
-        return () -> {this.getMunicipality().removeGeoLocatable(this);
-        MunicipalityRepository.getInstance().removeGeoLocatable(this);};
+        return () -> {
+            this.getMunicipality().removeGeoLocatable(this);
+        };
     }
 
     @Override
@@ -161,7 +186,7 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
         return Map.of(Parameter.NAME, toObjectSetter(this::setName, String.class),
                 Parameter.DESCRIPTION, toObjectSetter(this::setDescription, String.class),
                 Parameter.ADD_FILE, toObjectSetter(this::addImage, File.class),
-                Parameter.REMOVE_FILE, toObjectSetter(this::removeImage, File.class));
+                Parameter.REMOVE_FILE, toObjectSetter(this::removeFile, File.class));
     }
 
     @Override
@@ -181,16 +206,28 @@ public abstract class GeoLocatable implements Requestable, Searchable, Positiona
     }
 
     @Override
-    public GeoLocatableSOF getSynthesizedFormat(){
-        return new GeoLocatableSOF(this.getName(),
-                this.getImages().isEmpty() ? null : this.getImages().get(0),
+    public GeoLocatableOF getOutputFormat(){
+        return new GeoLocatableOF(
+                this.getName(),
                 this.getClass().getSimpleName(),
+                this.getFiles().isEmpty() ? null : this.getFiles().get(0).getName(),
+                this.getMunicipality().getName(),
+                this.getPosition(),
+                this.getDescription(),
+                this.getFiles().stream().map(File::getName).toList(),
                 this.getID());
     }
 
     @Override
     public boolean equals(Object obj) {
         return equalsID(obj);
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.municipality != null) this.municipality.removeGeoLocatable(this);
+        if (this.decorators != null) this.decorators.forEach(decorator -> decorator.setGeoLocatable(null));
+        if (this.commands != null) this.commands.forEach(RequestCommand::setItemNull);
     }
 
 }

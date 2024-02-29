@@ -2,22 +2,28 @@ package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
 
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Approvable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.GeoLocatable;
-import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.PointOfInterest;
-import it.cs.unicam.app_valorizzazione_territorio.model.contents.PointOfInterestContent;
 import it.cs.unicam.app_valorizzazione_territorio.model.Municipality;
 import it.cs.unicam.app_valorizzazione_territorio.model.Role;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
+import it.cs.unicam.app_valorizzazione_territorio.model.requests.Request;
 import it.cs.unicam.app_valorizzazione_territorio.model.requests.RequestFactory;
+import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
 /**
  * This class contains utility methods for the controllers of the geo-locatable items.
  */
+@Component
 public class InsertionUtils {
-    private static final RequestRepository requestRepository = RequestRepository.getInstance();
+
+    private RequestJpaRepository requestRepository;
+    @Autowired
+    InsertionUtils(RequestJpaRepository requestRepository) {
+        this.requestRepository = requestRepository;
+    }
 
     /**
      * Inserts the given item in the municipality and, if the user is a contributor, approves it.
@@ -27,10 +33,10 @@ public class InsertionUtils {
      * @param storingAction the action to perform to store the item
      * @param <T> the type of the item
      */
-    public static <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
-                                                                                                 User user,
-                                                                                                 Municipality municipality,
-                                                                                                 Consumer<T> storingAction) {
+    public <T extends Approvable & Visualizable> void insertItemApprovableByContributors(T item,
+                                                                                         User user,
+                                                                                         Municipality municipality,
+                                                                                         Consumer<T> storingAction) {
 
         if (item == null || user == null || municipality == null || storingAction == null)
             throw new IllegalArgumentException("Item, user and municipality must not be null");
@@ -39,7 +45,9 @@ public class InsertionUtils {
         if (Role.isAtLeastContributorForMunicipality(municipality).test(user)) {
             item.approve();
         } else {
-            requestRepository.add(RequestFactory.getApprovalRequest(item));
+            Request<?> request = RequestFactory.getApprovalRequest(item);
+            request.setSender(user);
+            requestRepository.save(request);
         }
     }
 

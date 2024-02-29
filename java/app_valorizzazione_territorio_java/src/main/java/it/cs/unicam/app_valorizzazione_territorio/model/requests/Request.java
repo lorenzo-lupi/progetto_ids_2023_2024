@@ -5,7 +5,8 @@ import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.ApprovalSta
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Identifiable;
 import it.cs.unicam.app_valorizzazione_territorio.model.abstractions.Visualizable;
 import it.cs.unicam.app_valorizzazione_territorio.model.User;
-import it.cs.unicam.app_valorizzazione_territorio.repositories.RequestRepository;
+import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,14 +17,27 @@ import java.util.Date;
  *
  * @param <I> the type of the item related to the request.
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "requestType", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
 public abstract class Request<I extends Visualizable> implements Approvable, Identifiable, Visualizable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long ID;
+    @Column(name="requestType", insertable = false, updatable = false)
+    protected String requestType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User sender;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "command_id")
     private final RequestCommand<I> command;
+    @Temporal(TemporalType.DATE)
     private final Date date;
     private String message;
+    @Enumerated(EnumType.STRING)
     private ApprovalStatusEnum status;
-    private final long ID = RequestRepository.getInstance().getNextID();
 
     /**
      * Constructor for a request.
