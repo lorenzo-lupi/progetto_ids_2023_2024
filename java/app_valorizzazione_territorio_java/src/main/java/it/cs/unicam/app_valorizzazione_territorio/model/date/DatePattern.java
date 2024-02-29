@@ -21,8 +21,6 @@ public class DatePattern {
         return pattern.matcher(inputString);
     }
 
-    //TODO: modify this method: in the way it is now,
-    // the only possible formats are in the dd-mm-yyyy
     public String getOutput(int firstVal, int secVal, int thirdVal){
         return String.format(this.outputFormat, firstVal, secVal, thirdVal);
     }

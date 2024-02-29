@@ -8,6 +8,7 @@ import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
  */
 @JsonView(View.Detailed.class)
 public final class AttractionOF extends PointOfInterestOF {
+    @JsonView(View.Detailed.class)
     private final String type;
     public AttractionOF(PointOfInterestOF pointOfInterestOF, String type) {
         super(pointOfInterestOF.name(),

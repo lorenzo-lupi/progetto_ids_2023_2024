@@ -56,17 +56,17 @@ public class User implements Searchable, Visualizable, Modifiable {
      * @param username the username of the user
      * @param email    the email of the user
      */
-    public User(String username, String email, String encryptedPassword) {
-        if (username == null || email == null || encryptedPassword == null)
+    public User(String username, String email, String password) {
+        if (username == null || email == null || password == null)
             throw new IllegalArgumentException("Parameters cannot be null");
         if (!CredentialsUtils.isEmailValid(email))
             throw new IllegalArgumentException("Invalid email");
-        if (!CredentialsUtils.isPasswordValid(encryptedPassword))
+        if (!CredentialsUtils.isPasswordValid(password))
             throw new IllegalArgumentException("Invalid password");
 
         this.username = username;
         this.email = email;
-        this.encryptedPassword = encryptedPassword;
+        this.encryptedPassword = CredentialsUtils.getEncryptedPassword(password);
         this.roles = new ArrayList<>();
         this.notifications = new ArrayList<>();
         this.savedContents = new ArrayList<>();

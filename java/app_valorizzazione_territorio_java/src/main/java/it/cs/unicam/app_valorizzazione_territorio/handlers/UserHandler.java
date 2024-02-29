@@ -82,7 +82,6 @@ public class UserHandler {
         User municipalityAdmin = new User(municipality.get().getName() + "Admin", userEmail, password);
         municipalityAdmin.addRole(new Role(municipality.get(), AuthorizationEnum.ADMINISTRATOR));
 
-        //Google Workspace account needed
         smtpRequestHandler.sendEmail(userEmail, "Credenziali di accesso",
         "Username: " + municipalityAdmin.getUsername() + "\nPassword: " + password);
 

@@ -8,9 +8,10 @@ import java.util.Date;
 /**
  * This class represents an event Detailed Output Format object.
  */
-@JsonView(View.Detailed.class)
 public final class EventOF extends PointOfInterestOF {
+    @JsonView(View.Detailed.class)
     private final Date startDate;
+    @JsonView(View.Detailed.class)
     private final Date endDate;
 
     public EventOF(PointOfInterestOF pointOfInterestOF, Date startDate, Date endDate) {

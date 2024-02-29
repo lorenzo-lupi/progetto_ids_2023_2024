@@ -22,7 +22,7 @@ public class SMTPRequestHandler {
                     Message.RecipientType.TO,
                     new InternetAddress(toEmail)
             );
-            newMessage.setFrom("noreply@ilcomunedelfuturo.it");
+            newMessage.setFrom("noreply-ilcomunedelfuturo");
             newMessage.setSubject(subject);
             newMessage.setText(body);
         };

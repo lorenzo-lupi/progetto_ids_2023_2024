@@ -1,5 +1,8 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.Activity;
 import jakarta.persistence.*;
 

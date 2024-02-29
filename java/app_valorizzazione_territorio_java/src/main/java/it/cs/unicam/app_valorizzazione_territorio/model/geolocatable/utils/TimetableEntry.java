@@ -1,5 +1,6 @@
 package it.cs.unicam.app_valorizzazione_territorio.model.geolocatable.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import it.cs.unicam.app_valorizzazione_territorio.dtos.View;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import java.time.DayOfWeek;
 @Entity
 @IdClass(TimetableEntry.EntryKey.class)
 public class TimetableEntry implements Serializable {
+    @JsonIgnore
     @Id
     @ManyToOne(fetch = FetchType.EAGER)
     private Timetable timetable;

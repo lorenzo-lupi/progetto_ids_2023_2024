@@ -12,9 +12,10 @@ import java.util.Map;
 /**
  * This class represents an activity Detailed Output Format object.
  */
-@JsonView(View.Detailed.class)
 public final class ActivityOF extends PointOfInterestOF {
+    @JsonView(View.Detailed.class)
     private final String type;
+    @JsonView(View.Detailed.class)
     private final Map<DayOfWeek, TimeRange> timetable;
 
     public ActivityOF(PointOfInterestOF pointOfInterestOF,
