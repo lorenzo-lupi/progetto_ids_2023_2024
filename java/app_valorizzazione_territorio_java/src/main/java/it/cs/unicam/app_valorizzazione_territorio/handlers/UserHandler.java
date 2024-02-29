@@ -29,6 +29,7 @@ import java.util.Set;
  * to generate a municipality administrator.
  */
 @Service
+
 public class UserHandler {
     private final UserJpaRepository userRepository;
     private final MunicipalityJpaRepository municipalityRepository;

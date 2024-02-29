@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class POIComuneDelFuturoApplication {
+
     public static void main(String[] args) throws JsonProcessingException {
         SpringApplication.run(POIComuneDelFuturoApplication.class, args);
     }

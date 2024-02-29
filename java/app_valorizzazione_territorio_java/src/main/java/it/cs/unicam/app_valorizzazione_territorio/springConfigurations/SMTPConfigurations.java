@@ -1,4 +1,4 @@
-package it.cs.unicam.app_valorizzazione_territorio.handlers.utils;
+package it.cs.unicam.app_valorizzazione_territorio.springConfigurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

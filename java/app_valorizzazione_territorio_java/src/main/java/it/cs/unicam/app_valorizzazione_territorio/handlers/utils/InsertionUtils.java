@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 public class InsertionUtils {
 
     private RequestJpaRepository requestRepository;
-
     @Autowired
     InsertionUtils(RequestJpaRepository requestRepository) {
         this.requestRepository = requestRepository;

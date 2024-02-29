@@ -250,6 +250,7 @@ public class GeoLocatableHandler {
         GeoLocatable geoLocatable = geoLocatableJpaRepository.save(builder.build().obtainResult());
 
         insertGeoLocatable(geoLocatable, user.get());
+        geoLocatableJpaRepository.save(geoLocatable);
 
         return geoLocatable.getID();
     }
