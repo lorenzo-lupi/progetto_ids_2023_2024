@@ -357,6 +357,7 @@ public class RequestHandler {
                             .accept(pair.getRight());
                 }
         );
+        geoLocatableJpaRepository.saveAndFlush(geoLocatable);
     }
 
     private boolean userIsAuthorized(User user, Municipality municipality) {

@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Representative entity of a municipal territory registered in the system.
@@ -212,5 +213,14 @@ public class Municipality implements Searchable, Visualizable, Positionable {
             new ArrayList<>(this.contests).forEach(this::removeContest);
         if (this.notifications != null)
             this.notifications.forEach(n -> n.setMunicipality(null));
+    }
+
+    @Override
+    public Set<Parameter> getParameters(){
+        return Set.of(
+                Parameter.NAME,
+                Parameter.DESCRIPTION,
+                Parameter.POSITION
+        );
     }
 }

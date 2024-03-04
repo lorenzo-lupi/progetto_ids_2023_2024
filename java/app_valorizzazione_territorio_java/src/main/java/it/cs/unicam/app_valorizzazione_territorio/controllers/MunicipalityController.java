@@ -48,8 +48,8 @@ public class MunicipalityController {
     }
 
     @GetMapping("parameters")
-    public ResponseEntity<Set<String>> getSearchParameters() {
-        return new ResponseEntity<>(municipalityHandler.getSearchCriteria(), HttpStatus.OK);
+    public ResponseEntity<List<String>> getSearchParameters() {
+        return new ResponseEntity<>(municipalityHandler.getSearchParameters(), HttpStatus.OK);
     }
 
     @JsonView(View.Synthesized.class)
@@ -57,5 +57,6 @@ public class MunicipalityController {
     public ResponseEntity<List<MunicipalityOF>> viewFilteredMunicipalities(@RequestBody List<SearchFilter> filters) {
         return new ResponseEntity<>(municipalityHandler.viewFilteredMunicipalities(filters), HttpStatus.OK);
     }
+
 
 }
