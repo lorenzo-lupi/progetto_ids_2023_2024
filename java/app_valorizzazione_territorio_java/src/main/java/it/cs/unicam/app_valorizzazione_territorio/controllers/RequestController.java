@@ -30,7 +30,7 @@ public class RequestController {
     RequestHandler requestHandler;
 
     @JsonView(View.Synthesized.class)
-    @GetMapping("view/municipality/{userId}")
+    @GetMapping("view/municipality/user/{userId}")
     public ResponseEntity<Object> viewMunicipalityRequests(@PathVariable("userId") long userId) {
         try {
             return new ResponseEntity<>(requestHandler.viewMunicipalityRequests(userId), HttpStatus.OK);
@@ -70,7 +70,7 @@ public class RequestController {
     }
 
     @JsonView(View.Detailed.class)
-    @GetMapping("view/contest/{requestId}")
+    @GetMapping("view/contest/requests/{requestId}")
     public ResponseEntity<Object> viewContestRequest(@PathVariable("requestId") long requestId) {
         try {
             return new ResponseEntity<>(requestHandler.viewContestRequest(requestId), HttpStatus.OK);

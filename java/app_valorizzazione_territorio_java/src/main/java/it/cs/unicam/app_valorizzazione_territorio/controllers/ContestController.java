@@ -67,6 +67,7 @@ public class ContestController {
         }
     }
 
+    @JsonView(View.Synthesized.class)
     @GetMapping("viewProposals/all/{contestID}")
     public ResponseEntity<Object> viewAllProposals(@PathVariable long contestID) {
         try{

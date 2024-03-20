@@ -90,7 +90,9 @@ public class TimeEventsHandler {
             throw new IllegalArgumentException("Event not found");
 
         Event e = optionalEvent.get();
-        e.getMunicipality().addNotification(notificationJpaRepository.save(
-                Notification.createNotification(e, "The event " + e.getName() + " has started!")));
+        Notification startNotification =
+                Notification.createNotification(e, "The event " + e.getName() + " has started!");
+        e.getMunicipality().addNotification(startNotification);
+        notificationJpaRepository.save(startNotification);
     }
 }

@@ -196,7 +196,7 @@ public class GeoLocatableController {
         }
     }
 
-    @PutMapping("/insert/compoundPoint/{municipalityID}/{userID}")
+    @PutMapping("/insert/compoundPoint")
     public ResponseEntity<Object> insertCompoundPoint(@RequestParam long municipalityID,
                                                       @RequestParam long userID,
                                                       @RequestBody CompoundPointIF compoundPointIF) {
